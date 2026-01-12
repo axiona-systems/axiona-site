@@ -1,9 +1,43 @@
-/* site.js — AXIONA x SENTRA shared (footer + lastUpdated + HU/EN toggle)
-   - No storage, hash only (#lang=hu|en)
+/* site.js — AXIONA x SENTRA shared
+   - Language persistence via URL query param: ?lang=hu|en
+   - No storage.
+   - Auto-propagates ?lang=... to all internal links (AXIONA <-> SENTRA)
    - Footer injected into #siteFooter (if present)
 */
 (function () {
   function pad2(n){ return String(n).padStart(2, '0'); }
+
+  function escapeHtml(s){
+    return String(s)
+      .replaceAll('&','&amp;')
+      .replaceAll('<','&lt;')
+      .replaceAll('>','&gt;')
+      .replaceAll('"','&quot;')
+      .replaceAll("'","&#39;");
+  }
+
+  function getLangFromUrl(){
+    try {
+      const u = new URL(location.href);
+      const q = (u.searchParams.get('lang') || '').toLowerCase();
+      if (q === 'en') return 'EN';
+      if (q === 'hu') return 'HU';
+    } catch(e){}
+
+    // fallback: old hash format (#lang=en|hu)
+    const h = (location.hash || '').toLowerCase();
+    if (h.includes('lang=en')) return 'EN';
+    return 'HU';
+  }
+
+  function setLangInUrl(code){
+    try {
+      const u = new URL(location.href);
+      u.searchParams.set('lang', (code === 'EN') ? 'en' : 'hu');
+      // keep existing hash (anchors)
+      history.replaceState(null, '', u.toString());
+    } catch(e){}
+  }
 
   function buildStamp(){
     const d = new Date(document.lastModified);
@@ -31,48 +65,76 @@
     `;
   }
 
-  function escapeHtml(s){
-    return String(s)
-      .replaceAll('&','&amp;')
-      .replaceAll('<','&lt;')
-      .replaceAll('>','&gt;')
-      .replaceAll('"','&quot;')
-      .replaceAll("'","&#39;");
-  }
-
-  function initLangToggle(){
+  function applyLangUI(code){
     const HU = document.getElementById('HU');
     const EN = document.getElementById('EN');
     const btn = document.getElementById('langToggle');
     if (!HU || !EN || !btn) return;
 
-    function setLang(code){
-      if (code === 'EN'){
-        EN.classList.add('isOn');
-        HU.classList.remove('isOn');
-        btn.textContent = 'EN';
-      } else {
-        HU.classList.add('isOn');
-        EN.classList.remove('isOn');
-        btn.textContent = 'HU';
-      }
-      try { location.hash = (code === 'EN') ? '#lang=en' : '#lang=hu'; } catch(e){}
+    if (code === 'EN'){
+      EN.classList.add('isOn');
+      HU.classList.remove('isOn');
+      btn.textContent = 'EN';
+      document.documentElement.setAttribute('lang', 'en');
+    } else {
+      HU.classList.add('isOn');
+      EN.classList.remove('isOn');
+      btn.textContent = 'HU';
+      document.documentElement.setAttribute('lang', 'hu');
     }
+  }
 
-    const h = (location.hash || '').toLowerCase();
-    if (h.includes('lang=en')) setLang('EN'); else setLang('HU');
+  function updateInternalLinks(code){
+    const lang = (code === 'EN') ? 'en' : 'hu';
+
+    document.querySelectorAll('a[href]').forEach(a => {
+      const href = a.getAttribute('href');
+      if (!href) return;
+
+      // skip anchors, mailto, tel, javascript
+      const low = href.toLowerCase();
+      if (low.startsWith('#') || low.startsWith('mailto:') || low.startsWith('tel:') || low.startsWith('javascript:')) return;
+
+      try {
+        const u = new URL(href, location.href);
+
+        // only same-origin
+        if (u.origin !== location.origin) return;
+
+        // set/override lang
+        u.searchParams.set('lang', lang);
+
+        // keep any existing hash
+        a.setAttribute('href', u.pathname + (u.search ? u.search : '') + (u.hash ? u.hash : ''));
+      } catch(e){}
+    });
+  }
+
+  function initLangToggle(codeInitial){
+    const btn = document.getElementById('langToggle');
+    if (!btn) return;
 
     btn.addEventListener('click', function(){
       const now = (btn.textContent || 'HU').trim().toUpperCase();
-      setLang(now === 'HU' ? 'EN' : 'HU');
+      const next = (now === 'HU') ? 'EN' : 'HU';
+      setLangInUrl(next);
+      applyLangUI(next);
+      updateInternalLinks(next);
     });
+
+    // initial apply
+    setLangInUrl(codeInitial);
+    applyLangUI(codeInitial);
+    updateInternalLinks(codeInitial);
   }
 
   function boot(){
     injectFooter();
     const stamp = buildStamp();
     setLastUpdated(stamp);
-    initLangToggle();
+
+    const code = getLangFromUrl();
+    initLangToggle(code);
   }
 
   if (document.readyState === 'loading'){
