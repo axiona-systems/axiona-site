@@ -1,0 +1,12 @@
+/* TEAM */
+Developer / Executor: Asztalos Zoltán
+Contact: hello@axiona.systems
+Site: https://axiona.systems
+
+/* THANKS */
+Built with: GitHub Pages + Cloudflare DNS
+Theme: AXIONA / SENTRA shared dark audit-grade baseline
+
+/* NOTES */
+SENTRA is read-only.
+ZOLAI is internal.
