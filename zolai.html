@@ -8,27 +8,15 @@
   <meta name="description"
     content="ZOLAI: deterministic, guard-first decision operating system powering AXIONA systems. Internal, non-product layer." />
   <link rel="stylesheet" href="./styles.css" />
-
   <style>
-    .right{display:flex; gap:10px; align-items:center; justify-content:flex-end;}
-    .langBtn{
-      border:1px solid rgba(255,255,255,0.10);
-      background: rgba(255,255,255,0.05);
-      color: rgba(255,255,255,0.92);
-      border-radius:12px;
-      padding:8px 10px;
-      font-size:12px;
-      cursor:pointer;
-      min-width:52px;
-      text-align:center;
-    }
-    .langBtn:hover{background: rgba(255,255,255,0.07)}
     .lang{display:none}
     .lang.isOn{display:block}
+    .right{display:flex; gap:10px; align-items:center; justify-content:flex-end;}
   </style>
 </head>
 
 <body>
+
   <div class="bg">
     <div class="aura a1"></div>
     <div class="aura a2"></div>
@@ -48,7 +36,7 @@
 
       <div class="right">
         <a href="./index.html" class="chip">← AXIONA</a>
-        <button class="langBtn" id="langToggle" type="button">HU</button>
+        <button id="langToggle" class="chip" type="button">HU</button>
       </div>
     </div>
   </header>
@@ -56,7 +44,7 @@
   <main class="wrap">
 
     <!-- ================= HU ================= -->
-    <div class="lang" id="HU">
+    <section class="lang" id="HU">
       <section class="hero">
         <div class="chips">
           <span class="chip">DETERMINISTIC</span>
@@ -119,21 +107,20 @@
         <div class="panel highlight">
           <div class="panelHead">Internal system layer</div>
           <div class="panelBody">
-            A ZOLAI belső infrastruktúra.
-            Nem termék, nem standard, nem kerül értékesítésre,
-            és nem jár ownership- vagy support-kötelezettséggel.
+            A ZOLAI belső infrastruktúra. Nem termék, nem standard,
+            nem kerül értékesítésre, és nem jár ownership- vagy support-kötelezettséggel.
             <div class="muted small" style="margin-top:10px;">
               A ZOLAI folyamatos, kontrollált fejlesztés alatt áll.
-              A fókusz a döntési logika, guardok és auditálhatóság
-              további pontosításán van, nem a funkcióbővítésen.
+              A fókusz a döntési logika, guardok és auditálhatóság további pontosításán van,
+              nem a funkcióbővítésen.
             </div>
           </div>
         </div>
       </section>
-    </div>
+    </section>
 
     <!-- ================= EN ================= -->
-    <div class="lang" id="EN">
+    <section class="lang" id="EN">
       <section class="hero">
         <div class="chips">
           <span class="chip">DETERMINISTIC</span>
@@ -160,8 +147,7 @@
           <div class="panel">
             <div class="panelHead">Decision OS</div>
             <div class="panelBody">
-              A rule- and invariant-driven decision system where every outcome
-              is explicit and traceable.
+              A rule- and invariant-driven decision system where every outcome is explicit and traceable.
             </div>
           </div>
 
@@ -196,9 +182,8 @@
         <div class="panel highlight">
           <div class="panelHead">Internal system layer</div>
           <div class="panelBody">
-            ZOLAI is internal infrastructure.
-            Not a product, not standardized, not offered commercially,
-            with no ownership or support obligations.
+            ZOLAI is internal infrastructure. Not a product, not standardized,
+            not offered commercially, with no ownership or support obligations.
             <div class="muted small" style="margin-top:10px;">
               ZOLAI is under continuous, controlled development.
               The focus is not feature expansion, but refinement of decision logic,
@@ -207,9 +192,12 @@
           </div>
         </div>
       </section>
-    </div>
+    </section>
 
-    <div id="siteFooter" data-footer-text="© AXIONA Systems — ZOLAI internal layer"></div>
+    <div id="siteFooter"
+         data-footer-brand="© AXIONA Systems — ZOLAI internal layer"
+         data-footer-name="Asztalos Zoltán"
+         data-footer-email="hello@axiona.systems"></div>
 
   </main>
 
