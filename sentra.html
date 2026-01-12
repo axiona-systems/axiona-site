@@ -1,18 +1,172 @@
 <!doctype html>
-<html lang="en">
-
+<html lang="hu">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <meta name="color-scheme" content="dark" />
   <title>SENTRA — Decision Control Layer</title>
-  <meta name="description"
-    content="SENTRA is the visible control layer of AXIONA Systems. Read-only decision visibility: STOP/REVIEW/AUTO, audit-grade traceability, system health." />
-  <link rel="stylesheet" href="./styles.css" />
+  <meta name="description" content="SENTRA: read-only decision control layer for AXIONA Systems." />
+  <style>
+    :root{
+      --bg:#060a10;
+      --panel: rgba(255,255,255,0.06);
+      --panel2: rgba(255,255,255,0.08);
+      --line: rgba(255,255,255,0.10);
+      --text: rgba(255,255,255,0.92);
+      --muted: rgba(255,255,255,0.68);
+      --muted2: rgba(255,255,255,0.55);
+      --ok: #35ff7a;
+      --blue: #86a3ff;
+      --chip: rgba(255,255,255,0.08);
+      --chipLine: rgba(134,163,255,0.32);
+      --shadow: 0 18px 60px rgba(0,0,0,0.45);
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      background: var(--bg);
+      color: var(--text);
+      overflow-x:hidden;
+    }
+
+    /* background aura */
+    .bg{position:fixed; inset:0; z-index:-2; overflow:hidden;}
+    .aura{
+      position:absolute; width:720px; height:720px; border-radius:999px;
+      filter: blur(80px); opacity:0.55; transform: translateZ(0);
+      background: radial-gradient(circle at 30% 30%, rgba(53,255,122,0.75), rgba(53,255,122,0.0) 60%);
+      animation: float 14s ease-in-out infinite;
+    }
+    .a1{left:-180px; top:-120px; opacity:0.45}
+    .a2{
+      right:-240px; top:60px; opacity:0.35;
+      background: radial-gradient(circle at 40% 40%, rgba(134,163,255,0.70), rgba(134,163,255,0.0) 62%);
+      animation-delay: -5s;
+    }
+    .a3{
+      left:18%; bottom:-340px; opacity:0.28;
+      background: radial-gradient(circle at 45% 45%, rgba(53,255,122,0.55), rgba(53,255,122,0.0) 66%);
+      animation-delay: -9s;
+    }
+    @keyframes float{
+      0%,100%{ transform: translate3d(0,0,0) scale(1) }
+      50%{ transform: translate3d(0,-22px,0) scale(1.03) }
+    }
+    .grain{
+      position:absolute; inset:-30%;
+      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='220' height='220' filter='url(%23n)' opacity='.35'/%3E%3C/svg%3E");
+      opacity:.10; mix-blend-mode: overlay; transform: rotate(8deg);
+    }
+
+    .wrap{max-width: 1040px; margin:0 auto; padding: 24px 22px 64px;}
+    .topbar{
+      position:sticky; top:0; z-index:10;
+      backdrop-filter: blur(12px);
+      background: linear-gradient(to bottom, rgba(6,10,16,0.86), rgba(6,10,16,0.65));
+      border-bottom: 1px solid var(--line);
+    }
+    .topbarInner{
+      max-width:1040px; margin:0 auto; padding: 14px 22px;
+      display:flex; align-items:center; justify-content:space-between; gap:14px;
+    }
+    .brand{display:flex; align-items:center; gap:12px; min-width: 240px;}
+    .dot{
+      width:10px; height:10px; border-radius:999px;
+      background: var(--ok);
+      box-shadow: 0 0 22px rgba(53,255,122,0.75);
+    }
+    .brandTxt{display:flex; flex-direction:column; line-height:1.1}
+    .brandTop{font-weight:650; font-size:13px; color: var(--text);}
+    .brandSub{font-size:12px; color: var(--muted2); margin-top:3px}
+
+    .nav{display:flex; align-items:center; gap:10px; flex-wrap:wrap; justify-content:center}
+    .chip{
+      display:inline-flex; align-items:center; gap:8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      border: 1px solid var(--chipLine);
+      background: var(--chip);
+      color: var(--text);
+      font-size: 12px;
+      text-decoration:none;
+      letter-spacing: .3px;
+    }
+    .chip.active{
+      border-color: rgba(53,255,122,0.55);
+      box-shadow: 0 0 0 1px rgba(53,255,122,0.12), 0 0 30px rgba(53,255,122,0.12);
+    }
+
+    .right{display:flex; align-items:center; gap:10px; justify-content:flex-end; min-width:240px;}
+    .langBtn{
+      border:1px solid var(--line);
+      background: rgba(255,255,255,0.05);
+      color: var(--text);
+      border-radius: 12px;
+      padding: 8px 10px;
+      font-size: 12px;
+      cursor:pointer;
+    }
+    .langBtn:hover{background: rgba(255,255,255,0.07)}
+    .homeLink{
+      color: var(--blue);
+      text-decoration:none;
+      font-size:12px;
+      padding: 8px 10px;
+      border-radius: 12px;
+      border: 1px solid rgba(134,163,255,0.25);
+      background: rgba(134,163,255,0.06);
+    }
+
+    .hero{padding: 34px 0 18px}
+    h1{margin: 14px 0 12px; font-size: 44px; letter-spacing:-0.9px;}
+    .lead{max-width: 820px; color: var(--muted); font-size: 15.5px; line-height: 1.55}
+
+    .grid{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-top: 18px;
+    }
+    .panel{
+      background: var(--panel);
+      border:1px solid var(--line);
+      border-radius: 18px;
+      padding: 16px 16px;
+      box-shadow: var(--shadow);
+    }
+    .panel h3{
+      margin: 0 0 10px;
+      font-size: 14px;
+      color: var(--text);
+      letter-spacing: .2px;
+    }
+    .panel ul{margin: 0; padding-left: 18px; color: var(--muted); line-height:1.6}
+    .muted{color: var(--muted)}
+    .small{font-size: 12px; color: var(--muted2)}
+    .divider{height:1px; background: var(--line); margin: 18px 0}
+    .footer{
+      margin-top: 30px;
+      padding-top: 18px;
+      border-top: 1px solid var(--line);
+      display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap;
+    }
+
+    /* language blocks */
+    .lang{display:none}
+    .lang.isOn{display:block}
+
+    @media (max-width: 860px){
+      h1{font-size: 34px;}
+      .grid{grid-template-columns:1fr}
+      .brand{min-width:unset}
+      .right{min-width:unset}
+    }
+  </style>
 </head>
 
 <body>
-  <!-- BACKGROUND -->
   <div class="bg">
     <div class="aura a1"></div>
     <div class="aura a2"></div>
@@ -20,140 +174,183 @@
     <div class="grain"></div>
   </div>
 
-  <!-- TOP BAR -->
   <header class="topbar">
-    <div class="wrap row">
+    <div class="topbarInner">
       <div class="brand">
-        <div class="mark"></div>
-        <div class="brandtext">
-          <div class="brandname">SENTRA</div>
-          <div class="brandsub">
-            Decision Control Layer — AXIONA Systems ·
-            <a href="./index.html" style="color:#9aa7ff;text-decoration:none;">
-              ← AXIONA
-            </a>
-          </div>
+        <div class="dot" aria-hidden="true"></div>
+        <div class="brandTxt">
+          <div class="brandTop">SENTRA</div>
+          <div class="brandSub">Decision Control Layer — AXIONA Systems</div>
         </div>
+      </div>
+
+      <nav class="nav" aria-label="Sections">
+        <a class="chip" href="#readonly">READ-ONLY</a>
+        <a class="chip" href="#trace">DECISION TRACE</a>
+        <a class="chip" href="#review">REVIEW GATES</a>
+        <a class="chip active" href="#health">SYSTEM HEALTH</a>
+      </nav>
+
+      <div class="right">
+        <a class="homeLink" href="/index.html">← AXIONA</a>
+        <button class="langBtn" type="button" id="langToggle">HU</button>
       </div>
     </div>
   </header>
 
   <main class="wrap">
+    <section class="hero" id="health">
 
-    <!-- HERO -->
-    <section class="hero">
-      <div class="chips">
-        <span class="chip">READ-ONLY</span>
-        <span class="chip">DECISION TRACE</span>
-        <span class="chip">REVIEW GATES</span>
-        <span class="chip ok">SYSTEM HEALTH</span>
+      <!-- HU -->
+      <div class="lang" id="HU">
+        <h1>SENTRA<br/>Decision Control Layer</h1>
+        <p class="lead">
+          A SENTRA az AXIONA rendszerek <b>látható kontrollrétege</b>.
+          Valós idejű betekintést ad döntésekbe, review-kba és rendszerállapotba —
+          <b>végrehajtás és módosítás nélkül</b>.
+        </p>
+
+        <div class="grid">
+          <div class="panel" id="readonly">
+            <h3>Mi a SENTRA</h3>
+            <ul>
+              <li>Read-only (csak olvasható) control room</li>
+              <li>Explicit STOP / REVIEW / AUTO állapotok</li>
+              <li>Teljes döntési visszakövethetőség</li>
+              <li>Nincs execution logika a UI-ban</li>
+            </ul>
+          </div>
+
+          <div class="panel" id="trace">
+            <h3>Mi nem a SENTRA</h3>
+            <ul>
+              <li>Nem automatizációs motor</li>
+              <li>Nem AI döntéshozó</li>
+              <li>Nem workflow runner</li>
+              <li>Nem black-box rendszer</li>
+            </ul>
+          </div>
+
+          <div class="panel" id="review">
+            <h3>Miért létezik</h3>
+            <ul>
+              <li>Operációs átláthatóság vállalati környezetben</li>
+              <li>Audit-grade működés és bizonyítható állapot</li>
+              <li>Kockázatcsökkentés: “nincs csendes változás”</li>
+              <li>Egységes, bemutatható kontrollnézet</li>
+            </ul>
+          </div>
+
+          <div class="panel">
+            <h3>Státusz</h3>
+            <div class="muted">
+              Internal pilot / pre-company evaluation. Nem termék, nem standard,
+              nem jelent ownership- vagy support-kötelezettséget.
+            </div>
+            <div class="divider"></div>
+            <div class="small">Last updated: <span id="lastUpdatedHU"></span></div>
+          </div>
+        </div>
       </div>
 
-      <h1>
-        SENTRA<br>
-        <span class="muted">Decision Control Layer</span>
-      </h1>
+      <!-- EN -->
+      <div class="lang" id="EN">
+        <h1>SENTRA<br/>Decision Control Layer</h1>
+        <p class="lead">
+          SENTRA is the visible control layer of AXIONA systems.
+          It provides real-time insight into decisions, reviews, and system state —
+          <b>without executing or modifying anything</b>.
+        </p>
 
-      <p class="lead">
-        SENTRA is the visible control layer of AXIONA Systems.
-        It provides real-time insight into decisions, reviews, and system state —
-        <b>without</b> executing or modifying anything.
-      </p>
+        <div class="grid">
+          <div class="panel">
+            <h3>What SENTRA is</h3>
+            <ul>
+              <li>Read-only control room</li>
+              <li>Explicit STOP / REVIEW / AUTO states</li>
+              <li>Full decision traceability</li>
+              <li>No execution logic inside the UI</li>
+            </ul>
+          </div>
+
+          <div class="panel">
+            <h3>What SENTRA is not</h3>
+            <ul>
+              <li>Not an automation engine</li>
+              <li>Not an AI decision maker</li>
+              <li>Not a workflow runner</li>
+              <li>Not a black-box system</li>
+            </ul>
+          </div>
+
+          <div class="panel">
+            <h3>Why it exists</h3>
+            <ul>
+              <li>Operational visibility for enterprise environments</li>
+              <li>Audit-grade behavior and provable state</li>
+              <li>Risk reduction: no silent changes</li>
+              <li>A presentable control view (not marketing)</li>
+            </ul>
+          </div>
+
+          <div class="panel">
+            <h3>Status</h3>
+            <div class="muted">
+              Internal pilot / pre-company evaluation. Not a product, not standardized,
+              no ownership or support obligations.
+            </div>
+            <div class="divider"></div>
+            <div class="small">Last updated: <span id="lastUpdatedEN"></span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer">
+        <div class="small">© AXIONA Systems — SENTRA design baseline</div>
+        <div class="small muted">Tip: a jobb felső HU/EN gombbal váltasz.</div>
+      </div>
     </section>
-
-    <!-- WHAT IT IS -->
-    <section class="section">
-      <h2>What SENTRA is</h2>
-      <div class="grid">
-        <div class="panel">
-          <div class="panelHead">Read-only control room</div>
-          <div class="panelBody">
-            A mission-control style view of decisions, states, and evidence —
-            designed for operational clarity, not demos.
-          </div>
-        </div>
-        <div class="panel">
-          <div class="panelHead">Explicit STOP / REVIEW / AUTO</div>
-          <div class="panelBody">
-            States are explicit and auditable. No silent change, no implicit behavior.
-          </div>
-        </div>
-        <div class="panel">
-          <div class="panelHead">Traceability</div>
-          <div class="panelBody">
-            Full decision trace: inputs, rules, evidence, why/why-not — suitable for audit contexts.
-          </div>
-        </div>
-        <div class="panel">
-          <div class="panelHead">No execution logic in the UI</div>
-          <div class="panelBody">
-            SENTRA visualizes the filesystem-based truth. Execution happens elsewhere — if approved.
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- WHAT IT IS NOT -->
-    <section class="section">
-      <h2>What SENTRA is not</h2>
-      <div class="split">
-        <div class="panel big">
-          <div class="panelHead">Not an automation engine</div>
-          <div class="panelBody">
-            SENTRA does not run workflows. It does not trigger actions. It does not modify system state.
-          </div>
-        </div>
-        <div class="panel big">
-          <div class="panelHead">Not an AI decision maker</div>
-          <div class="panelBody">
-            No black-box reasoning. Decisions are rule-based, explicit, and reviewable.
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- WHY -->
-    <section class="section">
-      <h2>Why it exists</h2>
-      <div class="panel highlight">
-        <div class="panelHead">Operational control, not hype</div>
-        <div class="panelBody">
-          SENTRA exists to make complex internal systems controllable: decisions become visible,
-          reviewable, and provable — with deterministic behavior.
-        </div>
-      </div>
-    </section>
-
-    <!-- STATUS -->
-    <section class="section">
-      <h2>Status</h2>
-      <div class="panel">
-        <div class="panelHead">Internal pilot / evaluation</div>
-        <div class="panelBody">
-          This is an internal pilot view. Not a product. Not standardized. No ownership transfer,
-          support, or warranty implied.
-        </div>
-      </div>
-    </section>
-
-    <!-- FOOTER -->
-    <footer class="footer">
-      <div class="muted">© AXIONA Systems — SENTRA design baseline</div>
-      <div class="muted small">
-        Last updated: <span id="lastUpdated"></span>
-      </div>
-    </footer>
-
   </main>
 
   <script>
     (function () {
+      // last updated
       const d = new Date(document.lastModified);
       const p = n => String(n).padStart(2, '0');
-      document.getElementById('lastUpdated').textContent =
-        `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())} ${p(d.getHours())}:${p(d.getMinutes())}`;
+      const stamp = `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())} ${p(d.getHours())}:${p(d.getMinutes())}`;
+      const hu = document.getElementById('lastUpdatedHU');
+      const en = document.getElementById('lastUpdatedEN');
+      if (hu) hu.textContent = stamp;
+      if (en) en.textContent = stamp;
+
+      // language toggle (default HU)
+      const HU = document.getElementById('HU');
+      const EN = document.getElementById('EN');
+      const btn = document.getElementById('langToggle');
+
+      function setLang(code){
+        if (code === 'EN'){
+          EN.classList.add('isOn');
+          HU.classList.remove('isOn');
+          btn.textContent = 'EN';
+        } else {
+          HU.classList.add('isOn');
+          EN.classList.remove('isOn');
+          btn.textContent = 'HU';
+        }
+        // remember in URL hash (no storage required)
+        try { location.hash = (code === 'EN') ? '#lang=en' : '#lang=hu'; } catch(e){}
+      }
+
+      // init from hash if present
+      const h = (location.hash || '').toLowerCase();
+      if (h.includes('lang=en')) setLang('EN'); else setLang('HU');
+
+      btn.addEventListener('click', function(){
+        const now = btn.textContent.trim().toUpperCase();
+        setLang(now === 'HU' ? 'EN' : 'HU');
+      });
     })();
   </script>
 </body>
-
 </html>
