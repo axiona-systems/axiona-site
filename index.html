@@ -6,16 +6,20 @@
   <meta name="color-scheme" content="dark" />
   <title>AXIONA Systems — Determinisztikus üzleti rendszerek</title>
   <meta name="description"
-    content="AXIONA Systems: determinisztikus üzleti, döntési és automatizálási rendszerek. Auditálható, visszakövethető működés." />
+        content="AXIONA Systems: determinisztikus üzleti, döntési és automatizálási rendszerek. Auditálható, visszakövethető működés." />
   <link rel="stylesheet" href="./styles.css" />
   <style>
     .lang{display:none}
     .lang.isOn{display:block}
+    .right{display:flex; gap:10px; align-items:center; justify-content:flex-end;}
+    @media (max-width: 860px){
+      .right{justify-content:flex-start}
+    }
   </style>
 </head>
 
 <body>
-
+  <!-- BACKGROUND -->
   <div class="bg">
     <div class="aura a1"></div>
     <div class="aura a2"></div>
@@ -23,6 +27,7 @@
     <div class="grain"></div>
   </div>
 
+  <!-- TOP BAR -->
   <header class="topbar">
     <div class="wrap row" style="justify-content:space-between; gap:14px;">
       <div class="brand">
@@ -33,7 +38,9 @@
         </div>
       </div>
 
-      <button id="langToggle" class="chip" type="button">HU</button>
+      <div class="right">
+        <button id="langToggle" class="chip" type="button">HU</button>
+      </div>
     </div>
   </header>
 
@@ -42,6 +49,7 @@
     <!-- ================= HU ================= -->
     <section class="lang" id="HU">
 
+      <!-- HERO -->
       <section class="hero">
         <div class="chips">
           <span class="chip">CONTROL ROOM</span>
@@ -68,6 +76,7 @@
         </div>
       </section>
 
+      <!-- OVERVIEW -->
       <section class="section" id="overview">
         <h2>Röviden</h2>
         <div class="grid">
@@ -105,6 +114,7 @@
         </div>
       </section>
 
+      <!-- DIFFERENT -->
       <section class="section">
         <h2>Miért más</h2>
         <div class="split">
@@ -126,6 +136,7 @@
         </div>
       </section>
 
+      <!-- STATUS -->
       <section class="section">
         <h2>Státusz</h2>
         <div class="panel highlight">
@@ -142,6 +153,7 @@
     <!-- ================= EN ================= -->
     <section class="lang" id="EN">
 
+      <!-- HERO -->
       <section class="hero">
         <div class="chips">
           <span class="chip">CONTROL ROOM</span>
@@ -168,7 +180,8 @@
         </div>
       </section>
 
-      <section class="section">
+      <!-- OVERVIEW -->
+      <section class="section" id="overview-en">
         <h2>In short</h2>
         <div class="grid">
           <div class="panel">
@@ -183,7 +196,7 @@
             <div class="panelHead">Who it’s for</div>
             <div class="panelBody">
               Organizations where operations are critical: finance, HR,
-              compliance-adjacent or complex internal processes.
+              compliance-adjacent areas, or complex internal processes.
             </div>
           </div>
 
@@ -191,7 +204,7 @@
             <div class="panelHead">What you get</div>
             <div class="panelBody">
               Clear processes, documented behavior, and a presentable control view
-              focused on operational transparency.
+              focused on operational transparency (not marketing).
             </div>
           </div>
 
@@ -205,22 +218,47 @@
         </div>
       </section>
 
+      <!-- DIFFERENT -->
+      <section class="section">
+        <h2>Why it’s different</h2>
+        <div class="split">
+          <div class="panel big">
+            <div class="panelHead">Not an “AI product” — a system</div>
+            <div class="panelBody">
+              Automations don’t “decide” on their own. They execute explicit,
+              pre-defined operating logic in a controllable and auditable way.
+            </div>
+          </div>
+
+          <div class="panel big">
+            <div class="panelHead">Enterprise-compatible approach</div>
+            <div class="panelBody">
+              The goal is not a flashy feature list, but a long-term operable,
+              audit-grade system that behaves predictably.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- STATUS -->
       <section class="section">
         <h2>Status</h2>
         <div class="panel highlight">
           <div class="panelHead">Internal pilot / pre-company evaluation</div>
           <div class="panelBody">
             This site presents a system initiative in a preparatory phase.
-            Not a product, not standardized, no ownership or support obligations.
+            Not a product, not standardized, and with no ownership or support obligations.
           </div>
         </div>
       </section>
 
     </section>
 
+    <!-- FOOTER (handled by site.js) -->
     <div id="siteFooter"
          data-footer-brand="© AXIONA Systems — SENTRA design baseline"
          data-footer-name="Asztalos Zoltán"
+         data-footer-role="Developer / Executor"
          data-footer-email="hello@axiona.systems"></div>
 
   </main>
