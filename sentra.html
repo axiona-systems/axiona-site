@@ -6,10 +6,18 @@
   <meta name="color-scheme" content="dark" />
   <title>SENTRA — Decision Control Layer</title>
   <meta name="description" content="SENTRA: read-only decision control layer for AXIONA Systems." />
+
+  <!-- KANONIKUS THEME -->
   <link rel="stylesheet" href="./styles.css" />
+
   <style>
-    /* SENTRA oldal-specifikus (MINIMÁL) – csak layout + lang toggle; THEME a styles.css-ből jön */
-    .right{display:flex; gap:10px; align-items:center; justify-content:flex-end;}
+    /* SENTRA-only, MINIMÁL */
+    .right{
+      display:flex;
+      gap:10px;
+      align-items:center;
+      justify-content:flex-end;
+    }
     .langBtn{
       border:1px solid rgba(255,255,255,0.10);
       background: rgba(255,255,255,0.05);
@@ -18,15 +26,18 @@
       padding: 8px 10px;
       font-size: 12px;
       cursor:pointer;
+      min-width:52px;
+      text-align:center;
     }
     .langBtn:hover{background: rgba(255,255,255,0.07)}
     .lang{display:none}
     .lang.isOn{display:block}
+
     .grid2{
       display:grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 14px;
-      margin-top: 18px;
+      grid-template-columns:1fr 1fr;
+      gap:14px;
+      margin-top:18px;
     }
     @media (max-width: 860px){
       .grid2{grid-template-columns:1fr}
@@ -35,7 +46,8 @@
 </head>
 
 <body>
-  <!-- BACKGROUND (ugyanaz, mint AXIONA) -->
+
+  <!-- BACKGROUND (AXIONA BASELINE) -->
   <div class="bg">
     <div class="aura a1"></div>
     <div class="aura a2"></div>
@@ -43,7 +55,7 @@
     <div class="grain"></div>
   </div>
 
-  <!-- TOP BAR (AXIONA stílus, AXIONA-s visszalépő chip) -->
+  <!-- TOP BAR -->
   <header class="topbar">
     <div class="wrap row" style="justify-content:space-between; gap:14px;">
       <div class="brand">
@@ -56,18 +68,17 @@
 
       <div class="right">
         <a href="./index.html" class="chip">← Back to AXIONA</a>
-        <button class="langBtn" type="button" id="langToggle">HU</button>
+        <button class="langBtn" id="langToggle" type="button">HU</button>
       </div>
     </div>
   </header>
 
   <main class="wrap">
 
-    <!-- HERO -->
-    <section class="hero">
+    <!-- ================= HU ================= -->
+    <div class="lang" id="HU">
 
-      <!-- HU -->
-      <div class="lang" id="HU">
+      <section class="hero">
         <div class="chips">
           <span class="chip">READ-ONLY</span>
           <span class="chip">DECISION TRACE</span>
@@ -90,7 +101,7 @@
           <div class="panel">
             <div class="panelHead">Mi a SENTRA</div>
             <div class="panelBody">
-              <ul style="margin:0; padding-left:18px; line-height:1.6;">
+              <ul>
                 <li>Read-only (csak olvasható) control room</li>
                 <li>Explicit STOP / REVIEW / AUTO állapotok</li>
                 <li>Teljes döntési visszakövethetőség</li>
@@ -102,7 +113,7 @@
           <div class="panel">
             <div class="panelHead">Mi nem a SENTRA</div>
             <div class="panelBody">
-              <ul style="margin:0; padding-left:18px; line-height:1.6;">
+              <ul>
                 <li>Nem automatizációs motor</li>
                 <li>Nem AI döntéshozó</li>
                 <li>Nem workflow runner</li>
@@ -114,10 +125,10 @@
           <div class="panel">
             <div class="panelHead">Miért létezik</div>
             <div class="panelBody">
-              <ul style="margin:0; padding-left:18px; line-height:1.6;">
+              <ul>
                 <li>Operációs átláthatóság vállalati környezetben</li>
                 <li>Audit-grade működés és bizonyítható állapot</li>
-                <li>Kockázatcsökkentés: “nincs csendes változás”</li>
+                <li>Kockázatcsökkentés: nincs csendes változás</li>
                 <li>Egységes, bemutatható kontrollnézet</li>
               </ul>
             </div>
@@ -126,23 +137,20 @@
           <div class="panel highlight">
             <div class="panelHead">Státusz</div>
             <div class="panelBody">
-              Internal pilot / pre-company evaluation. Nem termék, nem standard,
-              nem jelent ownership- vagy support-kötelezettséget.
-              <div style="margin-top:14px;" class="muted small">
-                Last updated: <span id="lastUpdatedHU"></span>
-              </div>
+              Internal pilot / pre-company evaluation.
+              Nem termék, nem standard, nem jelent ownership-
+              vagy support-kötelezettséget.
             </div>
           </div>
         </div>
 
-        <div class="footer" style="margin-top:30px;">
-          <div class="muted">© AXIONA Systems — SENTRA design baseline</div>
-          <div class="muted small">Tip: a jobb felső HU/EN gombbal váltasz.</div>
-        </div>
-      </div>
+      </section>
+    </div>
 
-      <!-- EN -->
-      <div class="lang" id="EN">
+    <!-- ================= EN ================= -->
+    <div class="lang" id="EN">
+
+      <section class="hero">
         <div class="chips">
           <span class="chip">READ-ONLY</span>
           <span class="chip">DECISION TRACE</span>
@@ -165,7 +173,7 @@
           <div class="panel">
             <div class="panelHead">What SENTRA is</div>
             <div class="panelBody">
-              <ul style="margin:0; padding-left:18px; line-height:1.6;">
+              <ul>
                 <li>Read-only control room</li>
                 <li>Explicit STOP / REVIEW / AUTO states</li>
                 <li>Full decision traceability</li>
@@ -177,7 +185,7 @@
           <div class="panel">
             <div class="panelHead">What SENTRA is not</div>
             <div class="panelBody">
-              <ul style="margin:0; padding-left:18px; line-height:1.6;">
+              <ul>
                 <li>Not an automation engine</li>
                 <li>Not an AI decision maker</li>
                 <li>Not a workflow runner</li>
@@ -189,11 +197,11 @@
           <div class="panel">
             <div class="panelHead">Why it exists</div>
             <div class="panelBody">
-              <ul style="margin:0; padding-left:18px; line-height:1.6;">
+              <ul>
                 <li>Operational visibility for enterprise environments</li>
                 <li>Audit-grade behavior and provable state</li>
                 <li>Risk reduction: no silent changes</li>
-                <li>A presentable control view (not marketing)</li>
+                <li>A presentable control view</li>
               </ul>
             </div>
           </div>
@@ -201,36 +209,37 @@
           <div class="panel highlight">
             <div class="panelHead">Status</div>
             <div class="panelBody">
-              Internal pilot / pre-company evaluation. Not a product, not standardized,
+              Internal pilot / pre-company evaluation.
+              Not a product, not standardized,
               no ownership or support obligations.
-              <div style="margin-top:14px;" class="muted small">
-                Last updated: <span id="lastUpdatedEN"></span>
-              </div>
             </div>
           </div>
         </div>
 
-        <div class="footer" style="margin-top:30px;">
-          <div class="muted">© AXIONA Systems — SENTRA design baseline</div>
-          <div class="muted small">Tip: use the HU/EN button top-right.</div>
-        </div>
-      </div>
+      </section>
+    </div>
 
-    </section>
+    <!-- FOOTER (EGYSÉGES, TIP NÉLKÜL) -->
+    <footer class="footer">
+      <div class="muted">© AXIONA Systems — SENTRA design baseline</div>
+      <div class="muted small">
+        Last updated: <span id="lastUpdated"></span>
+      </div>
+    </footer>
+
   </main>
 
   <script>
     (function () {
-      // last updated
       const d = new Date(document.lastModified);
       const p = n => String(n).padStart(2, '0');
-      const stamp = `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())} ${p(d.getHours())}:${p(d.getMinutes())}`;
-      const hu = document.getElementById('lastUpdatedHU');
-      const en = document.getElementById('lastUpdatedEN');
-      if (hu) hu.textContent = stamp;
-      if (en) en.textContent = stamp;
+      const stamp =
+        `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())} ` +
+        `${p(d.getHours())}:${p(d.getMinutes())}`;
 
-      // language toggle (default HU)
+      const u = document.getElementById('lastUpdated');
+      if (u) u.textContent = stamp;
+
       const HU = document.getElementById('HU');
       const EN = document.getElementById('EN');
       const btn = document.getElementById('langToggle');
@@ -252,10 +261,10 @@
       if (h.includes('lang=en')) setLang('EN'); else setLang('HU');
 
       btn.addEventListener('click', function(){
-        const now = btn.textContent.trim().toUpperCase();
-        setLang(now === 'HU' ? 'EN' : 'HU');
+        setLang(btn.textContent === 'HU' ? 'EN' : 'HU');
       });
     })();
   </script>
+
 </body>
 </html>
