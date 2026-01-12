@@ -5,9 +5,9 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <meta name="color-scheme" content="dark" />
-  <title>SENTRA — Decision Control Layer | AXIONA Systems</title>
+  <title>SENTRA — Decision Control Layer</title>
   <meta name="description"
-    content="SENTRA is the decision control layer of AXIONA Systems. Read-only, deterministic, audit-grade control room." />
+    content="SENTRA is the visible control layer of AXIONA Systems. Read-only decision visibility: STOP/REVIEW/AUTO, audit-grade traceability, system health." />
   <link rel="stylesheet" href="./styles.css" />
 </head>
 
@@ -27,7 +27,12 @@
         <div class="mark"></div>
         <div class="brandtext">
           <div class="brandname">SENTRA</div>
-          <div class="brandsub">Decision Control Layer — AXIONA Systems</div>
+          <div class="brandsub">
+            Decision Control Layer — AXIONA Systems ·
+            <a href="./index.html" style="color:#9aa7ff;text-decoration:none;">
+              ← AXIONA
+            </a>
+          </div>
         </div>
       </div>
     </div>
@@ -50,63 +55,105 @@
       </h1>
 
       <p class="lead">
-        SENTRA is the visible control layer of AXIONA systems.
+        SENTRA is the visible control layer of AXIONA Systems.
         It provides real-time insight into decisions, reviews, and system state —
-        without executing or modifying anything.
+        <b>without</b> executing or modifying anything.
       </p>
     </section>
 
     <!-- WHAT IT IS -->
     <section class="section">
       <h2>What SENTRA is</h2>
-      <ul>
-        <li>Read-only control room</li>
-        <li>Explicit STOP / REVIEW / AUTO states</li>
-        <li>Full decision traceability</li>
-        <li>No execution logic inside the UI</li>
-      </ul>
+      <div class="grid">
+        <div class="panel">
+          <div class="panelHead">Read-only control room</div>
+          <div class="panelBody">
+            A mission-control style view of decisions, states, and evidence —
+            designed for operational clarity, not demos.
+          </div>
+        </div>
+        <div class="panel">
+          <div class="panelHead">Explicit STOP / REVIEW / AUTO</div>
+          <div class="panelBody">
+            States are explicit and auditable. No silent change, no implicit behavior.
+          </div>
+        </div>
+        <div class="panel">
+          <div class="panelHead">Traceability</div>
+          <div class="panelBody">
+            Full decision trace: inputs, rules, evidence, why/why-not — suitable for audit contexts.
+          </div>
+        </div>
+        <div class="panel">
+          <div class="panelHead">No execution logic in the UI</div>
+          <div class="panelBody">
+            SENTRA visualizes the filesystem-based truth. Execution happens elsewhere — if approved.
+          </div>
+        </div>
+      </div>
     </section>
 
     <!-- WHAT IT IS NOT -->
     <section class="section">
       <h2>What SENTRA is not</h2>
-      <ul>
-        <li>Not an automation engine</li>
-        <li>Not an AI decision maker</li>
-        <li>Not a workflow runner</li>
-        <li>Not a black-box system</li>
-      </ul>
+      <div class="split">
+        <div class="panel big">
+          <div class="panelHead">Not an automation engine</div>
+          <div class="panelBody">
+            SENTRA does not run workflows. It does not trigger actions. It does not modify system state.
+          </div>
+        </div>
+        <div class="panel big">
+          <div class="panelHead">Not an AI decision maker</div>
+          <div class="panelBody">
+            No black-box reasoning. Decisions are rule-based, explicit, and reviewable.
+          </div>
+        </div>
+      </div>
     </section>
 
-    <!-- WHY IT EXISTS -->
+    <!-- WHY -->
     <section class="section">
       <h2>Why it exists</h2>
-      <p>
-        Complex systems fail when decisions become implicit and untraceable.
-        SENTRA exists to make decision logic visible, reviewable, and auditable —
-        before execution happens elsewhere.
-      </p>
+      <div class="panel highlight">
+        <div class="panelHead">Operational control, not hype</div>
+        <div class="panelBody">
+          SENTRA exists to make complex internal systems controllable: decisions become visible,
+          reviewable, and provable — with deterministic behavior.
+        </div>
+      </div>
     </section>
 
     <!-- STATUS -->
     <section class="section">
       <h2>Status</h2>
-      <div class="panel highlight">
-        <div class="panelHead">Internal control layer</div>
+      <div class="panel">
+        <div class="panelHead">Internal pilot / evaluation</div>
         <div class="panelBody">
-          SENTRA is part of AXIONA internal systems.
-          It is shown here to demonstrate control principles,
-          not as a standalone product offering.
+          This is an internal pilot view. Not a product. Not standardized. No ownership transfer,
+          support, or warranty implied.
         </div>
       </div>
     </section>
 
     <!-- FOOTER -->
     <footer class="footer">
-      <div class="muted">© AXIONA Systems — SENTRA control layer</div>
+      <div class="muted">© AXIONA Systems — SENTRA design baseline</div>
+      <div class="muted small">
+        Last updated: <span id="lastUpdated"></span>
+      </div>
     </footer>
 
   </main>
+
+  <script>
+    (function () {
+      const d = new Date(document.lastModified);
+      const p = n => String(n).padStart(2, '0');
+      document.getElementById('lastUpdated').textContent =
+        `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())} ${p(d.getHours())}:${p(d.getMinutes())}`;
+    })();
+  </script>
 </body>
 
 </html>
