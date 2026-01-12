@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="hu">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="color-scheme" content="dark" />
+  <title>ZOLAI — Deterministic Decision OS</title>
+  <meta name="description"
+    content="ZOLAI: deterministic, guard-first decision operating system powering AXIONA systems. Internal, non-product layer." />
+  <link rel="stylesheet" href="./styles.css" />
+
+  <style>
+    .right{display:flex; gap:10px; align-items:center; justify-content:flex-end;}
+    .langBtn{
+      border:1px solid rgba(255,255,255,0.10);
+      background: rgba(255,255,255,0.05);
+      color: rgba(255,255,255,0.92);
+      border-radius:12px;
+      padding:8px 10px;
+      font-size:12px;
+      cursor:pointer;
+      min-width:52px;
+      text-align:center;
+    }
+    .langBtn:hover{background: rgba(255,255,255,0.07)}
+    .lang{display:none}
+    .lang.isOn{display:block}
+  </style>
+</head>
+
+<body>
+  <div class="bg">
+    <div class="aura a1"></div>
+    <div class="aura a2"></div>
+    <div class="aura a3"></div>
+    <div class="grain"></div>
+  </div>
+
+  <header class="topbar">
+    <div class="wrap row" style="justify-content:space-between; gap:14px;">
+      <div class="brand">
+        <div class="mark"></div>
+        <div class="brandtext">
+          <div class="brandname">ZOLAI</div>
+          <div class="brandsub">Deterministic Decision OS — Internal Layer</div>
+        </div>
+      </div>
+
+      <div class="right">
+        <a href="./index.html" class="chip">← AXIONA</a>
+        <button class="langBtn" id="langToggle" type="button">HU</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap">
+
+    <!-- ================= HU ================= -->
+    <div class="lang" id="HU">
+      <section class="hero">
+        <div class="chips">
+          <span class="chip">DETERMINISTIC</span>
+          <span class="chip">GUARD-FIRST</span>
+          <span class="chip">AUDIT-GRADE</span>
+          <span class="chip ok">DECISION OS</span>
+        </div>
+
+        <h1>
+          ZOLAI — döntési operációs rendszer.<br>
+          <span class="muted">Nem termék. Nem autonóm. Nem AI-agent.</span>
+        </h1>
+
+        <p class="lead">
+          A ZOLAI az AXIONA rendszerek <b>belső döntési operációs rendszere</b>.
+          Feladata nem a végrehajtás, hanem a <b>döntések determinisztikus
+          értelmezése, validálása és auditálható előkészítése</b>.
+        </p>
+      </section>
+
+      <section class="section">
+        <h2>Mi a ZOLAI</h2>
+        <div class="grid">
+          <div class="panel">
+            <div class="panelHead">Decision OS</div>
+            <div class="panelBody">
+              Szabályokra, invariánsokra és guardokra épülő döntési rendszer,
+              amely minden döntést explicit, visszakövethető formában kezel.
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="panelHead">Deterministic by design</div>
+            <div class="panelBody">
+              Nincs tanulás, nincs adaptív viselkedés, nincs implicit módosulás.
+              Ugyanaz a bemenet → ugyanaz az eredmény.
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="panelHead">Guard-first működés</div>
+            <div class="panelBody">
+              Minden döntés STOP / REVIEW / ALLOW kapukon megy át.
+              Ha valami nem bizonyítható, a rendszer megáll.
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="panelHead">Nem UI, nem agent</div>
+            <div class="panelBody">
+              A ZOLAI nem felhasználói felület és nem autonóm AI.
+              A látható réteg a SENTRA, a végrehajtás külön rendszer.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>Státusz</h2>
+        <div class="panel highlight">
+          <div class="panelHead">Internal system layer</div>
+          <div class="panelBody">
+            A ZOLAI belső infrastruktúra.
+            Nem termék, nem standard, nem kerül értékesítésre,
+            és nem jár ownership- vagy support-kötelezettséggel.
+            <div class="muted small" style="margin-top:10px;">
+              A ZOLAI folyamatos, kontrollált fejlesztés alatt áll.
+              A fókusz a döntési logika, guardok és auditálhatóság
+              további pontosításán van, nem a funkcióbővítésen.
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- ================= EN ================= -->
+    <div class="lang" id="EN">
+      <section class="hero">
+        <div class="chips">
+          <span class="chip">DETERMINISTIC</span>
+          <span class="chip">GUARD-FIRST</span>
+          <span class="chip">AUDIT-GRADE</span>
+          <span class="chip ok">DECISION OS</span>
+        </div>
+
+        <h1>
+          ZOLAI — decision operating system.<br>
+          <span class="muted">Not a product. Not autonomous. Not an AI agent.</span>
+        </h1>
+
+        <p class="lead">
+          ZOLAI is the <b>internal decision operating system</b> behind AXIONA.
+          Its role is not execution, but <b>deterministic decision validation,
+          gating, and audit-grade preparation</b>.
+        </p>
+      </section>
+
+      <section class="section">
+        <h2>What ZOLAI is</h2>
+        <div class="grid">
+          <div class="panel">
+            <div class="panelHead">Decision OS</div>
+            <div class="panelBody">
+              A rule- and invariant-driven decision system where every outcome
+              is explicit and traceable.
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="panelHead">Deterministic by design</div>
+            <div class="panelBody">
+              No learning, no adaptive behavior, no silent changes.
+              Same input always produces the same result.
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="panelHead">Guard-first operation</div>
+            <div class="panelBody">
+              Every decision passes STOP / REVIEW / ALLOW gates.
+              If something cannot be proven, the system halts.
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="panelHead">Not UI, not an agent</div>
+            <div class="panelBody">
+              ZOLAI is not a user interface and not an autonomous AI.
+              Visibility is provided by SENTRA; execution lives elsewhere.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>Status</h2>
+        <div class="panel highlight">
+          <div class="panelHead">Internal system layer</div>
+          <div class="panelBody">
+            ZOLAI is internal infrastructure.
+            Not a product, not standardized, not offered commercially,
+            with no ownership or support obligations.
+            <div class="muted small" style="margin-top:10px;">
+              ZOLAI is under continuous, controlled development.
+              The focus is not feature expansion, but refinement of decision logic,
+              guards, and audit-grade guarantees.
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <div id="siteFooter" data-footer-text="© AXIONA Systems — ZOLAI internal layer"></div>
+
+  </main>
+
+  <script src="./site.js" defer></script>
+</body>
+</html>
