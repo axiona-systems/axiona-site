@@ -4,31 +4,15 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <meta name="color-scheme" content="dark" />
-  <title>AXIONA Systems — Determinisztikus üzleti rendszerek</title>
+  <title>AXIONA Systems — Deterministic, audit-grade systems</title>
   <meta name="description"
-    content="AXIONA Systems: determinisztikus üzleti, döntési és automatizálási rendszerek. Auditálható, visszakövethető működés." />
+    content="AXIONA Systems builds deterministic, audit-grade decision and automation systems for enterprise operations." />
   <link rel="stylesheet" href="./styles.css" />
-  <style>
-    .topbarRight{display:flex; align-items:center; justify-content:flex-end; gap:10px;}
-    .langBtn{
-      border:1px solid rgba(255,255,255,0.10);
-      background: rgba(255,255,255,0.05);
-      color: rgba(255,255,255,0.92);
-      border-radius: 12px;
-      padding: 8px 10px;
-      font-size: 12px;
-      cursor:pointer;
-      line-height:1;
-      min-width: 52px;
-      text-align:center;
-    }
-    .langBtn:hover{background: rgba(255,255,255,0.07)}
-    .lang{display:none}
-    .lang.isOn{display:block}
-  </style>
 </head>
 
 <body>
+
+  <!-- BACKGROUND -->
   <div class="bg">
     <div class="aura a1"></div>
     <div class="aura a2"></div>
@@ -36,8 +20,9 @@
     <div class="grain"></div>
   </div>
 
+  <!-- TOP BAR -->
   <header class="topbar">
-    <div class="wrap row" style="justify-content:space-between; gap:14px;">
+    <div class="wrap row" style="justify-content:space-between;">
       <div class="brand">
         <div class="mark"></div>
         <div class="brandtext">
@@ -46,16 +31,16 @@
         </div>
       </div>
 
-      <div class="topbarRight">
-        <button class="langBtn" type="button" id="langToggle">HU</button>
-      </div>
+      <!-- LANG TOGGLE -->
+      <button id="langToggle" class="chip">HU</button>
     </div>
   </header>
 
   <main class="wrap">
 
     <!-- ================= HU ================= -->
-    <div class="lang" id="HU">
+    <section class="lang" id="HU">
+
       <section class="hero">
         <div class="chips">
           <span class="chip">CONTROL ROOM</span>
@@ -72,17 +57,17 @@
         <p class="lead">
           Az AXIONA Systems olyan üzleti rendszereket tervez és épít, amelyek
           <b>ellenőrizhetők</b>, <b>auditálhatók</b> és <b>visszakövethetők</b>.
-          A hangsúly a kiszámítható működésen és az operációs kontrollon van,
+          A fókusz a kiszámítható működésen és az operációs kontrollon van,
           nem a feketedoboz-jellegű automatizmusokon.
         </p>
 
-        <div style="margin-top:24px; display:flex; gap:10px; flex-wrap:wrap;">
+        <div style="margin-top:24px;">
           <a href="./sentra.html" class="chip">Explore SENTRA Control Layer →</a>
           <a href="./zolai.html" class="chip">What powers it? → ZOLAI</a>
         </div>
       </section>
 
-      <section class="section" id="overview">
+      <section class="section">
         <h2>Röviden</h2>
         <div class="grid">
           <div class="panel">
@@ -96,8 +81,8 @@
           <div class="panel">
             <div class="panelHead">Kinek</div>
             <div class="panelBody">
-              Olyan szervezeteknek, ahol a működés kritikus: operáció, pénzügy, HR,
-              compliance-közeli vagy komplex belső folyamatok esetén.
+              Olyan szervezeteknek, ahol a működés kritikus: operáció, pénzügy,
+              HR, compliance-közeli vagy komplex belső folyamatok esetén.
             </div>
           </div>
 
@@ -120,27 +105,6 @@
       </section>
 
       <section class="section">
-        <h2>Miért más</h2>
-        <div class="split">
-          <div class="panel big">
-            <div class="panelHead">Nem „AI termék”, hanem rendszer</div>
-            <div class="panelBody">
-              Az automatizmusok nem önállóan „döntenek”, hanem előre meghatározott
-              működési logikát hajtanak végre ellenőrizhető módon.
-            </div>
-          </div>
-
-          <div class="panel big">
-            <div class="panelHead">Enterprise-kompatibilis megközelítés</div>
-            <div class="panelBody">
-              A cél nem a látványos funkciólista, hanem a hosszú távon
-              üzemeltethető, auditálható rendszer.
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section class="section">
         <h2>Státusz</h2>
         <div class="panel highlight">
           <div class="panelHead">Internal pilot / pre-company evaluation</div>
@@ -150,10 +114,12 @@
           </div>
         </div>
       </section>
-    </div>
+
+    </section>
 
     <!-- ================= EN ================= -->
-    <div class="lang" id="EN">
+    <section class="lang" id="EN">
+
       <section class="hero">
         <div class="chips">
           <span class="chip">CONTROL ROOM</span>
@@ -174,7 +140,7 @@
           not black-box automation.
         </p>
 
-        <div style="margin-top:24px; display:flex; gap:10px; flex-wrap:wrap;">
+        <div style="margin-top:24px;">
           <a href="./sentra.html" class="chip">Explore SENTRA Control Layer →</a>
           <a href="./zolai.html" class="chip">What powers it? → ZOLAI</a>
         </div>
@@ -186,13 +152,13 @@
           <div class="panel">
             <div class="panelHead">What we do</div>
             <div class="panelBody">
-              We build business automation and decision-support systems
-              that remain stable and predictable in enterprise environments.
+              We build automation and decision-support systems that remain
+              stable and predictable in enterprise environments.
             </div>
           </div>
 
           <div class="panel">
-            <div class="panelHead">Who it is for</div>
+            <div class="panelHead">Who it’s for</div>
             <div class="panelBody">
               Organizations where operations are critical: finance, HR,
               compliance-adjacent or complex internal processes.
@@ -202,8 +168,8 @@
           <div class="panel">
             <div class="panelHead">What you get</div>
             <div class="panelBody">
-              Clear processes, documented behavior, and a presentable control view
-              focused on operational transparency.
+              Clear processes, documented behavior, and a presentable control
+              view focused on operational transparency.
             </div>
           </div>
 
@@ -218,42 +184,62 @@
       </section>
 
       <section class="section">
-        <h2>Why it is different</h2>
-        <div class="split">
-          <div class="panel big">
-            <div class="panelHead">Not an “AI product” — a system</div>
-            <div class="panelBody">
-              Automations do not “decide” autonomously.
-              They execute predefined logic in an auditable, verifiable way.
-            </div>
-          </div>
-
-          <div class="panel big">
-            <div class="panelHead">Enterprise-compatible approach</div>
-            <div class="panelBody">
-              The goal is not a flashy feature list, but a system that remains
-              operable and auditable long-term.
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section class="section">
         <h2>Status</h2>
         <div class="panel highlight">
           <div class="panelHead">Internal pilot / pre-company evaluation</div>
           <div class="panelBody">
             This site presents a system initiative in a preparatory phase.
-            Not a product, not standardized, no ownership or support obligations.
+            It is not a product, not standardized, and carries no ownership
+            or support obligations.
           </div>
         </div>
       </section>
-    </div>
 
-    <div id="siteFooter" data-footer-text="© AXIONA Systems — SENTRA design baseline"></div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+      <div class="muted">
+        © AXIONA Systems — SENTRA design baseline
+      </div>
+      <div class="muted small">
+        Fejlesztés / kivitelezés: Asztalos Zoltán ·
+        <a href="mailto:hello@axiona.systems">hello@axiona.systems</a>
+      </div>
+    </footer>
 
   </main>
 
-  <script src="./site.js" defer></script>
+  <script>
+    (function () {
+      const HU = document.getElementById('HU');
+      const EN = document.getElementById('EN');
+      const btn = document.getElementById('langToggle');
+
+      function setLang(code){
+        if (code === 'EN'){
+          EN.style.display = 'block';
+          HU.style.display = 'none';
+          btn.textContent = 'EN';
+          document.documentElement.lang = 'en';
+          history.replaceState(null,'','?lang=en');
+        } else {
+          HU.style.display = 'block';
+          EN.style.display = 'none';
+          btn.textContent = 'HU';
+          document.documentElement.lang = 'hu';
+          history.replaceState(null,'','?lang=hu');
+        }
+      }
+
+      const q = new URLSearchParams(location.search).get('lang');
+      setLang(q === 'en' ? 'EN' : 'HU');
+
+      btn.addEventListener('click', () => {
+        setLang(btn.textContent === 'HU' ? 'EN' : 'HU');
+      });
+    })();
+  </script>
+
 </body>
 </html>
