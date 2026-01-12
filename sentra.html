@@ -4,15 +4,15 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <meta name="color-scheme" content="dark" />
-  <title>SENTRA — Decision Control Layer</title>
-  <meta name="description" content="SENTRA: read-only decision control layer for AXIONA Systems." />
-  <link rel="stylesheet" href="./styles.css" />
+  <title>SENTRA — Control Layer</title>
+  <meta name="description" content="SENTRA: read-only control layer for deterministic, audit-grade systems." />
+  <link rel="stylesheet" href="/styles.css" />
   <style>
     .lang{display:none}
     .lang.isOn{display:block}
     .right{display:flex; gap:10px; align-items:center; justify-content:flex-end;}
     .grid2{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:18px;}
-    @media (max-width: 860px){ .grid2{grid-template-columns:1fr} }
+    @media (max-width: 860px){ .grid2{grid-template-columns:1fr} .right{justify-content:flex-start} }
     ul{margin:0; padding-left:18px; line-height:1.65}
   </style>
 </head>
@@ -32,12 +32,12 @@
         <div class="mark"></div>
         <div class="brandtext">
           <div class="brandname">SENTRA</div>
-          <div class="brandsub">Decision Control Layer — AXIONA Systems</div>
+          <div class="brandsub">Read-only control layer</div>
         </div>
       </div>
 
       <div class="right">
-        <a href="./index.html" class="chip">← AXIONA</a>
+        <a href="/index.html" class="chip">← AXIONA</a>
         <button id="langToggle" class="chip" type="button">HU</button>
       </div>
     </div>
@@ -47,67 +47,69 @@
 
     <!-- ================= HU ================= -->
     <section class="lang" id="HU">
+
       <section class="hero">
         <div class="chips">
-          <span class="chip">READ-ONLY</span>
-          <span class="chip">DECISION TRACE</span>
-          <span class="chip">REVIEW GATES</span>
+          <span class="chip">CONTROL ROOM</span>
+          <span class="chip">AUDITABILITY</span>
           <span class="chip ok">SYSTEM HEALTH</span>
         </div>
 
         <h1>
-          SENTRA — Decision Control Layer.<br>
-          <span class="muted">Látható kontroll, végrehajtás nélkül.</span>
+          SENTRA — kontrollréteg.<br>
+          <span class="muted">Read-only felügyelet, bizonyítható állapot.</span>
         </h1>
 
         <p class="lead">
-          A SENTRA az AXIONA rendszerek <b>látható kontrollrétege</b>.
-          Valós idejű betekintést ad döntésekbe, review-kba és rendszerállapotba —
-          <b>végrehajtás és módosítás nélkül</b>.
+          A SENTRA az AXIONA rendszerek <b>read-only kontrollrétege</b>.
+          Célja az állapotok, döntések és futások átlátható, auditálható megjelenítése
+          végrehajtás nélkül.
         </p>
+
+        <!-- KIS SÁV / IRÁNYVÁLTÁS -->
+        <div style="margin-top:24px; display:flex; gap:10px; flex-wrap:wrap;">
+          <a href="/zolai.html" class="chip">Explore ZOLAI (internal framework) →</a>
+        </div>
 
         <div class="grid2">
           <div class="panel">
-            <div class="panelHead">Mi a SENTRA</div>
+            <div class="panelHead">Mit ad a SENTRA</div>
             <div class="panelBody">
               <ul>
-                <li>Read-only (csak olvasható) control room</li>
-                <li>Explicit STOP / REVIEW / AUTO állapotok</li>
-                <li>Teljes döntési visszakövethetőség</li>
-                <li>Nincs execution logika a UI-ban</li>
+                <li>Read-only állapot- és döntésnézet</li>
+                <li>Auditálható eseményláncok</li>
+                <li>Operációs átláthatóság</li>
+                <li>Determinista kontrollpontok</li>
               </ul>
             </div>
           </div>
 
           <div class="panel">
-            <div class="panelHead">Mi nem a SENTRA</div>
+            <div class="panelHead">Mit nem csinál</div>
             <div class="panelBody">
               <ul>
-                <li>Nem automatizációs motor</li>
-                <li>Nem AI döntéshozó</li>
-                <li>Nem workflow runner</li>
-                <li>Nem black-box rendszer</li>
+                <li>Nem futtat végrehajtást</li>
+                <li>Nem módosít rendszert</li>
+                <li>Nem “okosít” csendben</li>
+                <li>Nem helyettesít operátort</li>
               </ul>
             </div>
           </div>
+        </div>
+      </section>
 
+      <section class="section">
+        <h2>Miért fontos</h2>
+        <div class="grid2">
           <div class="panel">
-            <div class="panelHead">Miért létezik</div>
             <div class="panelBody">
-              <ul>
-                <li>Operációs átláthatóság vállalati környezetben</li>
-                <li>Audit-grade működés és bizonyítható állapot</li>
-                <li>Kockázatcsökkentés: nincs csendes változás</li>
-                <li>Egységes, bemutatható kontrollnézet</li>
-              </ul>
+              Közös kontrollnézet döntésekre, állapotokra és futásokra —
+              marketing nélkül, operációs fókuszban.
             </div>
           </div>
-
           <div class="panel">
-            <div class="panelHead">Hatókör</div>
             <div class="panelBody">
-              Read-only megjelenítés: döntések, review-k, állapotok.
-              Végrehajtás és módosítás nincs ebben a rétegben.
+              Audit-grade működés: mit, mikor, miért — visszakereshetően.
             </div>
           </div>
         </div>
@@ -118,75 +120,61 @@
         <div class="panel highlight">
           <div class="panelHead">Internal pilot / pre-company evaluation</div>
           <div class="panelBody">
+            Ez az oldal egy előkészítési fázisban lévő rendszerkezdeményezést mutat be.
             Nem termék, nem standard, és nem jelent ownership- vagy support-kötelezettséget.
           </div>
         </div>
       </section>
+
     </section>
 
     <!-- ================= EN ================= -->
     <section class="lang" id="EN">
+
       <section class="hero">
         <div class="chips">
-          <span class="chip">READ-ONLY</span>
-          <span class="chip">DECISION TRACE</span>
-          <span class="chip">REVIEW GATES</span>
+          <span class="chip">CONTROL ROOM</span>
+          <span class="chip">AUDITABILITY</span>
           <span class="chip ok">SYSTEM HEALTH</span>
         </div>
 
         <h1>
-          SENTRA — Decision Control Layer.<br>
-          <span class="muted">Visible control, no execution.</span>
+          SENTRA — control layer.<br>
+          <span class="muted">Read-only oversight, provable state.</span>
         </h1>
 
         <p class="lead">
-          SENTRA is the visible control layer of AXIONA systems.
-          It provides real-time insight into decisions, reviews, and system state —
-          <b>without executing or modifying anything</b>.
+          SENTRA is the <b>read-only control layer</b> of AXIONA systems.
+          It exposes states, decisions and runs in an auditable way — without execution.
         </p>
+
+        <!-- KIS SÁV / IRÁNYVÁLTÁS -->
+        <div style="margin-top:24px; display:flex; gap:10px; flex-wrap:wrap;">
+          <a href="/zolai.html" class="chip">Explore ZOLAI (internal framework) →</a>
+        </div>
 
         <div class="grid2">
           <div class="panel">
-            <div class="panelHead">What SENTRA is</div>
+            <div class="panelHead">What SENTRA provides</div>
             <div class="panelBody">
               <ul>
-                <li>Read-only control room</li>
-                <li>Explicit STOP / REVIEW / AUTO states</li>
-                <li>Full decision traceability</li>
-                <li>No execution logic inside the UI</li>
+                <li>Read-only views of state and decisions</li>
+                <li>Auditable event chains</li>
+                <li>Operational transparency</li>
+                <li>Deterministic control points</li>
               </ul>
             </div>
           </div>
 
           <div class="panel">
-            <div class="panelHead">What SENTRA is not</div>
+            <div class="panelHead">What it does not do</div>
             <div class="panelBody">
               <ul>
-                <li>Not an automation engine</li>
-                <li>Not an AI decision maker</li>
-                <li>Not a workflow runner</li>
-                <li>Not a black-box system</li>
+                <li>No execution</li>
+                <li>No system modification</li>
+                <li>No silent intelligence</li>
+                <li>No operator replacement</li>
               </ul>
-            </div>
-          </div>
-
-          <div class="panel">
-            <div class="panelHead">Why it exists</div>
-            <div class="panelBody">
-              <ul>
-                <li>Operational visibility for enterprise environments</li>
-                <li>Audit-grade behavior and provable state</li>
-                <li>Risk reduction: no silent changes</li>
-                <li>A presentable control view</li>
-              </ul>
-            </div>
-          </div>
-
-          <div class="panel">
-            <div class="panelHead">Scope</div>
-            <div class="panelBody">
-              Read-only visibility into decisions, reviews, and system state.
-              No execution and no modification in this layer.
             </div>
           </div>
         </div>
@@ -197,19 +185,22 @@
         <div class="panel highlight">
           <div class="panelHead">Internal pilot / pre-company evaluation</div>
           <div class="panelBody">
-            Not a product, not standardized, with no ownership or support obligations.
+            This page presents a system initiative in a preparatory phase.
+            Not a product, not standardized, and without ownership or support obligations.
           </div>
         </div>
       </section>
+
     </section>
 
     <div id="siteFooter"
          data-footer-brand="© AXIONA Systems — SENTRA design baseline"
          data-footer-name="Asztalos Zoltán"
+         data-footer-role="Developer / Executor"
          data-footer-email="hello@axiona.systems"></div>
 
   </main>
 
-  <script src="./site.js" defer></script>
+  <script src="/site.js" defer></script>
 </body>
 </html>
