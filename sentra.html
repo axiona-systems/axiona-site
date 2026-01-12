@@ -8,27 +8,16 @@
   <meta name="description" content="SENTRA: read-only decision control layer for AXIONA Systems." />
   <link rel="stylesheet" href="./styles.css" />
   <style>
-    .right{display:flex; gap:10px; align-items:center; justify-content:flex-end;}
-    .langBtn{
-      border:1px solid rgba(255,255,255,0.10);
-      background: rgba(255,255,255,0.05);
-      color: rgba(255,255,255,0.92);
-      border-radius: 12px;
-      padding: 8px 10px;
-      font-size: 12px;
-      cursor:pointer;
-      min-width:52px;
-      text-align:center;
-    }
-    .langBtn:hover{background: rgba(255,255,255,0.07)}
     .lang{display:none}
     .lang.isOn{display:block}
+    .right{display:flex; gap:10px; align-items:center; justify-content:flex-end;}
     .grid2{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:18px;}
     @media (max-width: 860px){ .grid2{grid-template-columns:1fr} }
   </style>
 </head>
 
 <body>
+
   <div class="bg">
     <div class="aura a1"></div>
     <div class="aura a2"></div>
@@ -47,8 +36,8 @@
       </div>
 
       <div class="right">
-        <a href="./index.html" class="chip">← Back to AXIONA</a>
-        <button class="langBtn" id="langToggle" type="button">HU</button>
+        <a href="./index.html" class="chip">← AXIONA</a>
+        <button id="langToggle" class="chip" type="button">HU</button>
       </div>
     </div>
   </header>
@@ -56,7 +45,7 @@
   <main class="wrap">
 
     <!-- ================= HU ================= -->
-    <div class="lang" id="HU">
+    <section class="lang" id="HU">
       <section class="hero">
         <div class="chips">
           <span class="chip">READ-ONLY</span>
@@ -117,19 +106,15 @@
             <div class="panelHead">Státusz</div>
             <div class="panelBody">
               Internal pilot / pre-company evaluation.
-              Nem termék, nem standard, nem jelent ownership-
-              vagy support-kötelezettséget.
-              <div class="muted small" style="margin-top:10px;">
-                Powered by ZOLAI (internal decision OS)
-              </div>
+              Nem termék, nem standard, nem jelent ownership- vagy support-kötelezettséget.
             </div>
           </div>
         </div>
       </section>
-    </div>
+    </section>
 
     <!-- ================= EN ================= -->
-    <div class="lang" id="EN">
+    <section class="lang" id="EN">
       <section class="hero">
         <div class="chips">
           <span class="chip">READ-ONLY</span>
@@ -190,18 +175,17 @@
             <div class="panelHead">Status</div>
             <div class="panelBody">
               Internal pilot / pre-company evaluation.
-              Not a product, not standardized,
-              no ownership or support obligations.
-              <div class="muted small" style="margin-top:10px;">
-                Powered by ZOLAI (internal decision OS)
-              </div>
+              Not a product, not standardized, no ownership or support obligations.
             </div>
           </div>
         </div>
       </section>
-    </div>
+    </section>
 
-    <div id="siteFooter" data-footer-text="© AXIONA Systems — SENTRA design baseline"></div>
+    <div id="siteFooter"
+         data-footer-brand="© AXIONA Systems — SENTRA design baseline"
+         data-footer-name="Asztalos Zoltán"
+         data-footer-email="hello@axiona.systems"></div>
 
   </main>
 
