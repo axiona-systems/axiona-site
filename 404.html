@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="color-scheme" content="dark" />
+    <title>AXIONA Systems — Not found</title>
+    <meta name="robots" content="noindex" />
+    <link rel="stylesheet" href="./styles.css" />
+</head>
+
+<body>
+    <div class="bg" aria-hidden="true">
+        <div class="aura a1"></div>
+        <div class="aura a2"></div>
+        <div class="aura a3"></div>
+        <div class="grain"></div>
+    </div>
+
+    <main class="wrap">
+        <section class="hero heroTight">
+            <div class="chips">
+                <span class="chip">404</span>
+                <span class="chip">NOT FOUND</span>
+            </div>
+
+            <h1 data-lang="hu">Az oldal nem található.</h1>
+            <h1 data-lang="en">Page not found.</h1>
+
+            <p class="lead" data-lang="hu">
+                Visszairányítunk az Overview oldalra.
+            </p>
+            <p class="lead" data-lang="en">
+                Redirecting you to the Overview page.
+            </p>
+
+            <div class="ctaRow">
+                <a class="btn" href="./index.html">Go to Overview</a>
+            </div>
+        </section>
+
+        <div id="siteFooter" data-footer-brand="© AXIONA Systems — engineering baseline"
+            data-footer-email="hello@axiona.systems"></div>
+    </main>
+
+    <script>
+        (function () {
+            try {
+                const u = new URL(window.location.href);
+                const lang = (u.searchParams.get("lang") || "hu").toLowerCase();
+                const target = "./index.html?lang=" + encodeURIComponent(lang) + "&v=404";
+                setTimeout(function () { window.location.replace(target); }, 900);
+            } catch (e) { }
+        })();
+    </script>
+    <script src="./site.js" defer></script>
+</body>
+
+</html>

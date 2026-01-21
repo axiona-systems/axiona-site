@@ -1,12 +1,121 @@
-/* site.js — AXIONA x SENTRA shared
-   - Language persistence via URL query param: ?lang=hu|en
-   - No storage.
-   - Auto-propagates ?lang=... to internal links
-   - Footer injected into #siteFooter (developer/execution + email + last updated), localized
-*/
-
 (function () {
-  function pad2(n) { return String(n).padStart(2, "0"); }
+  "use strict";
+
+  const DEFAULT_LANG = "hu";
+  const ALLOWED = new Set(["hu", "en"]);
+
+  function getLang() {
+    const u = new URL(window.location.href);
+    const raw = (u.searchParams.get("lang") || "").toLowerCase();
+    return ALLOWED.has(raw) ? raw : DEFAULT_LANG;
+  }
+
+  function setLang(lang) {
+    const u = new URL(window.location.href);
+    u.searchParams.set("lang", lang);
+    window.location.href = u.toString();
+  }
+
+  function forcedDisplayFor(el) {
+    const tag = (el.tagName || "").toUpperCase();
+    if (tag === "SPAN" || tag === "B" || tag === "I" || tag === "EM" || tag === "STRONG") return "inline";
+    if (tag === "LI") return "list-item";
+    return "block";
+  }
+
+  function toggleLangBlocks(lang) {
+    document.querySelectorAll("[data-lang]").forEach((el) => {
+      const v = (el.getAttribute("data-lang") || "").toLowerCase();
+      if (!ALLOWED.has(v)) return;
+
+      if (v === lang) {
+        el.style.display = forcedDisplayFor(el);
+        el.style.visibility = "visible";
+        el.style.opacity = "1";
+        el.removeAttribute("aria-hidden");
+      } else {
+        el.style.display = "none";
+        el.setAttribute("aria-hidden", "true");
+      }
+    });
+
+    document.documentElement.setAttribute("lang", lang);
+  }
+
+  function inheritLangToLinks(lang) {
+    document.querySelectorAll("a[href]").forEach((a) => {
+      const href = a.getAttribute("href");
+      if (!href) return;
+      if (href.startsWith("#")) return;
+      if (href.startsWith("mailto:") || href.startsWith("tel:")) return;
+      if (href.startsWith("http://") || href.startsWith("https://")) return;
+
+      try {
+        const u = new URL(href, window.location.href);
+        u.searchParams.set("lang", lang);
+        a.setAttribute("href", u.pathname + u.search + u.hash);
+      } catch (_) { }
+    });
+  }
+
+  function markActiveNav() {
+    const nav = document.querySelector("nav.nav");
+    if (!nav) return;
+
+    // current page (GitHub Pages: "/" -> index.html)
+    const raw = (location.pathname || "").split("/").pop() || "";
+    const page = (raw.trim() === "" ? "index.html" : raw.trim()).toLowerCase();
+
+    const items = Array.from(nav.querySelectorAll("a.navItem[href]"));
+    if (!items.length) return;
+
+    // clear
+    items.forEach((a) => a.classList.remove("isActive"));
+
+    // match by href basename
+    const match = items.find((a) => {
+      const href = (a.getAttribute("href") || "").split("?")[0].split("#")[0].trim();
+      const base = (href.split("/").pop() || "").toLowerCase();
+      return base === page;
+    });
+
+    // fallback: if we're on "/" (index) or no match, activate Overview (index.html) if present
+    const fallback =
+      match ||
+      items.find((a) => ((a.getAttribute("href") || "").split("?")[0].split("#")[0].toLowerCase().endsWith("index.html")));
+
+    if (fallback) fallback.classList.add("isActive");
+  }
+
+
+
+  function normalizeProofDisabled(lang) {
+    const msg =
+      lang === "hu"
+        ? "Disabled (publikus-safe összefoglaló még nincs kint)"
+        : "Disabled (public-safe summary not published yet)";
+
+    document.querySelectorAll("[data-proof='disabled']").forEach((el) => {
+      if (el.tagName && el.tagName.toUpperCase() === "SPAN") {
+        el.setAttribute("title", msg);
+        return;
+      }
+      el.textContent = msg;
+      el.setAttribute("title", msg);
+    });
+  }
+
+  function wireLangToggle(lang) {
+    const btn = document.getElementById("langToggle");
+    if (!btn) return;
+
+    btn.textContent = lang.toUpperCase();
+
+    btn.addEventListener("click", () => {
+      const next = lang === "hu" ? "en" : "hu";
+      setLang(next);
+    });
+  }
 
   function escapeHtml(s) {
     return String(s)
@@ -14,152 +123,135 @@
       .replaceAll("<", "&lt;")
       .replaceAll(">", "&gt;")
       .replaceAll('"', "&quot;")
-      .replaceAll("'", "&#39;");
+      .replaceAll("'", "&#039;");
   }
 
-  function getLangFromUrl() {
-    try {
-      const u = new URL(location.href);
-      const q = (u.searchParams.get("lang") || "").toLowerCase();
-      if (q === "en") return "EN";
-      if (q === "hu") return "HU";
-    } catch (e) {}
-    return "HU";
-  }
-
-  function setLangInUrl(code) {
-    try {
-      const u = new URL(location.href);
-      u.searchParams.set("lang", code === "EN" ? "en" : "hu");
-      history.replaceState(null, "", u.toString());
-    } catch (e) {}
-  }
-
-  function buildStamp() {
-    const d = new Date(document.lastModified);
-    return `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())} ${pad2(
-      d.getHours()
-    )}:${pad2(d.getMinutes())}`;
-  }
-
-  function applyLangUI(code) {
-    const HU = document.getElementById("HU");
-    const EN = document.getElementById("EN");
-    const btn = document.getElementById("langToggle");
-    if (!HU || !EN || !btn) return;
-
-    if (code === "EN") {
-      EN.classList.add("isOn");
-      HU.classList.remove("isOn");
-      btn.textContent = "EN";
-      document.documentElement.setAttribute("lang", "en");
-    } else {
-      HU.classList.add("isOn");
-      EN.classList.remove("isOn");
-      btn.textContent = "HU";
-      document.documentElement.setAttribute("lang", "hu");
-    }
-  }
-
-  function updateInternalLinks(code) {
-    const lang = code === "EN" ? "en" : "hu";
-
-    document.querySelectorAll("a[href]").forEach((a) => {
-      const href = a.getAttribute("href");
-      if (!href) return;
-
-      const low = href.toLowerCase();
-      if (
-        low.startsWith("#") ||
-        low.startsWith("mailto:") ||
-        low.startsWith("tel:") ||
-        low.startsWith("javascript:")
-      )
-        return;
-
-      try {
-        const u = new URL(href, location.href);
-        if (u.origin !== location.origin) return;
-        u.searchParams.set("lang", lang);
-        a.setAttribute("href", u.pathname + (u.search ? u.search : "") + (u.hash ? u.hash : ""));
-      } catch (e) {}
-    });
-  }
-
-  function setLastUpdated(stamp) {
-    document.querySelectorAll("[data-last-updated], #lastUpdated").forEach((n) => {
-      n.textContent = stamp;
-    });
-  }
-
-  function injectFooter(code) {
+  function injectFooter(lang) {
     const host = document.getElementById("siteFooter");
     if (!host) return;
 
+    const brand = host.getAttribute("data-footer-brand") || "© AXIONA Systems — engineering baseline";
     const email = host.getAttribute("data-footer-email") || "hello@axiona.systems";
-    const brand = host.getAttribute("data-footer-brand") || "© AXIONA Systems — SENTRA design baseline";
-    const name = host.getAttribute("data-footer-name") || "Asztalos Zoltán";
 
-    const t = {
-      HU: {
-        dev: "Fejlesztés / kivitelezés",
-        updated: "Last updated",
-      },
-      EN: {
-        dev: "Developer / Execution",
-        updated: "Last updated",
-      },
-    }[code === "EN" ? "EN" : "HU"];
+    const now = new Date();
+    const pad = (n) => String(n).padStart(2, "0");
+    const lastUpdated = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())} ${pad(
+      now.getHours()
+    )}:${pad(now.getMinutes())}`;
+
+    const credit =
+      lang === "hu"
+        ? `Fejlesztés / kivitelezés: Asztalos Zoltán • ${email}`
+        : `Built by: Zoltán Asztalos • ${email}`;
 
     host.innerHTML = `
-      <footer class="footer">
-        <div class="muted">
-          ${escapeHtml(brand)}
-        </div>
-
-        <div class="muted small" style="margin-top:6px;">
-          ${escapeHtml(t.dev)}: ${escapeHtml(name)} ·
-          <a href="mailto:${escapeHtml(email)}" style="color: rgba(134,163,255,0.92); text-decoration:none;">
-            ${escapeHtml(email)}
-          </a>
-        </div>
-
-        <div class="muted small" style="margin-top:6px;">
-          ${escapeHtml(t.updated)}: <span data-last-updated></span>
-        </div>
+      <footer class="site-footer">
+        <div class="footer-row">${escapeHtml(brand)}</div>
+        <div class="footer-row">${escapeHtml(credit)}</div>
+        <div class="footer-row">Last updated: ${escapeHtml(lastUpdated)}</div>
       </footer>
     `;
   }
 
-  function initLangToggle(codeInitial) {
-    const btn = document.getElementById("langToggle");
-    if (!btn) return;
-
-    btn.addEventListener("click", function () {
-      const now = (btn.textContent || "HU").trim().toUpperCase();
-      const next = now === "HU" ? "EN" : "HU";
-      setLangInUrl(next);
-      applyLangUI(next);
-      updateInternalLinks(next);
-      injectFooter(next);
-      setLastUpdated(buildStamp());
-    });
-
-    setLangInUrl(codeInitial);
-    applyLangUI(codeInitial);
-    updateInternalLinks(codeInitial);
-    injectFooter(codeInitial);
+  function getTopbarOffsetPx() {
+    const top = document.querySelector(".topbar");
+    if (!top) return 0;
+    const r = top.getBoundingClientRect();
+    // small breathing room
+    return Math.round(r.height + 10);
   }
 
-  function boot() {
-    const lang = getLangFromUrl();
-    initLangToggle(lang);
-    setLastUpdated(buildStamp());
+  function scrollToHashIfAny() {
+    const hash = (location.hash || "").trim();
+    if (!hash || hash.length < 2) return;
+
+    const id = decodeURIComponent(hash.slice(1));
+    const el = document.getElementById(id);
+    if (!el) return;
+
+    const offset = getTopbarOffsetPx();
+    const y = window.scrollY + el.getBoundingClientRect().top - offset;
+
+    window.scrollTo({ top: y, behavior: "auto" });
+  }
+
+  function wireHashClicks() {
+    document.querySelectorAll('a[href^="#"]').forEach((a) => {
+      a.addEventListener("click", (e) => {
+        const href = a.getAttribute("href") || "";
+        if (!href.startsWith("#") || href.length < 2) return;
+
+        const id = decodeURIComponent(href.slice(1));
+        const el = document.getElementById(id);
+        if (!el) return;
+
+        e.preventDefault();
+
+        history.replaceState(null, "", href);
+        const offset = getTopbarOffsetPx();
+        const y = window.scrollY + el.getBoundingClientRect().top - offset;
+
+        window.scrollTo({ top: y, behavior: "smooth" });
+      });
+    });
+  }
+
+  function main() {
+    const lang = getLang();
+    toggleLangBlocks(lang);
+    inheritLangToLinks(lang);
+    wireLangToggle(lang);
+    markActiveNav();
+    normalizeProofDisabled(lang);
+    injectFooter(lang);
+
+    // hash offset handling
+    wireHashClicks();
+    // after layout settles
+    setTimeout(scrollToHashIfAny, 0);
   }
 
   if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", boot);
+    document.addEventListener("DOMContentLoaded", main);
   } else {
-    boot();
+    main();
+  }
+})();
+
+
+/* === NAV ACTIVE ENFORCER v1 (must win) === */
+(function () {
+  try {
+    const nav = document.querySelector("nav.nav");
+    if (!nav) return;
+
+    const raw = (location.pathname || "").split("/").pop() || "";
+    const page = (raw.trim() === "" ? "index.html" : raw.trim()).toLowerCase();
+
+    const items = Array.from(nav.querySelectorAll(".navItem"));
+    if (!items.length) return;
+
+    // clear everything first (even if hardcoded in HTML)
+    items.forEach((el) => {
+      el.classList.remove("isActive");
+      el.removeAttribute("aria-current");
+    });
+
+    // prefer data-nav matching
+    const map = {
+      "index.html": "overview",
+      "sentra.html": "sentra",
+      "zolai.html": "zolai",
+      "company.html": "company",
+    };
+    const activeKey = map[page] || "overview";
+
+    const target = items.find((el) => (el.getAttribute("data-nav") || "").toLowerCase() === activeKey);
+    if (target) {
+      target.classList.add("isActive");
+      target.setAttribute("aria-current", "page");
+    }
+  } catch (_) {
+    // no-op
   }
 })();

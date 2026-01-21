@@ -1,9 +1,11 @@
 <!doctype html>
 <html lang="hu">
+
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <meta name="color-scheme" content="dark" />
+<<<<<<< Updated upstream
   <title>SENTRA — Control Layer</title>
   <meta name="description" content="SENTRA: read-only control layer for deterministic, audit-grade systems." />
   <link rel="stylesheet" href="/styles.css" />
@@ -16,10 +18,35 @@
     ul{margin:0; padding-left:18px; line-height:1.65}
   </style>
 </head>
+=======
+  <title>AXIONA Systems — SENTRA</title>
+  <meta name="description"
+    content="SENTRA — Control Room: döntési gate, végrehajtási kontroll, audit trail, rendszer-áttekintés. Publikus bemutató." />
+  <link rel="stylesheet" href="./styles.css?v=20260121_4" />
+</head><!-- Favicon / App -->
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="manifest" href="/site.webmanifest">
+<meta name="theme-color" content="#06101a">
+
+<!-- Canonical -->
+<link rel="canonical" href="https://axiona.systems/">
+
+<!-- OpenGraph -->
+<meta property="og:site_name" content="AXIONA Systems">
+<meta property="og:type" content="website">
+<meta property="og:title" content="AXIONA Systems — Engineering Baseline">
+<meta property="og:description" content="Deterministic systems, audit-grade automation, engineering-first AI.">
+<meta property="og:url" content="https://axiona.systems/">
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="AXIONA Systems — Engineering Baseline">
+<meta name="twitter:description" content="Deterministic systems, audit-grade automation, engineering-first AI.">
+
+>>>>>>> Stashed changes
 
 <body>
-
-  <div class="bg">
+  <div class="bg" aria-hidden="true">
     <div class="aura a1"></div>
     <div class="aura a2"></div>
     <div class="aura a3"></div>
@@ -27,10 +54,11 @@
   </div>
 
   <header class="topbar">
-    <div class="wrap row" style="justify-content:space-between; gap:14px;">
+    <div class="wrap topbarRow">
       <div class="brand">
-        <div class="mark"></div>
+        <div class="mark" aria-hidden="true"></div>
         <div class="brandtext">
+<<<<<<< Updated upstream
           <div class="brandname">SENTRA</div>
           <div class="brandsub">Read-only control layer</div>
         </div>
@@ -40,11 +68,54 @@
         <a href="/index.html" class="chip">← AXIONA</a>
         <button id="langToggle" class="chip" type="button">HU</button>
       </div>
+=======
+          <div class="brandname">AXIONA Systems</div>
+          <div class="brandsub">Deterministic • Audit-grade • System-first</div>
+        </div>
+      </div>
+
+      <nav class="nav" aria-label="Primary">
+        <a class="navItem" data-nav="overview" href="./index.html">Overview</a>
+        <a class="navItem" data-nav="sentra" href="./sentra.html">SENTRA</a>
+        <a class="navItem" data-nav="zolai" href="./zolai.html">ZOLAI</a>
+        <a class="navItem" data-nav="company" href="./company.html">Company</a>
+
+        <a class="navItem"
+          href="mailto:hello@axiona.systems?subject=AXIONA%20Systems%20%E2%80%94%20pilot%20request">Contact</a>
+        <span class="navItem isDisabled" aria-disabled="true" title="Coming soon">Proof</span>
+
+        <button class="langBtn" id="langToggle" type="button" aria-label="Language">HU</button>
+      </nav>
+>>>>>>> Stashed changes
     </div>
   </header>
 
   <main class="wrap">
+    <section class="hero heroTight">
+      <div class="heroSig" aria-hidden="true">
+        <svg class="axionaSig" viewBox="0 0 520 220">
+          <defs>
+            <linearGradient id="axg2" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="currentColor" stop-opacity="0.20" />
+              <stop offset="100%" stop-color="currentColor" stop-opacity="0.05" />
+            </linearGradient>
+          </defs>
+          <g fill="none" stroke="url(#axg2)" stroke-width="1.2">
+            <path d="M44 170 L140 110 L220 150 L320 90 L420 120 L488 64" />
+            <path d="M66 56 L170 90 L250 60 L350 120 L450 84" />
+          </g>
+          <g fill="currentColor" opacity="0.18">
+            <circle cx="44" cy="170" r="3" />
+            <circle cx="140" cy="110" r="3" />
+            <circle cx="220" cy="150" r="3" />
+            <circle cx="320" cy="90" r="3" />
+            <circle cx="420" cy="120" r="3" />
+            <circle cx="488" cy="64" r="3" />
+          </g>
+        </svg>
+      </div>
 
+<<<<<<< Updated upstream
     <!-- ================= HU ================= -->
     <section class="lang" id="HU">
 
@@ -176,15 +247,58 @@
                 <li>No operator replacement</li>
               </ul>
             </div>
+=======
+      <div class="chips">
+        <span class="chip ok">CONTROL ROOM</span>
+        <span class="chip">DECISION GATE</span>
+        <span class="chip">AUDIT TRAIL</span>
+        <span class="chip">HEALTH</span>
+      </div>
+
+      <h1>SENTRA</h1>
+
+      <p class="lead" data-lang="hu">
+        A SENTRA a bemutatható <b>kontrollréteg</b>: döntési kapuk, végrehajtási fegyelem,
+        és visszakövethető működés. Nem “dashboard design” — hanem operációs szerződés.
+      </p>
+      <p class="lead" data-lang="en">
+        SENTRA is the public-facing <b>control layer</b>: decision gates, disciplined execution,
+        and traceability. Not “dashboard design” — an operational contract.
+      </p>
+    </section>
+
+    <section class="section">
+      <div class="grid">
+        <div class="panel">
+          <div class="panelHead" data-lang="hu">Alapelv</div>
+          <div class="panelHead" data-lang="en">Core principle</div>
+          <div class="panelBody" data-lang="hu">
+            Minden művelet <b>PROPOSE → GATE → (APPROVED) EXEC</b> modellen fut. Default: NO-EXEC.
+          </div>
+          <div class="panelBody" data-lang="en">
+            Every operation runs under <b>PROPOSE → GATE → (APPROVED) EXEC</b>. Default: NO-EXEC.
+>>>>>>> Stashed changes
           </div>
         </div>
-      </section>
 
-      <section class="section">
-        <h2>Status</h2>
-        <div class="panel highlight">
-          <div class="panelHead">Internal pilot / pre-company evaluation</div>
+        <div class="panel">
+          <div class="panelHead" data-lang="hu">Miért fontos</div>
+          <div class="panelHead" data-lang="en">Why it matters</div>
+          <div class="panelBody" data-lang="hu">
+            Vállalati környezetben a hiba ára nagy. A kontrollréteg célja: blast radius limit + audit trail + gyors
+            diagnosztika.
+          </div>
+          <div class="panelBody" data-lang="en">
+            In enterprise settings, failures are expensive. The control layer enforces blast-radius limits, audit
+            trails, and fast diagnostics.
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panelHead" data-lang="hu">Mit látsz</div>
+          <div class="panelHead" data-lang="en">What you see</div>
           <div class="panelBody">
+<<<<<<< Updated upstream
             This page presents a system initiative in a preparatory phase.
             Not a product, not standardized, and without ownership or support obligations.
           </div>
@@ -198,9 +312,88 @@
          data-footer-name="Asztalos Zoltán"
          data-footer-role="Developer / Executor"
          data-footer-email="hello@axiona.systems"></div>
+=======
+            <ul class="bullets">
+              <li data-lang="hu">Állapotok: OK / WARN / STOP (explicit)</li>
+              <li data-lang="en">States: OK / WARN / STOP (explicit)</li>
+              <li data-lang="hu">Döntések és futások: idempotens nyomvonal</li>
+              <li data-lang="en">Decisions & runs: idempotent trace</li>
+              <li data-lang="hu">Runbook linkek: mit tegyünk hiba esetén</li>
+              <li data-lang="en">Runbooks: what to do on failure</li>
+            </ul>
+          </div>
+        </div>
 
+        <div class="panel">
+          <div class="panelHead" data-lang="hu">Mit nem</div>
+          <div class="panelHead" data-lang="en">What it is not</div>
+          <div class="panelBody">
+            <ul class="bullets">
+              <li data-lang="hu">Nem autonóm “AI üzemmód”</li>
+              <li data-lang="en">Not autonomous “AI mode”</li>
+              <li data-lang="hu">Nem implicit tanulás / rejtett állapot</li>
+              <li data-lang="en">No implicit learning / hidden state</li>
+              <li data-lang="hu">Nem “mindent megold” termékígéret</li>
+              <li data-lang="en">No “solves everything” product promise</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="panel highlight">
+        <div class="panelHead" data-lang="hu">Működési lánc</div>
+        <div class="panelHead" data-lang="en">Execution chain</div>
+        <div class="panelBody">
+          <div class="flowLine" data-lang="hu">
+            <span class="flowStep">INTAKE</span>
+            <span class="flowArrow">→</span>
+            <span class="flowStep">SCOPE LOCK</span>
+            <span class="flowArrow">→</span>
+            <span class="flowStep">GATE</span>
+            <span class="flowArrow">→</span>
+            <span class="flowStep">EXEC</span>
+            <span class="flowArrow">→</span>
+            <span class="flowStep">AUDIT</span>
+            <span class="flowArrow">→</span>
+            <span class="flowStep">HANDOFF</span>
+          </div>
+          <div class="flowLine" data-lang="en">
+            <span class="flowStep">INTAKE</span>
+            <span class="flowArrow">→</span>
+            <span class="flowStep">SCOPE LOCK</span>
+            <span class="flowArrow">→</span>
+            <span class="flowStep">GATE</span>
+            <span class="flowArrow">→</span>
+            <span class="flowStep">EXEC</span>
+            <span class="flowArrow">→</span>
+            <span class="flowStep">AUDIT</span>
+            <span class="flowArrow">→</span>
+            <span class="flowStep">HANDOFF</span>
+          </div>
+        </div>
+      </div>
+    </section>
+>>>>>>> Stashed changes
+
+    <div class="ctaRow" style="margin-top:18px">
+      <a class="btn" href="./index.html">Back to Overview</a>
+      <a class="btn ghost"
+        href="mailto:hello@axiona.systems?subject=AXIONA%20Systems%20%E2%80%94%20SENTRA%20pilot&body=Process%3A%20%5Bname%5D%0ARisk%3A%20%5Bwhat%20breaks%5D%0AConstraints%3A%20%5Bapproval%2Fcompliance%5D">
+        Pilot intake (email)
+      </a>
+    </div>
+
+    <div id="siteFooter" data-footer-brand="© AXIONA Systems — engineering baseline"
+      data-footer-email="hello@axiona.systems"></div>
   </main>
 
+<<<<<<< Updated upstream
   <script src="/site.js" defer></script>
+=======
+  <script src="./site.js?v=20260121_4" defer></script>
+>>>>>>> Stashed changes
 </body>
+
 </html>

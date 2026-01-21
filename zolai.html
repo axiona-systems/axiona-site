@@ -1,25 +1,37 @@
 <!doctype html>
 <html lang="hu">
+
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <meta name="color-scheme" content="dark" />
-  <title>ZOLAI — Internal Framework</title>
-  <meta name="description" content="ZOLAI: internal framework behind AXIONA systems. Guard-first, deterministic, audit-grade." />
-  <link rel="stylesheet" href="/styles.css" />
-  <style>
-    .lang{display:none}
-    .lang.isOn{display:block}
-    .right{display:flex; gap:10px; align-items:center; justify-content:flex-end;}
-    .grid2{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:18px;}
-    @media (max-width: 860px){ .grid2{grid-template-columns:1fr} .right{justify-content:flex-start} }
-    ul{margin:0; padding-left:18px; line-height:1.65}
-  </style>
-</head>
+  <title>AXIONA Systems — ZOLAI</title>
+  <meta name="description"
+    content="ZOLAI — belső rendszerépítési OS/framework. Nem publikus termék; SENTRA a bemutatható kontrollréteg." />
+  <link rel="stylesheet" href="./styles.css?v=20260121_4" />
+</head><!-- Favicon / App -->
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="manifest" href="/site.webmanifest">
+<meta name="theme-color" content="#06101a">
+
+<!-- Canonical -->
+<link rel="canonical" href="https://axiona.systems/">
+
+<!-- OpenGraph -->
+<meta property="og:site_name" content="AXIONA Systems">
+<meta property="og:type" content="website">
+<meta property="og:title" content="AXIONA Systems — Engineering Baseline">
+<meta property="og:description" content="Deterministic systems, audit-grade automation, engineering-first AI.">
+<meta property="og:url" content="https://axiona.systems/">
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="AXIONA Systems — Engineering Baseline">
+<meta name="twitter:description" content="Deterministic systems, audit-grade automation, engineering-first AI.">
+
 
 <body>
-
-  <div class="bg">
+  <div class="bg" aria-hidden="true">
     <div class="aura a1"></div>
     <div class="aura a2"></div>
     <div class="aura a3"></div>
@@ -27,228 +39,154 @@
   </div>
 
   <header class="topbar">
-    <div class="wrap row" style="justify-content:space-between; gap:14px;">
+    <div class="wrap topbarRow">
       <div class="brand">
-        <div class="mark"></div>
+        <div class="mark" aria-hidden="true"></div>
         <div class="brandtext">
-          <div class="brandname">ZOLAI</div>
-          <div class="brandsub">Internal framework behind AXIONA Systems</div>
+          <div class="brandname">AXIONA Systems</div>
+          <div class="brandsub">Deterministic • Audit-grade • System-first</div>
         </div>
       </div>
 
-      <div class="right">
-        <a href="/index.html" class="chip">← AXIONA</a>
-        <button id="langToggle" class="chip" type="button">HU</button>
-      </div>
+      <nav class="nav" aria-label="Primary">
+        <a class="navItem" data-nav="overview" href="./index.html">Overview</a>
+        <a class="navItem" data-nav="sentra" href="./sentra.html">SENTRA</a>
+        <a class="navItem" data-nav="zolai" href="./zolai.html">ZOLAI</a>
+        <a class="navItem" data-nav="company" href="./company.html">Company</a>
+        <a class="navItem"
+          href="mailto:hello@axiona.systems?subject=AXIONA%20Systems%20%E2%80%94%20pilot%20request">Contact</a>
+        <span class="navItem isDisabled" data-nav="proof" aria-disabled="true" title="Coming soon"
+          data-proof="disabled">Proof</span>
+
+        <button class="langBtn" id="langToggle" type="button" aria-label="Language">HU</button>
+      </nav>
     </div>
   </header>
 
   <main class="wrap">
+    <section class="hero heroTight">
+      <div class="heroSig" aria-hidden="true">
+        <svg class="axionaSig" viewBox="0 0 520 220">
+          <defs>
+            <linearGradient id="axgZ" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="currentColor" stop-opacity="0.18" />
+              <stop offset="100%" stop-color="currentColor" stop-opacity="0.05" />
+            </linearGradient>
+          </defs>
+          <g fill="none" stroke="url(#axgZ)" stroke-width="1.2">
+            <path d="M44 170 L140 110 L220 150 L320 90 L420 120 L488 64" />
+            <path d="M66 56 L170 90 L250 60 L350 120 L450 84" />
+            <path d="M90 190 L190 150 L280 200 L380 130 L490 170" />
+          </g>
+          <g fill="currentColor" opacity="0.18">
+            <circle cx="44" cy="170" r="3" />
+            <circle cx="140" cy="110" r="3" />
+            <circle cx="220" cy="150" r="3" />
+            <circle cx="320" cy="90" r="3" />
+            <circle cx="420" cy="120" r="3" />
+            <circle cx="488" cy="64" r="3" />
+          </g>
+        </svg>
+      </div>
 
-    <!-- ================= HU ================= -->
-    <section class="lang" id="HU">
+      <div class="chips">
+        <span class="chip">INTERNAL OS</span>
+        <span class="chip">SSOT</span>
+        <span class="chip">GUARD-FIRST</span>
+        <span class="chip ok">READ-ONLY CORE</span>
+      </div>
 
-      <section class="hero">
-        <div class="chips">
-          <span class="chip">GUARD-FIRST</span>
-          <span class="chip">READ-ONLY CORE</span>
-          <span class="chip">AUDIT LOGS</span>
-          <span class="chip ok">STABILITY</span>
-        </div>
+      <h1>ZOLAI</h1>
 
-        <h1>
-          ZOLAI — belső rendszerkeret.<br>
-          <span class="muted">Determinista működés, bizonyítható állapot.</span>
-        </h1>
-
-        <p class="lead">
-          A ZOLAI az AXIONA rendszerek mögötti <b>belső (internal)</b> keretrendszer.
-          Célja a stabil, meglepetésmentes működés: guardok, döntési kapuk, naplózás,
-          és a read-only kontrollréteg (SENTRA) támogatása.
-        </p>
-
-        <div style="margin-top:24px; display:flex; gap:10px; flex-wrap:wrap;">
-          <a href="/sentra.html" class="chip">Explore SENTRA Control Layer →</a>
-        </div>
-
-        <div class="grid2">
-          <div class="panel">
-            <div class="panelHead">Mit ad a ZOLAI</div>
-            <div class="panelBody">
-              <ul>
-                <li>Guard-first tervezés (STOP/WARN/REVIEW taxonomy)</li>
-                <li>Determinista döntési kapuk (gate-driven)</li>
-                <li>Append-only naplózás és indexek</li>
-                <li>Read-only core szemlélet + változás kontroll</li>
-              </ul>
-            </div>
-          </div>
-
-          <div class="panel">
-            <div class="panelHead">Mit nem ígér</div>
-            <div class="panelBody">
-              <ul>
-                <li>Nem „autonóm AI” és nem black-box</li>
-                <li>Nem helyettesíti az üzleti felelősséget</li>
-                <li>Nem futtat végrehajtást láthatatlanul</li>
-                <li>Nincs “silent change” működés</li>
-              </ul>
-            </div>
-          </div>
-
-          <div class="panel">
-            <div class="panelHead">Miért fontos</div>
-            <div class="panelBody">
-              <ul>
-                <li>Kiszámítható üzemeltetés vállalati környezetben</li>
-                <li>Auditálhatóság: mit-miért-mikor</li>
-                <li>Drift- és regresszióvédelem</li>
-                <li>Skálázható, átadható rendszerminta</li>
-              </ul>
-            </div>
-          </div>
-
-          <div class="panel">
-            <div class="panelHead">Hatókör</div>
-            <div class="panelBody">
-              A ZOLAI belső keret: nem “termék oldal”.
-              Ami kifelé látszik: AXIONA (pozicionálás) + SENTRA (read-only kontroll).
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section class="section">
-        <h2>Élő rendszer</h2>
-        <div class="panel highlight">
-          <div class="panelHead">Living system / evolving</div>
-          <div class="panelBody">
-            A ZOLAI fejlesztése folyamatosan zajlik, de <b>nem improvizatív</b> módon:
-            új elemek kizárólag guardolt, visszaellenőrizhető (auditálható) formában
-            kerülhetnek be. A cél: stabilitás növelése, nem “funkcióvadászat”.
-          </div>
-        </div>
-      </section>
-
-      <section class="section">
-        <h2>Státusz</h2>
-        <div class="panel highlight">
-          <div class="panelHead">Internal framework (non-commercial)</div>
-          <div class="panelBody">
-            A ZOLAI nem értékesített termék. Az AXIONA/SENTRA a bemutatható réteg;
-            a ZOLAI a háttérben biztosítja a determinisztikus, audit-grade működési mintát.
-          </div>
-        </div>
-      </section>
-
+      <p class="lead" data-lang="hu">
+        A ZOLAI egy <b>belső</b> rendszerépítési OS/framework: SSOT, guard-first működés,
+        és determinisztikus eszközlánc. Nem publikus termék és nem értékesített komponens.
+      </p>
+      <p class="lead" data-lang="en">
+        ZOLAI is an <b>internal</b> system-building OS/framework: SSOT, guard-first operation,
+        and deterministic toolchains. It is not a public product and is not sold as a component.
+      </p>
     </section>
 
-    <!-- ================= EN ================= -->
-    <section class="lang" id="EN">
-
-      <section class="hero">
-        <div class="chips">
-          <span class="chip">GUARD-FIRST</span>
-          <span class="chip">READ-ONLY CORE</span>
-          <span class="chip">AUDIT LOGS</span>
-          <span class="chip ok">STABILITY</span>
-        </div>
-
-        <h1>
-          ZOLAI — internal framework.<br>
-          <span class="muted">Deterministic behavior, provable state.</span>
-        </h1>
-
-        <p class="lead">
-          ZOLAI is the <b>internal</b> framework behind AXIONA systems.
-          It focuses on stable, predictable operation: guards, decision gates, logging,
-          and supporting SENTRA as a read-only control layer.
-        </p>
-
-        <div style="margin-top:24px; display:flex; gap:10px; flex-wrap:wrap;">
-          <a href="/sentra.html" class="chip">Explore SENTRA Control Layer →</a>
-        </div>
-
-        <div class="grid2">
-          <div class="panel">
-            <div class="panelHead">What ZOLAI provides</div>
-            <div class="panelBody">
-              <ul>
-                <li>Guard-first design (STOP/WARN/REVIEW taxonomy)</li>
-                <li>Deterministic decision gates (gate-driven)</li>
-                <li>Append-only logs and derived indexes</li>
-                <li>Read-only core mindset with controlled change</li>
-              </ul>
-            </div>
-          </div>
-
-          <div class="panel">
-            <div class="panelHead">What it does not claim</div>
-            <div class="panelBody">
-              <ul>
-                <li>Not “autonomous AI” and not a black box</li>
-                <li>Not a substitute for business responsibility</li>
-                <li>No hidden execution</li>
-                <li>No silent changes</li>
-              </ul>
-            </div>
-          </div>
-
-          <div class="panel">
-            <div class="panelHead">Why it matters</div>
-            <div class="panelBody">
-              <ul>
-                <li>Predictable operations in enterprise environments</li>
-                <li>Auditability: what / why / when</li>
-                <li>Drift and regression protection</li>
-                <li>A scalable, transferable system pattern</li>
-              </ul>
-            </div>
-          </div>
-
-          <div class="panel">
-            <div class="panelHead">Scope</div>
-            <div class="panelBody">
-              ZOLAI is internal: not a public “product page”.
-              The visible layers are AXIONA (positioning) and SENTRA (read-only control).
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section class="section">
-        <h2>Living system</h2>
-        <div class="panel highlight">
-          <div class="panelHead">Evolving — but controlled</div>
+    <section class="section">
+      <div class="grid">
+        <div class="panel">
+          <div class="panelHead" data-lang="hu">SENTRA vs ZOLAI</div>
+          <div class="panelHead" data-lang="en">SENTRA vs ZOLAI</div>
           <div class="panelBody">
-            ZOLAI is under continuous development, but <b>not improvisationally</b>:
-            new elements are introduced only through guarded, verifiable (auditable)
-            changes. The goal is stability and control — not feature chasing.
+            <ul class="bullets">
+              <li data-lang="hu"><b>SENTRA</b>: publikus-safe kontrollréteg (Control Room, gate, audit)</li>
+              <li data-lang="en"><b>SENTRA</b>: public-safe control layer (Control Room, gate, audit)</li>
+              <li data-lang="hu"><b>ZOLAI</b>: belső “építési OS” (SSOT, invariánsok, runbook fegyelem)</li>
+              <li data-lang="en"><b>ZOLAI</b>: internal “build OS” (SSOT, invariants, runbook discipline)</li>
+            </ul>
           </div>
         </div>
-      </section>
 
-      <section class="section">
-        <h2>Status</h2>
-        <div class="panel highlight">
-          <div class="panelHead">Internal framework (non-commercial)</div>
+        <div class="panel">
+          <div class="panelHead" data-lang="hu">Miért kell belső OS</div>
+          <div class="panelHead" data-lang="en">Why an internal OS</div>
+          <div class="panelBody" data-lang="hu">
+            Mert a stabil rendszerek nem “összekattintásból” születnek. Kell egy invariáns-készlet,
+            proof rutinok, és operációs fegyelem.
+          </div>
+          <div class="panelBody" data-lang="en">
+            Stable systems don’t come from “clicking things together”. You need invariants,
+            proof routines, and operational discipline.
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panelHead" data-lang="hu">Mit jelent: read-only core</div>
+          <div class="panelHead" data-lang="en">What “read-only core” means</div>
           <div class="panelBody">
-            ZOLAI is not a sold product. AXIONA/SENTRA is the presentable layer;
-            ZOLAI provides the deterministic, audit-grade operating pattern behind it.
+            <ul class="bullets">
+              <li data-lang="hu">CORE nem fut, nem entrypoint — csak SSOT</li>
+              <li data-lang="en">CORE is not runnable — SSOT only</li>
+              <li data-lang="hu">Változás overlay-kből / verziózott rétegekből</li>
+              <li data-lang="en">Changes via overlays / versioned layers</li>
+              <li data-lang="hu">STOP protokoll: bizonyíték nélkül nincs tovább</li>
+              <li data-lang="en">STOP protocol: no progress without proof</li>
+            </ul>
           </div>
         </div>
-      </section>
 
+        <div class="panel">
+          <div class="panelHead" data-lang="hu">Publikus üzenet</div>
+          <div class="panelHead" data-lang="en">Public message</div>
+          <div class="panelBody" data-lang="hu">
+            A ZOLAI azért létezik, hogy a szállított rendszerek <b>audit-grade</b> módon legyenek megépítve.
+            A publikus felület a SENTRA — a többi belső.
+          </div>
+          <div class="panelBody" data-lang="en">
+            ZOLAI exists to ensure delivered systems are built in an <b>audit-grade</b> way.
+            The public surface is SENTRA — the rest stays internal.
+          </div>
+        </div>
+      </div>
     </section>
 
-    <div id="siteFooter"
-         data-footer-brand="© AXIONA Systems — SENTRA design baseline"
-         data-footer-name="Asztalos Zoltán"
-         data-footer-role="Developer / Executor"
-         data-footer-email="hello@axiona.systems"></div>
+    <div class="panel highlight">
+      <div class="panelHead" data-lang="hu">Not for sale</div>
+      <div class="panelHead" data-lang="en">Not for sale</div>
+      <div class="panelBody" data-lang="hu">
+        ZOLAI nem “termék”. A megrendelő felé a kimenet: kontrollnézet, audit trail, runbook, átadási csomag.
+      </div>
+      <div class="panelBody" data-lang="en">
+        ZOLAI is not a “product”. Client-facing outputs are: control view, audit trail, runbooks, handoff package.
+      </div>
+    </div>
 
+    <div class="ctaRow" style="margin-top:18px">
+      <a class="btn" href="./sentra.html">See SENTRA</a>
+      <a class="btn ghost" href="./index.html">Back to Overview</a>
+    </div>
+
+    <div id="siteFooter" data-footer-brand="© AXIONA Systems — engineering baseline"
+      data-footer-email="hello@axiona.systems"></div>
   </main>
 
-  <script src="/site.js" defer></script>
+  <script src="./site.js?v=20260121_4" defer></script>
 </body>
+
 </html>
