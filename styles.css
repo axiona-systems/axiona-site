@@ -819,13 +819,26 @@ nav.nav .navItem:not(.isActive) {
 
 /* === NAV ACTIVE FINAL OVERRIDE (must win) === */
 nav.nav .navItem {
-  border-color: transparent !important;
+  border: 1px solid rgba(214, 234, 230, 0.12) !important;
   box-shadow: none !important;
 }
 
 nav.nav .navItem:hover {
-  border-color: rgba(214, 234, 230, 0.22) !important;
+  border-color: rgba(80, 255, 220, 0.35) !important;
   box-shadow: none !important;
+  color: rgba(232, 240, 255, .92) !important;
+}
+
+nav.nav .navItem:focus-visible {
+  outline: none !important;
+  border-color: rgba(80, 255, 220, 0.55) !important;
+  box-shadow: var(--glow) !important;
+}
+
+nav.nav .navItem:active {
+  border-color: rgba(80, 255, 220, 0.55) !important;
+  box-shadow: var(--glow) !important;
+  transform: translateY(0px) scale(0.98) !important;
 }
 
 nav.nav .navItem.isActive {
@@ -833,6 +846,7 @@ nav.nav .navItem.isActive {
   box-shadow: var(--glow) !important;
   color: rgba(232, 240, 255, .96) !important;
 }
+
 
 /* === NAV CLICK + FOCUS (works with FINAL OVERRIDE) === */
 nav.nav .navItem:focus-visible {
@@ -847,3 +861,7 @@ nav.nav .navItem:active {
   box-shadow: var(--glow) !important;
   transform: translateY(0px) scale(0.98) !important;
 }
+/* === BG VISIBILITY FIX (security + all pages) === */
+.bg { z-index: 0 !important; }
+.wrap, .topbar { position: relative; z-index: 1; }
+

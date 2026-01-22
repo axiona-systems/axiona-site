@@ -62,32 +62,32 @@
     const nav = document.querySelector("nav.nav");
     if (!nav) return;
 
-    // current page (GitHub Pages: "/" -> index.html)
     const raw = (location.pathname || "").split("/").pop() || "";
-    const page = (raw.trim() === "" ? "index.html" : raw.trim()).toLowerCase();
+    const page = ((raw.trim() === "") ? "index.html" : raw.trim()).toLowerCase();
 
-    const items = Array.from(nav.querySelectorAll("a.navItem[href]"));
+    const items = Array.from(nav.querySelectorAll(".navItem"));
     if (!items.length) return;
 
-    // clear
-    items.forEach((a) => a.classList.remove("isActive"));
+    // clear ALL
+    items.forEach((el) => {
+      el.classList.remove("isActive");
+      el.removeAttribute("aria-current");
+    });
 
-    // match by href basename
-    const match = items.find((a) => {
+    const links = items.filter((el) => el.tagName && el.tagName.toUpperCase() === "A");
+    const match = links.find((a) => {
       const href = (a.getAttribute("href") || "").split("?")[0].split("#")[0].trim();
       const base = (href.split("/").pop() || "").toLowerCase();
       return base === page;
     });
 
-    // fallback: if we're on "/" (index) or no match, activate Overview (index.html) if present
-    const fallback =
-      match ||
-      items.find((a) => ((a.getAttribute("href") || "").split("?")[0].split("#")[0].toLowerCase().endsWith("index.html")));
+    const fallback = match || links.find((a) => ((a.getAttribute("href") || "").split("?")[0].split("#")[0].toLowerCase().endsWith("index.html")));
 
-    if (fallback) fallback.classList.add("isActive");
+    if (fallback) {
+      fallback.classList.add("isActive");
+      fallback.setAttribute("aria-current", "page");
+    }
   }
-
-
 
   function normalizeProofDisabled(lang) {
     const msg =
@@ -218,40 +218,3 @@
   }
 })();
 
-
-/* === NAV ACTIVE ENFORCER v1 (must win) === */
-(function () {
-  try {
-    const nav = document.querySelector("nav.nav");
-    if (!nav) return;
-
-    const raw = (location.pathname || "").split("/").pop() || "";
-    const page = (raw.trim() === "" ? "index.html" : raw.trim()).toLowerCase();
-
-    const items = Array.from(nav.querySelectorAll(".navItem"));
-    if (!items.length) return;
-
-    // clear everything first (even if hardcoded in HTML)
-    items.forEach((el) => {
-      el.classList.remove("isActive");
-      el.removeAttribute("aria-current");
-    });
-
-    // prefer data-nav matching
-    const map = {
-      "index.html": "overview",
-      "sentra.html": "sentra",
-      "zolai.html": "zolai",
-      "company.html": "company",
-    };
-    const activeKey = map[page] || "overview";
-
-    const target = items.find((el) => (el.getAttribute("data-nav") || "").toLowerCase() === activeKey);
-    if (target) {
-      target.classList.add("isActive");
-      target.setAttribute("aria-current", "page");
-    }
-  } catch (_) {
-    // no-op
-  }
-})();
