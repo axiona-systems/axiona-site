@@ -8,7 +8,7 @@
   <title>AXIONA Systems — Workflow Security</title>
   <meta name="description"
     content="Client data protection for automated workflows. Guard-first, approval-gated, audit-grade execution." />
-  <link rel="stylesheet" href="./styles.css?v=20260122_1_1" />
+  <link rel="stylesheet" href="./styles.css?v=20260122_7" />
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="manifest" href="/site.webmanifest">
   <meta name="theme-color" content="#06101a">
@@ -23,6 +23,10 @@
     <div class="grain"></div>
   </div>
 
+  
+
+
+
 
   <header class="topbar">
     <div class="wrap topbarRow">
@@ -30,7 +34,10 @@
         <div class="mark"></div>
         <div>
           <div class="brandname">AXIONA Systems</div>
-          <div class="brandsub">Deterministic • Audit-grade • System-first</div>
+          <div class="brandsub">
+  <span data-lang="hu" class="isOn">Deterministic • Audit-grade • System-first</span>
+  <span data-lang="en">Deterministic • Audit-grade • System-first</span>
+</div>
         </div>
       </div>
 
@@ -49,19 +56,62 @@
   <main class="wrap">
 
     <section class="hero slim">
-      <h1>Workflow & Client Data Security</h1>
-      <p class="lead">
-        Megrendelői adatokkal kizárólag <b>jóváhagyott</b>, <b>korlátozott hatókörű</b>
-        és <b>auditált</b> automatizmusok dolgozhatnak.
-        Nincs autonóm végrehajtás, nincs rejtett művelet.
-      </p>
-    </section>
+  <div class="wrap">
+    <div class="heroSig" aria-hidden="true">
+        <svg class="axionaSig" viewBox="0 0 520 220">
+          <defs>
+            <linearGradient id="axg2" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="currentColor" stop-opacity="0.20" />
+              <stop offset="100%" stop-color="currentColor" stop-opacity="0.05" />
+            </linearGradient>
+          </defs>
+          <g fill="none" stroke="url(#axg2)" stroke-width="1.2">
+            <path d="M44 170 L140 110 L220 150 L320 90 L420 120 L488 64" />
+            <path d="M66 56 L170 90 L250 60 L350 120 L450 84" />
+          </g>
+          <g fill="currentColor" opacity="0.18">
+            <circle cx="44" cy="170" r="3" />
+            <circle cx="140" cy="110" r="3" />
+            <circle cx="220" cy="150" r="3" />
+            <circle cx="320" cy="90" r="3" />
+            <circle cx="420" cy="120" r="3" />
+            <circle cx="488" cy="64" r="3" />
+          </g>
+        </svg>
+      </div>
+
+      <h1 data-lang="hu" class="isOn">Workflow &amp; megbízói adatbiztonság</h1>
+    <h1 data-lang="en">Workflow &amp; Client Data Security</h1>
+
+    <p data-lang="hu" class="lead isOn">
+      Megrendelői adatokkal kizárólag <b>jóváhagyott</b>, <b>korlátozott hatókörű</b> és <b>auditált</b> automatizmusok dolgozhatnak.
+      Nincs autonóm végrehajtás, nincs rejtett művelet.
+    </p>
+    <p data-lang="en" class="lead">
+      Client data is processed only by <b>approved</b>, <b>scope-limited</b>, and <b>audited</b> automation.
+      No autonomous execution. No silent actions.
+    </p>
+
+    <div class="chips isOn" data-lang="hu" style="margin-top:14px">
+  <span class="chip ok">audit-grade</span>
+  <span class="chip">least privilege</span>
+  <span class="chip">SSOT-first</span>
+  <span class="chip">no silent writes</span>
+</div>
+<div class="chips" data-lang="en" style="margin-top:14px">
+  <span class="chip ok">audit-grade</span>
+  <span class="chip">least privilege</span>
+  <span class="chip">SSOT-first</span>
+  <span class="chip">no silent writes</span>
+</div>
+
+  </div>
+</section>
     <section class="section">
       <div class="panel">
-        <div class="panelHead">How we run secure automation</div>
+        <div class="panelHead"><span data-lang="hu" class="isOn">Így futtatunk biztonságos automatizálást</span><span data-lang="en">How we run secure automation</span></div>
         <div class="panelBody">
-          <div class="flowLine" aria-label="Execution flow">
-            <span class="flowStep">PROPOSE</span>
+          <div class="flowLine isOn" aria-label="Execution flow" data-lang="hu"><span class="flowStep">PROPOSE</span>
             <span class="flowArrow">→</span>
             <span class="flowStep">REVIEW</span>
             <span class="flowArrow">→</span>
@@ -69,63 +119,83 @@
             <span class="flowArrow">→</span>
             <span class="flowStep">EXEC</span>
             <span class="flowArrow">→</span>
-            <span class="flowStep">RECEIPTS</span>
-          </div>
+            <span class="flowStep">RECEIPTS</span></div>
+<div class="flowLine" aria-label="Execution flow" data-lang="en"><span class="flowStep">PROPOSE</span>
+            <span class="flowArrow">→</span>
+            <span class="flowStep">REVIEW</span>
+            <span class="flowArrow">→</span>
+            <span class="flowStep">APPROVE</span>
+            <span class="flowArrow">→</span>
+            <span class="flowStep">EXEC</span>
+            <span class="flowArrow">→</span>
+            <span class="flowStep">RECEIPTS</span></div>
           <div class="noteBox">
-            <div class="noteTitle">Read-only Control Room</div>
-            <div class="noteText">A működés állapota, döntések és proof-ok kontrollált nézetben követhetők. Végrehajtás
-              csak gate után.</div>
+            <div class="noteTitle"><span data-lang="hu" class="isOn">Read-only Control Room</span><span data-lang="en">Read-only Control Room</span></div>
+            <div class="noteText"><span data-lang="hu" class="isOn">A működés állapota, döntések és proof-ok kontrollált nézetben követhetők. Végrehajtás csak gate után.</span><span data-lang="en">System state, decisions, and proofs are visible in a controlled view. Execution only happens after the gate.</span></div>
           </div>
         </div>
       </div>
     </section>
     <section class="section">
       <div class="sectionHead">
-        <h2>Enterprise security checklist</h2>
-        <div class="sub">Amit egy pilot során ténylegesen leszállítunk / igazolunk (scope-függő).</div>
+        <h2 data-lang="hu" class="isOn">Vállalati biztonsági ellenőrzőlista</h2>
+<h2 data-lang="en">Enterprise security checklist</h2>
+        <div class="sub"><span data-lang="hu" class="isOn">Amit egy pilot során ténylegesen leszállítunk / igazolunk (scope-függő).</span><span data-lang="en">What we actually deliver and prove in a pilot (scope-dependent).</span></div>
       </div>
 
       <div class="grid">
         <div class="panel">
-          <div class="panelHead">Data handling</div>
+          <div class="panelHead"><span data-lang="hu" class="isOn">Adatkezelés</span><span data-lang="en">Data handling</span></div>
           <div class="panelBody">
             <ul class="bullets">
-              <li>Minimális adatkezelés (need-to-know)</li>
-              <li>Input/output nyomvonal (audit trail)</li>
-              <li>Érzékeny mezők kezelése: explicit rule / masking ahol kell</li>
+              <li data-lang="hu" class="isOn">Minimális adatkezelés (need-to-know)</li>
+<li data-lang="en">Minimal data handling (need-to-know).</li>
+              <li data-lang="hu" class="isOn">Input/output nyomvonal (audit trail)</li>
+<li data-lang="en">Input/output traceability (audit trail).</li>
+              <li data-lang="hu" class="isOn">Érzékeny mezők kezelése: explicit rule / masking ahol kell</li>
+<li data-lang="en">Sensitive fields: explicit rules and masking where needed.</li>
             </ul>
           </div>
         </div>
 
         <div class="panel">
-          <div class="panelHead">Execution safety</div>
+          <div class="panelHead"><span data-lang="hu" class="isOn">Végrehajtás-biztonság</span><span data-lang="en">Execution safety</span></div>
           <div class="panelBody">
             <ul class="bullets">
-              <li>Approval-gate kötelező kritikus lépéseknél</li>
-              <li>Blast-radius limit + fail-closed STOP</li>
-              <li>Idempotencia: duplikált futás = NO-OP / STOP</li>
+              <li data-lang="hu" class="isOn">Approval-gate kötelező kritikus lépéseknél</li>
+<li data-lang="en">Approval gate is mandatory for critical steps.</li>
+              <li data-lang="hu" class="isOn">Blast-radius limit + fail-closed STOP</li>
+<li data-lang="en">Blast-radius limits with fail-closed STOP.</li>
+              <li data-lang="hu" class="isOn">Idempotencia: duplikált futás = NO-OP / STOP</li>
+<li data-lang="en">Idempotency: duplicate runs become NO-OP or STOP.</li>
             </ul>
           </div>
         </div>
 
         <div class="panel">
-          <div class="panelHead">Ops & incident readiness</div>
+          <div class="panelHead"><span data-lang="hu" class="isOn">Üzemeltetés és incidens-készültség</span><span data-lang="en">Ops & incident readiness</span></div>
           <div class="panelBody">
             <ul class="bullets">
-              <li>Runbook: mit nézz, mit futtass, mi a STOP jel</li>
-              <li>Reprodukálható proof (hash/manifest alapú)</li>
-              <li>Kill switch / disable path</li>
+              <li data-lang="hu" class="isOn">Runbook: mit nézz, mit futtass, mi a STOP jel</li>
+<li data-lang="en">Runbook: what to check, what to run, what signals STOP.</li>
+              <li data-lang="hu" class="isOn">Reprodukálható proof (hash/manifest alapú)</li>
+<li data-lang="en">Reproducible proof (hash/manifest-based).</li>
+              <li data-lang="hu" class="isOn">Kill switch / disable path</li>
+<li data-lang="en">Kill switch / disable path.</li>
             </ul>
           </div>
         </div>
 
         <div class="panel">
-          <div class="panelHead">Compliance-adjacent</div>
+          <div class="panelHead"><span data-lang="hu" class="isOn">Compliance-közeli</span><span data-lang="en">Compliance-adjacent</span></div>
           <div class="panelBody">
             <ul class="bullets">
-              <li>Explicit döntési pontok és felelősség</li>
-              <li>Változáskövetés (mi mikor változott)</li>
-              <li>Handoff csomag (belső átadásra)</li>
+              <li data-lang="hu" class="isOn">Explicit döntési pontok és felelősség</li>
+<li data-lang="en">Explicit decision points and accountability.</li>
+              <li data-lang="hu" class="isOn">Változáskövetés (mi mikor változott)</li>
+<li data-lang="en">Change tracking (what changed and when).</li>
+              <li data-lang="hu" class="isOn">Handoff csomag (belső átadásra)</li>
+<li data-lang="en">Handoff package for internal transfer.</li>
             </ul>
           </div>
         </div>
@@ -133,14 +203,19 @@
     </section>
     <section class="section">
       <div class="panel highlight">
-        <div class="panelHead">AI governance (non-negotiable)</div>
+        <div class="panelHead"><span data-lang="hu" class="isOn">AI governance (nem alku tárgya)</span><span data-lang="en">AI governance (non-negotiable)</span></div>
         <div class="panelBody">
           <ul class="bullets">
-            <li>AI default: PROPOSE (nincs autonóm EXEC)</li>
-            <li>Pinned model/config (verzió és beállítás rögzítve)</li>
-            <li>Approval hash + expiry (jóváhagyás nem örök)</li>
-            <li>Evidence-first: javaslat csak bizonyítékkal</li>
-            <li>Receipt minden döntésről és futásról</li>
+            <li data-lang="hu" class="isOn">AI default: PROPOSE (nincs autonóm EXEC)</li>
+<li data-lang="en">AI default: PROPOSE (no autonomous EXEC).</li>
+            <li data-lang="hu" class="isOn">Pinned model/config (verzió és beállítás rögzítve)</li>
+<li data-lang="en">Pinned model/config (version and settings fixed).</li>
+            <li data-lang="hu" class="isOn">Approval hash + expiry (jóváhagyás nem örök)</li>
+<li data-lang="en">Approval hash + expiry (approval is not permanent).</li>
+            <li data-lang="hu" class="isOn">Evidence-first: javaslat csak bizonyítékkal</li>
+<li data-lang="en">Evidence-first: proposals only with proof.</li>
+            <li data-lang="hu" class="isOn">Receipt minden döntésről és futásról</li>
+<li data-lang="en">Receipt for every decision and run.</li>
           </ul>
         </div>
       </div>
@@ -148,10 +223,8 @@
 
     <section class="section">
       <div class="panel highlight">
-        <div class="panelHead">Execution Gate</div>
-        <div class="panelBody">
-          PROPOSE → REVIEW → (APPROVED) → EXEC
-        </div>
+        <div class="panelHead"><span data-lang="hu" class="isOn">Végrehajtási kapu</span><span data-lang="en">Execution Gate</span></div>
+        <div class="panelBody"><span data-lang="hu" class="isOn">PROPOSE → REVIEW → (APPROVED) → EXEC</span><span data-lang="en">PROPOSE → REVIEW → (APPROVED) → EXEC</span></div>
       </div>
     </section>
 
@@ -159,50 +232,44 @@
       <div class="grid">
 
         <div class="panel">
-          <div class="panelHead">Scope-lock</div>
+          <div class="panelHead"><span data-lang="hu" class="isOn">Scope-lock (hatókörzár)</span><span data-lang="en">Scope-lock</span></div>
           <div class="panelBody">
-            Minden automatizmus explicit scope-pal indul.
-            Ami nincs a scope-ban, az nem érhető el és nem hajtható végre.
+            <span data-lang="hu" class="isOn">Minden automatizmus explicit scope-pal indul. Ami nincs a scope-ban, az nem érhető el és nem hajtható végre.</span><span data-lang="en">Every automation starts with an explicit scope. Anything outside the scope is not accessible and cannot execute.</span>
           </div>
         </div>
 
         <div class="panel">
-          <div class="panelHead">Approval-gated execution</div>
+          <div class="panelHead"><span data-lang="hu" class="isOn">Approval-gated execution (jóváhagyás-kapu)</span><span data-lang="en">Approval-gated execution</span></div>
           <div class="panelBody">
-            Üzleti kritikus lépések csak jóváhagyás után futnak.
-            Approval nélkül a rendszer STOP állapotban marad.
+            <span data-lang="hu" class="isOn">Üzleti kritikus lépések csak jóváhagyás után futnak. Approval nélkül a rendszer STOP állapotban marad.</span><span data-lang="en">Business-critical steps run only after approval. Without approval, the system remains in STOP state.</span>
           </div>
         </div>
 
         <div class="panel">
-          <div class="panelHead">Blast-radius limit</div>
+          <div class="panelHead"><span data-lang="hu" class="isOn">Blast-radius limit (hatáskorlát)</span><span data-lang="en">Blast-radius limit</span></div>
           <div class="panelBody">
-            Minden futás hatása előre definiált és korlátozott.
-            Egy hiba nem terjedhet tovább a kijelölt hatókörön.
+            <span data-lang="hu" class="isOn">Minden futás hatása előre definiált és korlátozott. Egy hiba nem terjedhet tovább a kijelölt hatókörön.</span><span data-lang="en">Each run’s impact is predefined and limited. A failure cannot propagate beyond the defined scope.</span>
           </div>
         </div>
 
         <div class="panel">
-          <div class="panelHead">Audit & receipts</div>
+          <div class="panelHead"><span data-lang="hu" class="isOn">Audit & receipts</span><span data-lang="en">Audit & receipts</span></div>
           <div class="panelBody">
-            Minden lépés naplózott, visszakövethető és reprodukálható.
-            Döntésekhez és végrehajtáshoz bizonyíték (receipt) készül.
+            <span data-lang="hu" class="isOn">Minden lépés naplózott, visszakövethető és reprodukálható. Döntésekhez és végrehajtáshoz bizonyíték (receipt) készül.</span><span data-lang="en">Every step is logged, traceable, and reproducible. Decisions and execution produce evidence (receipts).</span>
           </div>
         </div>
 
         <div class="panel">
-          <div class="panelHead">AI usage constraints</div>
+          <div class="panelHead"><span data-lang="hu" class="isOn">AI használati korlátok</span><span data-lang="en">AI usage constraints</span></div>
           <div class="panelBody">
-            AI kizárólag javaslatot tehet (PROPOSE).
-            Végrehajtás csak emberi vagy policy-alapú jóváhagyással történhet.
+            <span data-lang="hu" class="isOn">AI kizárólag javaslatot tehet (PROPOSE). Végrehajtás csak emberi vagy policy-alapú jóváhagyással történhet.</span><span data-lang="en">AI can only propose (PROPOSE). Execution requires human or policy-based approval.</span>
           </div>
         </div>
 
         <div class="panel">
-          <div class="panelHead">Client data handling</div>
+          <div class="panelHead"><span data-lang="hu" class="isOn">Megbízói adatok kezelése</span><span data-lang="en">Client data handling</span></div>
           <div class="panelBody">
-            Adatok csak a szükséges ideig és mértékben kerülnek feldolgozásra.
-            Nincs általános tanulás, nincs rejtett adat-újrafelhasználás.
+            <span data-lang="hu" class="isOn">Adatok csak a szükséges ideig és mértékben kerülnek feldolgozásra. Nincs általános tanulás, nincs rejtett adat-újrafelhasználás.</span><span data-lang="en">Data is processed only as needed and for the necessary duration. No general training, no hidden data reuse.</span>
           </div>
         </div>
 
@@ -211,11 +278,9 @@
 
     <section class="section">
       <div class="panel">
-        <div class="panelHead">What this is NOT</div>
+        <div class="panelHead"><span data-lang="hu" class="isOn">Ami ez NEM</span><span data-lang="en">What this is NOT</span></div>
         <div class="panelBody">
-          Nem jogi adatvédelmi nyilatkozat.
-          Nem marketing ígéret.
-          Hanem mérnöki működési modell a megbízói adatok védelmére.
+          <span data-lang="hu" class="isOn">Nem jogi adatvédelmi nyilatkozat. Nem marketing ígéret. Hanem mérnöki működési modell a megbízói adatok védelmére.</span><span data-lang="en">Not a legal privacy notice. Not a marketing promise. An engineering operating model to protect client data.</span>
         </div>
       </div>
     </section>
@@ -225,7 +290,7 @@
 
   </main>
 
-  <script src="./site.js?v=20260122_1_1" defer></script>
+  <script src="./site.js?v=20260122_7" defer></script>
 </body>
 
 </html>
