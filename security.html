@@ -16,13 +16,13 @@
 </head>
 
 <body>
-
-  <div class="bg">
+  <div class="bg" aria-hidden="true">
     <div class="aura a1"></div>
     <div class="aura a2"></div>
     <div class="aura a3"></div>
     <div class="grain"></div>
   </div>
+
 
   <header class="topbar">
     <div class="wrap topbarRow">
@@ -55,6 +55,95 @@
         és <b>auditált</b> automatizmusok dolgozhatnak.
         Nincs autonóm végrehajtás, nincs rejtett művelet.
       </p>
+    </section>
+    <section class="section">
+      <div class="panel">
+        <div class="panelHead">How we run secure automation</div>
+        <div class="panelBody">
+          <div class="flowLine" aria-label="Execution flow">
+            <span class="flowStep">PROPOSE</span>
+            <span class="flowArrow">→</span>
+            <span class="flowStep">REVIEW</span>
+            <span class="flowArrow">→</span>
+            <span class="flowStep">APPROVE</span>
+            <span class="flowArrow">→</span>
+            <span class="flowStep">EXEC</span>
+            <span class="flowArrow">→</span>
+            <span class="flowStep">RECEIPTS</span>
+          </div>
+          <div class="noteBox">
+            <div class="noteTitle">Read-only Control Room</div>
+            <div class="noteText">A működés állapota, döntések és proof-ok kontrollált nézetben követhetők. Végrehajtás
+              csak gate után.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section class="section">
+      <div class="sectionHead">
+        <h2>Enterprise security checklist</h2>
+        <div class="sub">Amit egy pilot során ténylegesen leszállítunk / igazolunk (scope-függő).</div>
+      </div>
+
+      <div class="grid">
+        <div class="panel">
+          <div class="panelHead">Data handling</div>
+          <div class="panelBody">
+            <ul class="bullets">
+              <li>Minimális adatkezelés (need-to-know)</li>
+              <li>Input/output nyomvonal (audit trail)</li>
+              <li>Érzékeny mezők kezelése: explicit rule / masking ahol kell</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panelHead">Execution safety</div>
+          <div class="panelBody">
+            <ul class="bullets">
+              <li>Approval-gate kötelező kritikus lépéseknél</li>
+              <li>Blast-radius limit + fail-closed STOP</li>
+              <li>Idempotencia: duplikált futás = NO-OP / STOP</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panelHead">Ops & incident readiness</div>
+          <div class="panelBody">
+            <ul class="bullets">
+              <li>Runbook: mit nézz, mit futtass, mi a STOP jel</li>
+              <li>Reprodukálható proof (hash/manifest alapú)</li>
+              <li>Kill switch / disable path</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panelHead">Compliance-adjacent</div>
+          <div class="panelBody">
+            <ul class="bullets">
+              <li>Explicit döntési pontok és felelősség</li>
+              <li>Változáskövetés (mi mikor változott)</li>
+              <li>Handoff csomag (belső átadásra)</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section class="section">
+      <div class="panel highlight">
+        <div class="panelHead">AI governance (non-negotiable)</div>
+        <div class="panelBody">
+          <ul class="bullets">
+            <li>AI default: PROPOSE (nincs autonóm EXEC)</li>
+            <li>Pinned model/config (verzió és beállítás rögzítve)</li>
+            <li>Approval hash + expiry (jóváhagyás nem örök)</li>
+            <li>Evidence-first: javaslat csak bizonyítékkal</li>
+            <li>Receipt minden döntésről és futásról</li>
+          </ul>
+        </div>
+      </div>
     </section>
 
     <section class="section">

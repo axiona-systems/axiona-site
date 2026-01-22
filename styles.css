@@ -816,8 +816,34 @@ nav.nav .navItem:not(.isActive) {
   border-color: transparent !important;
   box-shadow: none !important;
 }
-/* === NAV ACTIVE FINAL OVERRIDE (must win) === */
-nav.nav .navItem{border-color:transparent !important;box-shadow:none !important;}
-nav.nav .navItem:hover{border-color:rgba(214,234,230,0.22) !important;box-shadow:none !important;}
-nav.nav .navItem.isActive{border:1px solid rgba(80,255,220,0.62) !important;box-shadow:var(--glow) !important;color:rgba(232,240,255,.96) !important;}
 
+/* === NAV ACTIVE FINAL OVERRIDE (must win) === */
+nav.nav .navItem {
+  border-color: transparent !important;
+  box-shadow: none !important;
+}
+
+nav.nav .navItem:hover {
+  border-color: rgba(214, 234, 230, 0.22) !important;
+  box-shadow: none !important;
+}
+
+nav.nav .navItem.isActive {
+  border: 1px solid rgba(80, 255, 220, 0.62) !important;
+  box-shadow: var(--glow) !important;
+  color: rgba(232, 240, 255, .96) !important;
+}
+
+/* === NAV CLICK + FOCUS (works with FINAL OVERRIDE) === */
+nav.nav .navItem:focus-visible {
+  outline: none !important;
+  border-color: rgba(80, 255, 220, 0.62) !important;
+  box-shadow: var(--glow) !important;
+  color: rgba(232, 240, 255, .96) !important;
+}
+
+nav.nav .navItem:active {
+  border-color: rgba(80, 255, 220, 0.62) !important;
+  box-shadow: var(--glow) !important;
+  transform: translateY(0px) scale(0.98) !important;
+}
