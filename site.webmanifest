@@ -1,16 +1,20 @@
 {
-    "name": "AXIONA Systems",
-    "short_name": "AXIONA",
-    "start_url": "/?source=pwa",
-    "display": "standalone",
-    "background_color": "#04060a",
-    "theme_color": "#06101a",
-    "icons": [
-        {
-            "src": "favicon.svg",
-            "sizes": "any",
-            "type": "image/svg+xml",
-            "purpose": "any maskable"
-        }
-    ]
+  "name": "AXIONA Systems",
+  "short_name": "AXIONA",
+  "start_url": "/?source=pwa",
+  "display": "standalone",
+  "background_color": "#04060a",
+  "theme_color": "#06101a",
+  "icons": [
+    {
+      "src": "./assets/brand/axiona-icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "./assets/brand/axiona-icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
 }
