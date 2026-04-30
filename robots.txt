@@ -1,5 +1,4 @@
 User-agent: *
 Allow: /
 
-# No sitemap yet
-# Sitemap: https://axiona.systems/sitemap.xml
+Sitemap: https://axiona.systems/sitemap.xml
