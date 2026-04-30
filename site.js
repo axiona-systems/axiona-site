@@ -1,1 +1,1 @@
-// AXIONA public R6: no runtime language hiding.
+// AXIONA public R7: no runtime language switching.
