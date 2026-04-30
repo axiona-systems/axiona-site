@@ -1,120 +1,68 @@
 <!doctype html>
-<html lang="en" class="lang-en no-js">
+<html class="no-js lang-en" lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="color-scheme" content="dark">
-  <script>
-    (function(){
-      var allowed={hu:1,en:1};
-      var p=new URLSearchParams(location.search);
-      var q=(p.get('lang')||'').toLowerCase();
-      var s='';
-      try{s=(localStorage.getItem('axiona_lang')||'').toLowerCase();}catch(e){}
-      var l=allowed[q]?q:(allowed[s]?s:'en');
-      document.documentElement.className='lang-'+l+' js';
-      document.documentElement.setAttribute('lang',l);
-    })();
-  </script>
-  <title>ZOLAI internal kernel — AXIONA Systems</title>
-  <meta name="description" content="Internal guard-first engineering kernel for controlled execution.">
+  <title>ZOLAI — Internal engineering kernel | AXIONA</title>
+  <meta name="description" content="ZOLAI is referenced publicly only as AXIONA internal engineering discipline and system-thinking kernel.">
   <link rel="canonical" href="https://axiona.systems/zolai.html">
-  <link rel="stylesheet" href="./styles.css?v=20260430_r1">
-  <link rel="icon" href="./favicon.svg" type="image/svg+xml">
-  <link rel="apple-touch-icon" sizes="180x180" href="./assets/brand/apple-touch-icon.png">
-  <link rel="manifest" href="./site.webmanifest">
-  <meta name="theme-color" content="#06101a">
-  <meta property="og:site_name" content="AXIONA Systems">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="ZOLAI — AXIONA Systems">
-  <meta property="og:description" content="Internal guard-first engineering kernel for controlled execution.">
+  <meta property="og:site_name" content="AXIONA">
+  <meta property="og:title" content="ZOLAI — Internal engineering kernel | AXIONA">
+  <meta property="og:description" content="ZOLAI is referenced publicly only as AXIONA internal engineering discipline and system-thinking kernel.">
   <meta property="og:url" content="https://axiona.systems/zolai.html">
-  <meta property="og:image" content="https://axiona.systems/assets/brand/axiona-icon-512.png">
-  <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="ZOLAI — AXIONA Systems">
-  <meta name="twitter:description" content="Internal guard-first engineering kernel for controlled execution.">
-  <meta name="twitter:image" content="https://axiona.systems/assets/brand/axiona-icon-512.png">
+  <meta name="theme-color" content="#04070d">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="assets/brand/apple-touch-icon.png">
+  <link rel="manifest" href="site.webmanifest">
+  <link rel="stylesheet" href="styles.css?v=2">
+  <script>document.documentElement.classList.remove('no-js');</script>
 </head>
 <body>
-  <div class="bg" aria-hidden="true"><div class="aura a1"></div><div class="aura a2"></div><div class="grain"></div></div>
-  <header class="topbar">
-    <div class="wrap topbarRow">
-      <a class="brand" href="./index.html" aria-label="AXIONA Systems home">
-        <img src="./assets/brand/axiona_icon_color.png" class="brandIcon" alt="" aria-hidden="true">
-        <span class="brandText"><strong>AXIONA Systems</strong><small>Deterministic • Audit-grade • System-first</small></span>
-      </a>
-      <nav class="nav" aria-label="Primary navigation">
-          <a class="navItem" data-nav="overview" href="./index.html">Overview</a>
-          <a class="navItem" data-nav="sentra" href="./sentra.html">SENTRA</a>
-          <a class="navItem isActive" data-nav="zolai" href="./zolai.html" aria-current="page">ZOLAI</a>
-          <a class="navItem" data-nav="security" href="./security.html">Security</a>
-          <a class="navItem" data-nav="services" href="./services.html">Services</a>
-          <a class="navItem" data-nav="support" href="./support.html">Support</a>
-          <a class="navItem" data-nav="company" href="./company.html">Company</a>
-          <a class="navItem" data-nav="contact" href="./contact.html">Contact</a>
-          <button class="langBtn" id="langToggle" type="button" aria-label="Switch language">HU</button>
-      </nav>
-    </div>
-  </header>
-  <main class="wrap">
-    <section class="hero">
-      <div class="heroText">
-        <div class="eyebrow">ZOLAI / Internal kernel</div>
-        <h1 data-lang="hu">A szabályozott végrehajtás belső mérnöki magja.</h1><h1 data-lang="en">Internal engineering kernel for controlled execution.</h1>
-        <p class="lead" data-lang="hu">A ZOLAI az AXIONA belső szabály-, proof- és guard-first munkamódjának neve. Publikusan csak a koncepció látható, nem a belső működési részletek.</p><p class="lead" data-lang="en">ZOLAI is the name of AXIONA’s internal rule, proof, and guard-first engineering approach. Publicly, only the concept is exposed, not internal operational details.</p>
-        
-      </div>
-      <div class="heroSig" aria-hidden="true">
-  <svg viewBox="0 0 520 220" class="axionaSig" role="img">
-    <defs><linearGradient id="axg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="currentColor" stop-opacity=".24"/><stop offset="100%" stop-color="currentColor" stop-opacity=".04"/></linearGradient></defs>
-    <g fill="none" stroke="url(#axg)" stroke-width="1.2"><path d="M44 170 L140 110 L220 150 L320 90 L420 120 L488 64"/><path d="M66 56 L170 90 L250 60 L350 120 L450 84"/><path d="M80 184 C170 132 250 196 340 128 S460 102 500 52"/></g>
-    <g fill="currentColor" opacity=".20"><circle cx="44" cy="170" r="3"/><circle cx="140" cy="110" r="3"/><circle cx="220" cy="150" r="3"/><circle cx="320" cy="90" r="3"/><circle cx="420" cy="120" r="3"/><circle cx="488" cy="64" r="3"/></g>
-  </svg>
-</div>
-    </section><section class="section">
-      <div class="sectionHead">
-        <h2 data-lang="hu">Alapelvek</h2><h2 data-lang="en">Principles</h2>
-        <p class="sub" data-lang="hu">A rendszer nem az AI-tól lesz biztonságos, hanem a felette álló vezérléstől.</p><p class="sub" data-lang="en">The system is not made safe by AI, but by the control layer above it.</p>
-      </div>
-      <div class="grid four">
-      <article class="panel">
-      <div class="panelHead"><span data-lang="hu">Default no-exec</span><span data-lang="en">Default no-exec</span></div>
-      <div class="panelBody" data-lang="hu">AI alapértelmezésben javasol. Nem hajt végre kritikus műveletet önállóan.</div><div class="panelBody" data-lang="en">AI proposes by default. It does not execute critical actions autonomously.</div>
-    </article>
-      <article class="panel">
-      <div class="panelHead"><span data-lang="hu">Proof-first</span><span data-lang="en">Proof-first</span></div>
-      <div class="panelBody" data-lang="hu">A “kész” állapot csak ellenőrizhető bizonyítékkal érvényes.</div><div class="panelBody" data-lang="en">“Done” is valid only with verifiable proof.</div>
-    </article>
-      <article class="panel">
-      <div class="panelHead"><span data-lang="hu">Idempotencia</span><span data-lang="en">Idempotency</span></div>
-      <div class="panelBody" data-lang="hu">Ismételt futás nem okozhat duplikált vagy váratlan üzleti hatást.</div><div class="panelBody" data-lang="en">Repeated execution must not create duplicate or unexpected business impact.</div>
-    </article>
-      <article class="panel">
-      <div class="panelHead"><span data-lang="hu">Fail-closed</span><span data-lang="en">Fail-closed</span></div>
-      <div class="panelBody" data-lang="hu">Bizonytalanság esetén nem folytatjuk vakon: STOP, REVIEW vagy explicit döntés.</div><div class="panelBody" data-lang="en">Under uncertainty, execution does not continue blindly: STOP, REVIEW, or explicit decision.</div>
-    </article>
-    </div>
-    </section><section class="section">
-      <div class="sectionHead">
-        <h2 data-lang="hu">Mire jó</h2><h2 data-lang="en">What it is for</h2>
-        <p class="sub" data-lang="hu">A ZOLAI nem marketing név, hanem építési fegyelem.</p><p class="sub" data-lang="en">ZOLAI is not a marketing label, but an engineering discipline.</p>
-      </div>
-      <div class="panel"><div class="panelBody"><ul class="bullets"><li data-lang="hu">AI-integrált üzleti workflow-k kontrollált tervezése.</li><li data-lang="en">Controlled design of AI-integrated business workflows.</li>
-<li data-lang="hu">Appok, webes rendszerek, backendek és automatizálások release-gate szemléletű építése.</li><li data-lang="en">Release-gate style delivery for apps, web systems, backends, and automations.</li>
-<li data-lang="hu">Döntési és végrehajtási állapotok szétválasztása.</li><li data-lang="en">Separation of decision state and execution state.</li>
-<li data-lang="hu">Auditálható handoff: mit változtattunk, miért, milyen proof mellett.</li><li data-lang="en">Auditable handoff: what changed, why, and with what proof.</li></ul></div></div>
-    </section>
-  </main>
-  <footer class="siteFooter wrap">
-    <div>© <span id="year">2026</span> AXIONA Systems</div>
-    <div class="footerLinks">
-      <a href="./support.html">Support</a>
-      <a href="./privacy.html">Privacy</a>
-      <a href="./legal.html">Legal</a>
-      <a href="./contact.html">Contact</a>
-    </div>
-    <div class="footerNote">Build: 2026-04-30 • Public website baseline • No hidden execution</div>
-  </footer>
-  <script src="./site.js?v=20260430_r1" defer></script>
+<div class="bg"><div class="aura a1"></div><div class="aura a2"></div><div class="grain"></div></div>
+<header class="topbar">
+  <div class="wrap topbarRow">
+    <a class="brand" href="index.html" aria-label="AXIONA home">
+      <img class="brandIcon" src="assets/brand/axiona_icon_color.png" alt="AXIONA">
+      <span class="brandText"><strong>AXIONA</strong><small data-lang="en">System-first software</small><small data-lang="hu">Rendszerközpontú szoftver</small></span>
+    </a>
+    <nav class="nav" aria-label="Primary navigation">
+      <a class="navItem" href="index.html" data-lang="en">Overview</a><a class="navItem" href="index.html" data-lang="hu">Áttekintés</a><a class="navItem isActive" href="systems.html" data-lang="en">Systems</a><a class="navItem isActive" href="systems.html" data-lang="hu">Rendszerek</a><a class="navItem" href="applications.html" data-lang="en">Applications</a><a class="navItem" href="applications.html" data-lang="hu">Alkalmazások</a><a class="navItem" href="impact.html" data-lang="en">Impact</a><a class="navItem" href="impact.html" data-lang="hu">Hatás</a><a class="navItem" href="security.html" data-lang="en">Security</a><a class="navItem" href="security.html" data-lang="hu">Biztonság</a><a class="navItem" href="services.html" data-lang="en">Services</a><a class="navItem" href="services.html" data-lang="hu">Szolgáltatások</a><a class="navItem" href="support.html" data-lang="en">Support</a><a class="navItem" href="support.html" data-lang="hu">Támogatás</a><a class="navItem" href="company.html" data-lang="en">Company</a><a class="navItem" href="company.html" data-lang="hu">Cég</a><a class="navItem" href="contact.html" data-lang="en">Contact</a><a class="navItem" href="contact.html" data-lang="hu">Kapcsolat</a>
+      <button id="langToggle" class="langBtn" type="button">HU</button>
+    </nav>
+  </div>
+</header>
+<main>
+
+<section class="wrap hero compactHero"><div class="heroText"><div data-lang="en">
+<span class="eyebrow">ZOLAI</span><h1>The engineering discipline behind the build.</h1><p class="lead">ZOLAI is not a public product feature. It is the internal discipline behind AXIONA: evidence-first thinking, controlled change and long-term maintainability.</p>
+</div><div data-lang="hu">
+<span class="eyebrow">ZOLAI</span><h1>Az építés mögötti mérnöki fegyelem.</h1><p class="lead">A ZOLAI nem publikus termékfunkció. Az AXIONA belső fegyelme: bizonyíték-alapú gondolkodás, kontrollált változtatás és hosszú távú karbantarthatóság.</p>
+</div></div><div class="heroSig"><svg class="axionaSig" viewBox="0 0 560 320" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+<path d="M70 236L183 56L280 236L377 56L490 236" stroke="currentColor" stroke-width="18" stroke-linecap="round" stroke-linejoin="round" opacity=".92"/>
+<path d="M131 141H430" stroke="currentColor" stroke-width="9" stroke-linecap="round" opacity=".34"/>
+<path d="M94 236H466" stroke="currentColor" stroke-width="9" stroke-linecap="round" opacity=".28"/>
+<circle cx="280" cy="158" r="92" stroke="currentColor" stroke-width="2" opacity=".20"/>
+<circle cx="280" cy="158" r="132" stroke="currentColor" stroke-width="2" opacity=".10"/>
+</svg></div></section>
+<section class="wrap section"><div data-lang="en">
+<div class="sectionHead"><h2>Public boundary</h2></div><div class="grid two"><article class="panel"><div class="panelHead">What visitors should know</div><div class="panelBody">AXIONA products are built with a strict engineering standard: no fake features, no hidden promises, no unmanaged automation.</div></article><article class="panel highlight"><div class="panelHead">What remains internal</div><div class="panelBody">Exact internal rules, repository layouts, operational procedures and private implementation details are not part of the public website.</div></article></div>
+</div><div data-lang="hu">
+<div class="sectionHead"><h2>Publikus határ</h2></div><div class="grid two"><article class="panel"><div class="panelHead">Amit a látogatónak tudnia kell</div><div class="panelBody">Az AXIONA termékek szigorú mérnöki standarddal készülnek: nincs hamis funkció, nincs rejtett ígéret, nincs kontroll nélküli automatizálás.</div></article><article class="panel highlight"><div class="panelHead">Ami belső marad</div><div class="panelBody">A pontos belső szabályok, repository-struktúrák, operációs eljárások és privát implementációs részletek nem a publikus weboldal részei.</div></article></div>
+</div></section>
+
+</main>
+<footer class="wrap siteFooter">
+  <div>© <span id="year"></span> AXIONA Systems. <span data-lang="en">Built for controlled, useful software.</span><span data-lang="hu">Kontrollált, hasznos szoftverekhez építve.</span></div>
+  <div class="footerLinks">
+    <a href="support.html">Support</a>
+    <a href="privacy.html">Privacy</a>
+    <a href="legal.html">Legal</a>
+    <a href="contact.html">Contact</a>
+  </div>
+  <div class="footerNote" data-lang="en">Public site only. Sensitive implementation details, credentials and private operational data are intentionally not published.</div>
+  <div class="footerNote" data-lang="hu">Nyilvános oldal. Érzékeny implementációs részletek, hozzáférések és privát operációs adatok szándékosan nem szerepelnek rajta.</div>
+</footer>
+<script src="site.js?v=2"></script>
 </body>
 </html>

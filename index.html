@@ -1,135 +1,93 @@
 <!doctype html>
-<html lang="en" class="lang-en no-js">
+<html class="no-js lang-en" lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="color-scheme" content="dark">
-  <script>
-    (function(){
-      var allowed={hu:1,en:1};
-      var p=new URLSearchParams(location.search);
-      var q=(p.get('lang')||'').toLowerCase();
-      var s='';
-      try{s=(localStorage.getItem('axiona_lang')||'').toLowerCase();}catch(e){}
-      var l=allowed[q]?q:(allowed[s]?s:'en');
-      document.documentElement.className='lang-'+l+' js';
-      document.documentElement.setAttribute('lang',l);
-    })();
-  </script>
-  <title>AXIONA Systems — Deterministic operational AI</title>
-  <meta name="description" content="Deterministic, audit-grade business automation and operational AI control.">
+  <title>AXIONA — Controlled software for useful systems | AXIONA</title>
+  <meta name="description" content="AXIONA builds controlled software, automation and AI-assisted systems for productivity, energy efficiency, environmental value and operational clarity.">
   <link rel="canonical" href="https://axiona.systems/">
-  <link rel="stylesheet" href="./styles.css?v=20260430_r1">
-  <link rel="icon" href="./favicon.svg" type="image/svg+xml">
-  <link rel="apple-touch-icon" sizes="180x180" href="./assets/brand/apple-touch-icon.png">
-  <link rel="manifest" href="./site.webmanifest">
-  <meta name="theme-color" content="#06101a">
-  <meta property="og:site_name" content="AXIONA Systems">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="AXIONA Systems — Deterministic operational AI">
-  <meta property="og:description" content="Deterministic, audit-grade business automation and operational AI control.">
+  <meta property="og:site_name" content="AXIONA">
+  <meta property="og:title" content="AXIONA — Controlled software for useful systems | AXIONA">
+  <meta property="og:description" content="AXIONA builds controlled software, automation and AI-assisted systems for productivity, energy efficiency, environmental value and operational clarity.">
   <meta property="og:url" content="https://axiona.systems/">
-  <meta property="og:image" content="https://axiona.systems/assets/brand/axiona-icon-512.png">
-  <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="AXIONA Systems — Deterministic operational AI">
-  <meta name="twitter:description" content="Deterministic, audit-grade business automation and operational AI control.">
-  <meta name="twitter:image" content="https://axiona.systems/assets/brand/axiona-icon-512.png">
+  <meta name="theme-color" content="#04070d">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="assets/brand/apple-touch-icon.png">
+  <link rel="manifest" href="site.webmanifest">
+  <link rel="stylesheet" href="styles.css?v=2">
+  <script>document.documentElement.classList.remove('no-js');</script>
 </head>
 <body>
-  <div class="bg" aria-hidden="true"><div class="aura a1"></div><div class="aura a2"></div><div class="grain"></div></div>
-  <header class="topbar">
-    <div class="wrap topbarRow">
-      <a class="brand" href="./index.html" aria-label="AXIONA Systems home">
-        <img src="./assets/brand/axiona_icon_color.png" class="brandIcon" alt="" aria-hidden="true">
-        <span class="brandText"><strong>AXIONA Systems</strong><small>Deterministic • Audit-grade • System-first</small></span>
-      </a>
-      <nav class="nav" aria-label="Primary navigation">
-          <a class="navItem isActive" data-nav="overview" href="./index.html" aria-current="page">Overview</a>
-          <a class="navItem" data-nav="sentra" href="./sentra.html">SENTRA</a>
-          <a class="navItem" data-nav="zolai" href="./zolai.html">ZOLAI</a>
-          <a class="navItem" data-nav="security" href="./security.html">Security</a>
-          <a class="navItem" data-nav="services" href="./services.html">Services</a>
-          <a class="navItem" data-nav="support" href="./support.html">Support</a>
-          <a class="navItem" data-nav="company" href="./company.html">Company</a>
-          <a class="navItem" data-nav="contact" href="./contact.html">Contact</a>
-          <button class="langBtn" id="langToggle" type="button" aria-label="Switch language">HU</button>
-      </nav>
-    </div>
-  </header>
-  <main class="wrap">
-    <section class="hero">
-      <div class="heroText">
-        <div class="eyebrow">Operational AI / deterministic systems</div>
-        <h1 data-lang="hu">Bizonyíthatóan működő üzleti rendszerek, nem AI-hype.</h1><h1 data-lang="en">Provable business systems, not AI hype.</h1>
-        <p class="lead" data-lang="hu">AXIONA kontrollált automatizálást, auditálható workflow-kat és AI-feletti operációs vezérlést épít. Kis scope, mérhető proof, fail-closed működés.</p><p class="lead" data-lang="en">AXIONA builds controlled automation, auditable workflows, and operational control above AI. Small scope, measurable proof, fail-closed execution.</p>
-        <div class="heroActions">
-          <a class="btn primary" href="./contact.html"><span data-lang="hu">Pilot indítása</span><span data-lang="en">Start a pilot</span></a>
-          <a class="btn" href="./services.html"><span data-lang="hu">Szolgáltatások</span><span data-lang="en">Services</span></a>
-          <a class="btn ghost" href="./support.html">Support</a>
-        </div>
-      </div>
-      <div class="heroSig" aria-hidden="true">
-  <svg viewBox="0 0 520 220" class="axionaSig" role="img">
-    <defs><linearGradient id="axg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="currentColor" stop-opacity=".24"/><stop offset="100%" stop-color="currentColor" stop-opacity=".04"/></linearGradient></defs>
-    <g fill="none" stroke="url(#axg)" stroke-width="1.2"><path d="M44 170 L140 110 L220 150 L320 90 L420 120 L488 64"/><path d="M66 56 L170 90 L250 60 L350 120 L450 84"/><path d="M80 184 C170 132 250 196 340 128 S460 102 500 52"/></g>
-    <g fill="currentColor" opacity=".20"><circle cx="44" cy="170" r="3"/><circle cx="140" cy="110" r="3"/><circle cx="220" cy="150" r="3"/><circle cx="320" cy="90" r="3"/><circle cx="420" cy="120" r="3"/><circle cx="488" cy="64" r="3"/></g>
-  </svg>
+<div class="bg"><div class="aura a1"></div><div class="aura a2"></div><div class="grain"></div></div>
+<header class="topbar">
+  <div class="wrap topbarRow">
+    <a class="brand" href="index.html" aria-label="AXIONA home">
+      <img class="brandIcon" src="assets/brand/axiona_icon_color.png" alt="AXIONA">
+      <span class="brandText"><strong>AXIONA</strong><small data-lang="en">System-first software</small><small data-lang="hu">Rendszerközpontú szoftver</small></span>
+    </a>
+    <nav class="nav" aria-label="Primary navigation">
+      <a class="navItem isActive" href="index.html" data-lang="en">Overview</a><a class="navItem isActive" href="index.html" data-lang="hu">Áttekintés</a><a class="navItem" href="systems.html" data-lang="en">Systems</a><a class="navItem" href="systems.html" data-lang="hu">Rendszerek</a><a class="navItem" href="applications.html" data-lang="en">Applications</a><a class="navItem" href="applications.html" data-lang="hu">Alkalmazások</a><a class="navItem" href="impact.html" data-lang="en">Impact</a><a class="navItem" href="impact.html" data-lang="hu">Hatás</a><a class="navItem" href="security.html" data-lang="en">Security</a><a class="navItem" href="security.html" data-lang="hu">Biztonság</a><a class="navItem" href="services.html" data-lang="en">Services</a><a class="navItem" href="services.html" data-lang="hu">Szolgáltatások</a><a class="navItem" href="support.html" data-lang="en">Support</a><a class="navItem" href="support.html" data-lang="hu">Támogatás</a><a class="navItem" href="company.html" data-lang="en">Company</a><a class="navItem" href="company.html" data-lang="hu">Cég</a><a class="navItem" href="contact.html" data-lang="en">Contact</a><a class="navItem" href="contact.html" data-lang="hu">Kapcsolat</a>
+      <button id="langToggle" class="langBtn" type="button">HU</button>
+    </nav>
+  </div>
+</header>
+<main>
+
+<section class="wrap hero">
+  <div class="heroText">
+    <div data-lang="en">
+<span class="eyebrow">AXIONA Systems</span><h1>Software that makes work, energy and decisions more efficient.</h1><p class="lead">AXIONA designs practical software systems: applications, automation layers and AI-assisted control flows that reduce waste, improve reliability and turn scattered operations into clear, measurable workflows.</p><div class="heroActions"><a class="btn primary" href="contact.html">Start a project</a><a class="btn" href="applications.html">View applications</a><a class="btn ghost" href="impact.html">Impact areas</a></div>
 </div>
-    </section><section class="section">
-      <div class="sectionHead">
-        <h2 data-lang="hu">Röviden</h2><h2 data-lang="en">In short</h2>
-        <p class="sub" data-lang="hu">A cél nem több gomb, hanem kevesebb működési kockázat.</p><p class="sub" data-lang="en">The goal is not more buttons, but lower operational risk.</p>
-      </div>
-      <div class="grid four">
-      <article class="panel">
-      <div class="panelHead"><span data-lang="hu">Mit építünk</span><span data-lang="en">What we build</span></div>
-      <div class="panelBody" data-lang="hu">Döntési és végrehajtási workflow-kat, amelyeknél minden kritikus lépés előbb javaslat, aztán gate, majd jóváhagyott végrehajtás.</div><div class="panelBody" data-lang="en">Decision and execution workflows where every critical step is first proposed, then gated, then executed only after approval.</div>
-    </article>
-      <article class="panel">
-      <div class="panelHead"><span data-lang="hu">Kinek</span><span data-lang="en">For whom</span></div>
-      <div class="panelBody" data-lang="hu">Kis és közepes vállalkozásoknak, ahol az ismétlődő adminisztráció, adatmozgás vagy AI-használat már működési kockázatot jelent.</div><div class="panelBody" data-lang="en">Small and mid-sized operators where repeated administration, data movement, or AI use already creates operational risk.</div>
-    </article>
-      <article class="panel">
-      <div class="panelHead"><span data-lang="hu">Működési elv</span><span data-lang="en">Operating principle</span></div>
-      <div class="panelBody" data-lang="hu">Determinism, idempotencia, audit trail, blast-radius limit, read-only kontrollnézet és dokumentált runbook.</div><div class="panelBody" data-lang="en">Determinism, idempotency, audit trail, blast-radius limits, read-only control view, and documented runbooks.</div>
-    </article>
-      <article class="panel">
-      <div class="panelHead"><span data-lang="hu">Eredmény</span><span data-lang="en">Outcome</span></div>
-      <div class="panelBody" data-lang="hu">Nem bemutató demó: átadható baseline, proof csomag, üzemeltetési szabályok, javítható és bővíthető rendszer.</div><div class="panelBody" data-lang="en">Not a demo: a handoff-ready baseline, proof package, operating rules, and a maintainable system.</div>
-    </article>
-    </div>
-    </section><section class="section">
-      <div class="sectionHead">
-        <h2 data-lang="hu">Pilot modell</h2><h2 data-lang="en">Pilot model</h2>
-        <p class="sub" data-lang="hu">Két hét, egy jól körülhatárolt folyamat, mérhető kimenettel.</p><p class="sub" data-lang="en">Two weeks, one tightly scoped workflow, measurable output.</p>
-      </div>
-      <div class="timeline">
-      <div><b>01</b><span data-lang="hu">Folyamat + kockázat összegyűjtése</span><span data-lang="en">Process + risk intake</span></div>
-      <div><b>02</b><span data-lang="hu">Scope, gate-ek és proof pontok rögzítése</span><span data-lang="en">Scope, gates, and proof points</span></div>
-      <div><b>03</b><span data-lang="hu">Kontrollált implementáció</span><span data-lang="en">Controlled implementation</span></div>
-      <div><b>04</b><span data-lang="hu">Handoff, runbook, döntési javaslat</span><span data-lang="en">Handoff, runbook, decision recommendation</span></div>
-    </div>
-    </section><section class="section">
-      <div class="sectionHead">
-        <h2 data-lang="hu">Public baseline</h2><h2 data-lang="en">Public baseline</h2>
-        <p class="sub" data-lang="hu">A publikus oldal szándékosan nem tartalmaz belső működési titkokat.</p><p class="sub" data-lang="en">The public site intentionally excludes internal operational secrets.</p>
-      </div>
-      <div class="grid two">
-      <article class="panel highlight"><div class="panelHead">SENTRA</div><div class="panelBody"><span data-lang="hu">Read-only Control Room koncepció auditálható rendszerekhez.</span><span data-lang="en">Read-only Control Room concept for auditable systems.</span> <a href="./sentra.html"><span data-lang="hu">Részletek</span><span data-lang="en">Details</span></a></div></article>
-      <article class="panel highlight"><div class="panelHead">ZOLAI</div><div class="panelBody"><span data-lang="hu">Belső mérnöki mag és szabályrendszer. Nem publikus végrehajtó termék.</span><span data-lang="en">Internal engineering kernel and rule system. Not a public execution product.</span> <a href="./zolai.html"><span data-lang="hu">Részletek</span><span data-lang="en">Details</span></a></div></article>
-    </div>
-    </section>
-  </main>
-  <footer class="siteFooter wrap">
-    <div>© <span id="year">2026</span> AXIONA Systems</div>
-    <div class="footerLinks">
-      <a href="./support.html">Support</a>
-      <a href="./privacy.html">Privacy</a>
-      <a href="./legal.html">Legal</a>
-      <a href="./contact.html">Contact</a>
-    </div>
-    <div class="footerNote">Build: 2026-04-30 • Public website baseline • No hidden execution</div>
-  </footer>
-  <script src="./site.js?v=20260430_r1" defer></script>
+    <div data-lang="hu">
+<span class="eyebrow">AXIONA Systems</span><h1>Szoftver, ami hatékonyabbá teszi a munkát, az energiát és a döntéseket.</h1><p class="lead">Az AXIONA gyakorlati szoftverrendszereket tervez: alkalmazásokat, automatizálási rétegeket és AI-támogatott vezérlési folyamatokat, amelyek csökkentik a pazarlást, növelik a megbízhatóságot és mérhető működéssé alakítják a szétszórt folyamatokat.</p><div class="heroActions"><a class="btn primary" href="contact.html">Projekt indítása</a><a class="btn" href="applications.html">Alkalmazások</a><a class="btn ghost" href="impact.html">Hatásterületek</a></div>
+</div>
+  </div>
+  <div class="heroSig"><svg class="axionaSig" viewBox="0 0 560 320" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+<path d="M70 236L183 56L280 236L377 56L490 236" stroke="currentColor" stroke-width="18" stroke-linecap="round" stroke-linejoin="round" opacity=".92"/>
+<path d="M131 141H430" stroke="currentColor" stroke-width="9" stroke-linecap="round" opacity=".34"/>
+<path d="M94 236H466" stroke="currentColor" stroke-width="9" stroke-linecap="round" opacity=".28"/>
+<circle cx="280" cy="158" r="92" stroke="currentColor" stroke-width="2" opacity=".20"/>
+<circle cx="280" cy="158" r="132" stroke="currentColor" stroke-width="2" opacity=".10"/>
+</svg></div>
+</section>
+<section class="wrap section">
+  <div data-lang="en">
+<div class="sectionHead"><h2>What AXIONA is</h2><p class="sub">A product and systems direction for building software that is useful, controlled and commercially defensible.</p></div><div class="grid three"><article class="panel highlight"><div class="panelHead">Application layer</div><div class="panelBody">Consumer and professional apps with clean UX, lawful data handling, reliable playback/content flows, support readiness and long-term maintainability.</div></article><article class="panel"><div class="panelHead">Control layer</div><div class="panelBody">Operational control rooms, workflow gates, audit trails and deterministic automation for business processes.</div></article><article class="panel"><div class="panelHead">AI layer</div><div class="panelBody">AI used as an assistant inside strict boundaries: proposals, classification, search, enrichment and decision support — not uncontrolled magic.</div></article></div>
+</div>
+  <div data-lang="hu">
+<div class="sectionHead"><h2>Mi az AXIONA</h2><p class="sub">Termék- és rendszerirány: hasznos, kontrollált és üzletileg védhető szoftverek építése.</p></div><div class="grid three"><article class="panel highlight"><div class="panelHead">Alkalmazásréteg</div><div class="panelBody">Felhasználói és professzionális appok tiszta UX-szel, jogtiszta adatkezeléssel, stabil tartalomfolyamatokkal, támogatási készültséggel és hosszú távú karbantarthatósággal.</div></article><article class="panel"><div class="panelHead">Vezérlőréteg</div><div class="panelBody">Operációs control roomok, workflow gate-ek, auditnyomok és determinisztikus automatizálás üzleti folyamatokra.</div></article><article class="panel"><div class="panelHead">AI-réteg</div><div class="panelBody">Az AI asszisztensként működik szigorú határok között: javaslat, osztályozás, keresés, gazdagítás és döntéstámogatás — nem kontroll nélküli varázslat.</div></article></div>
+</div>
+</section>
+<section class="wrap section">
+ <div data-lang="en">
+<div class="sectionHead"><h2>Main directions</h2><p class="sub">AXIONA is not limited to one app. The direction is a reusable software ecosystem.</p></div><div class="grid four"><article class="panel"><div class="panelHead">Productivity</div><div class="panelBody">Less manual work, fewer repeated decisions, cleaner task handoffs.</div></article><article class="panel"><div class="panelHead">Energy</div><div class="panelBody">Software for visibility, scheduling, optimization and waste reduction.</div></article><article class="panel"><div class="panelHead">Environment</div><div class="panelBody">Data-backed tools for more efficient resource use and lower operational friction.</div></article><article class="panel"><div class="panelHead">Media & knowledge</div><div class="panelBody">Offline-first apps and discovery tools where user control and lawful content matter.</div></article></div>
+</div>
+ <div data-lang="hu">
+<div class="sectionHead"><h2>Fő irányok</h2><p class="sub">Az AXIONA nem egyetlen app. Újrahasznosítható szoftver-ökoszisztéma épül.</p></div><div class="grid four"><article class="panel"><div class="panelHead">Hatékonyság</div><div class="panelBody">Kevesebb kézi munka, kevesebb ismételt döntés, tisztább feladatátadás.</div></article><article class="panel"><div class="panelHead">Energia</div><div class="panelBody">Szoftver láthatóságra, ütemezésre, optimalizálásra és pazarláscsökkentésre.</div></article><article class="panel"><div class="panelHead">Környezetvédelem</div><div class="panelBody">Adatalapú eszközök hatékonyabb erőforrás-használathoz és kisebb működési súrlódáshoz.</div></article><article class="panel"><div class="panelHead">Média és tudás</div><div class="panelBody">Offline-first appok és discovery eszközök, ahol fontos a felhasználói kontroll és a jogtiszta tartalom.</div></article></div>
+</div>
+</section>
+<section class="wrap section">
+ <div data-lang="en">
+<div class="sectionHead"><h2>Operating principle</h2><p class="sub">Build only what can be maintained, verified and improved.</p></div><div class="flowLine"><span>Observe</span><i>→</i><span>Control</span><i>→</i><span>Automate</span><i>→</i><span>Measure</span><i>→</i><span>Improve</span></div>
+</div>
+ <div data-lang="hu">
+<div class="sectionHead"><h2>Működési elv</h2><p class="sub">Csak olyat építünk, ami karbantartható, ellenőrizhető és fejleszthető.</p></div><div class="flowLine"><span>Megfigyelés</span><i>→</i><span>Kontroll</span><i>→</i><span>Automatizálás</span><i>→</i><span>Mérés</span><i>→</i><span>Fejlesztés</span></div>
+</div>
+</section>
+
+</main>
+<footer class="wrap siteFooter">
+  <div>© <span id="year"></span> AXIONA Systems. <span data-lang="en">Built for controlled, useful software.</span><span data-lang="hu">Kontrollált, hasznos szoftverekhez építve.</span></div>
+  <div class="footerLinks">
+    <a href="support.html">Support</a>
+    <a href="privacy.html">Privacy</a>
+    <a href="legal.html">Legal</a>
+    <a href="contact.html">Contact</a>
+  </div>
+  <div class="footerNote" data-lang="en">Public site only. Sensitive implementation details, credentials and private operational data are intentionally not published.</div>
+  <div class="footerNote" data-lang="hu">Nyilvános oldal. Érzékeny implementációs részletek, hozzáférések és privát operációs adatok szándékosan nem szerepelnek rajta.</div>
+</footer>
+<script src="site.js?v=2"></script>
 </body>
 </html>
