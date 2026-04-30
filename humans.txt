@@ -1,3 +1,3 @@
 AXIONA Systems
 Design and development: Asztalos Zoltán
-Status: public R9 layout, visual and static language polish
+Public baseline: R10 visual/software polish
