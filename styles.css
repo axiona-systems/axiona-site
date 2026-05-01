@@ -3568,3 +3568,75 @@ main > .hero.wrap > *{
     top:calc(46% + 76px)!important;
   }
 }
+
+
+/* AXIONA R52 UNIFIED TEXT COLUMN */
+/* Locks all hero text columns to the same readable width as the homepage, so line wrapping stays consistent between menu pages. */
+:root{
+  --ax-hero-text-col:720px;
+  --ax-hero-h1-col:720px;
+  --ax-hero-lead-col:680px;
+  --ax-hero-sublead-col:660px;
+}
+
+/* All top-page hero copy starts from the same left origin and uses the same text measure. */
+main > .hero.wrap > .hero-copy,
+body.home main > .hero.wrap > .hero-copy{
+  width:min(100%,var(--ax-hero-text-col))!important;
+  max-width:var(--ax-hero-text-col)!important;
+  justify-self:start!important;
+  text-align:left!important;
+  margin-left:0!important;
+  padding-left:0!important;
+  transform:none!important;
+}
+
+/* H1 line breaks are now governed by the same width on every page. */
+main > .hero.wrap > .hero-copy h1,
+body.home main > .hero.wrap > .hero-copy h1{
+  width:min(100%,var(--ax-hero-h1-col))!important;
+  max-width:var(--ax-hero-h1-col)!important;
+}
+
+/* Supporting text uses the same measure everywhere as well. */
+main > .hero.wrap > .hero-copy .lead,
+body.home main > .hero.wrap > .hero-copy .lead{
+  width:min(100%,var(--ax-hero-lead-col))!important;
+  max-width:var(--ax-hero-lead-col)!important;
+}
+main > .hero.wrap > .hero-copy .sublead,
+body.home main > .hero.wrap > .hero-copy .sublead{
+  width:min(100%,var(--ax-hero-sublead-col))!important;
+  max-width:var(--ax-hero-sublead-col)!important;
+}
+
+/* Keep the two-column shell unchanged, only standardize the text measure. */
+main > .hero.wrap,
+body.home main > .hero.wrap{
+  grid-template-columns:minmax(0,var(--ax-hero-text-col)) var(--ax-visual-w)!important;
+}
+
+/* Do not let page-specific action rows or home metrics change the text column width. */
+main > .hero.wrap > .hero-copy .actions,
+body.home main > .hero.wrap > .hero-copy .actions,
+body.home main > .hero.wrap > .hero-copy .hero-metrics{
+  max-width:var(--ax-hero-text-col)!important;
+}
+
+@media(max-width:980px){
+  main > .hero.wrap,
+  body.home main > .hero.wrap{
+    grid-template-columns:1fr!important;
+  }
+  main > .hero.wrap > .hero-copy,
+  body.home main > .hero.wrap > .hero-copy,
+  main > .hero.wrap > .hero-copy h1,
+  body.home main > .hero.wrap > .hero-copy h1,
+  main > .hero.wrap > .hero-copy .lead,
+  body.home main > .hero.wrap > .hero-copy .lead,
+  main > .hero.wrap > .hero-copy .sublead,
+  body.home main > .hero.wrap > .hero-copy .sublead{
+    width:100%!important;
+    max-width:100%!important;
+  }
+}
