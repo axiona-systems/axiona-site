@@ -1939,8 +1939,8 @@ main > .section .grid > .card{
 /* AXIONA R29 FIRST VISITOR CLARITY - problem recognition + EN/DE positioning alignment */
 
 
-/* AXIONA R39 DARK ICON ROLE LOCK */
-/* Header + favicon/app/PWA role-lock to dark tile assets only. */
+/* AXIONA R40 SINGLE SOURCE ICON INTEGRATION */
+/* Every active icon asset is derived from a_clean_modern_icon_branding_graphic_a_dark_navy_2.png. */
 .brand{
   display:inline-flex!important;
   align-items:center!important;
@@ -1951,12 +1951,12 @@ main > .section .grid > .card{
   text-decoration:none!important;
   white-space:nowrap!important;
 }
-.brand img.brand-dark-tile48{
+.brand img.brand-single-source-icon{
   width:40px!important;
   height:40px!important;
   min-width:40px!important;
   border-radius:10px!important;
-  object-fit:contain!important;
+  object-fit:cover!important;
   display:block!important;
   transform:none!important;
   box-shadow:0 0 0 1px rgba(118,241,255,.12),0 0 18px rgba(24,216,242,.10)!important;
@@ -1971,15 +1971,15 @@ main > .section .grid > .card{
 }
 @media(max-width:1180px){
   .brand{min-width:220px!important;height:42px!important;gap:11px!important;}
-  .brand img.brand-dark-tile48{width:37px!important;height:37px!important;min-width:37px!important;border-radius:9px!important;}
+  .brand img.brand-single-source-icon{width:37px!important;height:37px!important;min-width:37px!important;border-radius:9px!important;}
   .brand span{font-size:19px!important;}
 }
 @media(max-width:760px){
   .brand{width:100%!important;min-width:0!important;height:40px!important;gap:10px!important;}
-  .brand img.brand-dark-tile48{width:35px!important;height:35px!important;min-width:35px!important;border-radius:8px!important;}
+  .brand img.brand-single-source-icon{width:35px!important;height:35px!important;min-width:35px!important;border-radius:8px!important;}
   .brand span{font-size:18px!important;}
 }
 @media(max-width:420px){
   .brand span{font-size:17px!important;}
-  .brand img.brand-dark-tile48{width:34px!important;height:34px!important;min-width:34px!important;}
+  .brand img.brand-single-source-icon{width:34px!important;height:34px!important;min-width:34px!important;}
 }

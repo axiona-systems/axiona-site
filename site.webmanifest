@@ -1,31 +1,31 @@
 {
-  "id": "/?app=axiona-systems-r39",
+  "id": "/?app=axiona-single-source-icon-r40",
   "name": "AXIONA Systems",
   "short_name": "AXIONA",
-  "start_url": "/?source=pwa-r39",
+  "start_url": "/?source=pwa-single-source-icon-r40",
   "scope": "/",
   "display": "standalone",
   "background_color": "#071018",
   "theme_color": "#071018",
   "icons": [
     {
-      "src": "/assets/brand/axiona-app-icon-r39-192.png",
+      "src": "/assets/brand/axiona-app-icon-r40-192.png",
       "sizes": "192x192",
       "type": "image/png"
     },
     {
-      "src": "/assets/brand/axiona-app-icon-r39-512.png",
+      "src": "/assets/brand/axiona-app-icon-r40-512.png",
       "sizes": "512x512",
       "type": "image/png"
     },
     {
-      "src": "/assets/brand/axiona-maskable-icon-r39-192.png",
+      "src": "/assets/brand/axiona-maskable-icon-r40-192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "maskable"
     },
     {
-      "src": "/assets/brand/axiona-maskable-icon-r39-512.png",
+      "src": "/assets/brand/axiona-maskable-icon-r40-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"

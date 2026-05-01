@@ -1,0 +1,13 @@
+{
+  "version": "R40",
+  "site_base": "AXIONA_SITE_PUBLIC_R29_FIRST_VISITOR_CLARITY",
+  "icon_pack": "AXIONA_SINGLE_SOURCE_ICON_PACK_V1",
+  "single_source_filename": "a_clean_modern_icon_branding_graphic_a_dark_navy_2.png",
+  "single_source_sha256": "cd194618694e03c99e1e2082c0174e27282d4592bcd6f05cbebe5654acfabc21",
+  "header_file": "assets/brand/axiona-header-icon-r40.png",
+  "favicon_ico": "favicon-r40.ico",
+  "favicon_png": "favicon-r40-32x32.png",
+  "apple_touch": "apple-touch-icon-r40.png",
+  "manifest_id": "/?app=axiona-single-source-icon-r40",
+  "principle": "No old AXIONA icon source, no SVG favicon, no alternative A mark. All active icon roles use the single-source icon pack."
+}
