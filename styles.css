@@ -2451,3 +2451,130 @@ main > .section .grid > .card{
     opacity:.18;
   }
 }
+
+
+/* AXIONA R44 VISUAL-ONLY REAL 3D FIX */
+/* The 3D element is visual only. No explanatory text section. WebGL shader fixed. */
+.real-3d-section,
+.real-3d-copy{
+  display:none!important;
+}
+.real-3d-visual-only{
+  position:relative;
+  margin-top:clamp(16px,3vw,32px);
+  margin-bottom:clamp(8px,2vw,18px);
+}
+.real-3d-visual-only::before{
+  content:"";
+  position:absolute;
+  inset:4% -8% auto -8%;
+  height:380px;
+  background:
+    radial-gradient(circle at 50% 38%,rgba(24,216,242,.14),transparent 36%),
+    radial-gradient(circle at 68% 52%,rgba(37,224,138,.12),transparent 32%);
+  filter:blur(18px);
+  pointer-events:none;
+}
+.real-3d-visual-only .real-3d-panel{
+  position:relative;
+  z-index:2;
+  min-height:clamp(320px,48vw,560px);
+  border-radius:34px;
+  border:1px solid rgba(118,241,255,.16);
+  background:
+    linear-gradient(135deg,rgba(7,16,24,.94),rgba(2,6,12,.98)),
+    radial-gradient(circle at 50% 45%,rgba(24,216,242,.08),transparent 54%);
+  box-shadow:0 30px 100px rgba(0,0,0,.42),inset 0 1px 0 rgba(255,255,255,.05);
+  overflow:hidden;
+}
+.real-3d-visual-only .real-3d-panel::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:
+    linear-gradient(rgba(118,241,255,.05) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(118,241,255,.04) 1px,transparent 1px);
+  background-size:42px 42px;
+  opacity:.32;
+  mask-image:radial-gradient(circle at 50% 50%,black,transparent 76%);
+}
+.real-3d-visual-only .real-3d-panel::after{
+  content:"";
+  position:absolute;
+  inset:auto 8% 34px 8%;
+  height:1px;
+  background:linear-gradient(90deg,transparent,rgba(24,216,242,.52),rgba(37,224,138,.44),transparent);
+  box-shadow:0 0 22px rgba(24,216,242,.32);
+}
+.axiona-3d-canvas{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  display:block;
+  z-index:2;
+}
+.real-3d-fallback{
+  position:absolute;
+  inset:0;
+  display:grid;
+  place-items:center;
+  z-index:1;
+}
+.axiona-3d-canvas.webgl-active + .real-3d-fallback{
+  opacity:0;
+}
+.fallback-core{
+  width:160px;
+  height:160px;
+  border-radius:32px;
+  display:grid;
+  place-items:center;
+  background:linear-gradient(145deg,rgba(16,32,48,.96),rgba(3,8,14,.98));
+  border:1px solid rgba(118,241,255,.20);
+  box-shadow:0 0 58px rgba(24,216,242,.18);
+}
+.fallback-core img{
+  width:58px;
+  height:58px;
+  border-radius:14px;
+}
+.fallback-core span{
+  font-size:12px;
+  letter-spacing:.22em;
+  font-weight:900;
+  color:rgba(244,250,255,.86);
+}
+.real-3d-label{
+  position:absolute;
+  z-index:3;
+  padding:9px 12px;
+  border-radius:999px;
+  border:1px solid rgba(118,241,255,.16);
+  background:rgba(5,12,20,.66);
+  backdrop-filter:blur(12px);
+  color:rgba(244,250,255,.84);
+  font-size:12px;
+  font-weight:800;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  box-shadow:0 12px 28px rgba(0,0,0,.24);
+}
+.label-input{left:8%;top:18%;}
+.label-logic{right:9%;top:28%;}
+.label-output{right:14%;bottom:18%;}
+@media(max-width:700px){
+  .real-3d-visual-only .real-3d-panel{
+    min-height:330px;
+    border-radius:26px;
+  }
+  .real-3d-label{
+    font-size:10px;
+    padding:7px 10px;
+  }
+}
+@media(prefers-reduced-motion:reduce){
+  .real-3d-visual-only .real-3d-panel::before{
+    opacity:.18;
+  }
+}
