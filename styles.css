@@ -1920,3 +1920,17 @@ main > .section .grid > .card{
     font-size:14.2px !important;
   }
 }
+
+
+/* AXIONA R28 VISITOR BUSINESS CLARITY */
+.home .section-head .section-lead,
+.page .section-head .section-lead{
+  max-width:780px;
+}
+.contact-expectation{}
+@media(max-width:760px){
+  .home .section-head .section-lead,
+  .page .section-head .section-lead{
+    max-width:100%;
+  }
+}
