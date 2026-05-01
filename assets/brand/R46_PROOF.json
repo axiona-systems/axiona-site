@@ -1,0 +1,24 @@
+{
+  "HTML_COUNT": 39,
+  "HTML_WITH_V46": 39,
+  "OLD_CSS_REFS": 0,
+  "CORE_VISUAL_PAGES": 39,
+  "BAD_OLD_VISUAL_REFS": 0,
+  "R41_ICON_PRESERVED": true,
+  "READABLE_CORE_LABEL_CSS": true,
+  "CSS_MARKER": true,
+  "SAFETY_HITS": 0,
+  "CORE_REFS_SAMPLE": [
+    "404.html",
+    "applications.html",
+    "automation.html",
+    "company.html",
+    "contact.html",
+    "impact.html",
+    "index.html",
+    "legal.html",
+    "privacy.html",
+    "security.html"
+  ],
+  "BAD_BLOCKS": []
+}
