@@ -1939,8 +1939,8 @@ main > .section .grid > .card{
 /* AXIONA R29 FIRST VISITOR CLARITY - problem recognition + EN/DE positioning alignment */
 
 
-/* AXIONA R36 HEADER PNG ICON FIX */
-/* Header icon uses a pre-rendered PNG A tile from the logo pack, not SVG. */
+/* AXIONA R37 V3 LOGO ASSET INTEGRATION */
+/* Uses V3 corrected A-only header PNG. No full image, no inline fake A, no SVG header render dependency. */
 .brand{
   display:inline-flex!important;
   align-items:center!important;
@@ -1951,17 +1951,26 @@ main > .section .grid > .card{
   text-decoration:none!important;
   white-space:nowrap!important;
 }
-.brand img.brand-a-png{
+.brand .brand-icon-box{
   width:40px!important;
   height:40px!important;
   min-width:40px!important;
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
   border-radius:10px!important;
-  object-fit:cover!important;
+  background:linear-gradient(145deg,rgba(7,16,24,.98),rgba(3,7,13,.98))!important;
+  box-shadow:0 0 0 1px rgba(118,241,255,.16),0 0 18px rgba(24,216,242,.12)!important;
+  overflow:hidden!important;
+}
+.brand img.brand-a-icon{
+  width:30px!important;
+  height:30px!important;
+  object-fit:contain!important;
   display:block!important;
   transform:none!important;
-  box-shadow:0 0 0 1px rgba(118,241,255,.14),0 0 18px rgba(24,216,242,.12)!important;
 }
-.brand span{
+.brand span:not(.brand-icon-box){
   display:inline-block!important;
   color:var(--text,#f4faff)!important;
   font-weight:900!important;
@@ -1971,15 +1980,18 @@ main > .section .grid > .card{
 }
 @media(max-width:1180px){
   .brand{min-width:220px!important;height:42px!important;gap:11px!important;}
-  .brand img.brand-a-png{width:37px!important;height:37px!important;min-width:37px!important;border-radius:9px!important;}
-  .brand span{font-size:19px!important;}
+  .brand .brand-icon-box{width:37px!important;height:37px!important;min-width:37px!important;border-radius:9px!important;}
+  .brand img.brand-a-icon{width:28px!important;height:28px!important;}
+  .brand span:not(.brand-icon-box){font-size:19px!important;}
 }
 @media(max-width:760px){
   .brand{width:100%!important;min-width:0!important;height:40px!important;gap:10px!important;}
-  .brand img.brand-a-png{width:35px!important;height:35px!important;min-width:35px!important;border-radius:8px!important;}
-  .brand span{font-size:18px!important;}
+  .brand .brand-icon-box{width:35px!important;height:35px!important;min-width:35px!important;border-radius:8px!important;}
+  .brand img.brand-a-icon{width:26px!important;height:26px!important;}
+  .brand span:not(.brand-icon-box){font-size:18px!important;}
 }
 @media(max-width:420px){
-  .brand span{font-size:17px!important;}
-  .brand img.brand-a-png{width:34px!important;height:34px!important;min-width:34px!important;}
+  .brand span:not(.brand-icon-box){font-size:17px!important;}
+  .brand .brand-icon-box{width:34px!important;height:34px!important;min-width:34px!important;}
+  .brand img.brand-a-icon{width:25px!important;height:25px!important;}
 }

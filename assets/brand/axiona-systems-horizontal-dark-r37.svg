@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024" role="img" aria-label="AXIONA logo">
+<svg xmlns="http://www.w3.org/2000/svg" width="2400" height="720" viewBox="0 0 2400 720" role="img" aria-label="AXIONA Systems logo">
 
   <defs>
     <linearGradient id="markGrad" x1="180" y1="840" x2="840" y2="160" gradientUnits="userSpaceOnUse">
@@ -10,7 +10,7 @@
       <stop offset="0%" stop-color="#18D8F2"/>
       <stop offset="100%" stop-color="#25E08A"/>
     </linearGradient>
-    <linearGradient id="edgeGrad" x1="0" y1="0" x2="1024" y2="1024" gradientUnits="userSpaceOnUse">
+    <linearGradient id="edgeGrad" x1="0" y1="0" x2="2400" y2="720" gradientUnits="userSpaceOnUse">
       <stop offset="0%" stop-color="#18D8F2"/>
       <stop offset="45%" stop-color="#102336"/>
       <stop offset="100%" stop-color="#25E08A"/>
@@ -20,11 +20,16 @@
       <feColorMatrix in="blur" type="matrix" values="0 0 0 0 0.07  0 0 0 0 0.86  0 0 0 0 0.88  0 0 0 .45 0"/>
       <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
     </filter>
+    <radialGradient id="bgGlow" cx="50%" cy="42%" r="70%">
+      <stop offset="0%" stop-color="#0F2436"/>
+      <stop offset="58%" stop-color="#071018"/>
+      <stop offset="100%" stop-color="#03070D"/>
+    </radialGradient>
   </defs>
 
+<rect width="2400" height="720" fill="#071018"/>
 
-
-  <g id="axiona-mark" transform="translate(0 0) scale(1.0)" filter="url(#softGlow)">
+  <g id="axiona-mark" transform="translate(76 96) scale(0.5078125)" filter="url(#softGlow)">
     <polygon points="268,780 353,780 506,514 506,384 430,384" fill="url(#markGrad)"/>
     <polygon points="756,780 671,780 518,514 518,384 594,384" fill="url(#markGrad2)"/>
     <polygon points="188,900 279,900 389,704 300,704" fill="url(#markGrad)"/>
@@ -38,5 +43,6 @@
     <rect x="495" y="850" width="34" height="34" rx="4" fill="#24D79A"/>
   </g>
 
-
+  <text x="720" y="332" fill="#F4FAFF" font-family="Inter, Avenir Next, Montserrat, Arial, sans-serif" font-size="180" font-weight="700" letter-spacing="42">AXIONA</text>
+  <text x="724" y="468" fill="#D1DFEA" font-family="Inter, Avenir Next, Montserrat, Arial, sans-serif" font-size="82" font-weight="500" letter-spacing="20">SYSTEMS</text>
 </svg>
