@@ -1939,8 +1939,8 @@ main > .section .grid > .card{
 /* AXIONA R29 FIRST VISITOR CLARITY - problem recognition + EN/DE positioning alignment */
 
 
-/* AXIONA R40 SINGLE SOURCE ICON INTEGRATION */
-/* Every active icon asset is derived from a_clean_modern_icon_branding_graphic_a_dark_navy_2.png. */
+/* AXIONA R41 CACHE-BUSTED ICON PATH */
+/* Same single-source icon as R40, moved to fresh /assets/brand/r41/ paths to bypass cached 404 responses. */
 .brand{
   display:inline-flex!important;
   align-items:center!important;
