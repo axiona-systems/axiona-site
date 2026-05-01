@@ -1937,3 +1937,52 @@ main > .section .grid > .card{
 
 
 /* AXIONA R29 FIRST VISITOR CLARITY - problem recognition + EN/DE positioning alignment */
+
+
+/* AXIONA R30 LOGO SYSTEM INTEGRATION */
+.brand{
+  min-width:clamp(190px,20vw,300px)!important;
+  height:46px!important;
+  display:inline-flex!important;
+  align-items:center!important;
+  gap:0!important;
+  line-height:1!important;
+}
+.brand img.brand-logo{
+  width:clamp(188px,18vw,286px)!important;
+  height:auto!important;
+  max-height:44px!important;
+  object-fit:contain!important;
+  display:block!important;
+  transform:none!important;
+}
+.top-inner{
+  align-items:center;
+}
+@media(max-width:1180px){
+  .brand{
+    min-width:190px!important;
+    height:42px!important;
+  }
+  .brand img.brand-logo{
+    width:clamp(178px,28vw,246px)!important;
+    max-height:40px!important;
+  }
+}
+@media(max-width:760px){
+  .brand{
+    width:100%!important;
+    min-width:0!important;
+    height:38px!important;
+  }
+  .brand img.brand-logo{
+    width:min(220px,74vw)!important;
+    max-height:36px!important;
+  }
+}
+@media(max-width:420px){
+  .brand img.brand-logo{
+    width:min(205px,78vw)!important;
+    max-height:34px!important;
+  }
+}
