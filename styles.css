@@ -1939,29 +1939,38 @@ main > .section .grid > .card{
 /* AXIONA R29 FIRST VISITOR CLARITY - problem recognition + EN/DE positioning alignment */
 
 
-/* AXIONA R34 SOURCE LOGO ASSET INTEGRATION */
-/* Uses the actual uploaded/source logo asset for the header mark. No redrawn inline A. */
+/* AXIONA R35 A-ONLY ICON INTEGRATION */
+/* Header icon uses the source logo pack A-only mark. No full source image, no inline fake A, no wordmark image. */
 .brand{
   display:inline-flex!important;
   align-items:center!important;
   gap:12px!important;
   min-width:245px!important;
-  height:48px!important;
+  height:46px!important;
   line-height:1!important;
   text-decoration:none!important;
   white-space:nowrap!important;
 }
-.brand img.brand-source-mark{
-  width:42px!important;
-  height:42px!important;
-  min-width:42px!important;
-  border-radius:10px!important;
-  object-fit:cover!important;
+.brand .brand-icon-box{
+  width:40px!important;
+  height:40px!important;
+  min-width:40px!important;
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  border-radius:11px!important;
+  background:linear-gradient(145deg,rgba(9,22,34,.96),rgba(3,9,16,.96))!important;
+  box-shadow:0 0 0 1px rgba(118,241,255,.14),0 0 18px rgba(24,216,242,.12)!important;
+  overflow:hidden!important;
+}
+.brand img.brand-a-mark{
+  width:29px!important;
+  height:29px!important;
+  object-fit:contain!important;
   display:block!important;
   transform:none!important;
-  box-shadow:0 0 0 1px rgba(118,241,255,.10),0 0 18px rgba(24,216,242,.14);
 }
-.brand span{
+.brand span:not(.brand-icon-box){
   display:inline-block!important;
   color:var(--text,#f4faff)!important;
   font-weight:900!important;
@@ -1970,16 +1979,19 @@ main > .section .grid > .card{
   white-space:nowrap!important;
 }
 @media(max-width:1180px){
-  .brand{min-width:220px!important;height:44px!important;gap:11px!important;}
-  .brand img.brand-source-mark{width:38px!important;height:38px!important;min-width:38px!important;border-radius:9px!important;}
-  .brand span{font-size:19px!important;}
+  .brand{min-width:220px!important;height:42px!important;gap:11px!important;}
+  .brand .brand-icon-box{width:37px!important;height:37px!important;min-width:37px!important;border-radius:10px!important;}
+  .brand img.brand-a-mark{width:27px!important;height:27px!important;}
+  .brand span:not(.brand-icon-box){font-size:19px!important;}
 }
 @media(max-width:760px){
   .brand{width:100%!important;min-width:0!important;height:40px!important;gap:10px!important;}
-  .brand img.brand-source-mark{width:36px!important;height:36px!important;min-width:36px!important;border-radius:8px!important;}
-  .brand span{font-size:18px!important;}
+  .brand .brand-icon-box{width:35px!important;height:35px!important;min-width:35px!important;border-radius:9px!important;}
+  .brand img.brand-a-mark{width:25px!important;height:25px!important;}
+  .brand span:not(.brand-icon-box){font-size:18px!important;}
 }
 @media(max-width:420px){
-  .brand span{font-size:17px!important;}
-  .brand img.brand-source-mark{width:34px!important;height:34px!important;min-width:34px!important;}
+  .brand span:not(.brand-icon-box){font-size:17px!important;}
+  .brand .brand-icon-box{width:34px!important;height:34px!important;min-width:34px!important;}
+  .brand img.brand-a-mark{width:24px!important;height:24px!important;}
 }
