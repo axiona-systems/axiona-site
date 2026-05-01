@@ -1289,3 +1289,184 @@ img,svg,video,canvas{
 
 
 /* AXIONA R20 COPY CTA POLISH - no visual baseline change */
+
+/* AXIONA R21 MOBILE MENU + TEXT HOTFIX */
+@media (max-width:760px){
+  .top{
+    position:sticky;
+    top:0;
+    z-index:80;
+    background:rgba(3,9,16,.94)!important;
+    backdrop-filter:blur(18px);
+  }
+  .top-inner{
+    display:flex!important;
+    flex-direction:column!important;
+    align-items:stretch!important;
+    justify-content:flex-start!important;
+    height:auto!important;
+    min-height:0!important;
+    padding:12px 0 10px!important;
+    gap:8px!important;
+    grid-template-columns:none!important;
+    grid-template-areas:none!important;
+  }
+  .brand,
+  .nav,
+  .lang-switch{
+    width:100%;
+    min-width:0!important;
+    max-width:100%;
+  }
+  .brand{
+    order:1;
+    display:flex!important;
+    align-items:center!important;
+    justify-content:flex-start!important;
+    font-size:18px!important;
+    line-height:1.1!important;
+    white-space:nowrap;
+  }
+  .brand span{
+    display:inline-block;
+    line-height:1.1;
+  }
+  .nav{
+    order:2;
+    display:flex!important;
+    visibility:visible!important;
+    opacity:1!important;
+    justify-content:flex-start!important;
+    align-items:center!important;
+    flex-wrap:nowrap!important;
+    overflow-x:auto!important;
+    overflow-y:hidden!important;
+    -webkit-overflow-scrolling:touch;
+    scrollbar-width:none;
+    gap:6px!important;
+    padding:0 0 8px!important;
+    margin:0!important;
+  }
+  .nav::-webkit-scrollbar{display:none;}
+  .nav a{
+    flex:0 0 auto!important;
+    display:inline-flex!important;
+    align-items:center!important;
+    justify-content:center!important;
+    min-height:36px!important;
+    padding:7px 11px!important;
+    white-space:nowrap!important;
+    line-height:1.1!important;
+    font-size:12px!important;
+  }
+  .lang-switch{
+    order:3;
+    display:flex!important;
+    visibility:visible!important;
+    opacity:1!important;
+    justify-content:flex-start!important;
+    align-items:center!important;
+    font-size:12px!important;
+    line-height:1.1!important;
+    gap:4px!important;
+  }
+  .hero,
+  .hero.hero-small{
+    padding:34px 0 28px!important;
+    gap:22px!important;
+    min-height:0!important;
+  }
+  .hero-copy,
+  .section-head,
+  .page-grid > div,
+  .card,
+  .software-copy,
+  .system-map,
+  .security-panel,
+  .spotlight-copy,
+  .notice,
+  .side-panel,
+  .map-node,
+  .scope-item,
+  .footer-row,
+  .footer-links{
+    min-width:0!important;
+  }
+  .hero h1,
+  .hero-small h1,
+  .section h2,
+  .spotlight h2,
+  .notice h2,
+  .card h3,
+  .map-node strong,
+  .side-panel h3{
+    text-wrap:pretty;
+    overflow-wrap:anywhere;
+    word-break:normal;
+    hyphens:auto;
+  }
+  .lead,
+  .sublead,
+  .card p,
+  .map-node span,
+  .side-panel p,
+  .software-copy p,
+  .security-panel p,
+  .notice p,
+  .footer,
+  .footer-links a{
+    overflow-wrap:anywhere;
+    word-break:normal;
+    hyphens:auto;
+  }
+  .hero h1,
+  .hero-small h1{
+    font-size:clamp(32px,11.2vw,48px)!important;
+    line-height:1.03!important;
+    letter-spacing:-.05em!important;
+    max-width:100%!important;
+  }
+  .lead{
+    font-size:17px!important;
+    line-height:1.42!important;
+    margin-top:14px!important;
+    max-width:100%!important;
+  }
+  .sublead{
+    font-size:15px!important;
+    line-height:1.5!important;
+    margin-top:12px!important;
+    max-width:100%!important;
+  }
+  .section h2,
+  .spotlight h2,
+  .notice h2{
+    font-size:clamp(26px,8.5vw,36px)!important;
+    line-height:1.1!important;
+  }
+  .card h3{font-size:20px!important; line-height:1.15!important;}
+  .card p,
+  .map-node span,
+  .side-panel p,
+  .software-copy p,
+  .security-panel p{font-size:14.5px!important; line-height:1.55!important;}
+  .actions{gap:10px!important;}
+  .btn{width:100%!important; min-width:0!important;}
+  .axiona-core-visual,
+  .system-visual{
+    min-height:300px!important;
+    height:auto!important;
+  }
+  .footer{
+    padding-top:22px!important;
+  }
+}
+
+@media (max-width:420px){
+  .top-inner{padding:10px 0 8px!important;}
+  .brand{font-size:17px!important;}
+  .nav a{font-size:11.5px!important;padding:7px 10px!important;}
+  .hero h1,.hero-small h1{font-size:clamp(30px,10.6vw,42px)!important;}
+  .lead{font-size:16.5px!important;}
+  .sublead{font-size:14.5px!important;}
+}
