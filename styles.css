@@ -1939,70 +1939,27 @@ main > .section .grid > .card{
 /* AXIONA R29 FIRST VISITOR CLARITY - problem recognition + EN/DE positioning alignment */
 
 
-/* AXIONA R32 HEADER BRAND HARDENING */
-/* Header brand is inline SVG + live text, so it cannot disappear due to image sizing/cache. */
-.brand{
-  display:inline-flex!important;
-  align-items:center!important;
-  gap:11px!important;
-  min-width:235px!important;
-  height:44px!important;
-  line-height:1!important;
-  text-decoration:none!important;
-  white-space:nowrap!important;
-}
-.brand .brand-symbol{
-  width:38px!important;
-  height:38px!important;
-  min-width:38px!important;
-  display:block!important;
-  overflow:visible!important;
-  filter:drop-shadow(0 0 12px rgba(24,216,242,.16));
-}
-.brand span{
-  display:inline-block!important;
-  color:var(--text,#f4faff)!important;
-  font-weight:900!important;
-  font-size:22px!important;
-  letter-spacing:-.035em!important;
-  white-space:nowrap!important;
-}
-@media(max-width:1180px){
-  .brand{min-width:205px!important;height:40px!important;gap:10px!important;}
-  .brand .brand-symbol{width:34px!important;height:34px!important;min-width:34px!important;}
-  .brand span{font-size:19px!important;}
-}
-@media(max-width:760px){
-  .brand{width:100%!important;min-width:0!important;height:38px!important;gap:9px!important;}
-  .brand .brand-symbol{width:32px!important;height:32px!important;min-width:32px!important;}
-  .brand span{font-size:18px!important;}
-}
-@media(max-width:420px){
-  .brand span{font-size:17px!important;}
-  .brand .brand-symbol{width:31px!important;height:31px!important;min-width:31px!important;}
-}
-
-
-/* AXIONA R33 APP ICON REFRESH + HEADER MARK WEIGHT FIX */
+/* AXIONA R34 SOURCE LOGO ASSET INTEGRATION */
+/* Uses the actual uploaded/source logo asset for the header mark. No redrawn inline A. */
 .brand{
   display:inline-flex!important;
   align-items:center!important;
   gap:12px!important;
   min-width:245px!important;
-  height:46px!important;
+  height:48px!important;
   line-height:1!important;
   text-decoration:none!important;
   white-space:nowrap!important;
 }
-.brand .brand-symbol{
-  width:45px!important;
-  height:39px!important;
-  min-width:45px!important;
+.brand img.brand-source-mark{
+  width:42px!important;
+  height:42px!important;
+  min-width:42px!important;
+  border-radius:10px!important;
+  object-fit:cover!important;
   display:block!important;
-  overflow:visible!important;
-  transform:scaleX(1.15)!important;
-  transform-origin:left center!important;
-  filter:drop-shadow(0 0 14px rgba(24,216,242,.20));
+  transform:none!important;
+  box-shadow:0 0 0 1px rgba(118,241,255,.10),0 0 18px rgba(24,216,242,.14);
 }
 .brand span{
   display:inline-block!important;
@@ -2013,16 +1970,16 @@ main > .section .grid > .card{
   white-space:nowrap!important;
 }
 @media(max-width:1180px){
-  .brand{min-width:220px!important;height:42px!important;gap:11px!important;}
-  .brand .brand-symbol{width:40px!important;height:35px!important;min-width:40px!important;}
+  .brand{min-width:220px!important;height:44px!important;gap:11px!important;}
+  .brand img.brand-source-mark{width:38px!important;height:38px!important;min-width:38px!important;border-radius:9px!important;}
   .brand span{font-size:19px!important;}
 }
 @media(max-width:760px){
-  .brand{width:100%!important;min-width:0!important;height:39px!important;gap:10px!important;}
-  .brand .brand-symbol{width:38px!important;height:33px!important;min-width:38px!important;}
+  .brand{width:100%!important;min-width:0!important;height:40px!important;gap:10px!important;}
+  .brand img.brand-source-mark{width:36px!important;height:36px!important;min-width:36px!important;border-radius:8px!important;}
   .brand span{font-size:18px!important;}
 }
 @media(max-width:420px){
   .brand span{font-size:17px!important;}
-  .brand .brand-symbol{width:36px!important;height:32px!important;min-width:36px!important;}
+  .brand img.brand-source-mark{width:34px!important;height:34px!important;min-width:34px!important;}
 }
