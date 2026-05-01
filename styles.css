@@ -1981,3 +1981,48 @@ main > .section .grid > .card{
   .brand span{font-size:17px!important;}
   .brand .brand-symbol{width:31px!important;height:31px!important;min-width:31px!important;}
 }
+
+
+/* AXIONA R33 APP ICON REFRESH + HEADER MARK WEIGHT FIX */
+.brand{
+  display:inline-flex!important;
+  align-items:center!important;
+  gap:12px!important;
+  min-width:245px!important;
+  height:46px!important;
+  line-height:1!important;
+  text-decoration:none!important;
+  white-space:nowrap!important;
+}
+.brand .brand-symbol{
+  width:45px!important;
+  height:39px!important;
+  min-width:45px!important;
+  display:block!important;
+  overflow:visible!important;
+  transform:scaleX(1.15)!important;
+  transform-origin:left center!important;
+  filter:drop-shadow(0 0 14px rgba(24,216,242,.20));
+}
+.brand span{
+  display:inline-block!important;
+  color:var(--text,#f4faff)!important;
+  font-weight:900!important;
+  font-size:22px!important;
+  letter-spacing:-.035em!important;
+  white-space:nowrap!important;
+}
+@media(max-width:1180px){
+  .brand{min-width:220px!important;height:42px!important;gap:11px!important;}
+  .brand .brand-symbol{width:40px!important;height:35px!important;min-width:40px!important;}
+  .brand span{font-size:19px!important;}
+}
+@media(max-width:760px){
+  .brand{width:100%!important;min-width:0!important;height:39px!important;gap:10px!important;}
+  .brand .brand-symbol{width:38px!important;height:33px!important;min-width:38px!important;}
+  .brand span{font-size:18px!important;}
+}
+@media(max-width:420px){
+  .brand span{font-size:17px!important;}
+  .brand .brand-symbol{width:36px!important;height:32px!important;min-width:36px!important;}
+}
