@@ -16,7 +16,7 @@
 <link rel="apple-touch-icon" href="../apple-touch-icon-r41.png">
 <link rel="manifest" href="../site.webmanifest">
 <meta property="og:image" content="https://axiona.systems/assets/brand/r41/axiona-og-image-1200x630.jpg">
-  <link rel="stylesheet" href="../styles.css?v=42">
+  <link rel="stylesheet" href="../styles.css?v=43">
 </head>
 <body class="home">
   <header class="top">
@@ -62,7 +62,24 @@
           </div>
         </div>
       </div></section>
-    <section class="section wrap operating-simulator" aria-labelledby="operating-simulator-title">
+    
+    <section class="section wrap real-3d-section" aria-labelledby="real-3d-title">
+      <div class="real-3d-copy">
+        <div class="eyebrow">Real 3D operating core</div>
+        <h2 id="real-3d-title">AXIONA Core — not an image, but live 3D rendering.</h2>
+        <p class="section-lead">The central element is rendered in WebGL: camera, spatial depth, orbit paths, nodes and subtle motion. If the browser does not support it, the existing visual fallback remains.</p>
+      </div>
+      <div class="real-3d-panel" aria-label="AXIONA Core real 3D visual element">
+        <canvas class="axiona-3d-canvas" data-icon="../assets/brand/r41/axiona-header-icon.png"></canvas>
+        <div class="real-3d-fallback">
+          <div class="fallback-core"><img src="../assets/brand/r41/axiona-header-icon.png" alt=""><span>AXIONA CORE</span></div>
+        </div>
+        <div class="real-3d-label label-input">Input</div>
+        <div class="real-3d-label label-logic">Logic</div>
+        <div class="real-3d-label label-output">Output</div>
+      </div>
+    </section>
+<section class="section wrap operating-simulator" aria-labelledby="operating-simulator-title">
       <div class="section-head sim-head">
         <div class="eyebrow">Operating simulator</div>
         <h2 id="operating-simulator-title">From manual chaos to software-based clarity.</h2>
@@ -113,5 +130,6 @@
       <div class="footer-links"><a href="company.html">Background</a><a href="privacy.html">Privacy</a><a href="legal.html">Legal</a><a href="security.html">Security</a><a href="support.html">Support</a><a href="contact.html">Contact</a></div>
     </div>
   </footer>
+  <script src="../assets/js/hero-3d.js" defer></script>
 </body>
 </html>
