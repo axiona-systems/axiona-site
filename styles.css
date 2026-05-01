@@ -1939,8 +1939,8 @@ main > .section .grid > .card{
 /* AXIONA R29 FIRST VISITOR CLARITY - problem recognition + EN/DE positioning alignment */
 
 
-/* AXIONA R38 EXACT HEADER TILE48 */
-/* Header uses exactly V3 pack: 03_header/axiona-header-a-tile-48.png */
+/* AXIONA R39 DARK ICON ROLE LOCK */
+/* Header + favicon/app/PWA role-lock to dark tile assets only. */
 .brand{
   display:inline-flex!important;
   align-items:center!important;
@@ -1951,7 +1951,7 @@ main > .section .grid > .card{
   text-decoration:none!important;
   white-space:nowrap!important;
 }
-.brand img.brand-a-tile48{
+.brand img.brand-dark-tile48{
   width:40px!important;
   height:40px!important;
   min-width:40px!important;
@@ -1971,15 +1971,15 @@ main > .section .grid > .card{
 }
 @media(max-width:1180px){
   .brand{min-width:220px!important;height:42px!important;gap:11px!important;}
-  .brand img.brand-a-tile48{width:37px!important;height:37px!important;min-width:37px!important;border-radius:9px!important;}
+  .brand img.brand-dark-tile48{width:37px!important;height:37px!important;min-width:37px!important;border-radius:9px!important;}
   .brand span{font-size:19px!important;}
 }
 @media(max-width:760px){
   .brand{width:100%!important;min-width:0!important;height:40px!important;gap:10px!important;}
-  .brand img.brand-a-tile48{width:35px!important;height:35px!important;min-width:35px!important;border-radius:8px!important;}
+  .brand img.brand-dark-tile48{width:35px!important;height:35px!important;min-width:35px!important;border-radius:8px!important;}
   .brand span{font-size:18px!important;}
 }
 @media(max-width:420px){
   .brand span{font-size:17px!important;}
-  .brand img.brand-a-tile48{width:34px!important;height:34px!important;min-width:34px!important;}
+  .brand img.brand-dark-tile48{width:34px!important;height:34px!important;min-width:34px!important;}
 }
