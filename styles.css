@@ -1473,3 +1473,8 @@ img,svg,video,canvas{
 
 
 /* AXIONA R22 SOFTWARE POSITIONING POLISH - applications are supporting surfaces */
+
+
+/* AXIONA R23 CONTACT + CLARITY POLISH */
+.clarity-section{}
+.contact-email{font-weight:900;color:var(--accent);}
