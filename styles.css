@@ -3066,3 +3066,143 @@ body.home .hero .hero-core-visual{
     transform:translate(-50%,-50%) rotateZ(38deg) rotateX(-60deg) translateY(46px) translateZ(42px)!important;
   }
 }
+
+
+/* AXIONA R48 CORE POSITION + FRONT LABEL */
+/* Same vertical position across pages. AXIONA CORE label is no longer inside the tilted layer. */
+.hero{
+  align-items:start!important;
+}
+.hero .hero-copy{
+  align-self:center!important;
+}
+.hero .hero-core-visual{
+  align-self:start!important;
+  margin-top:clamp(6px,1.2vw,12px)!important;
+  margin-bottom:0!important;
+  min-height:clamp(250px,30vw,370px)!important;
+  padding-top:0!important;
+  transform:none!important;
+}
+body.home .hero .hero-core-visual{
+  align-self:start!important;
+  margin-top:clamp(6px,1.2vw,12px)!important;
+  transform:none!important;
+}
+.hero-core-visual .core-ambient{
+  position:relative!important;
+  height:clamp(250px,29vw,350px)!important;
+  width:min(470px,90vw)!important;
+  display:block!important;
+  perspective:1000px!important;
+}
+.hero-core-visual .core-device{
+  position:absolute!important;
+  left:50%!important;
+  top:47%!important;
+  width:260px!important;
+  height:210px!important;
+  transform-style:preserve-3d!important;
+  transform:translate(-50%,-50%) rotateX(60deg) rotateZ(-38deg)!important;
+  animation:axionaCoreDriftR48 8s ease-in-out infinite!important;
+}
+.hero-core-visual .layer-top{
+  overflow:visible!important;
+}
+.hero-core-visual .layer-top span{
+  display:none!important;
+}
+.hero-core-visual .layer-top img{
+  transform:rotateZ(38deg) rotateX(-60deg) translateY(-20px) translateZ(36px)!important;
+  z-index:25!important;
+}
+.core-title-front{
+  position:absolute!important;
+  left:50%!important;
+  top:calc(47% + 102px)!important;
+  z-index:80!important;
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  width:auto!important;
+  min-width:174px!important;
+  height:34px!important;
+  padding:0 16px!important;
+  border-radius:999px!important;
+  transform:translateX(-50%)!important;
+  font-size:12px!important;
+  line-height:1!important;
+  letter-spacing:.17em!important;
+  font-weight:950!important;
+  color:#fbfeff!important;
+  background:linear-gradient(90deg,rgba(2,8,13,.98),rgba(8,24,36,.94))!important;
+  border:1px solid rgba(118,241,255,.34)!important;
+  text-shadow:0 1px 2px rgba(0,0,0,.96),0 0 12px rgba(24,216,242,.38)!important;
+  box-shadow:0 16px 36px rgba(0,0,0,.52),0 0 24px rgba(24,216,242,.22),inset 0 1px 0 rgba(255,255,255,.14)!important;
+  white-space:nowrap!important;
+  pointer-events:none!important;
+  isolation:isolate!important;
+}
+.core-title-front::before{
+  content:"";
+  position:absolute;
+  inset:-8px;
+  border-radius:999px;
+  background:radial-gradient(circle at 50% 50%,rgba(24,216,242,.18),transparent 70%);
+  z-index:-1;
+}
+@keyframes axionaCoreDriftR48{
+  0%,100%{transform:translate(-50%,-50%) rotateX(60deg) rotateZ(-38deg);}
+  50%{transform:translate(-50%,calc(-50% - 8px)) rotateX(62deg) rotateZ(-35deg);}
+}
+@media(max-width:980px){
+  .hero{
+    align-items:start!important;
+  }
+  .hero .hero-copy{
+    align-self:start!important;
+  }
+  .hero .hero-core-visual,
+  body.home .hero .hero-core-visual{
+    margin-top:10px!important;
+    min-height:245px!important;
+  }
+  .hero-core-visual .core-device{
+    transform:translate(-50%,-50%) rotateX(60deg) rotateZ(-38deg) scale(.86)!important;
+    animation:axionaCoreDriftR48Tablet 8s ease-in-out infinite!important;
+  }
+  .core-title-front{
+    top:calc(47% + 88px)!important;
+  }
+}
+@keyframes axionaCoreDriftR48Tablet{
+  0%,100%{transform:translate(-50%,-50%) rotateX(60deg) rotateZ(-38deg) scale(.86);}
+  50%{transform:translate(-50%,calc(-50% - 7px)) rotateX(62deg) rotateZ(-35deg) scale(.86);}
+}
+@media(max-width:620px){
+  .hero .hero-core-visual,
+  body.home .hero .hero-core-visual{
+    min-height:220px!important;
+    margin-top:6px!important;
+  }
+  .hero-core-visual .core-device{
+    transform:translate(-50%,-50%) rotateX(60deg) rotateZ(-38deg) scale(.72)!important;
+    animation:axionaCoreDriftR48Mobile 8s ease-in-out infinite!important;
+  }
+  .core-title-front{
+    top:calc(47% + 76px)!important;
+    min-width:146px!important;
+    height:30px!important;
+    font-size:10px!important;
+    letter-spacing:.14em!important;
+  }
+}
+@keyframes axionaCoreDriftR48Mobile{
+  0%,100%{transform:translate(-50%,-50%) rotateX(60deg) rotateZ(-38deg) scale(.72);}
+  50%{transform:translate(-50%,calc(-50% - 6px)) rotateX(62deg) rotateZ(-35deg) scale(.72);}
+}
+@media(prefers-reduced-motion:reduce){
+  .hero-core-visual .core-device{
+    animation:none!important;
+  }
+}
