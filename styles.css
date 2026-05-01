@@ -1483,137 +1483,120 @@ img,svg,video,canvas{
 /* AXIONA R24 DISTRIBUTED CONTENT CLARITY - home shortened, details moved to relevant pages */
 
 
-/* AXIONA R25 RESTRAINED SYSTEM PRESENCE - quiet support/watch layer, no AI label */
-.system-presence-dot{
-  display:inline-block;
-  width:8px;
-  height:8px;
-  margin-left:2px;
-  border-radius:50%;
-  background:rgba(56,242,166,.78);
-  box-shadow:0 0 0 4px rgba(56,242,166,.055),0 0 18px rgba(56,242,166,.30);
-  transform:translateY(-6px);
+/* AXIONA R26 CARD GRID DISCIPLINE - stable card rhythm and bottom-aligned CTAs */
+
+/* Grid rows should behave like product/system cards, not loose text boxes. */
+.grid,
+.grid.three,
+.grid.two{
+  align-items:stretch;
+}
+
+.grid > .card,
+.grid.three > .card,
+.grid.two > .card{
+  height:100%;
+}
+
+/* Canonical card layout: icon/title/text at top, CTA at bottom. */
+.card{
+  display:flex !important;
+  flex-direction:column !important;
+  align-items:flex-start !important;
+  justify-content:flex-start !important;
+  min-height:252px;
+}
+
+.card .card-icon{
   flex:0 0 auto;
-  opacity:.86;
-  animation:presenceDot 5.8s ease-in-out infinite;
 }
-.system-sentinel{
-  position:absolute;
-  right:13%;
-  top:17%;
-  width:82px;
-  height:82px;
-  z-index:9;
-  pointer-events:none;
-  transform:translateZ(128px);
-  opacity:.84;
+
+.card h3{
+  width:100%;
+  margin:15px 0 9px;
 }
-.sentinel-core{
-  position:absolute;
-  left:50%;
-  top:50%;
-  width:10px;
-  height:10px;
-  border-radius:50%;
-  transform:translate(-50%,-50%);
-  background:rgba(214,255,232,.92);
-  box-shadow:0 0 18px rgba(118,241,255,.50),0 0 34px rgba(56,242,166,.22);
+
+.card p{
+  width:100%;
+  flex:0 1 auto;
+  margin-bottom:18px;
 }
-.sentinel-ring{
-  position:absolute;
-  inset:18px;
-  border-radius:50%;
-  border:1px solid rgba(118,241,255,.22);
-  box-shadow:inset 0 0 16px rgba(118,241,255,.045);
-  animation:sentinelBreathe 7.2s ease-in-out infinite;
+
+/* Any menu/link CTA inside a card must sit on the same lower rail. */
+.card > .text-link,
+.card a.text-link{
+  margin-top:auto !important;
+  align-self:flex-start;
+  min-height:34px;
+  display:inline-flex;
+  align-items:center;
 }
-.sentinel-ring.ring-b{
-  inset:7px;
-  border-color:rgba(56,242,166,.12);
-  animation-delay:1.6s;
+
+/* Cards without a CTA should still not collapse visually against CTA cards. */
+.card:not(:has(.text-link)){
+  padding-bottom:28px;
 }
-.axiona-core-visual .core-board::after{
-  content:"";
-  position:absolute;
-  left:11%;
-  right:11%;
-  top:18%;
-  bottom:14%;
-  pointer-events:none;
-  z-index:4;
-  border-radius:30px;
-  background:
-    radial-gradient(circle at 74% 25%,rgba(118,241,255,.075),transparent 17%),
-    radial-gradient(circle at 42% 62%,rgba(56,242,166,.052),transparent 20%);
-  opacity:.62;
-  animation:presenceField 9s ease-in-out infinite;
+
+/* Page-grid card groups must also align cleanly beside side panels. */
+.page-grid .grid > .card,
+.software-section .card,
+.security-grid .card{
+  min-height:230px;
 }
-.card,.map-node,.side-panel,.security-panel,.software-copy,.system-map{
-  transition:border-color .22s ease, box-shadow .22s ease, transform .22s ease;
+
+/* Secondary node cards get a tighter but still disciplined layout. */
+.map-node{
+  display:flex;
+  flex-direction:column;
+  justify-content:flex-start;
 }
-.card:hover,.map-node:hover,.side-panel:hover{
-  border-color:rgba(118,241,255,.30);
-  box-shadow:0 34px 90px rgba(0,0,0,.36),inset 0 1px 0 rgba(255,255,255,.06),0 0 0 1px rgba(56,242,166,.035);
+.map-node span{
+  margin-top:8px;
 }
-.card:hover .card-icon,
-.map-node:hover{
-  filter:drop-shadow(0 0 10px rgba(118,241,255,.08));
+
+/* Main route cards on the homepage need extra stability because they point to menus. */
+.home .grid > .card,
+body.home .grid > .card,
+main > .section .grid > .card{
+  min-height:248px;
 }
-.card::after{
-  content:"";
-  position:absolute;
-  left:22px;
-  right:22px;
-  bottom:0;
-  height:1px;
-  background:linear-gradient(90deg,transparent,rgba(118,241,255,.28),rgba(56,242,166,.18),transparent);
-  opacity:0;
-  pointer-events:none;
-  transition:opacity .22s ease;
+
+/* Avoid hover lifting from making rows feel jumpy. */
+.card:hover{
+  transform:translateY(-2px);
 }
-.card:hover::after{
-  opacity:.9;
-}
-@keyframes presenceDot{
-  0%,100%{opacity:.62;transform:translateY(-6px) scale(.88);}
-  45%{opacity:.95;transform:translateY(-6px) scale(1);}
-  62%{opacity:.74;transform:translateY(-6px) scale(.92);}
-}
-@keyframes sentinelBreathe{
-  0%,100%{opacity:.20;transform:scale(.92);}
-  42%{opacity:.72;transform:scale(1.04);}
-  68%{opacity:.34;transform:scale(.98);}
-}
-@keyframes presenceField{
-  0%,100%{opacity:.38;transform:scale(1);}
-  50%{opacity:.72;transform:scale(1.012);}
-}
+
+/* Mobile: keep order/CTA discipline but avoid oversized cards. */
 @media(max-width:760px){
-  .system-presence-dot{
-    width:7px;
-    height:7px;
-    transform:translateY(-5px);
+  .card{
+    min-height:auto !important;
+    padding:20px;
   }
-  .system-sentinel{
-    width:58px;
-    height:58px;
-    right:10%;
-    top:14%;
-    opacity:.70;
+  .card p{
+    margin-bottom:14px;
   }
-  .sentinel-ring{inset:13px;}
-  .sentinel-ring.ring-b{inset:5px;}
-  .card::after{left:18px;right:18px;}
+  .card > .text-link,
+  .card a.text-link{
+    margin-top:14px !important;
+    min-height:32px;
+  }
+  .card:not(:has(.text-link)){
+    padding-bottom:20px;
+  }
+  .grid,
+  .grid.three,
+  .grid.two{
+    gap:14px;
+  }
 }
-@media(max-width:420px){
-  .system-sentinel{
-    opacity:.46;
+
+/* Older browser safety if :has is not available: keep sane padding. */
+@supports not selector(.card:has(.text-link)){
+  .card{
+    padding-bottom:28px;
   }
-}
-@media (prefers-reduced-motion:reduce){
-  .system-presence-dot,
-  .sentinel-ring,
-  .axiona-core-visual .core-board::after{
-    animation:none!important;
+  .card > .text-link,
+  .card a.text-link{
+    margin-top:auto !important;
   }
 }
