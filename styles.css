@@ -1600,3 +1600,323 @@ main > .section .grid > .card{
     margin-top:auto !important;
   }
 }
+
+
+/* AXIONA R27 FINAL RESPONSIVE + TRUST POLISH */
+/* Goal: stable visitor rhythm, strong mobile/tablet UX, and consistent CTA behavior without changing the accepted R24/R26 content baseline. */
+
+:root{
+  --r27-section-y:52px;
+  --r27-section-y-compact:38px;
+}
+
+/* Slightly calmer vertical rhythm on the home page. */
+.home main > .section{
+  padding-top:var(--r27-section-y);
+  padding-bottom:var(--r27-section-y-compact);
+}
+.home main > .section + .section{
+  padding-top:var(--r27-section-y-compact);
+}
+.home .notice{
+  margin-top:34px;
+}
+
+/* Page hero content should feel like a product website, not a compressed document. */
+.page .hero-copy,
+.home .hero-copy{
+  min-width:0;
+}
+.hero-copy .actions{
+  align-items:center;
+}
+.actions .btn{
+  white-space:normal;
+  text-align:center;
+}
+
+/* CTA rails: all action rows have consistent spacing and touch targets. */
+.actions{
+  row-gap:12px;
+}
+.btn{
+  min-height:48px;
+  line-height:1.15;
+}
+.text-link{
+  line-height:1.2;
+}
+
+/* Card text rhythm: prevent crowded paragraphs while keeping cards aligned. */
+.card p,
+.map-node span,
+.side-panel p,
+.software-copy p,
+.security-panel p{
+  line-height:1.58;
+}
+.card h3{
+  line-height:1.15;
+}
+.card > .text-link,
+.card a.text-link{
+  padding-top:4px;
+}
+
+/* Trust polish: contact/support cards should not look like filler. */
+.contact-card,
+.support-card{
+  min-height:220px;
+}
+
+/* Tablet: keep nav visible and lower density. */
+@media(max-width:1180px){
+  .wrap{
+    width:min(100% - 42px, var(--site-max, 1320px));
+  }
+  .top-inner{
+    height:auto !important;
+    min-height:0 !important;
+    padding:12px 0 10px !important;
+    grid-template-columns:1fr auto !important;
+    grid-template-areas:
+      "brand lang"
+      "nav nav" !important;
+    gap:10px 14px !important;
+  }
+  .brand{grid-area:brand;}
+  .lang-switch{grid-area:lang;justify-content:flex-end;}
+  .nav{
+    grid-area:nav;
+    width:100%;
+    max-width:100%;
+    justify-content:flex-start !important;
+    flex-wrap:nowrap !important;
+    overflow-x:auto !important;
+    overflow-y:hidden !important;
+    padding:0 0 8px !important;
+    gap:6px !important;
+    scrollbar-width:none;
+    -webkit-overflow-scrolling:touch;
+  }
+  .nav::-webkit-scrollbar{display:none;}
+  .nav a{
+    flex:0 0 auto;
+    min-height:38px;
+    display:inline-flex;
+    align-items:center;
+    white-space:nowrap;
+  }
+  .hero,
+  .hero.hero-small{
+    grid-template-columns:1fr !important;
+    gap:34px !important;
+    padding:54px 0 38px !important;
+  }
+  .hero h1,
+  .hero-small h1{
+    max-width:920px;
+  }
+  .lead,
+  .sublead{
+    max-width:840px;
+  }
+  .home main > .section,
+  .page main > .section{
+    padding-top:42px;
+    padding-bottom:34px;
+  }
+  .grid,
+  .grid.three,
+  .grid.two{
+    gap:16px;
+  }
+  .page-grid{
+    gap:22px;
+  }
+}
+
+/* Phone: readable, non-overlapping, and lower density. */
+@media(max-width:760px){
+  .wrap{
+    width:min(100% - 26px,100%) !important;
+  }
+  .top{
+    position:sticky;
+    top:0;
+    z-index:90;
+    background:rgba(3,9,16,.94)!important;
+  }
+  .top-inner{
+    display:flex !important;
+    flex-direction:column !important;
+    align-items:stretch !important;
+    padding:11px 0 9px !important;
+    gap:8px !important;
+  }
+  .brand{
+    width:100%;
+    min-width:0 !important;
+    font-size:17.5px !important;
+    line-height:1.1 !important;
+  }
+  .brand img{
+    width:31px !important;
+    height:31px !important;
+  }
+  .nav{
+    width:100%;
+    display:flex !important;
+    visibility:visible !important;
+    opacity:1 !important;
+    justify-content:flex-start !important;
+    flex-wrap:nowrap !important;
+    overflow-x:auto !important;
+    overflow-y:hidden !important;
+    padding:0 0 7px !important;
+    gap:6px !important;
+  }
+  .nav a{
+    flex:0 0 auto !important;
+    min-height:35px !important;
+    font-size:11.8px !important;
+    padding:7px 10px !important;
+    line-height:1.1 !important;
+    white-space:nowrap !important;
+  }
+  .lang-switch{
+    width:100%;
+    justify-content:flex-start !important;
+    font-size:11.8px !important;
+    line-height:1.1 !important;
+  }
+  .hero,
+  .hero.hero-small{
+    padding:34px 0 24px !important;
+    gap:22px !important;
+  }
+  .hero h1,
+  .hero-small h1{
+    font-size:clamp(31px,10.9vw,46px) !important;
+    line-height:1.04 !important;
+    letter-spacing:-.048em !important;
+    max-width:100% !important;
+    overflow-wrap:normal;
+  }
+  .lead{
+    font-size:16.8px !important;
+    line-height:1.45 !important;
+    margin-top:14px !important;
+  }
+  .sublead{
+    font-size:14.8px !important;
+    line-height:1.52 !important;
+    margin-top:12px !important;
+  }
+  .actions{
+    margin-top:22px !important;
+    gap:10px !important;
+  }
+  .actions .btn{
+    width:100% !important;
+    min-width:0 !important;
+    min-height:45px !important;
+    padding:12px 14px !important;
+  }
+  .home main > .section,
+  .page main > .section,
+  .section,
+  .section + .section{
+    padding-top:28px !important;
+    padding-bottom:24px !important;
+  }
+  .section-head{
+    gap:10px !important;
+    margin-bottom:15px !important;
+  }
+  .section h2,
+  .spotlight h2,
+  .notice h2{
+    font-size:clamp(25px,8vw,35px) !important;
+    line-height:1.11 !important;
+  }
+  .section-lead{
+    font-size:14.8px !important;
+    line-height:1.52 !important;
+  }
+  .grid,
+  .grid.three,
+  .grid.two{
+    grid-template-columns:1fr !important;
+    gap:13px !important;
+  }
+  .card{
+    min-height:auto !important;
+    padding:19px !important;
+    border-radius:20px !important;
+  }
+  .card h3{
+    font-size:19.5px !important;
+    line-height:1.16 !important;
+  }
+  .card p{
+    font-size:14.5px !important;
+    line-height:1.56 !important;
+  }
+  .card > .text-link,
+  .card a.text-link{
+    margin-top:13px !important;
+    min-height:31px !important;
+  }
+  .software-copy,
+  .system-map,
+  .security-panel,
+  .spotlight,
+  .notice,
+  .side-panel{
+    padding:19px !important;
+    border-radius:20px !important;
+  }
+  .spotlight{
+    margin-top:16px !important;
+  }
+  .notice{
+    margin-top:18px !important;
+  }
+  .footer{
+    margin-top:auto !important;
+    padding:20px 0 calc(24px + env(safe-area-inset-bottom)) !important;
+  }
+  .footer-row{
+    flex-direction:column;
+    align-items:flex-start !important;
+    gap:10px !important;
+  }
+  .footer-links{
+    gap:8px 12px !important;
+  }
+}
+
+/* Very small phones: avoid headline collisions. */
+@media(max-width:420px){
+  .wrap{
+    width:min(100% - 22px,100%) !important;
+  }
+  .brand{
+    font-size:17px !important;
+  }
+  .nav a{
+    font-size:11.4px !important;
+    padding:7px 9px !important;
+  }
+  .hero h1,
+  .hero-small h1{
+    font-size:clamp(29px,10.5vw,40px) !important;
+  }
+  .lead{
+    font-size:16px !important;
+  }
+  .sublead{
+    font-size:14.2px !important;
+  }
+}
