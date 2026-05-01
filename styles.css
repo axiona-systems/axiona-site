@@ -1939,50 +1939,44 @@ main > .section .grid > .card{
 /* AXIONA R29 FIRST VISITOR CLARITY - problem recognition + EN/DE positioning alignment */
 
 
-/* AXIONA R30 LOGO SYSTEM INTEGRATION */
+/* AXIONA R31 LOGO ICON CACHE FIX */
+/* Header uses mark + live text for guaranteed visibility. App/PWA/favicon assets use r31 filenames to avoid stale icon caches. */
 .brand{
-  min-width:clamp(190px,20vw,300px)!important;
-  height:46px!important;
   display:inline-flex!important;
   align-items:center!important;
-  gap:0!important;
+  gap:12px!important;
+  min-width:240px!important;
+  height:44px!important;
+  text-decoration:none!important;
   line-height:1!important;
 }
-.brand img.brand-logo{
-  width:clamp(188px,18vw,286px)!important;
-  height:auto!important;
-  max-height:44px!important;
+.brand img.brand-mark{
+  width:38px!important;
+  height:38px!important;
+  min-width:38px!important;
   object-fit:contain!important;
   display:block!important;
   transform:none!important;
 }
-.top-inner{
-  align-items:center;
+.brand span{
+  display:inline-block!important;
+  color:var(--text,#f4faff)!important;
+  font-weight:900!important;
+  font-size:22px!important;
+  letter-spacing:-.03em!important;
+  white-space:nowrap!important;
 }
 @media(max-width:1180px){
-  .brand{
-    min-width:190px!important;
-    height:42px!important;
-  }
-  .brand img.brand-logo{
-    width:clamp(178px,28vw,246px)!important;
-    max-height:40px!important;
-  }
+  .brand{min-width:210px!important;height:40px!important;gap:10px!important;}
+  .brand img.brand-mark{width:34px!important;height:34px!important;min-width:34px!important;}
+  .brand span{font-size:19px!important;}
 }
 @media(max-width:760px){
-  .brand{
-    width:100%!important;
-    min-width:0!important;
-    height:38px!important;
-  }
-  .brand img.brand-logo{
-    width:min(220px,74vw)!important;
-    max-height:36px!important;
-  }
+  .brand{width:100%!important;min-width:0!important;height:38px!important;gap:9px!important;}
+  .brand img.brand-mark{width:32px!important;height:32px!important;min-width:32px!important;}
+  .brand span{font-size:18px!important;}
 }
 @media(max-width:420px){
-  .brand img.brand-logo{
-    width:min(205px,78vw)!important;
-    max-height:34px!important;
-  }
+  .brand span{font-size:17px!important;}
+  .brand img.brand-mark{width:31px!important;height:31px!important;min-width:31px!important;}
 }
