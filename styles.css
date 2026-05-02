@@ -3702,3 +3702,7 @@ body.home main > .hero.wrap > .hero-copy .hero-metrics{
 
 
 /* AXIONA R60 CORE VISUAL RESTORE: home hero uses full AXIONA CORE visual block again. */
+
+/* AXIONA R61 REAL INTAKE AND PRACTICAL VALUE */
+.intake-section .page-grid{align-items:start}.intake-form{display:grid;gap:18px}.form-grid{display:grid;gap:14px}.form-grid.two{grid-template-columns:repeat(2,minmax(0,1fr))}.intake-form label{display:grid;gap:8px;color:#d8e8ee;font-weight:800}.intake-form input,.intake-form textarea,.intake-form select{width:100%;border:1px solid rgba(180,224,232,.18);background:rgba(255,255,255,.045);color:#f3fbff;border-radius:16px;padding:13px 14px;font:inherit;outline:none}.intake-form textarea{resize:vertical}.intake-form input:focus,.intake-form textarea:focus,.intake-form select:focus{border-color:rgba(118,241,255,.55);box-shadow:0 0 0 4px rgba(118,241,255,.08)}.form-actions{display:flex;gap:12px;flex-wrap:wrap}.btn.disabled{opacity:.55;pointer-events:none}.summary-output{min-height:180px}.practical-tips-grid .card{min-height:230px}
+@media(max-width:720px){.form-grid.two{grid-template-columns:1fr}.form-actions .btn{width:100%;justify-content:center}}

@@ -1,14 +1,13 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
 <title>Contact | AXIONA Systems</title>
-<meta content="Simple contact." name="description"/>
+<meta content="Structured contact form for internal software, request handling, document workflows and automation discussions." name="description"/>
 <link href="https://axiona.systems/en/contact.html" rel="canonical"/>
 <meta content="Contact | AXIONA Systems" property="og:title"/>
-<meta content="Simple contact." property="og:description"/>
+<meta content="Structured contact form for internal software, request handling, document workflows and automation discussions." property="og:description"/>
 <meta content="website" property="og:type"/>
 <meta content="https://axiona.systems/en/contact.html" property="og:url"/>
 <meta content="#071018" name="theme-color"/>
@@ -17,7 +16,7 @@
 <link href="../apple-touch-icon-r41.png" rel="apple-touch-icon"/>
 <link href="../site.webmanifest" rel="manifest"/>
 <meta content="https://axiona.systems/assets/brand/r41/axiona-og-image-1200x630.jpg" property="og:image"/>
-<link href="../styles.css?v=60" rel="stylesheet"/>
+<link href="../styles.css?v=61" rel="stylesheet"/>
 </head>
 <body class="page">
 <header class="top">
@@ -27,40 +26,39 @@
 <div aria-label="Language selector" class="lang-switch"><a class="active" href="contact.html">EN</a><a class="" href="../de/contact.html">DE</a><a class="" href="../fr/contact.html">FR</a><a class="" href="../it/contact.html">IT</a><a class="" href="../es/contact.html">ES</a><a class="" href="../contact.html">HU</a></div>
 </div>
 </header>
-<main><section class="hero wrap hero-small">
-<div class="hero-copy">
-<div class="eyebrow">Contact</div>
-<h1>Describe what operation needs to be cleaned up.</h1>
-<div class="lead">If your process is spread across email, spreadsheets, files or manual administration, a short email is enough to start.</div>
-<p class="sublead">No finished specification is needed. Describe the current process, main problem, tools in use and desired outcome.</p>
-<div class="actions"><a class="btn primary" href="mailto:hello@axiona.systems">hello@axiona.systems<span>→</span></a><a class="btn" href="applications.html">Software directions<span>→</span></a></div>
-</div>
+<main>
+<section class="hero wrap hero-small">
+<div class="hero-copy"><div class="eyebrow">Contact</div><h1>Describe the operational problem, not a finished specification.</h1><div class="lead">If daily work is spread across email, spreadsheets, files and manual administration, the first step is a short structured picture of the situation.</div><p class="sublead">The form does not send data to a backend. It creates an email draft in your browser, so you can review it before sending.</p><div class="actions"><a class="btn primary" href="#intake-form">Operational intake form<span>→</span></a><a class="btn" href="practical-tips.html">Practical tips<span>→</span></a></div></div>
 <div aria-hidden="true" class="hero-core-visual">
-<div class="core-ambient core-ambient-hero">
-<div class="core-device">
-<div class="core-layer layer-top">
-<img alt="" src="../assets/brand/r41/axiona-header-icon.png"/>
-<span>AXIONA CORE</span>
+<div class="core-ambient core-ambient-hero"><div class="core-device"><div class="core-layer layer-top"><img alt="" src="../assets/brand/r41/axiona-header-icon.png"/><span>AXIONA CORE</span></div><div class="core-layer layer-mid"></div><div class="core-layer layer-low"></div><div class="core-glow-ring ring-one"></div><div class="core-glow-ring ring-two"></div><div class="core-node node-one"></div><div class="core-node node-two"></div><div class="core-node node-three"></div></div><div class="core-title-front">AXIONA CORE</div></div>
 </div>
-<div class="core-layer layer-mid"></div>
-<div class="core-layer layer-low"></div>
-<div class="core-glow-ring ring-one"></div>
-<div class="core-glow-ring ring-two"></div>
-<div class="core-node node-one"></div>
-<div class="core-node node-two"></div>
-<div class="core-node node-three"></div>
+</section>
+<section class="section wrap intake-section" id="intake-form">
+<div class="page-grid"><div>
+<div class="section-head"><h2>Operational intake form</h2><p class="section-lead">Use this to describe the problem clearly. Do not include sensitive data in the first message.</p></div>
+<form class="axiona-intake-form intake-form card" data-intake-form data-email="hello@axiona.systems">
+<div class="form-grid two">
+<label>Company or project name<input name="company" placeholder="Example: 12-person service company" type="text"/></label>
+<label>Contact name<input name="name" placeholder="Name" type="text"/></label>
+<label>Email address<input name="email" placeholder="name@company.com" type="email"/></label>
+<label>Team size<input name="size" placeholder="5-30" type="text"/></label>
 </div>
-<div class="core-title-front">AXIONA CORE</div>
-</div>
-</div>
-</section><section class="section wrap">
-<div class="section-head"><h2>Areas</h2></div>
-<div class="grid"><article class="card"><div class="card-icon icon-app"></div><h3>Email</h3><p>hello@axiona.systems</p></article><article class="card"><div class="card-icon icon-stack"></div><h3>Topic</h3><p>Mention whether the request concerns an application, website, automation or system development.</p></article><article class="card"><div class="card-icon icon-up"></div><h3>Response</h3><p>The goal is brief, useful and practical communication.</p></article></div>
-</section></main>
+<label>Which area is messy?<select name="area"><option value=""></option><option>Requests and offers</option><option>Documents and templates</option><option>Statuses and tasks</option><option>Files and internal administration</option><option>Support or issue reports</option><option>Not sure yet</option></select></label>
+<label>Which tools hold the process today?<textarea name="tools" rows="3" placeholder="Email, Excel, Google Drive, accounting tool, shared folders..."></textarea></label>
+<label>What is the concrete problem?<textarea name="problem" rows="5" placeholder="Example: requests are spread across email threads, and it is unclear who replied or what is blocked."></textarea></label>
+<label>What would be a good result?<textarea name="outcome" rows="4" placeholder="Example: one internal view where every request has a status, owner and next step."></textarea></label>
+<div class="form-actions"><button class="btn primary" type="submit">Create summary</button><a class="btn ghost disabled" data-mailto-link href="mailto:hello@axiona.systems">Open email draft<span>→</span></a></div>
+<label>You can copy the summary or open it as an email draft.<textarea class="summary-output" data-summary-output rows="9" readonly></textarea></label>
+</form>
+</div><aside class="side-panel"><h3>Direct email: hello@axiona.systems</h3><p>hello@axiona.systems</p><ul><li>Which area is messy?</li><li>What is the concrete problem?</li><li>What would be a good result?</li></ul></aside></div>
+</section>
+<section class="section wrap"><div class="section-head"><h2>Why is this useful?</h2></div><div class="grid three"><article class="card"><h3>Not an empty contact page</h3><p>The first message already shows the process, the problem and the expected result.</p></article><article class="card"><h3>No technical wording needed</h3><p>Describe where time is lost, where errors happen and what should be easier to see.</p></article><article class="card"><h3>A smaller first step</h3><p>The goal is not to promise a large system, but to define a useful first software base.</p></article></div></section>
+</main>
+<script src="../assets/js/contact-intake.js?v=61"></script>
 <footer class="footer">
 <div class="wrap footer-row">
 <div>© 2026 AXIONA Systems. Design and development: Asztalos Zoltán.</div>
-<div class="footer-links"><a href="company.html">Background</a><a href="case-study.html">Case study</a><a href="privacy.html">Privacy</a><a href="legal.html">Legal</a><a href="security.html">Security</a><a href="support.html">Support</a><a href="contact.html">Contact</a></div>
+<div class="footer-links"><a href="company.html">Background</a><a href="case-study.html">Case study</a><a href="practical-tips.html">Practical tips</a><a href="privacy.html">Privacy</a><a href="legal.html">Legal</a><a href="security.html">Security</a><a href="support.html">Support</a><a href="contact.html">Contact</a></div>
 </div>
 </footer>
 </body>
