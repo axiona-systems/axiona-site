@@ -3759,3 +3759,69 @@ main article.card .system-status + .card-icon + h3{margin-top:10px;}
   main > .page-hero.hero.wrap > .hero-core-visual .core-device{transform:translate(-50%,-50%) rotateX(60deg) rotateZ(-38deg) scale(.84)!important;}
   main > .page-hero.hero.wrap > .hero-core-visual .core-title-front{top:calc(46% + 82px)!important;}
 }
+
+
+/* AXIONA R63 VISUAL HIERARCHY RESTORE
+   Purpose: keep one premium AXIONA system, but give each topic a visible focus.
+   No image mockups, no hidden language logic. Pure HTML/CSS visual system. */
+:root{
+  --page-accent:var(--accent);
+  --page-accent-2:var(--accent2);
+  --page-warm:#f6c86a;
+  --page-violet:#a88cff;
+  --page-rose:#ff7a90;
+}
+body.page-home{--page-accent:#76f1ff;--page-accent-2:#38f2a6;}
+body.page-systems{--page-accent:#38f2a6;--page-accent-2:#76f1ff;}
+body.page-software{--page-accent:#5aa7ff;--page-accent-2:#76f1ff;}
+body.page-automation,body.page-services{--page-accent:#38f2a6;--page-accent-2:#f6c86a;}
+body.page-impact{--page-accent:#f6c86a;--page-accent-2:#76f1ff;}
+body.page-security{--page-accent:#ff7a90;--page-accent-2:#f6c86a;}
+body.page-support,body.page-contact{--page-accent:#76f1ff;--page-accent-2:#5aa7ff;}
+body.page-company{--page-accent:#a88cff;--page-accent-2:#76f1ff;}
+body.page-privacy,body.page-legal{--page-accent:#9fb3c8;--page-accent-2:#76f1ff;}
+body.page-tips{--page-accent:#f6c86a;--page-accent-2:#38f2a6;}
+body.page-case{--page-accent:#a88cff;--page-accent-2:#38f2a6;}
+
+body.visual-restored main:before{content:"";position:absolute;left:0;right:0;top:0;height:360px;pointer-events:none;background:radial-gradient(720px 360px at 16% 2%,color-mix(in srgb,var(--page-accent) 18%,transparent),transparent 68%),radial-gradient(680px 320px at 82% 7%,color-mix(in srgb,var(--page-accent-2) 13%,transparent),transparent 70%);opacity:.9;z-index:-1;}
+.hero-core-visual{position:relative;min-height:390px;border-radius:34px;background:linear-gradient(145deg,rgba(8,22,35,.80),rgba(4,12,21,.52));border:1px solid color-mix(in srgb,var(--page-accent) 28%,rgba(255,255,255,.08));box-shadow:0 28px 96px rgba(0,0,0,.32),inset 0 0 86px color-mix(in srgb,var(--page-accent) 9%,transparent);overflow:hidden;}
+.hero-core-visual:before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle at 50% 43%,color-mix(in srgb,var(--page-accent) 18%,transparent),transparent 33%),radial-gradient(circle at 70% 30%,color-mix(in srgb,var(--page-accent-2) 15%,transparent),transparent 36%),linear-gradient(135deg,rgba(255,255,255,.045),transparent 44%);}
+.hero-core-visual:after{content:"";position:absolute;left:22px;right:22px;bottom:18px;height:3px;border-radius:99px;background:linear-gradient(90deg,transparent,var(--page-accent),var(--page-accent-2),transparent);opacity:.72;box-shadow:0 0 22px color-mix(in srgb,var(--page-accent) 42%,transparent);}
+.core-layer.layer-top{border-color:color-mix(in srgb,var(--page-accent) 44%,rgba(255,255,255,.08));box-shadow:0 0 44px color-mix(in srgb,var(--page-accent) 22%,transparent),inset 0 0 26px color-mix(in srgb,var(--page-accent) 10%,transparent);}
+.core-title-front{color:color-mix(in srgb,var(--page-accent) 78%,#ffffff);text-shadow:0 0 24px color-mix(in srgb,var(--page-accent) 38%,transparent);}
+.core-glow-ring{border-color:color-mix(in srgb,var(--page-accent) 34%,transparent);}
+.core-node{background:var(--page-accent);box-shadow:0 0 22px color-mix(in srgb,var(--page-accent) 70%,transparent);}
+
+.eyebrow{color:color-mix(in srgb,var(--page-accent) 78%,#ffffff);}
+.btn.primary{background:linear-gradient(135deg,var(--page-accent),var(--page-accent-2));color:#021018;box-shadow:0 18px 48px color-mix(in srgb,var(--page-accent) 24%,transparent);}
+.btn.ghost,.btn:not(.primary){border-color:color-mix(in srgb,var(--page-accent) 28%,rgba(255,255,255,.10));}
+.card,.side-panel,.notice,.spotlight,.software-copy,.system-map,.security-panel{position:relative;border-color:color-mix(in srgb,var(--page-accent) 18%,rgba(255,255,255,.075));}
+.card:before,.side-panel:before,.notice:before,.spotlight:before{content:"";position:absolute;left:18px;right:18px;top:0;height:2px;border-radius:99px;background:linear-gradient(90deg,var(--page-accent),var(--page-accent-2),transparent);opacity:.72;}
+.card:hover{border-color:color-mix(in srgb,var(--page-accent) 36%,rgba(255,255,255,.10));box-shadow:0 20px 70px rgba(0,0,0,.24),0 0 0 1px color-mix(in srgb,var(--page-accent) 12%,transparent);transform:translateY(-1px);}
+.card-icon{background:radial-gradient(circle at 35% 30%,color-mix(in srgb,var(--page-accent) 32%,transparent),transparent 60%),linear-gradient(145deg,color-mix(in srgb,var(--page-accent) 16%,rgba(255,255,255,.045)),rgba(255,255,255,.035));border-color:color-mix(in srgb,var(--page-accent) 25%,rgba(255,255,255,.09));box-shadow:inset 0 0 24px color-mix(in srgb,var(--page-accent) 10%,transparent),0 0 22px color-mix(in srgb,var(--page-accent) 10%,transparent);}
+.section-head h2:after{content:"";display:block;width:72px;height:3px;margin-top:16px;border-radius:99px;background:linear-gradient(90deg,var(--page-accent),var(--page-accent-2));box-shadow:0 0 20px color-mix(in srgb,var(--page-accent) 26%,transparent);}
+.hero-metrics .metric{border-color:color-mix(in srgb,var(--page-accent) 22%,rgba(255,255,255,.08));background:linear-gradient(145deg,color-mix(in srgb,var(--page-accent) 10%,rgba(255,255,255,.035)),rgba(255,255,255,.028));}
+.hero-metrics .metric strong{color:color-mix(in srgb,var(--page-accent) 82%,#ffffff);}
+.page-core-visual{min-height:390px;}
+
+/* Give repeated informational pages a different rhythm without changing content. */
+body.page-tips .grid .card:nth-child(2n),body.page-case .grid .card:nth-child(2n),body.page-security .grid .card:nth-child(2n){background:linear-gradient(145deg,color-mix(in srgb,var(--page-accent-2) 11%,rgba(8,22,35,.70)),rgba(10,31,49,.42));}
+body.page-contact form,body.page-contact .axiona-intake-form{border:1px solid color-mix(in srgb,var(--page-accent) 24%,rgba(255,255,255,.10));box-shadow:0 24px 90px rgba(0,0,0,.28),inset 0 0 54px color-mix(in srgb,var(--page-accent) 6%,transparent);}
+body.page-security .card-icon,body.page-impact .card-icon,body.page-tips .card-icon{transform:rotate(-2deg);}
+body.page-systems .card-icon,body.page-software .card-icon,body.page-case .card-icon{transform:rotate(2deg);}
+
+@media(max-width:1180px){.hero-core-visual{max-width:620px;min-height:360px}.page-core-visual{min-height:360px}}
+@media(max-width:760px){body.visual-restored main:before{height:260px}.hero-core-visual{min-height:300px;border-radius:26px}.hero-core-visual:after{left:16px;right:16px;bottom:14px}.card:before,.side-panel:before,.notice:before,.spotlight:before{left:14px;right:14px}}
+/* AXIONA R63A explicit page-accent classes for deploy-gate and future visual consistency */
+body.page-accent-home{--page-accent:#76f1ff;--page-accent-2:#38f2a6;}
+body.page-accent-systems{--page-accent:#38f2a6;--page-accent-2:#76f1ff;}
+body.page-accent-software{--page-accent:#5aa7ff;--page-accent-2:#76f1ff;}
+body.page-accent-automation,body.page-accent-services{--page-accent:#38f2a6;--page-accent-2:#f6c86a;}
+body.page-accent-impact{--page-accent:#f6c86a;--page-accent-2:#76f1ff;}
+body.page-accent-security{--page-accent:#ff7a90;--page-accent-2:#f6c86a;}
+body.page-accent-support,body.page-accent-contact{--page-accent:#76f1ff;--page-accent-2:#5aa7ff;}
+body.page-accent-company{--page-accent:#a88cff;--page-accent-2:#76f1ff;}
+body.page-accent-privacy,body.page-accent-legal{--page-accent:#9fb3c8;--page-accent-2:#76f1ff;}
+body.page-accent-tips{--page-accent:#f6c86a;--page-accent-2:#38f2a6;}
+body.page-accent-case{--page-accent:#a88cff;--page-accent-2:#38f2a6;}
+
