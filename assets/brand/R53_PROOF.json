@@ -1,0 +1,21 @@
+{
+  "release": "AXIONA_SITE_PUBLIC_R53_SYSTEMS_IN_DEVELOPMENT",
+  "date": "2026-05-02",
+  "css_version": "styles.css?v=53",
+  "changed_pages": [
+    "systems.html",
+    "en/systems.html",
+    "de/systems.html",
+    "styles.css"
+  ],
+  "public_markers": [
+    "Systems in Development",
+    "AXIONA Request Hub",
+    "AXIONA Document Flow",
+    "AXIONA AuditBox",
+    "AXIONA Ops Board",
+    "AXIONA Support Desk Lite",
+    "AXIONA Field Report"
+  ],
+  "regression_check": "public wording and cache version verified; no internal visitor-facing language added"
+}
