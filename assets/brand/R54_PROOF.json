@@ -1,0 +1,18 @@
+{
+  "version": "R54",
+  "baseline": "AXIONA_SITE_PUBLIC_R54_OWN_SYSTEM_POSITIONING",
+  "source_baseline": "R53 systems in development",
+  "css_version": "styles.css?v=54",
+  "scope": [
+    "custom and owned system positioning",
+    "systems in development copy refinement",
+    "HU/EN/DE public-safe messaging"
+  ],
+  "expected_public_markers": [
+    "saját kézben tartható",
+    "kevesebb felesleges külső függés",
+    "owned software",
+    "fewer unnecessary external dependencies",
+    "eigener Kontrolle"
+  ]
+}

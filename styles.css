@@ -3642,7 +3642,7 @@ body.home main > .hero.wrap > .hero-copy .hero-metrics{
 }
 
 
-/* AXIONA R53 SYSTEMS IN DEVELOPMENT */
+/* AXIONA R54 OWN SYSTEM POSITIONING */
 .systems-development-page .systems-grid{
   display:grid;
   grid-template-columns:repeat(3,minmax(0,1fr));
@@ -3695,3 +3695,7 @@ body.home main > .hero.wrap > .hero-copy .hero-metrics{
     min-height:230px;
   }
 }
+
+
+/* AXIONA R54 OWN SYSTEM POSITIONING */
+.ownership-notice h2,.ownership-band h2{text-wrap:balance}.ownership-band .card{min-height:220px}.ownership-notice{border-color:rgba(56,242,166,.28)}
