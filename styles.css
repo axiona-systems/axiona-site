@@ -3825,3 +3825,215 @@ body.page-accent-privacy,body.page-accent-legal{--page-accent:#9fb3c8;--page-acc
 body.page-accent-tips{--page-accent:#f6c86a;--page-accent-2:#38f2a6;}
 body.page-accent-case{--page-accent:#a88cff;--page-accent-2:#38f2a6;}
 
+
+
+/* layout-guard-r64 */
+/* AXIONA R64 LAYOUT GUARD - card and contact stability
+   Purpose: prevent card overlap and contact form stretching after the multi-language/content expansion.
+   No new visual concept, only layout safety. */
+*,*::before,*::after{box-sizing:border-box;}
+
+/* Cards: never let long titles, translated text or pseudo highlights break the grid. */
+.grid,
+.grid.three,
+.grid.two,
+.grid.four,
+.systems-grid,
+.practical-tips-grid,
+.security-grid{
+  align-items:stretch!important;
+  grid-auto-rows:auto!important;
+}
+.card,
+.system-card,
+.side-panel,
+.notice,
+.spotlight,
+.software-copy,
+.system-map,
+.security-panel{
+  min-width:0!important;
+  max-width:100%!important;
+  height:auto!important;
+  overflow:hidden!important;
+  isolation:isolate!important;
+}
+.card > *,
+.system-card > *,
+.side-panel > *,
+.notice > *,
+.spotlight > *,
+.software-copy > *,
+.security-panel > *{
+  min-width:0!important;
+}
+.card h3,
+.card p,
+.side-panel h3,
+.side-panel p,
+.side-panel li,
+.section-lead,
+.lead,
+.sublead{
+  overflow-wrap:break-word!important;
+  word-break:normal!important;
+  hyphens:auto;
+}
+.card h3{line-height:1.18!important;}
+.card p{line-height:1.58!important;}
+.card::before,
+.side-panel::before,
+.notice::before,
+.spotlight::before{
+  pointer-events:none!important;
+}
+
+/* Homepage: use flexible card columns instead of forcing too many cards into one row. */
+body.home .grid.four,
+body.home main > .section .grid.four{
+  grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr))!important;
+  gap:22px!important;
+}
+body.home .grid.three,
+body.home main > .section .grid.three{
+  grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr))!important;
+  gap:22px!important;
+}
+body.home .card{
+  min-height:0!important;
+  padding:24px!important;
+}
+body.home .hero-metrics{
+  grid-template-columns:repeat(auto-fit,minmax(min(100%,190px),1fr))!important;
+}
+
+/* Generic page grids: protect side panels from colliding with primary content. */
+.page-grid{
+  grid-template-columns:minmax(0,1fr) minmax(280px,380px)!important;
+  gap:clamp(20px,3vw,34px)!important;
+}
+.page-grid > div,
+.page-grid > aside{
+  min-width:0!important;
+  max-width:100%!important;
+}
+
+/* Contact/intake: the form is a form, not a product card rail. */
+body.page-contact .intake-section .page-grid,
+body.page-accent-contact .intake-section .page-grid{
+  grid-template-columns:minmax(0,1fr) minmax(280px,360px)!important;
+  align-items:start!important;
+}
+.axiona-intake-form,
+.intake-form{
+  width:100%!important;
+  max-width:100%!important;
+  min-height:0!important;
+  height:auto!important;
+  display:grid!important;
+  gap:18px!important;
+  overflow:hidden!important;
+  padding:24px!important;
+}
+.intake-form label{
+  min-width:0!important;
+  width:100%!important;
+}
+.intake-form input,
+.intake-form textarea,
+.intake-form select,
+.summary-output{
+  display:block!important;
+  width:100%!important;
+  max-width:100%!important;
+  min-width:0!important;
+}
+.intake-form textarea,
+.summary-output{
+  overflow:auto!important;
+}
+.form-grid,
+.form-grid.two{
+  min-width:0!important;
+  width:100%!important;
+  grid-template-columns:repeat(2,minmax(0,1fr))!important;
+}
+.form-actions{
+  align-items:stretch!important;
+}
+.form-actions .btn{
+  flex:1 1 220px!important;
+}
+body.page-contact .grid.three,
+body.page-accent-contact .grid.three{
+  grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr))!important;
+}
+
+/* Tablet and narrow desktop: contact and generic side panels become stacked before they get cramped. */
+@media(max-width:1100px){
+  .page-grid,
+  body.page-contact .intake-section .page-grid,
+  body.page-accent-contact .intake-section .page-grid{
+    grid-template-columns:1fr!important;
+  }
+  .side-panel{
+    width:100%!important;
+  }
+}
+
+/* Mobile: one clean column, no cramped two-column form fields. */
+@media(max-width:760px){
+  body.home .grid.four,
+  body.home .grid.three,
+  body.home main > .section .grid.four,
+  body.home main > .section .grid.three,
+  .grid,
+  .grid.three,
+  .grid.two,
+  .grid.four,
+  .systems-grid,
+  .practical-tips-grid,
+  .security-grid{
+    grid-template-columns:1fr!important;
+    gap:14px!important;
+  }
+  .card,
+  body.home .card,
+  .side-panel,
+  .notice,
+  .spotlight,
+  .software-copy,
+  .security-panel{
+    padding:20px!important;
+    min-height:0!important;
+  }
+  .form-grid,
+  .form-grid.two{
+    grid-template-columns:1fr!important;
+  }
+  .axiona-intake-form,
+  .intake-form{
+    padding:20px!important;
+  }
+  .form-actions .btn{
+    flex:1 1 100%!important;
+    width:100%!important;
+  }
+  .hero-metrics{
+    grid-template-columns:1fr!important;
+  }
+}
+
+@media(max-width:420px){
+  .card,
+  body.home .card,
+  .side-panel,
+  .notice,
+  .spotlight,
+  .software-copy,
+  .security-panel,
+  .axiona-intake-form,
+  .intake-form{
+    padding:18px!important;
+  }
+}
