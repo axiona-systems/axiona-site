@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
@@ -16,7 +17,7 @@
 <link href="../apple-touch-icon-r41.png" rel="apple-touch-icon"/>
 <link href="../site.webmanifest" rel="manifest"/>
 <meta content="https://axiona.systems/assets/brand/r41/axiona-og-image-1200x630.jpg" property="og:image"/>
-<link href="../styles.css?v=61" rel="stylesheet"/>
+<link href="../styles.css?v=62" rel="stylesheet"/>
 </head>
 <body class="page">
 <header class="top">
@@ -36,7 +37,7 @@
 <section class="section wrap intake-section" id="intake-form">
 <div class="page-grid"><div>
 <div class="section-head"><h2>Operational intake form</h2><p class="section-lead">Use this to describe the problem clearly. Do not include sensitive data in the first message.</p></div>
-<form class="axiona-intake-form intake-form card" data-intake-form data-email="hello@axiona.systems">
+<form class="axiona-intake-form intake-form card" data-email="hello@axiona.systems" data-intake-form="">
 <div class="form-grid two">
 <label>Company or project name<input name="company" placeholder="Example: 12-person service company" type="text"/></label>
 <label>Contact name<input name="name" placeholder="Name" type="text"/></label>
@@ -44,15 +45,15 @@
 <label>Team size<input name="size" placeholder="5-30" type="text"/></label>
 </div>
 <label>Which area is messy?<select name="area"><option value=""></option><option>Requests and offers</option><option>Documents and templates</option><option>Statuses and tasks</option><option>Files and internal administration</option><option>Support or issue reports</option><option>Not sure yet</option></select></label>
-<label>Which tools hold the process today?<textarea name="tools" rows="3" placeholder="Email, Excel, Google Drive, accounting tool, shared folders..."></textarea></label>
-<label>What is the concrete problem?<textarea name="problem" rows="5" placeholder="Example: requests are spread across email threads, and it is unclear who replied or what is blocked."></textarea></label>
-<label>What would be a good result?<textarea name="outcome" rows="4" placeholder="Example: one internal view where every request has a status, owner and next step."></textarea></label>
-<div class="form-actions"><button class="btn primary" type="submit">Create summary</button><a class="btn ghost disabled" data-mailto-link href="mailto:hello@axiona.systems">Open email draft<span>→</span></a></div>
-<label>You can copy the summary or open it as an email draft.<textarea class="summary-output" data-summary-output rows="9" readonly></textarea></label>
+<label>Which tools hold the process today?<textarea name="tools" placeholder="Email, Excel, Google Drive, accounting tool, shared folders..." rows="3"></textarea></label>
+<label>What is the concrete problem?<textarea name="problem" placeholder="Example: requests are spread across email threads, and it is unclear who replied or what is blocked." rows="5"></textarea></label>
+<label>What would be a good result?<textarea name="outcome" placeholder="Example: one internal view where every request has a status, owner and next step." rows="4"></textarea></label>
+<div class="form-actions"><button class="btn primary" type="submit">Create summary</button><a class="btn ghost disabled" data-mailto-link="" href="mailto:hello@axiona.systems">Open email draft<span>→</span></a></div>
+<label>You can copy the summary or open it as an email draft.<textarea class="summary-output" data-summary-output="" readonly="" rows="9"></textarea></label>
 </form>
 </div><aside class="side-panel"><h3>Direct email: hello@axiona.systems</h3><p>hello@axiona.systems</p><ul><li>Which area is messy?</li><li>What is the concrete problem?</li><li>What would be a good result?</li></ul></aside></div>
 </section>
-<section class="section wrap"><div class="section-head"><h2>Why is this useful?</h2></div><div class="grid three"><article class="card"><h3>Not an empty contact page</h3><p>The first message already shows the process, the problem and the expected result.</p></article><article class="card"><h3>No technical wording needed</h3><p>Describe where time is lost, where errors happen and what should be easier to see.</p></article><article class="card"><h3>A smaller first step</h3><p>The goal is not to promise a large system, but to define a useful first software base.</p></article></div></section>
+<section class="section wrap"><div class="section-head"><h2>Why is this useful?</h2></div><div class="grid three"><article class="card"><div class="card-icon icon-stack"></div><h3>Not an empty contact page</h3><p>The first message already shows the process, the problem and the expected result.</p></article><article class="card"><div class="card-icon icon-gear"></div><h3>No technical wording needed</h3><p>Describe where time is lost, where errors happen and what should be easier to see.</p></article><article class="card"><div class="card-icon icon-up"></div><h3>A smaller first step</h3><p>The goal is not to promise a large system, but to define a useful first software base.</p></article></div></section>
 </main>
 <script src="../assets/js/contact-intake.js?v=61"></script>
 <footer class="footer">

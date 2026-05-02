@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="es">
 <head>
 <meta charset="utf-8"/>
@@ -16,7 +17,7 @@
 <link href="../apple-touch-icon-r41.png" rel="apple-touch-icon"/>
 <link href="../site.webmanifest" rel="manifest"/>
 <meta content="https://axiona.systems/assets/brand/r41/axiona-og-image-1200x630.jpg" property="og:image"/>
-<link href="../styles.css?v=61" rel="stylesheet"/>
+<link href="../styles.css?v=62" rel="stylesheet"/>
 </head>
 <body class="page">
 <header class="top">
@@ -36,7 +37,7 @@
 <section class="section wrap intake-section" id="intake-form">
 <div class="page-grid"><div>
 <div class="section-head"><h2>Formulario de entrada operativa</h2><p class="section-lead">Úsalo para describir el problema de forma concreta. No incluyas datos sensibles en el primer mensaje.</p></div>
-<form class="axiona-intake-form intake-form card" data-intake-form data-email="hello@axiona.systems">
+<form class="axiona-intake-form intake-form card" data-email="hello@axiona.systems" data-intake-form="">
 <div class="form-grid two">
 <label>Empresa o proyecto<input name="company" placeholder="Ejemplo: empresa de servicios de 12 personas" type="text"/></label>
 <label>Nombre de contacto<input name="name" placeholder="Nombre" type="text"/></label>
@@ -44,15 +45,15 @@
 <label>Tamaño del equipo<input name="size" placeholder="5-30" type="text"/></label>
 </div>
 <label>¿Qué área está desordenada?<select name="area"><option value=""></option><option>Solicitudes y ofertas</option><option>Documentos y plantillas</option><option>Estados y tareas</option><option>Archivos y administración interna</option><option>Soporte o incidencias</option><option>Aún no lo sé</option></select></label>
-<label>¿En qué herramientas vive hoy el proceso?<textarea name="tools" rows="3" placeholder="E-mail, Excel, Google Drive, herramienta contable, carpetas compartidas..."></textarea></label>
-<label>¿Cuál es el problema concreto?<textarea name="problem" rows="5" placeholder="Ejemplo: las solicitudes están repartidas en varios hilos de e-mail, y no está claro quién respondió o qué está bloqueado."></textarea></label>
-<label>¿Cuál sería un buen resultado?<textarea name="outcome" rows="4" placeholder="Ejemplo: una vista interna donde cada solicitud tenga estado, responsable y siguiente paso."></textarea></label>
-<div class="form-actions"><button class="btn primary" type="submit">Crear resumen</button><a class="btn ghost disabled" data-mailto-link href="mailto:hello@axiona.systems">Abrir borrador de e-mail<span>→</span></a></div>
-<label>Puedes copiar el resumen o abrirlo como borrador de e-mail.<textarea class="summary-output" data-summary-output rows="9" readonly></textarea></label>
+<label>¿En qué herramientas vive hoy el proceso?<textarea name="tools" placeholder="E-mail, Excel, Google Drive, herramienta contable, carpetas compartidas..." rows="3"></textarea></label>
+<label>¿Cuál es el problema concreto?<textarea name="problem" placeholder="Ejemplo: las solicitudes están repartidas en varios hilos de e-mail, y no está claro quién respondió o qué está bloqueado." rows="5"></textarea></label>
+<label>¿Cuál sería un buen resultado?<textarea name="outcome" placeholder="Ejemplo: una vista interna donde cada solicitud tenga estado, responsable y siguiente paso." rows="4"></textarea></label>
+<div class="form-actions"><button class="btn primary" type="submit">Crear resumen</button><a class="btn ghost disabled" data-mailto-link="" href="mailto:hello@axiona.systems">Abrir borrador de e-mail<span>→</span></a></div>
+<label>Puedes copiar el resumen o abrirlo como borrador de e-mail.<textarea class="summary-output" data-summary-output="" readonly="" rows="9"></textarea></label>
 </form>
 </div><aside class="side-panel"><h3>E-mail directo: hello@axiona.systems</h3><p>hello@axiona.systems</p><ul><li>¿Qué área está desordenada?</li><li>¿Cuál es el problema concreto?</li><li>¿Cuál sería un buen resultado?</li></ul></aside></div>
 </section>
-<section class="section wrap"><div class="section-head"><h2>¿Por qué es útil?</h2></div><div class="grid three"><article class="card"><h3>No es una página de contacto vacía</h3><p>El primer mensaje ya muestra el proceso, el problema y el resultado esperado.</p></article><article class="card"><h3>No hace falta lenguaje técnico</h3><p>Describe dónde se pierde tiempo, dónde aparecen errores y qué debería verse mejor.</p></article><article class="card"><h3>Un primer paso limitado</h3><p>El objetivo no es prometer un gran sistema, sino definir una primera base de software útil.</p></article></div></section>
+<section class="section wrap"><div class="section-head"><h2>¿Por qué es útil?</h2></div><div class="grid three"><article class="card"><div class="card-icon icon-stack"></div><h3>No es una página de contacto vacía</h3><p>El primer mensaje ya muestra el proceso, el problema y el resultado esperado.</p></article><article class="card"><div class="card-icon icon-gear"></div><h3>No hace falta lenguaje técnico</h3><p>Describe dónde se pierde tiempo, dónde aparecen errores y qué debería verse mejor.</p></article><article class="card"><div class="card-icon icon-up"></div><h3>Un primer paso limitado</h3><p>El objetivo no es prometer un gran sistema, sino definir una primera base de software útil.</p></article></div></section>
 </main>
 <script src="../assets/js/contact-intake.js?v=61"></script>
 <footer class="footer">
