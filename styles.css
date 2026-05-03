@@ -4193,3 +4193,6 @@ body.page-contact .section + .section{
 .mail-draft-panel input:focus,.mail-draft-panel textarea:focus,.mail-draft-panel select:focus{border-color:rgba(118,241,255,.55);box-shadow:0 0 0 4px rgba(118,241,255,.08);}
 .mail-draft-panel button.btn{cursor:pointer;font:inherit;appearance:none;-webkit-appearance:none;}
 .mail-draft-hint{margin:0;color:var(--muted);font-size:14px;line-height:1.55;}
+
+
+/* AXIONA R70 APP PRIVACY NOTICE: privacy/legal content updated; no layout change required. */
