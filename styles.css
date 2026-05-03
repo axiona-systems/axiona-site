@@ -4160,3 +4160,10 @@ body.page-contact .section + .section{
 }
 
 /* content-reset-r66 */
+
+/* human-editorial-r67: editorial copy reset, calmer informational site */
+
+.editorial-note{font-size:.95rem;color:var(--muted);max-width:62ch}
+.process-list{display:grid;gap:14px}
+.process-list li{list-style:none;padding:14px 16px;border:1px solid rgba(126,242,214,.2);border-radius:18px;background:rgba(255,255,255,.035)}
+.contact-note{min-height:auto}
