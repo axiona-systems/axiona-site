@@ -1,18 +1,11 @@
 # Security
 
-Please do not report security issues through public GitHub issues.
+Please do not post security reports in public GitHub issues.
 
-Use the public contact or support channel on the AXIONA Systems website:
+Use the contact page instead:
 
-- https://axiona.systems/contact.html
-- https://axiona.systems/support.html
+https://axiona.systems/contact.html
 
-Helpful information to include:
+Include the affected page, a short description and the steps needed to reproduce the issue.
 
-- affected URL
-- short description
-- steps to reproduce
-- browser and device information
-- screenshot if useful
-
-Do not include passwords, access tokens, private keys, personal documents or other sensitive data in the first message.
+Please do not send passwords, tokens, private keys or personal documents in the first message.

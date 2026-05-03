@@ -1,11 +1,11 @@
 # Support
 
-For website, product or service questions, use the public support page:
+For support or general questions, use the website:
 
 https://axiona.systems/support.html
 
-For general contact, use:
+For direct contact:
 
 https://axiona.systems/contact.html
 
-GitHub issues are not the primary support channel for AXIONA Systems.
+GitHub issues are not used as the main support channel.
