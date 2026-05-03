@@ -2219,7 +2219,7 @@ main > .section .grid > .card{
   text-align:right;
   color:rgba(195,255,226,.66);
 }
-.sim-proof-strip{
+.sim-check-strip{
   position:relative;
   z-index:2;
   display:grid;
@@ -2227,21 +2227,21 @@ main > .section .grid > .card{
   gap:14px;
   margin-top:16px;
 }
-.sim-proof-strip div{
+.sim-check-strip div{
   padding:16px 18px;
   border-radius:20px;
   border:1px solid rgba(118,241,255,.11);
   background:rgba(255,255,255,.035);
 }
-.sim-proof-strip strong,
-.sim-proof-strip span{
+.sim-check-strip strong,
+.sim-check-strip span{
   display:block;
 }
-.sim-proof-strip strong{
+.sim-check-strip strong{
   color:var(--text,#f4faff);
   font-size:14px;
 }
-.sim-proof-strip span{
+.sim-check-strip span{
   margin-top:4px;
   color:rgba(214,231,241,.65);
   font-size:13px;
@@ -2276,7 +2276,7 @@ main > .section .grid > .card{
   .sim-panel{
     min-height:260px;
   }
-  .sim-proof-strip{
+  .sim-check-strip{
     grid-template-columns:1fr;
   }
 }
@@ -3812,7 +3812,7 @@ body.page-systems .card-icon,body.page-software .card-icon,body.page-case .card-
 
 @media(max-width:1180px){.hero-core-visual{max-width:620px;min-height:360px}.page-core-visual{min-height:360px}}
 @media(max-width:760px){body.visual-restored main:before{height:260px}.hero-core-visual{min-height:300px;border-radius:26px}.hero-core-visual:after{left:16px;right:16px;bottom:14px}.card:before,.side-panel:before,.notice:before,.spotlight:before{left:14px;right:14px}}
-/* AXIONA R63A explicit page-accent classes for deploy-gate and future visual consistency */
+/* AXIONA R63A explicit page-accent classes for check-gate and future visual consistency */
 body.page-accent-home{--page-accent:#76f1ff;--page-accent-2:#38f2a6;}
 body.page-accent-systems{--page-accent:#38f2a6;--page-accent-2:#76f1ff;}
 body.page-accent-software{--page-accent:#5aa7ff;--page-accent-2:#76f1ff;}
@@ -4158,3 +4158,5 @@ body.page-contact .section + .section{
     min-height:110px!important;
   }
 }
+
+/* content-reset-r66 */
