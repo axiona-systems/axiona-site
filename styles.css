@@ -4037,3 +4037,124 @@ body.page-accent-contact .grid.three{
     padding:18px!important;
   }
 }
+
+
+/* layout-polish-r65 */
+/* AXIONA R65 layout polish - fixes wide-screen card rhythm and contact side-panel stretch.
+   Goal: keep the R63/R64 visual language, but remove empty third columns, over-stretched side panels,
+   and card/footer collisions on desktop-sized screens. */
+
+/* The homepage reference band has two real children. Do not reserve a hidden third column. */
+body.home .spotlight,
+main > .spotlight.wrap{
+  grid-template-columns:minmax(0,0.92fr) minmax(320px,0.78fr)!important;
+  align-items:stretch!important;
+  gap:clamp(22px,3vw,34px)!important;
+  max-width:min(calc(100% - var(--ax-side-gap)),1120px)!important;
+}
+body.home .spotlight > *,
+main > .spotlight.wrap > *{
+  min-width:0!important;
+}
+body.home .spotlight .side-panel,
+main > .spotlight.wrap .side-panel{
+  align-self:stretch!important;
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:center!important;
+  min-height:0!important;
+}
+
+/* Generic mixed content rows: side panels should behave like compact callouts, not full-height rails. */
+.page-grid{
+  align-items:start!important;
+}
+.page-grid > .side-panel,
+.page-grid aside.side-panel,
+section .side-panel{
+  align-self:start!important;
+  min-height:0!important;
+}
+body.home .page-grid{
+  grid-template-columns:minmax(0,1fr) minmax(280px,330px)!important;
+}
+body.home .page-grid .side-panel{
+  max-width:330px!important;
+}
+
+/* Contact/intake: keep the helpful email card compact and let the form own the vertical space. */
+body.page-contact .intake-section .page-grid,
+body.page-accent-contact .intake-section .page-grid{
+  grid-template-columns:minmax(0,760px) minmax(260px,320px)!important;
+  justify-content:start!important;
+  align-items:start!important;
+}
+body.page-contact .intake-section .side-panel,
+body.page-accent-contact .intake-section .side-panel{
+  align-self:start!important;
+  min-height:0!important;
+  height:auto!important;
+  max-height:none!important;
+  padding:24px!important;
+}
+body.page-contact .axiona-intake-form,
+body.page-contact .intake-form,
+body.page-accent-contact .axiona-intake-form,
+body.page-accent-contact .intake-form{
+  max-width:760px!important;
+}
+body.page-contact .summary-output,
+body.page-accent-contact .summary-output{
+  min-height:130px!important;
+}
+
+/* Cards: keep desktop rows balanced, but avoid large empty rails and footer collisions. */
+.grid,
+.grid.three,
+.grid.two{
+  align-items:stretch!important;
+}
+body.home .section + .section,
+body.page-systems .section + .section,
+body.page-contact .section + .section{
+  margin-top:clamp(10px,2vw,24px)!important;
+}
+.footer{
+  clear:both!important;
+  position:relative!important;
+  z-index:2!important;
+}
+
+@media(max-width:1180px){
+  body.home .spotlight,
+  main > .spotlight.wrap,
+  body.home .page-grid,
+  body.page-contact .intake-section .page-grid,
+  body.page-accent-contact .intake-section .page-grid{
+    grid-template-columns:1fr!important;
+    max-width:min(calc(100% - var(--ax-side-gap)),var(--ax-rail))!important;
+  }
+  body.home .page-grid .side-panel,
+  body.page-contact .intake-section .side-panel,
+  body.page-accent-contact .intake-section .side-panel{
+    max-width:100%!important;
+    width:100%!important;
+  }
+  body.page-contact .axiona-intake-form,
+  body.page-contact .intake-form,
+  body.page-accent-contact .axiona-intake-form,
+  body.page-accent-contact .intake-form{
+    max-width:100%!important;
+  }
+}
+
+@media(max-width:760px){
+  body.home .spotlight,
+  main > .spotlight.wrap{
+    padding:20px!important;
+  }
+  body.page-contact .summary-output,
+  body.page-accent-contact .summary-output{
+    min-height:110px!important;
+  }
+}
