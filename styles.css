@@ -4184,3 +4184,5 @@ body.page-contact .section + .section{
 .form-note{font-size:13px;line-height:1.55;color:rgba(234,247,245,.62);margin:10px 0 0}
 .support-note{align-self:start;height:auto}
 @media(max-width:900px){.support-grid{grid-template-columns:1fr}.footer-language-switch{width:100%;margin-left:0}.footer-row{align-items:flex-start}}
+
+/* language-clean-r69: language-specific copy reset and no mixed-language page bodies */
