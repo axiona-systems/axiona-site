@@ -3918,7 +3918,7 @@ body.home .hero-metrics{
   max-width:100%!important;
 }
 
-/* Contact/intake: the form is a form, not a product card rail. */
+/* Contact/intake: local-only email draft panels. */
 body.page-contact .intake-section .page-grid,
 body.page-accent-contact .intake-section .page-grid{
   grid-template-columns:minmax(0,1fr) minmax(280px,360px)!important;
@@ -4185,4 +4185,11 @@ body.page-contact .section + .section{
 .support-note{align-self:start;height:auto}
 @media(max-width:900px){.support-grid{grid-template-columns:1fr}.footer-language-switch{width:100%;margin-left:0}.footer-row{align-items:flex-start}}
 
-/* language-clean-r69: language-specific copy reset and no mixed-language page bodies */
+
+/* AXIONA R69: local-only email draft panels; no insecure mailto form submission. */
+.mail-draft-panel label{display:grid;gap:8px;color:#d8e8ee;font-weight:800;min-width:0;width:100%;}
+.mail-draft-panel input,.mail-draft-panel textarea,.mail-draft-panel select{width:100%;box-sizing:border-box;min-width:0;border:1px solid rgba(180,224,232,.18);background:rgba(255,255,255,.045);color:#f3fbff;border-radius:16px;padding:13px 14px;font:inherit;outline:none;}
+.mail-draft-panel textarea{min-height:112px;resize:vertical;}
+.mail-draft-panel input:focus,.mail-draft-panel textarea:focus,.mail-draft-panel select:focus{border-color:rgba(118,241,255,.55);box-shadow:0 0 0 4px rgba(118,241,255,.08);}
+.mail-draft-panel button.btn{cursor:pointer;font:inherit;appearance:none;-webkit-appearance:none;}
+.mail-draft-hint{margin:0;color:var(--muted);font-size:14px;line-height:1.55;}
