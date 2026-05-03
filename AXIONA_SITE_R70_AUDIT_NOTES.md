@@ -2,7 +2,7 @@
 
 Date: 2026-05-03
 Package: AXIONA_SITE_PUBLIC_R70_APPLE_PRIVACY_NOTICE.zip
-CSS version: styles.css?v=70
+CSS version: styles.css?v=71
 
 ## Purpose
 
@@ -14,7 +14,7 @@ R70 replaces the short privacy page with a real public privacy notice suitable a
 - Rebuilt EN privacy.html as Privacy Policy.
 - Rebuilt DE privacy.html as Datenschutzerklärung.
 - Added app/software scope, controller contact, website logs, support data, local-first app data, diagnostics, App Store/payment handling, legal bases, retention, service providers, user rights, privacy request route and security note.
-- Global cache bump applied to styles.css?v=70.
+- Global cache bump applied to styles.css?v=71.
 - No backend form submission introduced.
 - No analytics/tracking script introduced.
 - No internal engineering details exposed.
