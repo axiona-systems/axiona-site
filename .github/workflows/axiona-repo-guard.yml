@@ -1,0 +1,81 @@
+name: AXIONA Repo Guard
+
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: axiona-repo-guard-${{ github.repository }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  repository-guard:
+    name: AXIONA Repository Guard
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      PR_BASE_SHA: ${{ github.event.pull_request.base.sha }}
+      PUSH_BEFORE_SHA: ${{ github.event.before }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Run AXIONA repository invariants
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          echo "REPOSITORY=$GITHUB_REPOSITORY"
+          echo "REF=$GITHUB_REF"
+          echo "SHA=$GITHUB_SHA"
+
+          echo "=== Legacy global rule anchor gate ==="
+          if git grep -nI "fakukac1980/AXIONA_CI" -- . ':(exclude)BUILD/**' ':(exclude)**/DerivedData/**'; then
+            echo "STOP_AXIONA_LEGACY_RULE_ANCHOR_FOUND"
+            exit 1
+          fi
+          echo "OK_AXIONA_NO_LEGACY_RULE_ANCHOR"
+
+          echo "=== Junk artifact gate ==="
+          JUNK_LIST="$(find . \
+            -path './.git' -prune -o \
+            -path './BUILD' -prune -o \
+            -path '*/DerivedData/*' -prune -o \
+            \( -name '.DS_Store' -o -name '__MACOSX' -o -name '*.pyc' -o -name '.pytest_cache' -o -name '.mypy_cache' \) \
+            -print)"
+          if [ -n "$JUNK_LIST" ]; then
+            echo "$JUNK_LIST"
+            echo "STOP_AXIONA_JUNK_ARTIFACT_FOUND"
+            exit 1
+          fi
+          echo "OK_AXIONA_NO_JUNK_ARTIFACTS"
+
+          echo "=== Obvious private key gate ==="
+          if git grep -nI -E "BEGIN (RSA |OPENSSH |DSA |EC )?PRIVATE KEY" -- . ':(exclude)BUILD/**' ':(exclude)**/DerivedData/**'; then
+            echo "STOP_AXIONA_PRIVATE_KEY_MATERIAL_FOUND"
+            exit 1
+          fi
+          echo "OK_AXIONA_NO_PRIVATE_KEY_MATERIAL"
+
+          echo "=== Diff whitespace gate ==="
+          BASE_SHA="${PR_BASE_SHA:-}"
+          if [ -z "$BASE_SHA" ]; then
+            BASE_SHA="${PUSH_BEFORE_SHA:-}"
+          fi
+          if [ -z "$BASE_SHA" ] || [ "$BASE_SHA" = "0000000000000000000000000000000000000000" ]; then
+            BASE_SHA="$(git rev-list --max-parents=0 HEAD | tail -n 1)"
+          fi
+          git diff --check "$BASE_SHA" HEAD
+          echo "OK_AXIONA_DIFF_WHITESPACE_GATE"
+
+          echo "OK_AXIONA_REPOSITORY_GUARD_PASSED"
