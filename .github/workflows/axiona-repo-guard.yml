@@ -26,25 +26,31 @@ jobs:
       PUSH_BEFORE_SHA: ${{ github.event.before }}
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0
 
       - name: Run AXIONA repository invariants
         shell: bash
         run: |
-          set -euo pipefail
+          set -uo pipefail
+
+          FAIL=0
 
           echo "REPOSITORY=$GITHUB_REPOSITORY"
           echo "REF=$GITHUB_REF"
           echo "SHA=$GITHUB_SHA"
 
           echo "=== Legacy global rule anchor gate ==="
-          if git grep -nI "fakukac1980/AXIONA_CI" -- . ':(exclude)BUILD/**' ':(exclude)**/DerivedData/**'; then
+          if grep -RIn "fakukac1980/AXIONA_CI" . \
+            --exclude-dir=.git \
+            --exclude-dir=BUILD \
+            --exclude-dir=DerivedData; then
             echo "STOP_AXIONA_LEGACY_RULE_ANCHOR_FOUND"
-            exit 1
+            FAIL=1
+          else
+            echo "OK_AXIONA_NO_LEGACY_RULE_ANCHOR"
           fi
-          echo "OK_AXIONA_NO_LEGACY_RULE_ANCHOR"
 
           echo "=== Junk artifact gate ==="
           JUNK_LIST="$(find . \
@@ -56,16 +62,21 @@ jobs:
           if [ -n "$JUNK_LIST" ]; then
             echo "$JUNK_LIST"
             echo "STOP_AXIONA_JUNK_ARTIFACT_FOUND"
-            exit 1
+            FAIL=1
+          else
+            echo "OK_AXIONA_NO_JUNK_ARTIFACTS"
           fi
-          echo "OK_AXIONA_NO_JUNK_ARTIFACTS"
 
           echo "=== Obvious private key gate ==="
-          if git grep -nI -E "BEGIN (RSA |OPENSSH |DSA |EC )?PRIVATE KEY" -- . ':(exclude)BUILD/**' ':(exclude)**/DerivedData/**'; then
+          if grep -RInE "BEGIN (RSA |OPENSSH |DSA |EC )?PRIVATE KEY" . \
+            --exclude-dir=.git \
+            --exclude-dir=BUILD \
+            --exclude-dir=DerivedData; then
             echo "STOP_AXIONA_PRIVATE_KEY_MATERIAL_FOUND"
-            exit 1
+            FAIL=1
+          else
+            echo "OK_AXIONA_NO_PRIVATE_KEY_MATERIAL"
           fi
-          echo "OK_AXIONA_NO_PRIVATE_KEY_MATERIAL"
 
           echo "=== Diff whitespace gate ==="
           BASE_SHA="${PR_BASE_SHA:-}"
@@ -73,9 +84,22 @@ jobs:
             BASE_SHA="${PUSH_BEFORE_SHA:-}"
           fi
           if [ -z "$BASE_SHA" ] || [ "$BASE_SHA" = "0000000000000000000000000000000000000000" ]; then
-            BASE_SHA="$(git rev-list --max-parents=0 HEAD | tail -n 1)"
+            BASE_SHA="HEAD~1"
           fi
-          git diff --check "$BASE_SHA" HEAD
-          echo "OK_AXIONA_DIFF_WHITESPACE_GATE"
+          if git rev-parse --verify "$BASE_SHA" >/dev/null 2>&1; then
+            if git diff --check "$BASE_SHA" HEAD; then
+              echo "OK_AXIONA_DIFF_WHITESPACE_GATE"
+            else
+              echo "STOP_AXIONA_DIFF_WHITESPACE_GATE_FAILED"
+              FAIL=1
+            fi
+          else
+            echo "WARN_AXIONA_DIFF_BASE_UNAVAILABLE_SKIP_WHITESPACE_GATE=$BASE_SHA"
+          fi
+
+          if [ "$FAIL" -ne 0 ]; then
+            echo "STOP_AXIONA_REPOSITORY_GUARD_FAILED"
+            exit 1
+          fi
 
           echo "OK_AXIONA_REPOSITORY_GUARD_PASSED"
