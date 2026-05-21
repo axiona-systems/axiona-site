@@ -1,0 +1,42 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Editors
+.idea/
+.vscode/*
+!.vscode/extensions.json
+
+# Local environment
+.env
+.env.*
+*.local
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Dependencies and build outputs
+node_modules/
+dist/
+build/
+.cache/
+.parcel-cache/
+
+# Backups and generated packages
+*.zip
+*.tar
+*.tar.gz
+*.tgz
+*_backup/
+*_bak/
+backup/
+backups/
+
+# System files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
