@@ -1,32 +1,33 @@
-# AXIONA CI P1 Adoption
+# AXIONA CI P1 Adoption Pointer
 
-Status: active pointer
+Status: active
 Repository: axiona-systems/axiona-site
-Central source: axiona-systems/AXIONA_CI
+Central governance repository: axiona-systems/AXIONA_CI
 
-This repository adopts the central AXIONA_CI P1 report-only safety foundation by reference.
+AXIONA_CI_ADOPTION_POINTER=TRUE
+CENTRAL_GOVERNANCE_REPO=axiona-systems/AXIONA_CI
+AXIONA_CI_RULES_INDEX=Docs/Rules/00_AXIONA_RULES_INDEX.md
+NO_LOCAL_RULE_DUPLICATION=TRUE
 
-Central guide:
+## Purpose
 
-```text
-AXIONA_CI/Docs/Guides/AXIONA_CI_P1_PRODUCT_REPO_ADOPTION_GUIDE_v0_1.md
-```
+This repository adopts AXIONA_CI as the central governance and rule source of truth.
+Product repositories must not copy AXIONA_CI tools, schemas, or config locally.
 
-Central accepted baseline:
+## Closed authority boundary
 
-```text
-P1_REPORT_ONLY_FOUNDATION=ACCEPTED
-GITHUB_MAIN_BASELINE=OK
-TRUSTED_LOCAL_MAC_PROOF=OK
-```
+NO_LOCAL_AXIONA_CI_TOOL_COPY
+NO_LOCAL_AXIONA_CI_SCHEMA_COPY
+NO_LOCAL_AXIONA_CI_CONFIG_COPY
+NO_BRANCH_PROTECTION_MUTATION
+NO_AUTO_REPAIR
+NO_AUTO_ROLLBACK
+NO_AUTONOMOUS_APPLY
+NO_RELEASE_AUTHORITY
+NO_DEPLOY_AUTHORITY
+NO_SECRET_ACCESS_AUTHORITY
+NO_MULTI_AGENT_EXECUTION_GRAPH
 
-Rules:
+## Final marker
 
-```text
-CENTRAL_AXIONA_CI_TOOLS_REQUIRED=TRUE
-NO_LOCAL_TOOL_COPY_BY_DEFAULT=TRUE
-P1_REPORT_ONLY_FOUNDATION_ACTIVE=TRUE
-NO_AUTOMATIC_REPAIR_AUTHORITY=TRUE
-NO_AUTOMATIC_ROLLBACK_AUTHORITY=TRUE
-NO_RELEASE_DEPLOY_RUNTIME_AUTHORITY_FROM_P1=TRUE
-```
+OK_SITE_AXIONA_CI_P1_ADOPTION_POINTER_V0_1
