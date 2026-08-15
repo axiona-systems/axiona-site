@@ -1,5 +1,5 @@
-
-/* AXIONA R72 — multipage navigation overlay. Keeps R71 visual system; removes one-page anchor navigation. */
+@import url("/assets/unified-r73.css");
+/* AXIONA R72 multipage navigation shell; R73 global visual/mobile theme is imported above. */
 .topbar nav a.active:after{right:0}
 .topbar nav .nav-contact.active{background:var(--orange);color:var(--ink)}
 .page-r72 main{min-height:calc(100vh - 82px)}
