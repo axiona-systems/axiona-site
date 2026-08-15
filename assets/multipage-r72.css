@@ -1,11 +1,11 @@
 @import url("/assets/unified-r73.css");
 /* AXIONA R72 multipage navigation shell; R73 global visual/mobile theme is imported above. */
 .topbar nav a.active:after{right:0}
-.topbar nav .nav-contact.active{background:var(--orange);color:var(--ink)}
+.topbar nav .nav-contact.active{background:var(--orange);color:var(--white)}
 .page-r72 main{min-height:calc(100vh - 82px)}
 .page-r72:not(.page-overview) .services,.page-r72:not(.page-overview) .anatomy,.page-r72:not(.page-overview) .security,.page-r72:not(.page-overview) .method,.page-r72:not(.page-overview) .development{padding-top:92px}
 .page-r72 .services>.system-service:only-of-type,.page-r72 .services>.website-service:only-of-type{margin-bottom:0}
 .page-r72 .standalone-contact{min-height:calc(100vh - 82px);align-items:center}
 .footer-meta a:hover,.footer-meta a:focus-visible{text-decoration:underline;text-underline-offset:4px}
-@media (max-width:1100px){.topbar{grid-template-columns:200px 1fr auto;gap:14px}.topbar nav{gap:14px;font-size:12px}}
-@media (max-width:900px){.topbar nav a.active:after{right:auto;width:22px}.page-r72:not(.page-overview) .services,.page-r72:not(.page-overview) .anatomy,.page-r72:not(.page-overview) .security,.page-r72:not(.page-overview) .method,.page-r72:not(.page-overview) .development{padding-top:72px}}
+@media (max-width:1100px){.topbar{grid-template-columns:190px minmax(0,1fr) auto;gap:12px}.topbar nav{gap:14px;font-size:12px}}
+@media (max-width:900px){.topbar nav a.active:after{display:none}.topbar nav .nav-contact.active{background:var(--acid);color:var(--ink)}.page-r72:not(.page-overview) .services,.page-r72:not(.page-overview) .anatomy,.page-r72:not(.page-overview) .security,.page-r72:not(.page-overview) .method,.page-r72:not(.page-overview) .development{padding-top:64px}}
