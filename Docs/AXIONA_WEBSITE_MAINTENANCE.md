@@ -1,8 +1,8 @@
 # AXIONA Website Maintenance Baseline
 
-Status: **R77 SEO / indexing baseline**  
-Effective date: **2026-08-17**  
-Repository: `axiona-systems/axiona-site`  
+Status: **R77 SEO / indexing baseline**
+Effective date: **2026-08-17**
+Repository: `axiona-systems/axiona-site`
 Public site: `https://axiona.systems/`
 
 This file is the release checklist for future AXIONA public website changes. A website change is not complete until the applicable items below are checked.
