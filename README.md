@@ -18,11 +18,19 @@ Then open:
 http://localhost:8080/
 ```
 
-## Working notes
+## Release and maintenance
 
-Keep public pages simple, accurate and visitor-facing.
+The canonical website maintenance and SEO/indexing checklist is:
 
-Before publishing, check the page in a browser and make sure the navigation, language versions and sitemap still match.
+`Docs/AXIONA_WEBSITE_MAINTENANCE.md`
+
+Before every release run:
+
+```bash
+python3 scripts/verify_seo.py
+```
+
+Keep public pages simple, accurate and visitor-facing. Navigation, active language versions, canonical URLs, hreflang relationships, sitemap and robots configuration must remain consistent with the documented route matrix.
 
 ## Ownership
 
