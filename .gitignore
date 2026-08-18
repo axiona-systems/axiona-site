@@ -25,6 +25,7 @@ dist/
 build/
 .cache/
 .parcel-cache/
+.lighthouseci/
 
 # Backups and generated packages
 *.zip
