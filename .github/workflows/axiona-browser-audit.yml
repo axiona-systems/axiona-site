@@ -14,14 +14,10 @@ on:
       - ".github/workflows/axiona-browser-audit.yml"
   workflow_dispatch:
 
-concurrency:
-  group: axiona-browser-audit-${{ github.event.pull_request.number || github.ref }}
-  cancel-in-progress: true
-
 jobs:
   browser-audit:
     name: Lighthouse + axe
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 12
     permissions:
       contents: read
@@ -31,16 +27,12 @@ jobs:
         with:
           persist-credentials: false
 
-      - name: Set up Node.js
-        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
-        with:
-          node-version: "22"
-          package-manager-cache: false
-
-      - name: Locate system Chrome
+      - name: Verify browser audit runtime
         shell: bash
         run: |
           set -euo pipefail
+          node --version
+          npm --version
           CHROME_PATH="$(command -v google-chrome-stable || command -v google-chrome || command -v chromium || true)"
           if [ -z "$CHROME_PATH" ]; then
             echo "STOP_AXIONA_BROWSER_AUDIT_CHROME_MISSING"
@@ -49,10 +41,10 @@ jobs:
           echo "CHROME_PATH=$CHROME_PATH" >> "$GITHUB_ENV"
           echo "OK_AXIONA_BROWSER_AUDIT_CHROME=$CHROME_PATH"
 
-      - name: Install pinned browser audit tools
+      - name: Install pinned browser audit tools without lifecycle scripts
         shell: bash
         run: |
-          npm install --no-save --no-audit --no-fund \
+          npm install --no-save --ignore-scripts --no-audit --no-fund \
             @lhci/cli@0.15.1 \
             playwright-core@1.62.1 \
             axe-core@4.12.1
