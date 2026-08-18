@@ -1,8 +1,8 @@
 # AXIONA Website Maintenance Baseline
 
-Status: **Premium hardening P0 / P2 / P3 / P4 baseline**  
-Effective date: **2026-08-18**  
-Repository: `axiona-systems/axiona-site`  
+Status: **Premium hardening P0 / P2 / P3 / P4 baseline**
+Effective date: **2026-08-18**
+Repository: `axiona-systems/axiona-site`
 Public site: `https://axiona.systems/`
 
 This file is the canonical maintenance and release checklist for future AXIONA public website changes. A website change is not complete until the applicable repository, browser and live-deployment proofs below are green.
