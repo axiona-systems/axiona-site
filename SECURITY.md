@@ -2,10 +2,12 @@
 
 Please do not post security reports in public GitHub issues.
 
-Use the contact page instead:
+Use the security contact instead:
 
-https://axiona.systems/contact.html
+- Email: security reports can be sent to `hello@axiona.systems`
+- Public policy: https://axiona.systems/security.html
+- Security contact file: https://axiona.systems/.well-known/security.txt
 
-Include the affected page, a short description and the steps needed to reproduce the issue.
+Please include the affected page or component, a short description, and the minimum steps needed to reproduce the issue.
 
-Please do not send passwords, tokens, private keys or personal documents in the first message.
+Do not send passwords, tokens, private keys, banking data, or personal documents in the first message.

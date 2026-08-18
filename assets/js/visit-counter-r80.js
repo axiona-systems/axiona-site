@@ -1,4 +1,17 @@
 (() => {
+  const compactMobileMenu = () => {
+    if (!window.matchMedia("(max-width: 920px)").matches) return;
+    document.querySelectorAll(".mobile-menu[open]").forEach((menu) => {
+      menu.removeAttribute("open");
+    });
+  };
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", compactMobileMenu, { once: true });
+  } else {
+    compactMobileMenu();
+  }
+
   try {
     const navigation = performance.getEntriesByType("navigation")[0];
     if (navigation && navigation.type !== "navigate") return;
@@ -17,6 +30,6 @@
       keepalive: true,
     }).catch(() => {});
   } catch (_) {
-    // Counting must never affect the website experience.
+    // Site runtime helpers must never affect the website experience.
   }
 })();
