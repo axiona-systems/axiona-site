@@ -1,6 +1,6 @@
 # AXIONA Website Maintenance Baseline
 
-Status: **Premium hardening P0 / P2 / P3 / P4 + public copy baseline + Keeper preview R89**
+Status: **Premium hardening P0 / P2 / P3 / P4 + public copy baseline + Keeper preview R90**
 Effective date: **2026-08-19**
 Repository: `axiona-systems/axiona-site`
 Public site: `https://axiona.systems/`
@@ -99,6 +99,7 @@ Keeper publication rules:
 7. The public examples are explanatory scenarios, not customer testimonials or claims that a named external customer is already using Keeper.
 8. HU / EN / DE Keeper pages must stay semantically aligned. Preserve natural language in each locale rather than literal translation.
 9. The iPhone / iPad / Apple App Store positioning must remain visible on the Keeper page and on the homepage / Solutions entry points in every active language.
+10. Public examples must stay **generic, varied and non-identifying**. Do not reuse real personal case details, identifiable asset names, or one private matter across multiple surfaces. The homepage, Solutions page and Keeper detail page should deliberately show different example categories so Keeper does not appear to be a single-purpose app.
 
 ## 5. Contact intake privacy invariant
 
@@ -309,6 +310,7 @@ Do not treat the following as incidental files or presentation details:
 - language alternates
 - Keeper development-status wording
 - Keeper launch-platform / App Store wording
+- Keeper public-example diversity / privacy
 - `robots.txt`
 - legacy redirect shells
 - contact-intake privacy behavior
@@ -325,7 +327,7 @@ Canonical continuation point after this hardening pass:
 
 - repository: `axiona-systems/axiona-site`
 - branch: `main`
-- completed scope: **P0 + P2 + P3 + P4 + HU/EN/DE public copy hardening + Keeper R89 product/platform preview**
+- completed scope: **P0 + P2 + P3 + P4 + HU/EN/DE public copy hardening + Keeper R90 product/platform/example-balance preview**
 - deferred scope: **P1 completed references / case studies**
 
 P1 stays deferred until a genuinely presentable completed AXIONA application exists. The Keeper preview is intentionally labelled as in development and must not be treated as a completed reference until the product actually reaches that state.
