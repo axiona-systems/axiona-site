@@ -172,6 +172,7 @@ jobs:
             echo "STOP_AXIONA_LIVE_STATUS_READ_FAILED=$HTTP_CODE"
             exit 1
           fi
+          export EXISTING_SHA
 
           python3 - <<'PY'
           import base64, json, os
@@ -187,7 +188,6 @@ jobs:
           with open('/tmp/status-put.json', 'w', encoding='utf-8') as f:
               json.dump(body, f)
           PY
-          export EXISTING_SHA
           curl --fail-with-body --silent --show-error \
             --request PUT \
             --header "Accept: application/vnd.github+json" \
