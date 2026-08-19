@@ -18,6 +18,7 @@ ROUTES = (
     "process.html",
     "security.html",
     "solutions.html",
+    "keeper.html",
     "contact.html",
     "privacy.html",
     "legal.html",
@@ -162,6 +163,20 @@ def main() -> int:
                 if alternates != expected:
                     errors.append(
                         f"homepage hreflang mismatch: {label}: {alternates!r} != {expected!r}"
+                    )
+
+            if route == "keeper.html":
+                expected_canonical = page_url(lang, route)
+                canonicals = canonical_links(parser)
+                if canonicals != [expected_canonical]:
+                    errors.append(
+                        f"keeper canonical mismatch: {label}: {canonicals!r} != {[expected_canonical]!r}"
+                    )
+                alternates = alternate_links(parser)
+                expected = expected_alternates(route)
+                if alternates != expected:
+                    errors.append(
+                        f"keeper hreflang mismatch: {label}: {alternates!r} != {expected!r}"
                     )
 
             if route == "support.html":
