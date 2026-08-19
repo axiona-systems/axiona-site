@@ -141,12 +141,12 @@
 .keeper-matter-doc small{
   display:block;
   margin-top:4px;
-  color:#707873;
+  color:#646d68;
   font-size:10px;
   line-height:1.25;
 }
 .keeper-doc-state{
-  color:#6e7773;
+  color:#606964;
   font:850 8px/1 monospace;
   letter-spacing:.07em;
   text-align:right;
