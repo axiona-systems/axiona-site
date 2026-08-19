@@ -1,0 +1,153 @@
+#!/usr/bin/env python3
+from __future__ import annotations
+
+import base64
+import re
+import shutil
+import subprocess
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[1]
+ROUTES = (
+    "index.html", "systems.html", "process.html", "security.html", "solutions.html",
+    "keeper.html", "contact.html", "privacy.html", "legal.html", "support.html",
+)
+LOCALES = (("", "hu"), ("en/", "en"), ("de/", "de"))
+
+
+def image_url(lang: str, keeper: bool) -> str:
+    stem = "axiona-keeper-social-preview" if keeper else "axiona-social-preview"
+    return f"https://axiona.systems/assets/social/{stem}-r92-{lang}.png"
+
+
+def migrate_html() -> None:
+    for prefix, lang in LOCALES:
+        for route in ROUTES:
+            path = ROOT / prefix / route
+            text = path.read_text(encoding="utf-8")
+            target = image_url(lang, route == "keeper.html")
+            for marker in ("property=\"og:image\"", "property=\"og:image:secure_url\"", "name=\"twitter:image\""):
+                pattern = rf'<meta content="[^"]+" {re.escape(marker)}/>'
+                repl = f'<meta content="{target}" {marker}/>'
+                text, count = re.subn(pattern, repl, text, count=1)
+                if count != 1:
+                    raise RuntimeError(f"expected exactly one {marker} in {path}, got {count}")
+            path.write_text(text, encoding="utf-8")
+
+
+def harden_verifier() -> None:
+    path = ROOT / "scripts/verify_public_quality.py"
+    text = path.read_text(encoding="utf-8")
+    old_block = '''GENERAL_SOCIAL_IMAGE = "https://axiona.systems/assets/social/axiona-social-preview-r91.png"\nKEEPER_SOCIAL_IMAGE = "https://axiona.systems/assets/social/axiona-keeper-social-preview-r91.png"\nLEGACY_SOCIAL_IMAGE = "https://axiona.systems/assets/social/axiona-social-preview-r86.png"\nSOCIAL_IMAGE_ASSETS = (\n    "assets/social/axiona-social-preview-r91.png",\n    "assets/social/axiona-keeper-social-preview-r91.png",\n    "assets/social/axiona-social-preview-r86.png",\n)'''
+    new_block = '''GENERAL_SOCIAL_IMAGES = {\n    "": "https://axiona.systems/assets/social/axiona-social-preview-r92-hu.png",\n    "en/": "https://axiona.systems/assets/social/axiona-social-preview-r92-en.png",\n    "de/": "https://axiona.systems/assets/social/axiona-social-preview-r92-de.png",\n}\nKEEPER_SOCIAL_IMAGES = {\n    "": "https://axiona.systems/assets/social/axiona-keeper-social-preview-r92-hu.png",\n    "en/": "https://axiona.systems/assets/social/axiona-keeper-social-preview-r92-en.png",\n    "de/": "https://axiona.systems/assets/social/axiona-keeper-social-preview-r92-de.png",\n}\nLEGACY_SOCIAL_IMAGES = (\n    "https://axiona.systems/assets/social/axiona-social-preview-r91.png",\n    "https://axiona.systems/assets/social/axiona-keeper-social-preview-r91.png",\n    "https://axiona.systems/assets/social/axiona-social-preview-r86.png",\n)\nSOCIAL_IMAGE_ASSETS = (\n    "assets/social/axiona-social-preview-r92-hu.png",\n    "assets/social/axiona-social-preview-r92-en.png",\n    "assets/social/axiona-social-preview-r92-de.png",\n    "assets/social/axiona-keeper-social-preview-r92-hu.png",\n    "assets/social/axiona-keeper-social-preview-r92-en.png",\n    "assets/social/axiona-keeper-social-preview-r92-de.png",\n    "assets/social/axiona-social-preview-r86.png",\n)'''
+    if old_block not in text:
+        raise RuntimeError("social constants block not found")
+    text = text.replace(old_block, new_block, 1)
+
+    old_line = '        expected_social_image = KEEPER_SOCIAL_IMAGE if page.name == "keeper.html" else GENERAL_SOCIAL_IMAGE\n'
+    new_lines = '''        relative_label = page.relative_to(ROOT).as_posix()\n        social_prefix = "en/" if relative_label.startswith("en/") else "de/" if relative_label.startswith("de/") else ""\n        expected_social_image = (\n            KEEPER_SOCIAL_IMAGES[social_prefix]\n            if page.name == "keeper.html"\n            else GENERAL_SOCIAL_IMAGES[social_prefix]\n        )\n'''
+    if old_line not in text:
+        raise RuntimeError("expected social image assignment not found")
+    text = text.replace(old_line, new_lines, 1)
+
+    old_legacy = '''        if LEGACY_SOCIAL_IMAGE in text:\n            errors.append(f"legacy R86 social preview URL remains active in {label}")\n'''
+    new_legacy = '''        for legacy_social_image in LEGACY_SOCIAL_IMAGES:\n            if legacy_social_image in text:\n                errors.append(f"legacy social preview URL remains active in {label}: {legacy_social_image}")\n'''
+    if old_legacy not in text:
+        raise RuntimeError("legacy social check not found")
+    text = text.replace(old_legacy, new_legacy, 1)
+    text = text.replace('print("OK_AXIONA_SOCIAL_PREVIEW_R91")', 'print("OK_AXIONA_SOCIAL_PREVIEW_R92_LOCALES")', 1)
+    path.write_text(text, encoding="utf-8")
+
+
+def update_docs() -> None:
+    path = ROOT / "Docs/AXIONA_WEBSITE_MAINTENANCE.md"
+    text = path.read_text(encoding="utf-8")
+    marker = "## 10. Locale-specific social preview invariant (R92)"
+    if marker in text:
+        return
+    section = f'''\n\n{marker}\n\nAll 30 active HU / EN / DE pages must expose a 1200×630 opaque PNG social card in the same language as the page. General pages use the matching HU / EN / DE AXIONA Systems card; Keeper pages use the matching HU / EN / DE Keeper card. `og:image`, `og:image:secure_url` and `twitter:image` must point to the same locale-specific R92 asset. Active pages must not fall back to R91 or R86 URLs. The fresh R92 image URLs also prevent reuse of stale Facebook image cache from the earlier malformed-preview incident. `verify_public_quality.py` validates both route-to-locale mapping and binary PNG integrity.\n'''
+    path.write_text(text.rstrip() + section + "\n", encoding="utf-8")
+
+
+def card_html(logo: str, eyebrow: str, title: str, line1: str, line2: str, keeper: bool) -> str:
+    visual = (
+        '<div class="phone"><div class="notch"></div><div class="doc d1"></div><div class="doc d2"></div><div class="doc d3"></div><div class="folder"></div></div>'
+        if keeper else
+        '<div class="node n1"></div><div class="node n2"></div><div class="node n3"></div><div class="node n4"></div><div class="line l1"></div><div class="line l2"></div><div class="line l3"></div><div class="panel-label">AXIONA SYSTEM</div>'
+    )
+    footer = "AXIONA.SYSTEMS / KEEPER" if keeper else "AXIONA.SYSTEMS"
+    return f'''<!doctype html><html><head><meta charset="utf-8"><style>
+*{{box-sizing:border-box}}html,body{{margin:0;width:1200px;height:630px;overflow:hidden}}body{{font-family:Arial,Helvetica,sans-serif;background:#f4efe6;color:#0f2440}}
+.card{{position:relative;width:1200px;height:630px;padding:58px 64px;background:linear-gradient(135deg,#f6f1e8 0%,#f2ecdf 100%)}}
+.brand{{display:flex;align-items:center;gap:16px;font-weight:800;font-size:24px;letter-spacing:1px}}.brand img{{width:46px;height:46px}}.brand small{{display:block;font-size:12px;letter-spacing:4px;margin-top:2px;font-weight:700}}
+.eyebrow{{margin-top:58px;font-size:15px;font-weight:800;letter-spacing:2.2px;color:#d66b58}}h1{{margin:18px 0 24px;font-size:58px;line-height:1.02;letter-spacing:-2.2px;max-width:690px}}
+.meta{{font-size:20px;line-height:1.7;font-weight:700;color:#223b59}}.meta .muted{{font-weight:600;color:#52657a}}.foot{{position:absolute;left:64px;bottom:48px;font-size:14px;font-weight:800;letter-spacing:2.2px;color:#667486}}
+.visual{{position:absolute;right:54px;top:52px;width:356px;height:526px;background:#102943;border-radius:26px;overflow:hidden;box-shadow:0 16px 40px rgba(15,36,64,.18)}}.visual:before{{content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.045) 1px,transparent 1px);background-size:32px 32px}}
+.panel-label{{position:absolute;left:26px;bottom:24px;font-size:12px;font-weight:800;letter-spacing:2px;color:#e7ded0}}.node{{position:absolute;width:64px;height:64px;border:2px solid #f4efe6;border-radius:14px;background:#173854}}.n1{{left:42px;top:84px}}.n2{{right:42px;top:84px}}.n3{{left:42px;top:284px}}.n4{{right:42px;top:284px}}.node:after{{content:'';position:absolute;inset:18px;border-radius:50%;background:#d66b58}}.line{{position:absolute;background:#7890a6}}.l1{{left:106px;top:115px;width:144px;height:2px}}.l2{{left:73px;top:148px;width:2px;height:136px}}.l3{{right:73px;top:148px;width:2px;height:136px}}
+.phone{{position:absolute;left:78px;top:48px;width:200px;height:398px;border:3px solid #f4efe6;border-radius:28px;background:#153550}}.notch{{position:absolute;left:66px;top:12px;width:68px;height:8px;border-radius:8px;background:#f4efe6}}.doc{{position:absolute;left:28px;width:144px;height:74px;border-radius:10px;background:#f4efe6}}.d1{{top:64px}}.d2{{top:151px}}.d3{{top:238px}}.doc:before{{content:'';position:absolute;left:16px;top:18px;width:82px;height:5px;border-radius:4px;background:#8a9aab;box-shadow:0 14px 0 #b3bdc7,0 28px 0 #d66b58}}.folder{{position:absolute;left:28px;bottom:28px;width:144px;height:50px;border-radius:8px;background:#d66b58}}.folder:before{{content:'';position:absolute;left:0;top:-10px;width:58px;height:16px;border-radius:6px 6px 0 0;background:#d66b58}}
+</style></head><body><div class="card"><div class="brand"><img src="data:image/png;base64,{logo}"><div>AXIONA<small>SYSTEMS</small></div></div><div class="eyebrow">{eyebrow}</div><h1>{title}</h1><div class="meta">{line1}<br><span class="muted">{line2}</span></div><div class="foot">{footer}</div><div class="visual">{visual}</div></div></body></html>'''
+
+
+def render_cards() -> None:
+    chrome = next((p for name in ("google-chrome-stable", "google-chrome", "chromium") if (p := shutil.which(name))), None)
+    if not chrome:
+        raise RuntimeError("Chrome/Chromium not found")
+    logo = base64.b64encode((ROOT / "assets/axiona-mark.png").read_bytes()).decode("ascii")
+    tmp = Path("/tmp/axiona-r92-social")
+    tmp.mkdir(parents=True, exist_ok=True)
+    cards = {
+        "general-hu": ("DIGITÁLIS RENDSZEREK · MÉRNÖKI SZEMLÉLET", "Rendezett rendszerek.<br>Tiszta működés.", "Rendszerépítés&nbsp; / &nbsp;Folyamattervezés", "Szoftver&nbsp; / &nbsp;Automatizálás&nbsp; / &nbsp;Biztonság", False),
+        "general-en": ("DIGITAL SYSTEMS · ENGINEERING", "Structured systems.<br>Clear operation.", "System design&nbsp; / &nbsp;Process design", "Software&nbsp; / &nbsp;Automation&nbsp; / &nbsp;Security", False),
+        "general-de": ("DIGITALE SYSTEME · ENGINEERING", "Strukturierte Systeme.<br>Klare Abläufe.", "Systemaufbau&nbsp; / &nbsp;Prozessgestaltung", "Software&nbsp; / &nbsp;Automatisierung&nbsp; / &nbsp;Sicherheit", False),
+        "keeper-hu": ("AXIONA KEEPER · FEJLESZTÉS ALATT", "Dokumentumok.<br>Rendben tartva.", "Mobil dokumentumrendezés", "iPhone&nbsp; · &nbsp;iPad&nbsp; · &nbsp;Apple App Store", True),
+        "keeper-en": ("AXIONA KEEPER · IN DEVELOPMENT", "Documents.<br>Kept in order.", "Mobile document organization", "iPhone&nbsp; · &nbsp;iPad&nbsp; · &nbsp;Apple App Store", True),
+        "keeper-de": ("AXIONA KEEPER · IN ENTWICKLUNG", "Dokumente.<br>Klar geordnet.", "Mobile Dokumentenorganisation", "iPhone&nbsp; · &nbsp;iPad&nbsp; · &nbsp;Apple App Store", True),
+    }
+    targets = {
+        "general-hu": "axiona-social-preview-r92-hu.png", "general-en": "axiona-social-preview-r92-en.png", "general-de": "axiona-social-preview-r92-de.png",
+        "keeper-hu": "axiona-keeper-social-preview-r92-hu.png", "keeper-en": "axiona-keeper-social-preview-r92-en.png", "keeper-de": "axiona-keeper-social-preview-r92-de.png",
+    }
+    for key, values in cards.items():
+        html_path = tmp / f"{key}.html"
+        html_path.write_text(card_html(logo, *values), encoding="utf-8")
+        target = (ROOT / "assets/social" / targets[key]).resolve()
+        subprocess.run([
+            chrome, "--headless=new", "--disable-gpu", "--no-sandbox", "--hide-scrollbars",
+            "--window-size=1200,630", "--force-device-scale-factor=1", f"--screenshot={target}", html_path.resolve().as_uri(),
+        ], check=True)
+
+
+def run_checks() -> None:
+    subprocess.run(["python3", "scripts/verify_seo.py"], cwd=ROOT, check=True)
+    subprocess.run(["python3", "scripts/verify_public_quality.py"], cwd=ROOT, check=True)
+
+
+def commit_changes() -> None:
+    for rel in (
+        ".github/workflows/r92-social-locale-migration.yml",
+        ".github/workflows/r92-social-locale-runner.yml",
+        "scripts/_r92_social_migrate.py",
+    ):
+        path = ROOT / rel
+        if path.exists():
+            path.unlink()
+    subprocess.run(["git", "config", "user.name", "AXIONA Release Automation"], cwd=ROOT, check=True)
+    subprocess.run(["git", "config", "user.email", "41898282+github-actions[bot]@users.noreply.github.com"], cwd=ROOT, check=True)
+    subprocess.run(["git", "add", "-A"], cwd=ROOT, check=True)
+    subprocess.run(["git", "diff", "--cached", "--check"], cwd=ROOT, check=True)
+    subprocess.run(["git", "commit", "-m", "Add localized R92 social preview cards"], cwd=ROOT, check=True)
+    subprocess.run(["git", "push", "origin", "HEAD:feature/social-preview-r91-locales"], cwd=ROOT, check=True)
+
+
+def main() -> int:
+    migrate_html()
+    harden_verifier()
+    update_docs()
+    render_cards()
+    run_checks()
+    commit_changes()
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
