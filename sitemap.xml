@@ -121,6 +121,30 @@
     <xhtml:link rel="alternate" hreflang="x-default" href="https://axiona.systems/solutions.html"/>
   </url>
   <url>
+    <loc>https://axiona.systems/keeper.html</loc>
+    <lastmod>2026-08-19</lastmod>
+    <xhtml:link rel="alternate" hreflang="hu" href="https://axiona.systems/keeper.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://axiona.systems/en/keeper.html"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://axiona.systems/de/keeper.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://axiona.systems/keeper.html"/>
+  </url>
+  <url>
+    <loc>https://axiona.systems/en/keeper.html</loc>
+    <lastmod>2026-08-19</lastmod>
+    <xhtml:link rel="alternate" hreflang="hu" href="https://axiona.systems/keeper.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://axiona.systems/en/keeper.html"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://axiona.systems/de/keeper.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://axiona.systems/keeper.html"/>
+  </url>
+  <url>
+    <loc>https://axiona.systems/de/keeper.html</loc>
+    <lastmod>2026-08-19</lastmod>
+    <xhtml:link rel="alternate" hreflang="hu" href="https://axiona.systems/keeper.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://axiona.systems/en/keeper.html"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://axiona.systems/de/keeper.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://axiona.systems/keeper.html"/>
+  </url>
+  <url>
     <loc>https://axiona.systems/contact.html</loc>
     <lastmod>2026-08-19</lastmod>
     <xhtml:link rel="alternate" hreflang="hu" href="https://axiona.systems/contact.html"/>

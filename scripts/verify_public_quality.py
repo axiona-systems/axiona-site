@@ -16,6 +16,7 @@ ACTIVE_ROUTES = (
     "process.html",
     "security.html",
     "solutions.html",
+    "keeper.html",
     "contact.html",
     "privacy.html",
     "legal.html",
@@ -42,6 +43,17 @@ REMOVED_LEGACY_ASSETS = (
     "favicon-r41-32x32.png",
     "favicon-r41.ico",
     "assets/brand/r41",
+)
+KEEPER_EXPECTED_LINKS = {
+    "": "/keeper.html",
+    "en/": "/en/keeper.html",
+    "de/": "/de/keeper.html",
+}
+KEEPER_REQUIRED_MARKERS = (
+    'class="keeper-status-badge"',
+    'class="keeper-planned-note"',
+    'class="keeper-folder-tree"',
+    'class="keeper-dev-status section-pad"',
 )
 
 
@@ -156,6 +168,29 @@ def main() -> int:
             if not candidate.exists():
                 errors.append(f"{label}: broken local {kind}: {ref}")
 
+    keeper_css = ROOT / "assets/keeper-r87.css"
+    if not keeper_css.is_file():
+        errors.append("missing Keeper product stylesheet: assets/keeper-r87.css")
+
+    for prefix, keeper_href in KEEPER_EXPECTED_LINKS.items():
+        homepage = ROOT / prefix / "index.html"
+        solutions = ROOT / prefix / "solutions.html"
+        keeper = ROOT / prefix / "keeper.html"
+
+        for source in (homepage, solutions):
+            text = source.read_text(encoding="utf-8") if source.is_file() else ""
+            if f'href="{keeper_href}"' not in text:
+                errors.append(f"Keeper product entry link missing in {source}: {keeper_href}")
+            if "/assets/keeper-r87.css" not in text:
+                errors.append(f"Keeper stylesheet missing from product entry page: {source}")
+
+        keeper_text = keeper.read_text(encoding="utf-8") if keeper.is_file() else ""
+        if "/assets/keeper-r87.css" not in keeper_text:
+            errors.append(f"Keeper stylesheet missing from product page: {keeper}")
+        for marker in KEEPER_REQUIRED_MARKERS:
+            if marker not in keeper_text:
+                errors.append(f"Keeper transparency marker missing in {keeper}: {marker}")
+
     for prefix in LANG_PREFIXES:
         contact = ROOT / prefix / "contact.html"
         text = contact.read_text(encoding="utf-8") if contact.is_file() else ""
@@ -237,6 +272,7 @@ def main() -> int:
 
     print("OK_AXIONA_LEGACY_PUBLIC_SURFACE_CLEAN")
     print("OK_AXIONA_ACTIVE_INTERNAL_LINKS")
+    print("OK_AXIONA_KEEPER_PRODUCT_PREVIEW_INVARIANTS")
     print("OK_AXIONA_CONTACT_INTAKE_LOCAL_ONLY")
     print("OK_AXIONA_SECURITY_TXT")
     print("OK_AXIONA_PUBLIC_QUALITY_PASSED")
