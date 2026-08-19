@@ -37,7 +37,7 @@ jobs:
           set -euo pipefail
           git fetch origin feature/social-preview-r91-locales
           git checkout -B feature/social-preview-r91-locales origin/feature/social-preview-r91-locales
-          python3 scripts/_r92_social_migrate.py
+          python3 scripts/_r92_social_migrate_fixed.py
 
       - name: Verify website SEO and indexing invariants
         shell: bash
