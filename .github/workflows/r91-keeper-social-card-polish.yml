@@ -1,0 +1,123 @@
+name: R91 Keeper Social Card Polish
+
+on:
+  pull_request:
+    branches:
+      - main
+    types:
+      - opened
+      - synchronize
+      - reopened
+
+permissions:
+  contents: write
+
+concurrency:
+  group: r91-keeper-social-card-polish-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  render:
+    if: github.event.pull_request.head.ref == 'fix/r91-keeper-social-card-polish'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          ref: fix/r91-keeper-social-card-polish
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Prepare renderer
+        shell: bash
+        run: |
+          set -euo pipefail
+          CHROME_PATH="$(command -v google-chrome-stable || command -v google-chrome || command -v chromium || true)"
+          if [ -z "$CHROME_PATH" ]; then
+            echo "STOP_R91_KEEPER_RENDER_CHROME_MISSING"
+            exit 1
+          fi
+          echo "CHROME_PATH=$CHROME_PATH" >> "$GITHUB_ENV"
+          npm install --no-save --ignore-scripts --no-audit --no-fund playwright-core@1.62.1
+
+      - name: Render Keeper production social card
+        shell: bash
+        run: |
+          set -euo pipefail
+          node <<'NODE'
+          const { chromium } = require('playwright-core');
+          const fs = require('fs');
+          const mark = fs.readFileSync('assets/axiona-mark.png').toString('base64');
+          const html = `<!doctype html><html><head><meta charset="utf-8"><style>
+          *{box-sizing:border-box}html,body{margin:0;width:1200px;height:630px;overflow:hidden;background:#f6efe3}
+          body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;color:#10262e}
+          .card{position:relative;width:1200px;height:630px;padding:66px 70px;background:linear-gradient(135deg,#f8f1e7 0%,#f4ecdf 100%)}
+          .card:before{content:"";position:absolute;left:0;top:0;width:1200px;height:8px;background:#ef6b43}
+          .brand{display:flex;align-items:center;gap:17px;height:64px}.brand img{width:58px;height:58px;object-fit:contain}
+          .brand-name{font-size:27px;line-height:1;font-weight:760;letter-spacing:.22em}.brand-name small{display:block;margin-top:8px;font-size:11px;font-weight:680;letter-spacing:.46em;color:#5c6e72}
+          .content{display:grid;grid-template-columns:1.18fr .82fr;gap:62px;align-items:center;height:424px;margin-top:35px}
+          .eyebrow{font-size:14px;font-weight:730;letter-spacing:.2em;color:#e35f3a;margin-bottom:20px}
+          h1{font-size:63px;line-height:.99;letter-spacing:-.048em;margin:0 0 25px;font-weight:770;max-width:610px}
+          .rule{width:126px;height:5px;background:#ef6b43;margin:0 0 26px}
+          .scope{font-size:20px;line-height:1.58;color:#4c6267}.scope b{font-weight:650;color:#18343c}.dot{color:#ef6b43;padding:0 8px}
+          .visual{position:relative;height:392px;border-radius:26px;background:#10272f;overflow:hidden;box-shadow:0 24px 55px rgba(16,39,47,.16)}
+          .visual:before{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.05) 1px,transparent 1px);background-size:39px 39px}
+          .visual svg{position:absolute;inset:0;width:100%;height:100%}
+          .footer{position:absolute;left:70px;right:70px;bottom:38px;display:flex;align-items:center;justify-content:space-between;border-top:1px solid rgba(16,39,47,.16);padding-top:18px;font-size:13px;letter-spacing:.13em;color:#6e7c7e}
+          .footer strong{font-weight:720;color:#17323a;letter-spacing:.16em}
+          </style></head><body><div class="card">
+          <div class="brand"><img src="data:image/png;base64,${mark}" alt=""><div class="brand-name">AXIONA<small>SYSTEMS</small></div></div>
+          <div class="content"><div>
+            <div class="eyebrow">AXIONA KEEPER · IN DEVELOPMENT</div>
+            <h1>Documents.<br>Kept in order.</h1>
+            <div class="rule"></div>
+            <div class="scope"><b>Mobile document organization</b><br>iPhone<span class="dot">·</span>iPad<span class="dot">·</span>Apple App Store</div>
+          </div>
+          <div class="visual"><svg viewBox="0 0 405 392" aria-hidden="true">
+            <defs><filter id="s"><feDropShadow dx="0" dy="8" stdDeviation="10" flood-opacity=".18"/></filter></defs>
+            <rect x="76" y="48" width="190" height="270" rx="27" fill="#f6efe3" filter="url(#s)"/>
+            <rect x="91" y="69" width="160" height="218" rx="16" fill="#ffffff" opacity=".72"/>
+            <rect x="117" y="105" width="108" height="12" rx="6" fill="#ef6b43"/>
+            <rect x="117" y="139" width="83" height="8" rx="4" fill="#75898d"/>
+            <rect x="117" y="161" width="108" height="8" rx="4" fill="#a2adae"/>
+            <rect x="117" y="183" width="96" height="8" rx="4" fill="#a2adae"/>
+            <rect x="117" y="219" width="108" height="42" rx="10" fill="#10272f"/>
+            <circle cx="171" cy="303" r="6" fill="#10272f"/>
+            <rect x="248" y="118" width="104" height="142" rx="18" fill="#f6efe3" filter="url(#s)"/>
+            <rect x="267" y="143" width="66" height="8" rx="4" fill="#ef6b43"/>
+            <rect x="267" y="167" width="51" height="7" rx="3.5" fill="#75898d"/>
+            <rect x="267" y="189" width="66" height="7" rx="3.5" fill="#a2adae"/>
+            <path d="M267 226 h66" stroke="#10272f" stroke-width="8" stroke-linecap="round"/>
+            <path d="M230 99 C284 69 337 78 356 116" fill="none" stroke="#ef6b43" stroke-width="3" stroke-linecap="round"/>
+            <circle cx="356" cy="116" r="7" fill="#ef6b43"/>
+          </svg></div></div>
+          <div class="footer"><strong>AXIONA.SYSTEMS / KEEPER</strong><span>MOBILE · DOCUMENTS · STRUCTURE</span></div>
+          </div></body></html>`;
+          (async()=>{const browser=await chromium.launch({executablePath:process.env.CHROME_PATH,headless:true,args:['--no-sandbox','--disable-dev-shm-usage']});const context=await browser.newContext({viewport:{width:1200,height:630},deviceScaleFactor:1});const page=await context.newPage();await page.setContent(html,{waitUntil:'load'});await page.screenshot({path:'assets/social/axiona-keeper-social-preview-r91.png',type:'png',fullPage:false,omitBackground:false});await browser.close();})().catch(e=>{console.error(e);process.exit(1)});
+          NODE
+
+      - name: Verify site and PNG integrity
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 scripts/verify_seo.py
+          python3 scripts/verify_public_quality.py
+          git diff --check
+
+      - name: Remove renderer scaffolding and commit
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          rm -f .github/workflows/r91-keeper-social-card-polish.yml
+          rm -rf node_modules package-lock.json package.json
+          git config user.name "AXIONA Release Automation"
+          git config user.email "actions@users.noreply.github.com"
+          git add -A
+          git diff --cached --check
+          git diff --cached --quiet && { echo "No Keeper card changes to commit"; exit 1; }
+          git commit -m "Polish R91 Keeper social card"
+          git remote set-url origin "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          git push origin HEAD:fix/r91-keeper-social-card-polish
