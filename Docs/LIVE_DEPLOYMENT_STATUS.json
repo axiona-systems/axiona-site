@@ -1,15 +1,22 @@
 {
-  "checked_at": "2026-08-19T21:27:18.849191+00:00",
+  "checked_at": "2026-08-19T21:52:47.638918+00:00",
   "result": "PASS",
-  "source_sha": "9943d50895a57f988184eb2be93fca505777abce",
-  "run_id": "32303898241",
+  "source_sha": "49a4d4d720293b43d23a356815e7fb7684b2c1ff",
+  "run_id": "32306031628",
   "request_outcome": "success",
   "build_outcome": "success",
   "live_outcome": "success",
   "expected": {
-    "hu": "axiona-social-preview-r92-hu.png",
-    "en": "axiona-social-preview-r92-en.png",
-    "de": "axiona-social-preview-r92-de.png",
-    "keeper_hu": "axiona-keeper-social-preview-r92-hu.png"
+    "social_hu": "axiona-social-preview-r92-hu.png",
+    "social_en": "axiona-social-preview-r92-en.png",
+    "social_de": "axiona-social-preview-r92-de.png",
+    "keeper_social_hu": "axiona-keeper-social-preview-r92-hu.png",
+    "keeper_story": "R94",
+    "keeper_stylesheet": "assets/keeper-r94.css",
+    "keeper_locales": [
+      "hu",
+      "en",
+      "de"
+    ]
   }
 }
