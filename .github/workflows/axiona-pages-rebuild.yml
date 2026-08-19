@@ -15,7 +15,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
   pages: write
 
 concurrency:
@@ -29,6 +29,7 @@ jobs:
     timeout-minutes: 6
     steps:
       - name: Request GitHub Pages rebuild
+        id: request
         shell: bash
         env:
           GH_TOKEN: ${{ github.token }}
@@ -50,6 +51,7 @@ jobs:
           PY
 
       - name: Wait for Pages build completion
+        id: build
         shell: bash
         env:
           GH_TOKEN: ${{ github.token }}
@@ -88,6 +90,7 @@ jobs:
           exit 1
 
       - name: Verify live R92 social metadata and assets
+        id: live
         shell: bash
         run: |
           set -euo pipefail
@@ -110,3 +113,88 @@ jobs:
           done
           echo "STOP_AXIONA_LIVE_R92_SOCIAL_PREVIEWS_NOT_PUBLISHED"
           exit 1
+
+      - name: Record live deployment proof
+        if: always()
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPOSITORY: ${{ github.repository }}
+          SOURCE_SHA: ${{ github.sha }}
+          RUN_ID: ${{ github.run_id }}
+          REQUEST_OUTCOME: ${{ steps.request.outcome }}
+          BUILD_OUTCOME: ${{ steps.build.outcome }}
+          LIVE_OUTCOME: ${{ steps.live.outcome }}
+        run: |
+          set -euo pipefail
+          STATUS_PATH="Docs/LIVE_DEPLOYMENT_STATUS.json"
+          export STATUS_PATH
+          python3 - <<'PY'
+          import json, os
+          from datetime import datetime, timezone
+          result = "PASS" if os.environ.get("LIVE_OUTCOME") == "success" else "FAIL"
+          payload = {
+              "checked_at": datetime.now(timezone.utc).isoformat(),
+              "result": result,
+              "source_sha": os.environ.get("SOURCE_SHA"),
+              "run_id": os.environ.get("RUN_ID"),
+              "request_outcome": os.environ.get("REQUEST_OUTCOME"),
+              "build_outcome": os.environ.get("BUILD_OUTCOME"),
+              "live_outcome": os.environ.get("LIVE_OUTCOME"),
+              "expected": {
+                  "hu": "axiona-social-preview-r92-hu.png",
+                  "en": "axiona-social-preview-r92-en.png",
+                  "de": "axiona-social-preview-r92-de.png",
+                  "keeper_hu": "axiona-keeper-social-preview-r92-hu.png"
+              }
+          }
+          with open('/tmp/live-status.json', 'w', encoding='utf-8') as f:
+              json.dump(payload, f, ensure_ascii=False, indent=2)
+              f.write('\n')
+          PY
+
+          HTTP_CODE="$(curl --silent --show-error --output /tmp/status-meta.json --write-out '%{http_code}' \
+            --header "Accept: application/vnd.github+json" \
+            --header "Authorization: Bearer ${GH_TOKEN}" \
+            --header "X-GitHub-Api-Version: 2026-03-10" \
+            "https://api.github.com/repos/${REPOSITORY}/contents/${STATUS_PATH}?ref=main")"
+
+          EXISTING_SHA=""
+          if [ "$HTTP_CODE" = "200" ]; then
+            EXISTING_SHA="$(python3 - <<'PY'
+          import json
+          data = json.load(open('/tmp/status-meta.json', encoding='utf-8'))
+          print(data.get('sha', ''))
+          PY
+          )"
+          elif [ "$HTTP_CODE" != "404" ]; then
+            cat /tmp/status-meta.json
+            echo "STOP_AXIONA_LIVE_STATUS_READ_FAILED=$HTTP_CODE"
+            exit 1
+          fi
+          export EXISTING_SHA
+
+          python3 - <<'PY'
+          import base64, json, os
+          raw = open('/tmp/live-status.json', 'rb').read()
+          body = {
+              'message': 'Record AXIONA live deployment proof',
+              'content': base64.b64encode(raw).decode('ascii'),
+              'branch': 'main'
+          }
+          sha = os.environ.get('EXISTING_SHA', '')
+          if sha:
+              body['sha'] = sha
+          with open('/tmp/status-put.json', 'w', encoding='utf-8') as f:
+              json.dump(body, f)
+          PY
+          curl --fail-with-body --silent --show-error \
+            --request PUT \
+            --header "Accept: application/vnd.github+json" \
+            --header "Authorization: Bearer ${GH_TOKEN}" \
+            --header "X-GitHub-Api-Version: 2026-03-10" \
+            --header "Content-Type: application/json" \
+            --data-binary @/tmp/status-put.json \
+            "https://api.github.com/repos/${REPOSITORY}/contents/${STATUS_PATH}" \
+            >/dev/null
+          echo "OK_AXIONA_LIVE_DEPLOYMENT_PROOF_RECORDED"
