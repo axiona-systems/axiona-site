@@ -55,6 +55,7 @@ KEEPER_REQUIRED_MARKERS = (
     'class="keeper-folder-tree"',
     'class="keeper-dev-status section-pad"',
 )
+KEEPER_PLATFORM_MARKERS = ("iPhone", "iPad", "Apple App Store")
 
 
 class RefParser(HTMLParser):
@@ -183,6 +184,9 @@ def main() -> int:
                 errors.append(f"Keeper product entry link missing in {source}: {keeper_href}")
             if "/assets/keeper-r87.css" not in text:
                 errors.append(f"Keeper stylesheet missing from product entry page: {source}")
+            for marker in KEEPER_PLATFORM_MARKERS:
+                if marker not in text:
+                    errors.append(f"Keeper platform marker missing in {source}: {marker}")
 
         keeper_text = keeper.read_text(encoding="utf-8") if keeper.is_file() else ""
         if "/assets/keeper-r87.css" not in keeper_text:
@@ -190,6 +194,9 @@ def main() -> int:
         for marker in KEEPER_REQUIRED_MARKERS:
             if marker not in keeper_text:
                 errors.append(f"Keeper transparency marker missing in {keeper}: {marker}")
+        for marker in KEEPER_PLATFORM_MARKERS:
+            if marker not in keeper_text:
+                errors.append(f"Keeper platform marker missing in {keeper}: {marker}")
 
     for prefix in LANG_PREFIXES:
         contact = ROOT / prefix / "contact.html"
