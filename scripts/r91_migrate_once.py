@@ -17,11 +17,23 @@ KEEPER = 'https://axiona.systems/assets/social/axiona-keeper-social-preview-r91.
 LEGACY = 'https://axiona.systems/assets/social/axiona-social-preview-r86.png'
 
 
-def replace_required(text: str, pattern: str, replacement: str, label: str) -> str:
+def upsert_meta(text: str, selector: str, value: str, attr: str) -> tuple[str, bool]:
+    pattern = rf'<meta\b[^>]*\b{attr}="{re.escape(selector)}"[^>]*/?>'
+    replacement = f'<meta content="{value}" {attr}="{selector}"/>'
     updated, count = re.subn(pattern, replacement, text, count=1)
-    if count != 1:
-        raise RuntimeError(f'{label}: expected exactly one matching meta tag, got {count}')
-    return updated
+    if count > 1:
+        raise RuntimeError(f'duplicate metadata selector {attr}={selector}')
+    return updated, count == 1
+
+
+def insert_before_canonical(text: str, tags: list[str], label: str) -> str:
+    if not tags:
+        return text
+    canonical = re.search(r'<link\b[^>]*\brel="canonical"[^>]*/?>', text)
+    if canonical is None:
+        raise RuntimeError(f'{label}: canonical link anchor missing')
+    block = ''.join(tags)
+    return text[:canonical.start()] + block + text[canonical.start():]
 
 
 def migrate_html() -> None:
@@ -31,27 +43,36 @@ def migrate_html() -> None:
             path = ROOT / prefix / route
             text = path.read_text(encoding='utf-8')
             expected = KEEPER if route == 'keeper.html' else GENERAL
-            text = replace_required(
-                text,
-                r'<meta content="[^"]+" property="og:image"/>',
-                f'<meta content="{expected}" property="og:image"/>',
-                path.as_posix(),
+            missing: list[str] = []
+
+            specs = (
+                ('og:image', expected, 'property'),
+                ('og:image:width', '1200', 'property'),
+                ('og:image:height', '630', 'property'),
+                ('og:image:type', 'image/png', 'property'),
+                ('twitter:image', expected, 'name'),
             )
-            text = replace_required(
-                text,
-                r'<meta content="[^"]+" name="twitter:image"/>',
-                f'<meta content="{expected}" name="twitter:image"/>',
-                path.as_posix(),
-            )
-            text = re.sub(
-                r'<meta content="[^"]+" property="og:image:secure_url"/>',
-                f'<meta content="{expected}" property="og:image:secure_url"/>',
-                text,
-            )
+            for selector, value, attr in specs:
+                text, existed = upsert_meta(text, selector, value, attr)
+                if not existed:
+                    missing.append(f'<meta content="{value}" {attr}="{selector}"/>')
+
+            # Keep an existing secure_url aligned, but do not require it on every page.
+            secure_pattern = r'<meta\b[^>]*\bproperty="og:image:secure_url"[^>]*/?>'
+            if re.search(secure_pattern, text):
+                text = re.sub(
+                    secure_pattern,
+                    f'<meta content="{expected}" property="og:image:secure_url"/>',
+                    text,
+                    count=1,
+                )
+
+            text = insert_before_canonical(text, missing, path.as_posix())
             if LEGACY in text:
                 raise RuntimeError(f'{path}: legacy R86 social image URL remains after migration')
             path.write_text(text, encoding='utf-8')
             changed += 1
+
     if changed != 30:
         raise RuntimeError(f'expected 30 active pages, migrated {changed}')
     print('R91_MIGRATED_ACTIVE_PAGES=30')
