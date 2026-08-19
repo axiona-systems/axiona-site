@@ -3,7 +3,10 @@
 
 from __future__ import annotations
 
+import binascii
+import struct
 import sys
+import zlib
 from html.parser import HTMLParser
 from pathlib import Path
 from urllib.parse import urlsplit
@@ -63,6 +66,7 @@ LEGACY_SOCIAL_IMAGE = "https://axiona.systems/assets/social/axiona-social-previe
 SOCIAL_IMAGE_ASSETS = (
     "assets/social/axiona-social-preview-r91.png",
     "assets/social/axiona-keeper-social-preview-r91.png",
+    "assets/social/axiona-social-preview-r86.png",
 )
 
 
@@ -77,6 +81,60 @@ class RefParser(HTMLParser):
             self.refs.append(("href", values["href"]))
         if "src" in values:
             self.refs.append(("src", values["src"]))
+
+
+def validate_social_png(path: Path) -> str | None:
+    try:
+        data = path.read_bytes()
+    except OSError as exc:
+        return f"cannot read PNG: {exc}"
+    if data[:8] != b"\x89PNG\r\n\x1a\n":
+        return "invalid PNG signature"
+
+    pos = 8
+    width = height = color_type = None
+    idat = bytearray()
+    has_trns = False
+    saw_iend = False
+    try:
+        while pos + 12 <= len(data):
+            length = struct.unpack(">I", data[pos:pos + 4])[0]
+            end = pos + 12 + length
+            if end > len(data):
+                return f"truncated PNG chunk at byte {pos}"
+            kind = data[pos + 4:pos + 8]
+            payload = data[pos + 8:pos + 8 + length]
+            expected_crc = struct.unpack(">I", data[pos + 8 + length:end])[0]
+            actual_crc = binascii.crc32(kind + payload) & 0xFFFFFFFF
+            if expected_crc != actual_crc:
+                return f"CRC mismatch in {kind.decode('latin1')}"
+            if kind == b"IHDR":
+                width, height, _depth, color_type, compression, filtering, interlace = struct.unpack(">IIBBBBB", payload)
+                if compression != 0 or filtering != 0 or interlace not in (0, 1):
+                    return "unsupported PNG header"
+            elif kind == b"IDAT":
+                idat.extend(payload)
+            elif kind == b"tRNS":
+                has_trns = True
+            elif kind == b"IEND":
+                saw_iend = True
+                pos = end
+                break
+            pos = end
+    except (struct.error, ValueError) as exc:
+        return f"malformed PNG structure: {exc}"
+
+    if not saw_iend or pos != len(data):
+        return "missing terminal IEND or trailing data"
+    if (width, height) != (1200, 630):
+        return f"expected 1200x630, got {width}x{height}"
+    if color_type in (4, 6) or has_trns:
+        return "social PNG must use an opaque RGB/palette background"
+    try:
+        zlib.decompress(bytes(idat))
+    except zlib.error as exc:
+        return f"invalid IDAT zlib stream: {exc}"
+    return None
 
 
 def active_paths() -> list[Path]:
@@ -286,8 +344,13 @@ def main() -> int:
                 errors.append(f"security.txt missing directive: {token}")
 
     for asset in SOCIAL_IMAGE_ASSETS:
-        if not (ROOT / asset).is_file():
-            errors.append(f"missing R91 social preview asset: {asset}")
+        asset_path = ROOT / asset
+        if not asset_path.is_file():
+            errors.append(f"missing social preview asset: {asset}")
+            continue
+        png_error = validate_social_png(asset_path)
+        if png_error:
+            errors.append(f"invalid social preview asset {asset}: {png_error}")
 
     manifest = ROOT / "site.webmanifest"
     if manifest.is_file():
