@@ -42,6 +42,8 @@ original_commit_changes = migration.commit_changes
 
 
 def commit_changes_fixed() -> None:
+    docs = migration.ROOT / "Docs/AXIONA_WEBSITE_MAINTENANCE.md"
+    docs.write_text(docs.read_text(encoding="utf-8").rstrip() + "\n", encoding="utf-8")
     helper = migration.ROOT / "scripts/_r92_social_migrate_fixed.py"
     if helper.exists():
         helper.unlink()
