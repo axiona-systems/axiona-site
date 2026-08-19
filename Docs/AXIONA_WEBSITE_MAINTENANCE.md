@@ -254,7 +254,21 @@ curl -fsSL https://axiona.systems/robots.txt
 
 A release is **not live-proof complete** until the public site returns the expected current content. A stale CDN/cache/web-fetch result must be reported as unverified instead of being called a successful deploy.
 
-At the time this baseline was written, the repository `main` and all pre-merge quality gates were proven current, while the available external fetch still returned the previous Contact HTML. That is an operational deployment-proof uncertainty, not permission to claim a live PASS. Re-run the live proof before declaring the edge deployment complete.
+### 12.1 Pages publishing-source incident — 2026-08-19
+
+During the HU / EN / DE copy-hardening release, the repository `main` passed all required gates and contained the intended pages, but the public edge continued to return older HTML. The live Hungarian overview and Contact content matched the obsolete `feature/r86-premium-sharing` branch exactly, while `main` already contained the newer release.
+
+Operational repair performed:
+
+1. The previous `feature/r86-premium-sharing` tip was preserved as `archive/r86-pages-source-pre-copy-20260819`.
+2. `feature/r86-premium-sharing` was then synchronized to the validated `main` merge commit as a reversible deployment bridge.
+3. `main` remains the only canonical source of truth. Do not develop, edit or treat the R86 branch as a second source of truth.
+
+Permanent release rule:
+
+- GitHub Pages should be configured to publish directly from `main` (or from a GitHub Actions Pages deployment whose source is `main`).
+- Until that repository Pages setting is explicitly corrected, any release is incomplete if the public edge still reflects the old R86 deployment state.
+- Do not solve future stale deployments by editing old public branches independently. First prove the deployment source, preserve any old ref that must be retained, and keep the published content aligned with validated `main`.
 
 ## 13. Google result expectations
 
@@ -275,6 +289,7 @@ Do not treat the following as incidental files or presentation details:
 - `security.txt`
 - CI workflow permissions and action pinning
 - Lighthouse / axe thresholds
+- Pages publishing source
 
 They are part of the AXIONA public website contract and must be reviewed whenever the relevant site structure, behavior or deployment architecture changes.
 
