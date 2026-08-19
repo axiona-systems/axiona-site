@@ -12,9 +12,12 @@ const paths = [
   "/process.html",
   "/security.html",
   "/solutions.html",
+  "/keeper.html",
   "/contact.html",
   "/en/",
-  "/de/"
+  "/en/keeper.html",
+  "/de/",
+  "/de/keeper.html"
 ];
 
 if (!chromePath) {
