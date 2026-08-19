@@ -1,11 +1,13 @@
 # AXIONA Website Maintenance Baseline
 
-Status: **Premium hardening P0 / P2 / P3 / P4 baseline**
-Effective date: **2026-08-18**
+Status: **Premium hardening P0 / P2 / P3 / P4 + public copy baseline**
+Effective date: **2026-08-19**
 Repository: `axiona-systems/axiona-site`
 Public site: `https://axiona.systems/`
 
 This file is the canonical maintenance and release checklist for future AXIONA public website changes. A website change is not complete until the applicable repository, browser and live-deployment proofs below are green.
+
+The active HU / EN / DE public copy was reviewed as one language system on 2026-08-19. Keep the writing direct, concrete and human: avoid abstract product language, inflated claims, generic AI-style slogans and literal cross-language translations. Hungarian uses direct informal address where the visitor is addressed personally; English uses natural personal business language; German uses consistent formal `Sie` address. Preserve meaning across languages rather than forcing sentence-by-sentence translation.
 
 ## 1. Active public language set
 
@@ -243,7 +245,7 @@ After merge, verify the public edge directly. Minimum proof set:
 curl -fsSL https://axiona.systems/ | grep -Ei 'canonical|hreflang|<title>|description'
 curl -fsSL https://axiona.systems/en/ | grep -Ei 'canonical|hreflang|<title>|description'
 curl -fsSL https://axiona.systems/de/ | grep -Ei 'canonical|hreflang|<title>|description'
-curl -fsSL https://axiona.systems/contact.html | grep -F 'Írd le a működési problémát, ne a technológiát.'
+curl -fsSL https://axiona.systems/contact.html | grep -F 'Írd le, mi működik nehezen. A technológiát ráérünk később kiválasztani.'
 curl -fsSL https://axiona.systems/.well-known/security.txt
 curl -fsSL https://axiona.systems/applications.html | grep -F 'https://axiona.systems/solutions.html'
 curl -fsSL https://axiona.systems/sitemap.xml | head -80
@@ -282,7 +284,7 @@ Canonical continuation point after this hardening pass:
 
 - repository: `axiona-systems/axiona-site`
 - branch: `main`
-- completed scope: **P0 + P2 + P3 + P4**
+- completed scope: **P0 + P2 + P3 + P4 + HU/EN/DE public copy hardening**
 - deferred scope: **P1 references / case studies**
 
 P1 stays deferred until a genuinely presentable first AXIONA application exists. Do not reopen it merely to make the public website look larger or more established than the current evidence supports.
