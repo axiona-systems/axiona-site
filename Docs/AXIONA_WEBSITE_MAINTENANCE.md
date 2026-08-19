@@ -335,3 +335,7 @@ P1 stays deferred until a genuinely presentable completed AXIONA application exi
 ## R91 social preview invariant
 
 All 30 active HU / EN / DE pages use fixed 1200×630 PNG social previews. Normal pages use `assets/social/axiona-social-preview-r91.png`; the three Keeper pages use `assets/social/axiona-keeper-social-preview-r91.png`. `og:image` and `twitter:image` must match, and the width, height and PNG type metadata are release invariants. The old R86 URL must not appear in active HTML. Keep the R91 filenames stable until a deliberate cache-busting release introduces a newer filename.
+
+## 10. Locale-specific social preview invariant (R92)
+
+All 30 active HU / EN / DE pages must expose a 1200×630 opaque PNG social card in the same language as the page. General pages use the matching HU / EN / DE AXIONA Systems card; Keeper pages use the matching HU / EN / DE Keeper card. `og:image`, `og:image:secure_url` and `twitter:image` must point to the same locale-specific R92 asset. Active pages must not fall back to R91 or R86 URLs. The fresh R92 image URLs also prevent reuse of stale Facebook image cache from the earlier malformed-preview incident. `verify_public_quality.py` validates both route-to-locale mapping and binary PNG integrity.

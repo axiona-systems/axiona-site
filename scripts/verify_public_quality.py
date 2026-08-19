@@ -60,12 +60,28 @@ KEEPER_REQUIRED_MARKERS = (
 )
 KEEPER_PLATFORM_MARKERS = ("iPhone", "iPad", "Apple App Store")
 
-GENERAL_SOCIAL_IMAGE = "https://axiona.systems/assets/social/axiona-social-preview-r91.png"
-KEEPER_SOCIAL_IMAGE = "https://axiona.systems/assets/social/axiona-keeper-social-preview-r91.png"
-LEGACY_SOCIAL_IMAGE = "https://axiona.systems/assets/social/axiona-social-preview-r86.png"
+GENERAL_SOCIAL_IMAGES = {
+    "": "https://axiona.systems/assets/social/axiona-social-preview-r92-hu.png",
+    "en/": "https://axiona.systems/assets/social/axiona-social-preview-r92-en.png",
+    "de/": "https://axiona.systems/assets/social/axiona-social-preview-r92-de.png",
+}
+KEEPER_SOCIAL_IMAGES = {
+    "": "https://axiona.systems/assets/social/axiona-keeper-social-preview-r92-hu.png",
+    "en/": "https://axiona.systems/assets/social/axiona-keeper-social-preview-r92-en.png",
+    "de/": "https://axiona.systems/assets/social/axiona-keeper-social-preview-r92-de.png",
+}
+LEGACY_SOCIAL_IMAGES = (
+    "https://axiona.systems/assets/social/axiona-social-preview-r91.png",
+    "https://axiona.systems/assets/social/axiona-keeper-social-preview-r91.png",
+    "https://axiona.systems/assets/social/axiona-social-preview-r86.png",
+)
 SOCIAL_IMAGE_ASSETS = (
-    "assets/social/axiona-social-preview-r91.png",
-    "assets/social/axiona-keeper-social-preview-r91.png",
+    "assets/social/axiona-social-preview-r92-hu.png",
+    "assets/social/axiona-social-preview-r92-en.png",
+    "assets/social/axiona-social-preview-r92-de.png",
+    "assets/social/axiona-keeper-social-preview-r92-hu.png",
+    "assets/social/axiona-keeper-social-preview-r92-en.png",
+    "assets/social/axiona-keeper-social-preview-r92-de.png",
     "assets/social/axiona-social-preview-r86.png",
 )
 
@@ -211,7 +227,13 @@ def main() -> int:
             continue
 
         text = page.read_text(encoding="utf-8")
-        expected_social_image = KEEPER_SOCIAL_IMAGE if page.name == "keeper.html" else GENERAL_SOCIAL_IMAGE
+        relative_label = page.relative_to(ROOT).as_posix()
+        social_prefix = "en/" if relative_label.startswith("en/") else "de/" if relative_label.startswith("de/") else ""
+        expected_social_image = (
+            KEEPER_SOCIAL_IMAGES[social_prefix]
+            if page.name == "keeper.html"
+            else GENERAL_SOCIAL_IMAGES[social_prefix]
+        )
         required_social_meta = (
             f'content="{expected_social_image}" property="og:image"',
             f'content="{expected_social_image}" name="twitter:image"',
@@ -222,8 +244,9 @@ def main() -> int:
         for token in required_social_meta:
             if token not in text:
                 errors.append(f"social preview invariant missing in {label}: {token}")
-        if LEGACY_SOCIAL_IMAGE in text:
-            errors.append(f"legacy R86 social preview URL remains active in {label}")
+        for legacy_social_image in LEGACY_SOCIAL_IMAGES:
+            if legacy_social_image in text:
+                errors.append(f"legacy social preview URL remains active in {label}: {legacy_social_image}")
 
         for prefix in ("/fr/", "/es/", "/it/"):
             if prefix in text:
@@ -371,7 +394,7 @@ def main() -> int:
     print("OK_AXIONA_KEEPER_PRODUCT_PREVIEW_INVARIANTS")
     print("OK_AXIONA_CONTACT_INTAKE_LOCAL_ONLY")
     print("OK_AXIONA_SECURITY_TXT")
-    print("OK_AXIONA_SOCIAL_PREVIEW_R91")
+    print("OK_AXIONA_SOCIAL_PREVIEW_R92_LOCALES")
     print("OK_AXIONA_PUBLIC_QUALITY_PASSED")
     return 0
 
