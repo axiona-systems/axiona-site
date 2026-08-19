@@ -331,3 +331,7 @@ Canonical continuation point after this hardening pass:
 - deferred scope: **P1 completed references / case studies**
 
 P1 stays deferred until a genuinely presentable completed AXIONA application exists. The Keeper preview is intentionally labelled as in development and must not be treated as a completed reference until the product actually reaches that state.
+
+## R91 social preview invariant
+
+All 30 active HU / EN / DE pages use fixed 1200×630 PNG social previews. Normal pages use `assets/social/axiona-social-preview-r91.png`; the three Keeper pages use `assets/social/axiona-keeper-social-preview-r91.png`. `og:image` and `twitter:image` must match, and the width, height and PNG type metadata are release invariants. The old R86 URL must not appear in active HTML. Keep the R91 filenames stable until a deliberate cache-busting release introduces a newer filename.
