@@ -1,6 +1,6 @@
 # AXIONA Website Maintenance Baseline
 
-Status: **Premium hardening P0 / P2 / P3 / P4 + public copy baseline + Keeper preview R87**
+Status: **Premium hardening P0 / P2 / P3 / P4 + public copy baseline + Keeper preview R89**
 Effective date: **2026-08-19**
 Repository: `axiona-systems/axiona-site`
 Public site: `https://axiona.systems/`
@@ -90,13 +90,15 @@ P1 may be reopened only when a real AXIONA application is production-ready enoug
 
 Keeper publication rules:
 
-1. The page must state clearly that Keeper is in active development and is not yet publicly available.
+1. The public page needs one clear development-status signal; do not repeat or over-explain product maturity throughout the page.
 2. Planned capabilities — including automatic folder/case organisation — must be described as planned until they are genuinely available in the public product.
-3. Do not publish a purchase button, App Store badge, price, release date or availability claim before those facts are real and approved.
-4. Do not turn internal architecture or engineering terminology into public product copy. Explain the user problem and the expected behaviour in ordinary language.
-5. Security and privacy claims must remain within demonstrated product boundaries. Avoid absolute claims such as “unbreakable”, “100% secure” or equivalent.
-6. The public examples are explanatory scenarios, not customer testimonials or claims that a named external customer is already using Keeper.
-7. HU / EN / DE Keeper pages must stay semantically aligned. Preserve natural language in each locale rather than literal translation.
+3. The approved launch-platform statement is: **first release for iPhone and iPad through the Apple App Store**. This is a platform/distribution plan, not a claim that the app can already be downloaded.
+4. Do not publish an official App Store download badge, purchase button, price, release date or “available now” wording before those facts are real and approved.
+5. Do not turn internal architecture or engineering terminology into public product copy. Explain the user problem and the expected behaviour in ordinary language.
+6. Security and privacy claims must remain within demonstrated product boundaries. Avoid absolute claims such as “unbreakable”, “100% secure” or equivalent.
+7. The public examples are explanatory scenarios, not customer testimonials or claims that a named external customer is already using Keeper.
+8. HU / EN / DE Keeper pages must stay semantically aligned. Preserve natural language in each locale rather than literal translation.
+9. The iPhone / iPad / Apple App Store positioning must remain visible on the Keeper page and on the homepage / Solutions entry points in every active language.
 
 ## 5. Contact intake privacy invariant
 
@@ -173,6 +175,7 @@ python3 scripts/verify_public_quality.py
 - local-only contact-intake behavior
 - compact mobile-navigation behavior
 - Keeper status/planned-feature markers and entry-point links
+- Keeper iPhone / iPad / Apple App Store positioning across HU / EN / DE
 - `security.txt`
 - current manifest references
 
@@ -263,9 +266,9 @@ After merge, verify the public edge directly. Minimum proof set:
 curl -fsSL https://axiona.systems/ | grep -Ei 'canonical|hreflang|<title>|description'
 curl -fsSL https://axiona.systems/en/ | grep -Ei 'canonical|hreflang|<title>|description'
 curl -fsSL https://axiona.systems/de/ | grep -Ei 'canonical|hreflang|<title>|description'
-curl -fsSL https://axiona.systems/keeper.html | grep -E 'AXIONA KEEPER|FEJLESZTÉS ALATT|keeper.html'
-curl -fsSL https://axiona.systems/en/keeper.html | grep -E 'AXIONA KEEPER|IN DEVELOPMENT|keeper.html'
-curl -fsSL https://axiona.systems/de/keeper.html | grep -E 'AXIONA KEEPER|IN ENTWICKLUNG|keeper.html'
+curl -fsSL https://axiona.systems/keeper.html | grep -E 'AXIONA KEEPER|FEJLESZTÉS ALATT|iPhone|iPad|Apple App Store'
+curl -fsSL https://axiona.systems/en/keeper.html | grep -E 'AXIONA KEEPER|IN DEVELOPMENT|iPhone|iPad|Apple App Store'
+curl -fsSL https://axiona.systems/de/keeper.html | grep -E 'AXIONA KEEPER|IN ENTWICKLUNG|iPhone|iPad|Apple App Store'
 curl -fsSL https://axiona.systems/contact.html | grep -F 'Írd le, mi működik nehezen. A technológiát ráérünk később kiválasztani.'
 curl -fsSL https://axiona.systems/.well-known/security.txt
 curl -fsSL https://axiona.systems/applications.html | grep -F 'https://axiona.systems/solutions.html'
@@ -305,6 +308,7 @@ Do not treat the following as incidental files or presentation details:
 - canonical URLs
 - language alternates
 - Keeper development-status wording
+- Keeper launch-platform / App Store wording
 - `robots.txt`
 - legacy redirect shells
 - contact-intake privacy behavior
@@ -321,7 +325,7 @@ Canonical continuation point after this hardening pass:
 
 - repository: `axiona-systems/axiona-site`
 - branch: `main`
-- completed scope: **P0 + P2 + P3 + P4 + HU/EN/DE public copy hardening + Keeper R87 product preview**
+- completed scope: **P0 + P2 + P3 + P4 + HU/EN/DE public copy hardening + Keeper R89 product/platform preview**
 - deferred scope: **P1 completed references / case studies**
 
 P1 stays deferred until a genuinely presentable completed AXIONA application exists. The Keeper preview is intentionally labelled as in development and must not be treated as a completed reference until the product actually reaches that state.
