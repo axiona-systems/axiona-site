@@ -1,0 +1,25 @@
+name: R92 Social Locale Runner
+
+on:
+  pull_request:
+    branches:
+      - main
+    types:
+      - synchronize
+      - reopened
+
+permissions:
+  contents: write
+
+jobs:
+  migrate:
+    if: github.head_ref == 'feature/social-preview-r91-locales'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Checkout PR head
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          ref: feature/social-preview-r91-locales
+      - name: Apply and verify R92 social locale migration
+        run: python3 scripts/_r92_social_migrate.py
