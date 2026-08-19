@@ -8,6 +8,7 @@
         "http://localhost/process.html",
         "http://localhost/security.html",
         "http://localhost/solutions.html",
+        "http://localhost/keeper.html",
         "http://localhost/contact.html"
       ],
       "numberOfRuns": 1,
