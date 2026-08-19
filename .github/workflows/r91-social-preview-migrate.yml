@@ -1,0 +1,235 @@
+name: R91 Social Preview Migration
+
+on:
+  push:
+    branches:
+      - feature/social-preview-r91
+
+permissions:
+  contents: write
+
+concurrency:
+  group: r91-social-preview-migrate-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  migrate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout feature branch
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Apply deterministic R91 migration
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import binascii
+          import re
+          import struct
+          import zlib
+
+          ROOT = Path('.')
+          PREFIXES = ('', 'en/', 'de/')
+          ROUTES = (
+              'index.html', 'systems.html', 'process.html', 'security.html',
+              'solutions.html', 'keeper.html', 'contact.html', 'privacy.html',
+              'legal.html', 'support.html',
+          )
+          GENERAL = 'https://axiona.systems/assets/social/axiona-social-preview-r91.png'
+          KEEPER = 'https://axiona.systems/assets/social/axiona-keeper-social-preview-r91.png'
+          LEGACY = 'https://axiona.systems/assets/social/axiona-social-preview-r86.png'
+
+          def replace_required(text: str, pattern: str, replacement: str, label: str) -> str:
+              updated, count = re.subn(pattern, replacement, text, count=1)
+              if count != 1:
+                  raise RuntimeError(f'{label}: expected exactly one matching meta tag, got {count}')
+              return updated
+
+          changed = []
+          for prefix in PREFIXES:
+              for route in ROUTES:
+                  path = ROOT / prefix / route
+                  text = path.read_text(encoding='utf-8')
+                  expected = KEEPER if route == 'keeper.html' else GENERAL
+                  text = replace_required(
+                      text,
+                      r'<meta content="[^"]+" property="og:image"/>',
+                      f'<meta content="{expected}" property="og:image"/>',
+                      path.as_posix(),
+                  )
+                  text = replace_required(
+                      text,
+                      r'<meta content="[^"]+" name="twitter:image"/>',
+                      f'<meta content="{expected}" name="twitter:image"/>',
+                      path.as_posix(),
+                  )
+                  text = re.sub(
+                      r'<meta content="[^"]+" property="og:image:secure_url"/>',
+                      f'<meta content="{expected}" property="og:image:secure_url"/>',
+                      text,
+                  )
+                  if LEGACY in text:
+                      raise RuntimeError(f'{path}: legacy R86 social image URL remains after migration')
+                  path.write_text(text, encoding='utf-8')
+                  changed.append(path.as_posix())
+
+          # Deterministic, opaque 1200x630 Keeper-specific PNG. Pure stdlib; no external renderer.
+          W, H = 1200, 630
+          BG = (241, 238, 230)
+          INK = (11, 30, 37)
+          ACCENT = (239, 107, 67)
+          MUTED = (95, 102, 95)
+          pixels = bytearray(BG * (W * H))
+
+          def put(x, y, color):
+              if 0 <= x < W and 0 <= y < H:
+                  i = (y * W + x) * 3
+                  pixels[i:i+3] = bytes(color)
+
+          def rect(x0, y0, x1, y1, color):
+              x0, y0 = max(0, x0), max(0, y0)
+              x1, y1 = min(W, x1), min(H, y1)
+              row = bytes(color) * max(0, x1 - x0)
+              for y in range(y0, y1):
+                  i = (y * W + x0) * 3
+                  pixels[i:i+len(row)] = row
+
+          FONT = {
+              'A': ('01110','10001','10001','11111','10001','10001','10001'),
+              'X': ('10001','10001','01010','00100','01010','10001','10001'),
+              'I': ('11111','00100','00100','00100','00100','00100','11111'),
+              'O': ('01110','10001','10001','10001','10001','10001','01110'),
+              'N': ('10001','11001','11001','10101','10011','10011','10001'),
+              'K': ('10001','10010','10100','11000','10100','10010','10001'),
+              'E': ('11111','10000','10000','11110','10000','10000','11111'),
+              'P': ('11110','10001','10001','11110','10000','10000','10000'),
+              'R': ('11110','10001','10001','11110','10100','10010','10001'),
+          }
+
+          def text_width(text, scale):
+              return sum((5 * scale) + scale for _ in text) - scale
+
+          def draw_text(x, y, text, scale, color):
+              cursor = x
+              for ch in text:
+                  glyph = FONT.get(ch)
+                  if glyph:
+                      for gy, row in enumerate(glyph):
+                          for gx, bit in enumerate(row):
+                              if bit == '1':
+                                  rect(cursor + gx*scale, y + gy*scale,
+                                       cursor + (gx+1)*scale, y + (gy+1)*scale, color)
+                  cursor += 6 * scale
+
+          # frame + accent rail
+          rect(58, 54, 1142, 58, INK)
+          rect(58, 572, 1142, 576, INK)
+          rect(58, 54, 62, 576, INK)
+          rect(1138, 54, 1142, 576, INK)
+          rect(76, 74, 96, 556, ACCENT)
+          draw_text(132, 118, 'AXIONA', 11, INK)
+          draw_text(132, 254, 'KEEPER', 22, INK)
+          rect(132, 442, 720, 449, ACCENT)
+          # iPhone / iPad pictograms
+          rect(894, 168, 1020, 408, INK)
+          rect(902, 178, 1012, 390, BG)
+          rect(1050, 200, 1115, 408, INK)
+          rect(1056, 210, 1109, 390, BG)
+          rect(132, 510, 380, 516, MUTED)
+
+          def chunk(kind: bytes, data: bytes) -> bytes:
+              return struct.pack('>I', len(data)) + kind + data + struct.pack('>I', binascii.crc32(kind + data) & 0xffffffff)
+
+          raw = bytearray()
+          stride = W * 3
+          for y in range(H):
+              raw.append(0)
+              raw.extend(pixels[y*stride:(y+1)*stride])
+          png = b'\x89PNG\r\n\x1a\n'
+          png += chunk(b'IHDR', struct.pack('>IIBBBBB', W, H, 8, 2, 0, 0, 0))
+          png += chunk(b'IDAT', zlib.compress(bytes(raw), 9))
+          png += chunk(b'IEND', b'')
+          keeper_asset = ROOT / 'assets/social/axiona-keeper-social-preview-r91.png'
+          keeper_asset.write_bytes(png)
+
+          verifier = ROOT / 'scripts/verify_public_quality.py'
+          q = verifier.read_text(encoding='utf-8')
+          constant_anchor = 'KEEPER_PLATFORM_MARKERS = ("iPhone", "iPad", "Apple App Store")\n'
+          constants = '''\nGENERAL_SOCIAL_IMAGE = "https://axiona.systems/assets/social/axiona-social-preview-r91.png"\nKEEPER_SOCIAL_IMAGE = "https://axiona.systems/assets/social/axiona-keeper-social-preview-r91.png"\nLEGACY_SOCIAL_IMAGE = "https://axiona.systems/assets/social/axiona-social-preview-r86.png"\nSOCIAL_IMAGE_ASSETS = (\n    "assets/social/axiona-social-preview-r91.png",\n    "assets/social/axiona-keeper-social-preview-r91.png",\n)\n'''
+          if 'GENERAL_SOCIAL_IMAGE =' not in q:
+              if constant_anchor not in q:
+                  raise RuntimeError('verify_public_quality.py constant anchor not found')
+              q = q.replace(constant_anchor, constant_anchor + constants, 1)
+
+          loop_anchor = '        text = page.read_text(encoding="utf-8")\n        for prefix in ("/fr/", "/es/", "/it/"):\n'
+          social_gate = '''        text = page.read_text(encoding="utf-8")\n        expected_social_image = KEEPER_SOCIAL_IMAGE if page.name == "keeper.html" else GENERAL_SOCIAL_IMAGE\n        required_social_meta = (\n            f'content="{expected_social_image}" property="og:image"',\n            f'content="{expected_social_image}" name="twitter:image"',\n            'content="1200" property="og:image:width"',\n            'content="630" property="og:image:height"',\n            'content="image/png" property="og:image:type"',\n        )\n        for token in required_social_meta:\n            if token not in text:\n                errors.append(f"social preview invariant missing in {label}: {token}")\n        if LEGACY_SOCIAL_IMAGE in text:\n            errors.append(f"legacy R86 social preview URL remains active in {label}")\n\n        for prefix in ("/fr/", "/es/", "/it/"):\n'''
+          if 'required_social_meta = (' not in q:
+              if loop_anchor not in q:
+                  raise RuntimeError('verify_public_quality.py active-page loop anchor not found')
+              q = q.replace(loop_anchor, social_gate, 1)
+
+          manifest_anchor = '    manifest = ROOT / "site.webmanifest"\n'
+          asset_gate = '''    for asset in SOCIAL_IMAGE_ASSETS:\n        if not (ROOT / asset).is_file():\n            errors.append(f"missing R91 social preview asset: {asset}")\n\n'''
+          if 'missing R91 social preview asset' not in q:
+              if manifest_anchor not in q:
+                  raise RuntimeError('verify_public_quality.py manifest anchor not found')
+              q = q.replace(manifest_anchor, asset_gate + manifest_anchor, 1)
+
+          print_anchor = '    print("OK_AXIONA_PUBLIC_QUALITY_PASSED")\n'
+          if 'OK_AXIONA_SOCIAL_PREVIEW_R91' not in q:
+              if print_anchor not in q:
+                  raise RuntimeError('verify_public_quality.py print anchor not found')
+              q = q.replace(print_anchor, '    print("OK_AXIONA_SOCIAL_PREVIEW_R91")\n' + print_anchor, 1)
+          verifier.write_text(q, encoding='utf-8')
+
+          docs = ROOT / 'Docs/AXIONA_WEBSITE_MAINTENANCE.md'
+          d = docs.read_text(encoding='utf-8')
+          heading = '## R91 social preview invariant'
+          if heading not in d:
+              d += '''\n\n## R91 social preview invariant\n\nAll 30 active HU / EN / DE pages use fixed 1200×630 PNG social previews. Normal pages use `assets/social/axiona-social-preview-r91.png`; the three Keeper pages use `assets/social/axiona-keeper-social-preview-r91.png`. `og:image` and `twitter:image` must match, and the width, height and PNG type metadata are release invariants. The old R86 URL must not appear in active HTML. Keep the R91 filenames stable until a deliberate cache-busting release introduces a newer filename.\n'''
+              docs.write_text(d, encoding='utf-8')
+
+          print(f'R91_MIGRATED_ACTIVE_PAGES={len(changed)}')
+          print(f'R91_KEEPER_ASSET_BYTES={keeper_asset.stat().st_size}')
+          PY
+
+      - name: Verify static site gates
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 scripts/verify_seo.py
+          python3 scripts/verify_public_quality.py
+          python3 - <<'PY'
+          from pathlib import Path
+          import struct
+          p = Path('assets/social/axiona-keeper-social-preview-r91.png')
+          data = p.read_bytes()
+          if data[:8] != b'\x89PNG\r\n\x1a\n':
+              raise SystemExit('keeper social asset is not PNG')
+          w, h = struct.unpack('>II', data[16:24])
+          if (w, h) != (1200, 630):
+              raise SystemExit(f'keeper social asset dimensions are {w}x{h}')
+          print('OK_R91_KEEPER_PNG_1200x630')
+          PY
+
+      - name: Remove one-time workflow and commit migration
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          rm -f .github/workflows/r91-social-preview-migrate.yml
+          git config user.name "AXIONA Release Automation"
+          git config user.email "actions@users.noreply.github.com"
+          git add -A
+          git diff --cached --check
+          git diff --cached --quiet && { echo "No migration changes to commit"; exit 1; }
+          git commit -m "Complete R91 social preview migration"
+          git remote set-url origin "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          git push origin HEAD:feature/social-preview-r91
