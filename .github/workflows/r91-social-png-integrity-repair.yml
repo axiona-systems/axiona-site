@@ -1,0 +1,147 @@
+name: R91 Social PNG Integrity Repair
+
+on:
+  pull_request:
+    branches:
+      - main
+    types:
+      - opened
+      - synchronize
+      - reopened
+
+permissions:
+  contents: write
+
+concurrency:
+  group: r91-social-png-integrity-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  repair:
+    if: github.event.pull_request.head.ref == 'fix/r91-social-png-integrity'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout repair branch
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          ref: fix/r91-social-png-integrity
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Recover valid pre-corruption social card and harden verifier
+        shell: bash
+        run: |
+          set -euo pipefail
+          git show 21c3017d1f422ca6a4e4b6e0d26a469f373638d1:assets/social/axiona-social-preview-r86.png > /tmp/axiona-social-candidate.png
+          python3 - <<'PY'
+          from pathlib import Path
+          import binascii
+          import struct
+          import zlib
+
+          ROOT = Path('.')
+          candidate = Path('/tmp/axiona-social-candidate.png')
+
+          def validate_png(path: Path) -> tuple[int, int, int, bool]:
+              data = path.read_bytes()
+              if data[:8] != b'\x89PNG\r\n\x1a\n':
+                  raise RuntimeError(f'{path}: invalid PNG signature')
+              pos = 8
+              width = height = color_type = None
+              idat = bytearray()
+              has_trns = False
+              saw_iend = False
+              while pos + 12 <= len(data):
+                  length = struct.unpack('>I', data[pos:pos+4])[0]
+                  end = pos + 12 + length
+                  if end > len(data):
+                      raise RuntimeError(f'{path}: truncated PNG chunk at {pos}')
+                  kind = data[pos+4:pos+8]
+                  payload = data[pos+8:pos+8+length]
+                  expected_crc = struct.unpack('>I', data[pos+8+length:end])[0]
+                  actual_crc = binascii.crc32(kind + payload) & 0xffffffff
+                  if expected_crc != actual_crc:
+                      raise RuntimeError(f'{path}: CRC mismatch in {kind.decode("latin1")}')
+                  if kind == b'IHDR':
+                      width, height, bit_depth, color_type, compression, filtering, interlace = struct.unpack('>IIBBBBB', payload)
+                      if compression != 0 or filtering != 0 or interlace not in (0, 1):
+                          raise RuntimeError(f'{path}: unsupported PNG header')
+                  elif kind == b'IDAT':
+                      idat.extend(payload)
+                  elif kind == b'tRNS':
+                      has_trns = True
+                  elif kind == b'IEND':
+                      saw_iend = True
+                      pos = end
+                      break
+                  pos = end
+              if not saw_iend or pos != len(data):
+                  raise RuntimeError(f'{path}: missing terminal IEND or trailing data')
+              if (width, height) != (1200, 630):
+                  raise RuntimeError(f'{path}: expected 1200x630, got {width}x{height}')
+              if color_type in (4, 6) or has_trns:
+                  raise RuntimeError(f'{path}: transparency is not allowed for AXIONA social cards')
+              try:
+                  zlib.decompress(bytes(idat))
+              except zlib.error as exc:
+                  raise RuntimeError(f'{path}: invalid IDAT zlib stream: {exc}') from exc
+              return width, height, color_type, has_trns
+
+          print('RECOVERED_CANDIDATE', validate_png(candidate))
+          card = candidate.read_bytes()
+          (ROOT / 'assets/social/axiona-social-preview-r91.png').write_bytes(card)
+          (ROOT / 'assets/social/axiona-social-preview-r86.png').write_bytes(card)
+
+          verifier = ROOT / 'scripts/verify_public_quality.py'
+          text = verifier.read_text(encoding='utf-8')
+          import_anchor = 'import sys\n'
+          import_block = 'import binascii\nimport struct\nimport sys\nimport zlib\n'
+          if 'import binascii\n' not in text:
+              if import_anchor not in text:
+                  raise RuntimeError('verifier import anchor missing')
+              text = text.replace(import_anchor, import_block, 1)
+
+          function_anchor = '\n\ndef active_paths() -> list[Path]:\n'
+          png_function = '''\n\ndef validate_social_png(path: Path) -> str | None:\n    try:\n        data = path.read_bytes()\n    except OSError as exc:\n        return f"cannot read PNG: {exc}"\n    if data[:8] != b"\\x89PNG\\r\\n\\x1a\\n":\n        return "invalid PNG signature"\n\n    pos = 8\n    width = height = color_type = None\n    idat = bytearray()\n    has_trns = False\n    saw_iend = False\n    try:\n        while pos + 12 <= len(data):\n            length = struct.unpack(">I", data[pos:pos + 4])[0]\n            end = pos + 12 + length\n            if end > len(data):\n                return f"truncated PNG chunk at byte {pos}"\n            kind = data[pos + 4:pos + 8]\n            payload = data[pos + 8:pos + 8 + length]\n            expected_crc = struct.unpack(">I", data[pos + 8 + length:end])[0]\n            actual_crc = binascii.crc32(kind + payload) & 0xFFFFFFFF\n            if expected_crc != actual_crc:\n                return f"CRC mismatch in {kind.decode('latin1')}"\n            if kind == b"IHDR":\n                width, height, _bit_depth, color_type, compression, filtering, interlace = struct.unpack(">IIBBBBB", payload)\n                if compression != 0 or filtering != 0 or interlace not in (0, 1):\n                    return "unsupported PNG header"\n            elif kind == b"IDAT":\n                idat.extend(payload)\n            elif kind == b"tRNS":\n                has_trns = True\n            elif kind == b"IEND":\n                saw_iend = True\n                pos = end\n                break\n            pos = end\n    except (struct.error, ValueError) as exc:\n        return f"malformed PNG structure: {exc}"\n\n    if not saw_iend or pos != len(data):\n        return "missing terminal IEND or trailing data"\n    if (width, height) != (1200, 630):\n        return f"expected 1200x630, got {width}x{height}"\n    if color_type in (4, 6) or has_trns:\n        return "social PNG must use an opaque background"\n    try:\n        zlib.decompress(bytes(idat))\n    except zlib.error as exc:\n        return f"invalid IDAT zlib stream: {exc}"\n    return None\n'''
+          if 'def validate_social_png(' not in text:
+              if function_anchor not in text:
+                  raise RuntimeError('verifier function anchor missing')
+              text = text.replace(function_anchor, png_function + function_anchor, 1)
+
+          asset_anchor = '''    for asset in SOCIAL_IMAGE_ASSETS:\n        if not (ROOT / asset).is_file():\n            errors.append(f"missing R91 social preview asset: {asset}")\n\n'''
+          asset_replacement = '''    for asset in SOCIAL_IMAGE_ASSETS:\n        asset_path = ROOT / asset\n        if not asset_path.is_file():\n            errors.append(f"missing R91 social preview asset: {asset}")\n            continue\n        png_error = validate_social_png(asset_path)\n        if png_error:\n            errors.append(f"invalid R91 social preview asset {asset}: {png_error}")\n\n'''
+          if 'invalid R91 social preview asset' not in text:
+              if asset_anchor not in text:
+                  raise RuntimeError('verifier social asset anchor missing')
+              text = text.replace(asset_anchor, asset_replacement, 1)
+
+          verifier.write_text(text, encoding='utf-8')
+          print('R91_GENERAL_REPAIRED', validate_png(ROOT / 'assets/social/axiona-social-preview-r91.png'))
+          print('R86_FALLBACK_REPAIRED', validate_png(ROOT / 'assets/social/axiona-social-preview-r86.png'))
+          print('R91_KEEPER_VALID', validate_png(ROOT / 'assets/social/axiona-keeper-social-preview-r91.png'))
+          PY
+
+      - name: Run fail-closed release gates
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 scripts/verify_seo.py
+          python3 scripts/verify_public_quality.py
+          git diff --check
+
+      - name: Remove repair workflow and commit clean result
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          rm -f .github/workflows/r91-social-png-integrity-repair.yml
+          git config user.name "AXIONA Release Automation"
+          git config user.email "actions@users.noreply.github.com"
+          git add -A
+          git diff --cached --check
+          git diff --cached --quiet && { echo "No repair changes to commit"; exit 1; }
+          git commit -m "Repair R91 social PNG integrity"
+          git remote set-url origin "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          git push origin HEAD:fix/r91-social-png-integrity
