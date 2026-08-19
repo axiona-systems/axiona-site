@@ -19,7 +19,7 @@ concurrency:
 jobs:
   repair:
     if: github.event.pull_request.head.ref == 'fix/r91-social-png-integrity'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 10
     steps:
       - name: Checkout repair branch
@@ -29,7 +29,86 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
 
-      - name: Recover newest valid historical social card and harden verifier
+      - name: Verify render runtime
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --version
+          npm --version
+          CHROME_PATH="$(command -v google-chrome-stable || command -v google-chrome || command -v chromium || true)"
+          if [ -z "$CHROME_PATH" ]; then
+            echo "STOP_R91_RENDER_CHROME_MISSING"
+            exit 1
+          fi
+          echo "CHROME_PATH=$CHROME_PATH" >> "$GITHUB_ENV"
+          npm install --no-save --ignore-scripts --no-audit --no-fund playwright-core@1.62.1
+
+      - name: Render clean production R91 social card
+        shell: bash
+        run: |
+          set -euo pipefail
+          node <<'NODE'
+          const { chromium } = require('playwright-core');
+          const fs = require('fs');
+          const mark = fs.readFileSync('assets/axiona-mark.png').toString('base64');
+          const html = `<!doctype html>
+          <html><head><meta charset="utf-8"><style>
+          *{box-sizing:border-box}html,body{margin:0;width:1200px;height:630px;overflow:hidden;background:#f6efe3}
+          body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;color:#10262e}
+          .card{position:relative;width:1200px;height:630px;padding:66px 70px;background:linear-gradient(135deg,#f8f1e7 0%,#f4ecdf 100%)}
+          .card:before{content:"";position:absolute;left:0;top:0;width:1200px;height:8px;background:#ef6b43}
+          .brand{display:flex;align-items:center;gap:17px;height:64px}.brand img{width:58px;height:58px;object-fit:contain}
+          .brand-name{font-size:27px;line-height:1;font-weight:760;letter-spacing:.22em}.brand-name small{display:block;margin-top:8px;font-size:11px;font-weight:680;letter-spacing:.46em;color:#5c6e72}
+          .content{display:grid;grid-template-columns:1.22fr .78fr;gap:64px;align-items:center;height:424px;margin-top:35px}
+          .eyebrow{font-size:14px;font-weight:730;letter-spacing:.2em;color:#e35f3a;margin-bottom:20px}
+          h1{font-size:55px;line-height:1.02;letter-spacing:-.045em;margin:0 0 25px;font-weight:760;max-width:610px}
+          .rule{width:126px;height:5px;background:#ef6b43;margin:0 0 26px}
+          .scope{font-size:20px;line-height:1.6;letter-spacing:.015em;color:#4c6267;max-width:610px}
+          .scope b{font-weight:650;color:#18343c}.dot{color:#ef6b43;padding:0 8px}
+          .visual{position:relative;height:392px;border-radius:26px;background:#10272f;overflow:hidden;box-shadow:0 24px 55px rgba(16,39,47,.16)}
+          .visual:before{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.055) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.055) 1px,transparent 1px);background-size:39px 39px}
+          .visual svg{position:absolute;inset:0;width:100%;height:100%}
+          .footer{position:absolute;left:70px;right:70px;bottom:38px;display:flex;align-items:center;justify-content:space-between;border-top:1px solid rgba(16,39,47,.16);padding-top:18px;font-size:13px;letter-spacing:.13em;color:#6e7c7e}
+          .footer strong{font-weight:720;color:#17323a;letter-spacing:.16em}
+          </style></head><body><div class="card">
+          <div class="brand"><img src="data:image/png;base64,${mark}" alt=""><div class="brand-name">AXIONA<small>SYSTEMS</small></div></div>
+          <div class="content"><div>
+            <div class="eyebrow">DIGITAL SYSTEMS · ENGINEERING</div>
+            <h1>Structured systems.<br>Clear operation.</h1>
+            <div class="rule"></div>
+            <div class="scope"><b>System design</b><span class="dot">·</span><b>Process design</b><br>Software<span class="dot">·</span>Automation<span class="dot">·</span>Security</div>
+          </div>
+          <div class="visual"><svg viewBox="0 0 390 392" aria-hidden="true">
+            <defs><filter id="shadow"><feDropShadow dx="0" dy="7" stdDeviation="9" flood-opacity=".16"/></filter></defs>
+            <path d="M66 98 H150 V65 H260 V126 H322" fill="none" stroke="#75949b" stroke-width="2" opacity=".75"/>
+            <path d="M66 294 H128 V245 H217 V309 H322" fill="none" stroke="#75949b" stroke-width="2" opacity=".75"/>
+            <path d="M150 65 V176 H217 V245" fill="none" stroke="#ef6b43" stroke-width="3"/>
+            <rect x="43" y="72" width="74" height="52" rx="12" fill="#f6efe3" filter="url(#shadow)"/>
+            <rect x="132" y="153" width="126" height="82" rx="16" fill="#f6efe3" filter="url(#shadow)"/>
+            <rect x="273" y="101" width="74" height="52" rx="12" fill="#f6efe3" filter="url(#shadow)"/>
+            <rect x="43" y="269" width="74" height="52" rx="12" fill="#f6efe3" filter="url(#shadow)"/>
+            <rect x="273" y="284" width="74" height="52" rx="12" fill="#f6efe3" filter="url(#shadow)"/>
+            <circle cx="195" cy="194" r="13" fill="#ef6b43"/>
+            <circle cx="80" cy="98" r="7" fill="#ef6b43"/>
+            <circle cx="310" cy="127" r="7" fill="#ef6b43"/>
+            <circle cx="80" cy="295" r="7" fill="#ef6b43"/>
+            <circle cx="310" cy="310" r="7" fill="#ef6b43"/>
+            <path d="M168 194 h54 M195 167 v54" stroke="#10272f" stroke-width="3" stroke-linecap="round"/>
+          </svg></div></div>
+          <div class="footer"><strong>AXIONA.SYSTEMS</strong><span>DESIGN · DEVELOPMENT · OPERATION</span></div>
+          </div></body></html>`;
+
+          (async () => {
+            const browser = await chromium.launch({executablePath: process.env.CHROME_PATH, headless: true, args:['--no-sandbox','--disable-dev-shm-usage']});
+            const context = await browser.newContext({viewport:{width:1200,height:630}, deviceScaleFactor:1});
+            const page = await context.newPage();
+            await page.setContent(html, {waitUntil:'load'});
+            await page.screenshot({path:'/tmp/axiona-social-r91-clean.png', type:'png', fullPage:false, omitBackground:false});
+            await browser.close();
+          })().catch((error) => { console.error(error); process.exit(1); });
+          NODE
+
+      - name: Install repaired card and harden verifier
         shell: bash
         run: |
           set -euo pipefail
@@ -37,15 +116,16 @@ jobs:
           from pathlib import Path
           import binascii
           import struct
-          import subprocess
           import zlib
 
           ROOT = Path('.')
+          rendered = Path('/tmp/axiona-social-r91-clean.png')
           GENERAL_R91 = ROOT / 'assets/social/axiona-social-preview-r91.png'
           FALLBACK_R86 = ROOT / 'assets/social/axiona-social-preview-r86.png'
           KEEPER_R91 = ROOT / 'assets/social/axiona-keeper-social-preview-r91.png'
 
-          def validate_bytes(data: bytes) -> str | None:
+          def validate_png(path: Path) -> str | None:
+              data = path.read_bytes()
               if data[:8] != b'\x89PNG\r\n\x1a\n':
                   return 'invalid PNG signature'
               pos = 8
@@ -85,64 +165,23 @@ jobs:
               if (width, height) != (1200, 630):
                   return f'expected 1200x630, got {width}x{height}'
               if color_type in (4, 6) or has_trns:
-                  return 'social PNG must use an opaque background'
+                  return 'social PNG must use an opaque RGB/palette background'
               try:
                   zlib.decompress(bytes(idat))
               except zlib.error as exc:
                   return f'invalid IDAT zlib stream: {exc}'
               return None
 
-          def git(*args: str) -> bytes:
-              return subprocess.check_output(['git', *args])
-
-          # Inspect every historical non-Keeper PNG path ever present under assets/social.
-          names = git('log', '--all', '--name-only', '--pretty=format:', '--', 'assets/social').decode('utf-8', 'replace').splitlines()
-          paths = sorted({name.strip() for name in names if name.strip().endswith('.png') and 'keeper' not in name.lower()})
-          if not paths:
-              raise RuntimeError('NO_HISTORICAL_SOCIAL_PNG_PATHS')
-
-          seen_blobs: set[str] = set()
-          valid: list[tuple[int, str, str, bytes]] = []
-          checked = 0
-          for path in paths:
-              commits = git('log', '--all', '--format=%H', '--', path).decode().splitlines()
-              for order, commit in enumerate(commits):
-                  try:
-                      blob = git('rev-parse', f'{commit}:{path}').decode().strip()
-                  except subprocess.CalledProcessError:
-                      continue
-                  if blob in seen_blobs:
-                      continue
-                  seen_blobs.add(blob)
-                  checked += 1
-                  try:
-                      data = git('show', f'{commit}:{path}')
-                  except subprocess.CalledProcessError:
-                      continue
-                  error = validate_bytes(data)
-                  print(f'HISTORICAL_SOCIAL_CANDIDATE path={path} commit={commit} blob={blob} bytes={len(data)} status={error or "VALID"}')
-                  if error is None:
-                      # git log is newest-first per path. Prefer newest commit timestamp globally.
-                      timestamp = int(git('show', '-s', '--format=%ct', commit).decode().strip())
-                      valid.append((timestamp, commit, path, data))
-
-          print(f'HISTORICAL_SOCIAL_UNIQUE_BLOBS_CHECKED={checked}')
-          if not valid:
-              raise RuntimeError('NO_VALID_HISTORICAL_SOCIAL_CARD')
-
-          valid.sort(key=lambda item: item[0], reverse=True)
-          timestamp, source_commit, source_path, card = valid[0]
-          print(f'SELECTED_SOCIAL_CARD commit={source_commit} path={source_path} bytes={len(card)} timestamp={timestamp}')
-          GENERAL_R91.write_bytes(card)
-          FALLBACK_R86.write_bytes(card)
-
-          if validate_bytes(GENERAL_R91.read_bytes()) is not None:
-              raise RuntimeError('R91_GENERAL_REPAIR_VALIDATION_FAILED')
-          if validate_bytes(FALLBACK_R86.read_bytes()) is not None:
-              raise RuntimeError('R86_FALLBACK_REPAIR_VALIDATION_FAILED')
-          keeper_error = validate_bytes(KEEPER_R91.read_bytes())
-          if keeper_error:
-              raise RuntimeError(f'KEEPER_R91_INVALID: {keeper_error}')
+          rendered_error = validate_png(rendered)
+          if rendered_error:
+              raise RuntimeError(f'RENDERED_R91_INVALID: {rendered_error}')
+          GENERAL_R91.write_bytes(rendered.read_bytes())
+          FALLBACK_R86.write_bytes(rendered.read_bytes())
+          for label, path in (('R91_GENERAL', GENERAL_R91), ('R86_FALLBACK', FALLBACK_R86), ('R91_KEEPER', KEEPER_R91)):
+              error = validate_png(path)
+              if error:
+                  raise RuntimeError(f'{label}_INVALID: {error}')
+              print(f'OK_{label}_PNG_BINARY_INTEGRITY bytes={path.stat().st_size}')
 
           verifier = ROOT / 'scripts/verify_public_quality.py'
           text = verifier.read_text(encoding='utf-8')
@@ -161,7 +200,7 @@ jobs:
               text = text.replace(tuple_anchor, tuple_replacement, 1)
 
           function_anchor = '\n\ndef active_paths() -> list[Path]:\n'
-          png_function = '''\n\ndef validate_social_png(path: Path) -> str | None:\n    try:\n        data = path.read_bytes()\n    except OSError as exc:\n        return f"cannot read PNG: {exc}"\n    if data[:8] != b"\\x89PNG\\r\\n\\x1a\\n":\n        return "invalid PNG signature"\n\n    pos = 8\n    width = height = color_type = None\n    idat = bytearray()\n    has_trns = False\n    saw_iend = False\n    try:\n        while pos + 12 <= len(data):\n            length = struct.unpack(">I", data[pos:pos + 4])[0]\n            end = pos + 12 + length\n            if end > len(data):\n                return f"truncated PNG chunk at byte {pos}"\n            kind = data[pos + 4:pos + 8]\n            payload = data[pos + 8:pos + 8 + length]\n            expected_crc = struct.unpack(">I", data[pos + 8 + length:end])[0]\n            actual_crc = binascii.crc32(kind + payload) & 0xFFFFFFFF\n            if expected_crc != actual_crc:\n                return f"CRC mismatch in {kind.decode('latin1')}"\n            if kind == b"IHDR":\n                width, height, _depth, color_type, compression, filtering, interlace = struct.unpack(">IIBBBBB", payload)\n                if compression != 0 or filtering != 0 or interlace not in (0, 1):\n                    return "unsupported PNG header"\n            elif kind == b"IDAT":\n                idat.extend(payload)\n            elif kind == b"tRNS":\n                has_trns = True\n            elif kind == b"IEND":\n                saw_iend = True\n                pos = end\n                break\n            pos = end\n    except (struct.error, ValueError) as exc:\n        return f"malformed PNG structure: {exc}"\n\n    if not saw_iend or pos != len(data):\n        return "missing terminal IEND or trailing data"\n    if (width, height) != (1200, 630):\n        return f"expected 1200x630, got {width}x{height}"\n    if color_type in (4, 6) or has_trns:\n        return "social PNG must use an opaque background"\n    try:\n        zlib.decompress(bytes(idat))\n    except zlib.error as exc:\n        return f"invalid IDAT zlib stream: {exc}"\n    return None\n'''
+          png_function = '''\n\ndef validate_social_png(path: Path) -> str | None:\n    try:\n        data = path.read_bytes()\n    except OSError as exc:\n        return f"cannot read PNG: {exc}"\n    if data[:8] != b"\\x89PNG\\r\\n\\x1a\\n":\n        return "invalid PNG signature"\n\n    pos = 8\n    width = height = color_type = None\n    idat = bytearray()\n    has_trns = False\n    saw_iend = False\n    try:\n        while pos + 12 <= len(data):\n            length = struct.unpack(">I", data[pos:pos + 4])[0]\n            end = pos + 12 + length\n            if end > len(data):\n                return f"truncated PNG chunk at byte {pos}"\n            kind = data[pos + 4:pos + 8]\n            payload = data[pos + 8:pos + 8 + length]\n            expected_crc = struct.unpack(">I", data[pos + 8 + length:end])[0]\n            actual_crc = binascii.crc32(kind + payload) & 0xFFFFFFFF\n            if expected_crc != actual_crc:\n                return f"CRC mismatch in {kind.decode('latin1')}"\n            if kind == b"IHDR":\n                width, height, _depth, color_type, compression, filtering, interlace = struct.unpack(">IIBBBBB", payload)\n                if compression != 0 or filtering != 0 or interlace not in (0, 1):\n                    return "unsupported PNG header"\n            elif kind == b"IDAT":\n                idat.extend(payload)\n            elif kind == b"tRNS":\n                has_trns = True\n            elif kind == b"IEND":\n                saw_iend = True\n                pos = end\n                break\n            pos = end\n    except (struct.error, ValueError) as exc:\n        return f"malformed PNG structure: {exc}"\n\n    if not saw_iend or pos != len(data):\n        return "missing terminal IEND or trailing data"\n    if (width, height) != (1200, 630):\n        return f"expected 1200x630, got {width}x{height}"\n    if color_type in (4, 6) or has_trns:\n        return "social PNG must use an opaque RGB/palette background"\n    try:\n        zlib.decompress(bytes(idat))\n    except zlib.error as exc:\n        return f"invalid IDAT zlib stream: {exc}"\n    return None\n'''
           if 'def validate_social_png(' not in text:
               if function_anchor not in text:
                   raise RuntimeError('verifier function anchor missing')
@@ -175,9 +214,6 @@ jobs:
               text = text.replace(asset_anchor, asset_replacement, 1)
 
           verifier.write_text(text, encoding='utf-8')
-          print('OK_R91_GENERAL_PNG_BINARY_INTEGRITY')
-          print('OK_R86_FALLBACK_PNG_BINARY_INTEGRITY')
-          print('OK_R91_KEEPER_PNG_BINARY_INTEGRITY')
           PY
 
       - name: Run fail-closed release gates
@@ -195,6 +231,7 @@ jobs:
         run: |
           set -euo pipefail
           rm -f .github/workflows/r91-social-png-integrity-repair.yml
+          rm -rf node_modules package-lock.json package.json
           git config user.name "AXIONA Release Automation"
           git config user.email "actions@users.noreply.github.com"
           git add -A
