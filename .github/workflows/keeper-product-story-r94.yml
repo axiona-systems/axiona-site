@@ -1,0 +1,71 @@
+name: Keeper Product Story R94
+
+on:
+  push:
+    branches:
+      - feature/keeper-product-story-r94
+    paths:
+      - "scripts/migrate_keeper_product_story_r94.py"
+      - ".github/workflows/keeper-product-story-r94.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  migrate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          fetch-depth: 0
+          persist-credentials: true
+
+      - name: Apply R94 Keeper product story
+        run: python3 scripts/migrate_keeper_product_story_r94.py
+
+      - name: Verify Keeper R94 migration surface
+        shell: bash
+        run: |
+          set -euo pipefail
+          for file in index.html keeper.html solutions.html en/index.html en/keeper.html en/solutions.html de/index.html de/keeper.html de/solutions.html; do
+            grep -Fq '/assets/keeper-r94.css' "$file"
+            grep -Fq 'keeper-matter-demo' "$file"
+            if grep -Fq 'keeper-case-card' "$file"; then
+              echo "STOP_R94_LEGACY_CASE_CARD_REMAINS=$file"
+              exit 1
+            fi
+          done
+          grep -Fq 'keeper-scatter-map' keeper.html
+          grep -Fq 'keeper-scatter-map' en/keeper.html
+          grep -Fq 'keeper-scatter-map' de/keeper.html
+          test -f assets/keeper-r94.css
+          echo "OK_KEEPER_R94_SURFACE"
+
+      - name: Run SEO and public quality gates
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 scripts/verify_seo.py
+          python3 scripts/verify_public_quality.py
+          git diff --check
+          echo "OK_KEEPER_R94_GATES"
+
+      - name: Commit clean R94 implementation
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -f scripts/migrate_keeper_product_story_r94.py
+          rm -f .github/workflows/keeper-product-story-r94.yml
+          git add -A
+          if git diff --cached --quiet; then
+            echo "STOP_R94_NO_CHANGES"
+            exit 1
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "Reframe Keeper around connected matters"
+          git push origin HEAD:feature/keeper-product-story-r94
+          echo "OK_KEEPER_R94_COMMITTED"
