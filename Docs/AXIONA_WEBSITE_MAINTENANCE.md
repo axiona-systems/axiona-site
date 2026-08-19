@@ -1,6 +1,6 @@
 # AXIONA Website Maintenance Baseline
 
-Status: **Premium hardening P0 / P2 / P3 / P4 + public copy baseline**
+Status: **Premium hardening P0 / P2 / P3 / P4 + public copy baseline + Keeper preview R87**
 Effective date: **2026-08-19**
 Repository: `axiona-systems/axiona-site`
 Public site: `https://axiona.systems/`
@@ -30,6 +30,7 @@ Every active route exists as a HU / EN / DE triplet:
 | Process design | `/process.html` | `/en/process.html` | `/de/process.html` |
 | Security | `/security.html` | `/en/security.html` | `/de/security.html` |
 | Solutions | `/solutions.html` | `/en/solutions.html` | `/de/solutions.html` |
+| AXIONA Keeper | `/keeper.html` | `/en/keeper.html` | `/de/keeper.html` |
 | Contact | `/contact.html` | `/en/contact.html` | `/de/contact.html` |
 | Privacy | `/privacy.html` | `/en/privacy.html` | `/de/privacy.html` |
 | Legal | `/legal.html` | `/en/legal.html` | `/de/legal.html` |
@@ -83,6 +84,20 @@ Until at least one AXIONA application is genuinely ready to be presented as a co
 
 P1 may be reopened only when a real AXIONA application is production-ready enough to be shown honestly. At that point the proof layer should be designed from verifiable facts, not marketing placeholders.
 
+### 4.1 AXIONA Keeper public preview is not a completed reference
+
+`/keeper.html`, `/en/keeper.html` and `/de/keeper.html` are an explicitly labelled **product-in-development preview**, not a completed reference or case study. Publishing this preview does not reopen P1.
+
+Keeper publication rules:
+
+1. The page must state clearly that Keeper is in active development and is not yet publicly available.
+2. Planned capabilities — including automatic folder/case organisation — must be described as planned until they are genuinely available in the public product.
+3. Do not publish a purchase button, App Store badge, price, release date or availability claim before those facts are real and approved.
+4. Do not turn internal architecture or engineering terminology into public product copy. Explain the user problem and the expected behaviour in ordinary language.
+5. Security and privacy claims must remain within demonstrated product boundaries. Avoid absolute claims such as “unbreakable”, “100% secure” or equivalent.
+6. The public examples are explanatory scenarios, not customer testimonials or claims that a named external customer is already using Keeper.
+7. HU / EN / DE Keeper pages must stay semantically aligned. Preserve natural language in each locale rather than literal translation.
+
 ## 5. Contact intake privacy invariant
 
 The HU / EN / DE contact pages use a structured project-intake interface.
@@ -135,6 +150,7 @@ The following rules are mandatory:
 7. A renamed, added or removed public page requires the route matrix, sitemap and automated verifiers to be changed in the same release.
 8. Visible copy, title and meta description must describe the same current positioning. Do not leave search metadata on an old product or company description after changing the page.
 9. Inactive FR / ES / IT URLs and legacy redirect routes must not re-enter the active sitemap.
+10. The Keeper triplet must expose self-referencing canonicals and reciprocal HU / EN / DE / x-default alternates.
 
 ## 8. Static fail-closed release gates
 
@@ -156,6 +172,7 @@ python3 scripts/verify_public_quality.py
 - forbidden old public markers
 - local-only contact-intake behavior
 - compact mobile-navigation behavior
+- Keeper status/planned-feature markers and entry-point links
 - `security.txt`
 - current manifest references
 
@@ -183,6 +200,7 @@ Representative HU routes:
 - `/process.html`
 - `/security.html`
 - `/solutions.html`
+- `/keeper.html`
 - `/contact.html`
 
 Current thresholds:
@@ -194,7 +212,7 @@ Current thresholds:
 
 ### axe WCAG baseline
 
-The axe audit covers the core HU routes plus the EN and DE homepages. Critical or serious WCAG findings are blocking.
+The axe audit covers the core HU routes, the EN and DE homepages, and all three Keeper language pages. Critical or serious WCAG findings are blocking.
 
 The first real browser run found genuine contrast defects in badges, navigation and security/system metadata. Those defects were corrected. The final validation run passed both Lighthouse and axe.
 
@@ -245,10 +263,13 @@ After merge, verify the public edge directly. Minimum proof set:
 curl -fsSL https://axiona.systems/ | grep -Ei 'canonical|hreflang|<title>|description'
 curl -fsSL https://axiona.systems/en/ | grep -Ei 'canonical|hreflang|<title>|description'
 curl -fsSL https://axiona.systems/de/ | grep -Ei 'canonical|hreflang|<title>|description'
+curl -fsSL https://axiona.systems/keeper.html | grep -E 'AXIONA KEEPER|FEJLESZTÉS ALATT|keeper.html'
+curl -fsSL https://axiona.systems/en/keeper.html | grep -E 'AXIONA KEEPER|IN DEVELOPMENT|keeper.html'
+curl -fsSL https://axiona.systems/de/keeper.html | grep -E 'AXIONA KEEPER|IN ENTWICKLUNG|keeper.html'
 curl -fsSL https://axiona.systems/contact.html | grep -F 'Írd le, mi működik nehezen. A technológiát ráérünk később kiválasztani.'
 curl -fsSL https://axiona.systems/.well-known/security.txt
 curl -fsSL https://axiona.systems/applications.html | grep -F 'https://axiona.systems/solutions.html'
-curl -fsSL https://axiona.systems/sitemap.xml | head -80
+curl -fsSL https://axiona.systems/sitemap.xml | grep -F 'keeper.html'
 curl -fsSL https://axiona.systems/robots.txt
 ```
 
@@ -274,7 +295,7 @@ Permanent release rule:
 
 Deployment and Google Search results are separate states. A successful site deployment does **not** immediately replace Google's cached title or snippet. Recrawling and re-indexing are asynchronous, and Google may generate a search snippet from visible page content instead of using the meta description verbatim.
 
-When homepage title/description/positioning changes, use Google Search Console URL Inspection for `/`, `/en/` and `/de/` and request indexing. When the route structure changes, inspect/resubmit `sitemap.xml` in Search Console as well.
+When homepage title/description/positioning changes, use Google Search Console URL Inspection for `/`, `/en/` and `/de/` and request indexing. When the route structure changes, inspect/resubmit `sitemap.xml` in Search Console as well. Keeper is a new indexable route triplet, so the updated sitemap should be resubmitted after the live release is proven.
 
 ## 14. Change-control rule
 
@@ -283,6 +304,7 @@ Do not treat the following as incidental files or presentation details:
 - `sitemap.xml`
 - canonical URLs
 - language alternates
+- Keeper development-status wording
 - `robots.txt`
 - legacy redirect shells
 - contact-intake privacy behavior
@@ -299,7 +321,7 @@ Canonical continuation point after this hardening pass:
 
 - repository: `axiona-systems/axiona-site`
 - branch: `main`
-- completed scope: **P0 + P2 + P3 + P4 + HU/EN/DE public copy hardening**
-- deferred scope: **P1 references / case studies**
+- completed scope: **P0 + P2 + P3 + P4 + HU/EN/DE public copy hardening + Keeper R87 product preview**
+- deferred scope: **P1 completed references / case studies**
 
-P1 stays deferred until a genuinely presentable first AXIONA application exists. Do not reopen it merely to make the public website look larger or more established than the current evidence supports.
+P1 stays deferred until a genuinely presentable completed AXIONA application exists. The Keeper preview is intentionally labelled as in development and must not be treated as a completed reference until the product actually reaches that state.
