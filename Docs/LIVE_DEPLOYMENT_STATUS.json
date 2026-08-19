@@ -1,0 +1,15 @@
+{
+  "checked_at": "2026-08-19T21:12:05.017456+00:00",
+  "result": "PASS",
+  "source_sha": "947666813eed355993a4ab6831231ffeb73ff73b",
+  "run_id": "32302585353",
+  "request_outcome": "success",
+  "build_outcome": "success",
+  "live_outcome": "success",
+  "expected": {
+    "hu": "axiona-social-preview-r92-hu.png",
+    "en": "axiona-social-preview-r92-en.png",
+    "de": "axiona-social-preview-r92-de.png",
+    "keeper_hu": "axiona-keeper-social-preview-r92-hu.png"
+  }
+}
