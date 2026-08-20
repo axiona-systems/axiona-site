@@ -168,6 +168,8 @@
 
 .keeper96-dev{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:36px;align-items:center}
 .keeper96-dev p{max-width:850px;margin:13px 0 0;color:#535a55;font-size:15px;line-height:1.68}
+.keeper-dev-status.keeper96-dev .keeper96-kicker{color:var(--acid)}
+.keeper-dev-status.keeper96-dev p{color:#d4dddd}
 .keeper96-dev-badge{padding:18px 20px;border:1px solid #829294;background:var(--navy);color:var(--white);min-width:260px}
 .keeper96-dev-badge span{display:block;color:var(--acid);font:900 9px/1 monospace;letter-spacing:.12em}
 .keeper96-dev-badge strong{display:block;margin-top:8px;font-size:16px;line-height:1.35}
