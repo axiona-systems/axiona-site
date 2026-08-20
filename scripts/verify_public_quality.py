@@ -62,6 +62,71 @@ KEEPER_REQUIRED_MARKERS = (
     'class="keeper-dev-status keeper96-dev section-pad"',
 )
 KEEPER_PLATFORM_MARKERS = ("iPhone", "iPad", "Apple App Store")
+KEEPER_SEMANTIC_REQUIRED = {
+    "": {
+        "keeper": (
+            "A különbség az, mennyi munka marad rád.",
+            "Nem neked kell egyedül összerakni a kapcsolatokat.",
+            "Nem neked kell minden dátumot külön figyelni.",
+            "A Keeper célja, hogy ezeknek a lépéseknek a nagy részét elvégezze helyetted",
+        ),
+        "home": (
+            "Ne neked kelljen minden iratot végigolvasni, rendezni és fejben tartani.",
+            "a munka nagy részét nem neked kell kézzel elvégezni",
+        ),
+        "solutions": (
+            "Így nem neked kell minden iratot külön végigolvasni, kézzel besorolni és fejben tartani.",
+        ),
+    },
+    "en/": {
+        "keeper": (
+            "The difference is how much work is still left for you.",
+            "You do not have to piece all the relationships together yourself.",
+            "You do not have to watch every date manually.",
+            "Keeper is designed to do most of those steps for you",
+        ),
+        "home": (
+            "You should not have to read, organize and remember every document yourself.",
+            "Most of that work should not be yours to do by hand",
+        ),
+        "solutions": (
+            "You should not have to read every document end to end, classify it by hand and remember every deadline yourself.",
+        ),
+    },
+    "de/": {
+        "keeper": (
+            "Der Unterschied ist, wie viel Arbeit bei Ihnen bleibt.",
+            "Sie müssen die Zusammenhänge nicht allein zusammensetzen.",
+            "Sie müssen nicht jedes Datum selbst überwachen.",
+            "Keeper soll den größten Teil dieser Schritte übernehmen",
+        ),
+        "home": (
+            "Sie sollten nicht jedes Dokument selbst lesen, ordnen und im Kopf behalten müssen.",
+            "Den größten Teil dieser Arbeit sollen Sie nicht von Hand erledigen müssen",
+        ),
+        "solutions": (
+            "Sie sollen nicht jede Unterlage vollständig lesen, von Hand zuordnen und jede Frist selbst im Kopf behalten müssen.",
+        ),
+    },
+}
+KEEPER_SEMANTIC_FORBIDDEN = {
+    "": (
+        "A rend attól függ, mennyire következetesen rendezed kézzel.",
+        "Neked kell észrevenni és átírni valahová.",
+        "Megkeresi a helyét a többi irat között.",
+    ),
+    "en/": (
+        "Order depends on how consistently you maintain it by hand.",
+        "You have to notice it and copy it somewhere else.",
+        "Find where it fits with your other documents.",
+    ),
+    "de/": (
+        "Die Ordnung hängt davon ab, wie konsequent Sie sie manuell pflegen.",
+        "Sie müssen es bemerken und separat übertragen.",
+        "Den Platz zwischen den anderen Unterlagen finden.",
+    ),
+}
+
 KEEPER_HUMAN_COPY_FORBIDDEN = {
     "": (
         "PDF, kép vagy fotó",
@@ -343,6 +408,19 @@ def main() -> int:
         for forbidden in KEEPER_HUMAN_COPY_FORBIDDEN[prefix]:
             if forbidden in keeper_text:
                 errors.append(f"Keeper human-copy regression in {keeper}: {forbidden}")
+        for required in KEEPER_SEMANTIC_REQUIRED[prefix]["keeper"]:
+            if required not in keeper_text:
+                errors.append(f"Keeper semantic ownership marker missing in {keeper}: {required}")
+        for required in KEEPER_SEMANTIC_REQUIRED[prefix]["home"]:
+            if required not in homepage_text:
+                errors.append(f"Keeper semantic ownership marker missing in {homepage}: {required}")
+        for required in KEEPER_SEMANTIC_REQUIRED[prefix]["solutions"]:
+            if required not in solutions_text:
+                errors.append(f"Keeper semantic ownership marker missing in {solutions}: {required}")
+        for forbidden in KEEPER_SEMANTIC_FORBIDDEN[prefix]:
+            for source, source_text in ((keeper, keeper_text), (homepage, homepage_text), (solutions, solutions_text)):
+                if forbidden in source_text:
+                    errors.append(f"ambiguous Keeper semantic copy remains in {source}: {forbidden}")
 
     for prefix in LANG_PREFIXES:
         contact = ROOT / prefix / "contact.html"
