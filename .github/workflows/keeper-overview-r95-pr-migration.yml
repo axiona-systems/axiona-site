@@ -28,7 +28,7 @@ jobs:
           python3 scripts/verify_public_quality.py
           git config user.name "AXIONA Automation"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git rm scripts/patch_keeper_overview_r95.py .github/workflows/keeper-overview-r95-pr-migration.yml
+          git rm -f scripts/patch_keeper_overview_r95.py .github/workflows/keeper-overview-r95-pr-migration.yml
           git add index.html en/index.html de/index.html assets/keeper-r94.css scripts/verify_public_quality.py
           git commit -m "Focus Keeper overview on visitor benefits"
           git push origin HEAD:fix/keeper-overview-benefit-r95
