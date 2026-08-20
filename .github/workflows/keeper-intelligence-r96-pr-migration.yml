@@ -26,6 +26,10 @@ jobs:
           python3 scripts/verify_seo.py
           python3 scripts/verify_public_quality.py
 
+          # Pages verification is updated separately because a workflow GITHUB_TOKEN
+          # may not modify another workflow file.
+          git checkout -- .github/workflows/axiona-pages-rebuild.yml
+
           git config user.name "AXIONA Automation"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git rm -f scripts/patch_keeper_intelligence_r96.py .github/workflows/keeper-intelligence-r96-pr-migration.yml
@@ -34,7 +38,6 @@ jobs:
             solutions.html en/solutions.html de/solutions.html \
             keeper.html en/keeper.html de/keeper.html \
             assets/keeper-r96.css \
-            scripts/verify_public_quality.py \
-            .github/workflows/axiona-pages-rebuild.yml
+            scripts/verify_public_quality.py
           git commit -m "Reframe Keeper around document intelligence"
           git push origin HEAD:feature/keeper-intelligence-story-r96
