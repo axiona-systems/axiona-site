@@ -117,12 +117,12 @@ jobs:
               && grep -Fq 'Weniger manuelle Verwaltung' <<<"$HOME_DE" \
               && grep -Fq '/assets/keeper-r96.css' <<<"$KEEPER_HU" \
               && grep -Fq 'keeper96-workcard' <<<"$KEEPER_HU" \
-              && grep -Fq 'elvégzi a rendrakás nagy részét' <<<"$KEEPER_HU" \
+              && grep -Fq 'elvégzi körülötte az adminisztráció nagy részét' <<<"$KEEPER_HU" \
               && grep -Fq 'keeper96-process-grid' <<<"$KEEPER_HU" \
               && grep -Fq '/assets/keeper-r96.css' <<<"$KEEPER_EN" \
-              && grep -Fq 'does most of the organising work' <<<"$KEEPER_EN" \
+              && grep -Fq 'does most of the admin work around it' <<<"$KEEPER_EN" \
               && grep -Fq '/assets/keeper-r96.css' <<<"$KEEPER_DE" \
-              && grep -Fq 'liest es, erkennt es und ordnet' <<<"$KEEPER_DE" \
+              && grep -Fq 'übernimmt einen großen Teil der Verwaltungsarbeit darum' <<<"$KEEPER_DE" \
               && curl --fail --silent --show-error --head https://axiona.systems/assets/social/axiona-social-preview-r92-hu.png >/dev/null \
               && curl --fail --silent --show-error --head https://axiona.systems/assets/social/axiona-keeper-social-preview-r92-hu.png >/dev/null \
               && curl --fail --silent --show-error --head https://axiona.systems/assets/keeper-r96.css >/dev/null; then
