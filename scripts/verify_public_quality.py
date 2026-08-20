@@ -62,6 +62,26 @@ KEEPER_REQUIRED_MARKERS = (
     'class="keeper-dev-status keeper96-dev section-pad"',
 )
 KEEPER_PLATFORM_MARKERS = ("iPhone", "iPad", "Apple App Store")
+KEEPER_HUMAN_COPY_FORBIDDEN = {
+    "": (
+        "PDF, kép vagy fotó",
+        "strukturált, ellenőrizhető adatot",
+        "KEEPER FEJLESZTÉSI IRÁNY",
+        "tervezett termékműködés szemléltető példái",
+    ),
+    "en/": (
+        "PDF, image or photo",
+        "structured, reviewable information",
+        "KEEPER PRODUCT DIRECTION",
+        "illustrative examples of the planned product experience",
+    ),
+    "de/": (
+        "PDF, Bild oder Foto",
+        "strukturierte, prüfbare Information",
+        "KEEPER PRODUKTRICHTUNG",
+        "veranschaulichen die geplante Produktfunktion",
+    ),
+}
 
 GENERAL_SOCIAL_IMAGES = {
     "": "https://axiona.systems/assets/social/axiona-social-preview-r92-hu.png",
@@ -320,6 +340,9 @@ def main() -> int:
         for marker in KEEPER_PLATFORM_MARKERS:
             if marker not in keeper_text:
                 errors.append(f"Keeper platform marker missing in {keeper}: {marker}")
+        for forbidden in KEEPER_HUMAN_COPY_FORBIDDEN[prefix]:
+            if forbidden in keeper_text:
+                errors.append(f"Keeper human-copy regression in {keeper}: {forbidden}")
 
     for prefix in LANG_PREFIXES:
         contact = ROOT / prefix / "contact.html"
