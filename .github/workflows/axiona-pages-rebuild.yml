@@ -89,7 +89,7 @@ jobs:
           echo "STOP_AXIONA_PAGES_BUILD_TIMEOUT"
           exit 1
 
-      - name: Verify live social previews and Keeper product story
+      - name: Verify live social previews and Keeper R96 intelligence story
         id: live
         shell: bash
         run: |
@@ -98,6 +98,9 @@ jobs:
             HU="$(curl --fail --silent --show-error --location https://axiona.systems/systems.html || true)"
             EN="$(curl --fail --silent --show-error --location https://axiona.systems/en/systems.html || true)"
             DE="$(curl --fail --silent --show-error --location https://axiona.systems/de/systems.html || true)"
+            HOME_HU="$(curl --fail --silent --show-error --location https://axiona.systems/ || true)"
+            HOME_EN="$(curl --fail --silent --show-error --location https://axiona.systems/en/ || true)"
+            HOME_DE="$(curl --fail --silent --show-error --location https://axiona.systems/de/ || true)"
             KEEPER_HU="$(curl --fail --silent --show-error --location https://axiona.systems/keeper.html || true)"
             KEEPER_EN="$(curl --fail --silent --show-error --location https://axiona.systems/en/keeper.html || true)"
             KEEPER_DE="$(curl --fail --silent --show-error --location https://axiona.systems/de/keeper.html || true)"
@@ -105,23 +108,31 @@ jobs:
               && grep -Fq 'axiona-social-preview-r92-en.png' <<<"$EN" \
               && grep -Fq 'axiona-social-preview-r92-de.png' <<<"$DE" \
               && grep -Fq 'axiona-keeper-social-preview-r92-hu.png' <<<"$KEEPER_HU" \
-              && grep -Fq '/assets/keeper-r94.css' <<<"$KEEPER_HU" \
-              && grep -Fq 'keeper-matter-demo keeper-matter-demo--full' <<<"$KEEPER_HU" \
-              && grep -Fq 'melyik ügyhöz tartozik' <<<"$KEEPER_HU" \
-              && grep -Fq '/assets/keeper-r94.css' <<<"$KEEPER_EN" \
-              && grep -Fq 'which matter it belongs to' <<<"$KEEPER_EN" \
-              && grep -Fq '/assets/keeper-r94.css' <<<"$KEEPER_DE" \
-              && grep -Fq 'zu welchem Vorgang es gehört' <<<"$KEEPER_DE" \
+              && grep -Fq '/assets/keeper-r96.css' <<<"$HOME_HU" \
+              && grep -Fq 'keeper96-preview-panel' <<<"$HOME_HU" \
+              && grep -Fq 'Kevesebb kézi adminisztráció' <<<"$HOME_HU" \
+              && grep -Fq 'keeper96-preview-panel' <<<"$HOME_EN" \
+              && grep -Fq 'Less manual admin' <<<"$HOME_EN" \
+              && grep -Fq 'keeper96-preview-panel' <<<"$HOME_DE" \
+              && grep -Fq 'Weniger manuelle Verwaltung' <<<"$HOME_DE" \
+              && grep -Fq '/assets/keeper-r96.css' <<<"$KEEPER_HU" \
+              && grep -Fq 'keeper96-workcard' <<<"$KEEPER_HU" \
+              && grep -Fq 'elvégzi a rendrakás nagy részét' <<<"$KEEPER_HU" \
+              && grep -Fq 'keeper96-process-grid' <<<"$KEEPER_HU" \
+              && grep -Fq '/assets/keeper-r96.css' <<<"$KEEPER_EN" \
+              && grep -Fq 'does most of the organising work' <<<"$KEEPER_EN" \
+              && grep -Fq '/assets/keeper-r96.css' <<<"$KEEPER_DE" \
+              && grep -Fq 'liest es, erkennt es und ordnet' <<<"$KEEPER_DE" \
               && curl --fail --silent --show-error --head https://axiona.systems/assets/social/axiona-social-preview-r92-hu.png >/dev/null \
               && curl --fail --silent --show-error --head https://axiona.systems/assets/social/axiona-keeper-social-preview-r92-hu.png >/dev/null \
-              && curl --fail --silent --show-error --head https://axiona.systems/assets/keeper-r94.css >/dev/null; then
-              echo "OK_AXIONA_LIVE_SOCIAL_AND_KEEPER_R94"
+              && curl --fail --silent --show-error --head https://axiona.systems/assets/keeper-r96.css >/dev/null; then
+              echo "OK_AXIONA_LIVE_SOCIAL_AND_KEEPER_R96"
               exit 0
             fi
-            echo "LIVE_R94_NOT_READY_ATTEMPT=${attempt}"
+            echo "LIVE_R96_NOT_READY_ATTEMPT=${attempt}"
             sleep 5
           done
-          echo "STOP_AXIONA_LIVE_R94_NOT_PUBLISHED"
+          echo "STOP_AXIONA_LIVE_R96_NOT_PUBLISHED"
           exit 1
 
       - name: Record live deployment proof
@@ -156,8 +167,8 @@ jobs:
                   "social_en": "axiona-social-preview-r92-en.png",
                   "social_de": "axiona-social-preview-r92-de.png",
                   "keeper_social_hu": "axiona-keeper-social-preview-r92-hu.png",
-                  "keeper_story": "R94",
-                  "keeper_stylesheet": "assets/keeper-r94.css",
+                  "keeper_story": "R96",
+                  "keeper_stylesheet": "assets/keeper-r96.css",
                   "keeper_locales": ["hu", "en", "de"]
               }
           }
