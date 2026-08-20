@@ -66,8 +66,8 @@ KEEPER_SEMANTIC_REQUIRED = {
     "": {
         "keeper": (
             "A különbség az, mennyi munka marad rád.",
-            "Nem neked kell egyedül összerakni a kapcsolatokat.",
-            "Nem neked kell minden dátumot külön figyelni.",
+            "Keeperrel nem neked kell egyedül összerakni a kapcsolatokat.",
+            "Keeperrel nem neked kell minden dátumot külön figyelni.",
             "A Keeper célja, hogy ezeknek a lépéseknek a nagy részét elvégezze helyetted",
         ),
         "home": (
@@ -81,8 +81,8 @@ KEEPER_SEMANTIC_REQUIRED = {
     "en/": {
         "keeper": (
             "The difference is how much work is still left for you.",
-            "You do not have to piece all the relationships together yourself.",
-            "You do not have to watch every date manually.",
+            "With Keeper, you do not have to piece all the relationships together yourself.",
+            "With Keeper, you do not have to watch every date manually.",
             "Keeper is designed to do most of those steps for you",
         ),
         "home": (
@@ -96,8 +96,8 @@ KEEPER_SEMANTIC_REQUIRED = {
     "de/": {
         "keeper": (
             "Der Unterschied ist, wie viel Arbeit bei Ihnen bleibt.",
-            "Sie müssen die Zusammenhänge nicht allein zusammensetzen.",
-            "Sie müssen nicht jedes Datum selbst überwachen.",
+            "Mit Keeper müssen Sie die Zusammenhänge nicht allein zusammensetzen.",
+            "Mit Keeper müssen Sie nicht jedes Datum selbst überwachen.",
             "Keeper soll den größten Teil dieser Schritte übernehmen",
         ),
         "home": (
@@ -111,16 +111,22 @@ KEEPER_SEMANTIC_REQUIRED = {
 }
 KEEPER_SEMANTIC_FORBIDDEN = {
     "": (
+        "<strong>Neked kell végigolvasni és kiszedni, ami fontos.</strong>",
+        "<strong>Nem neked kell minden iratot végigolvasni.</strong>",
         "A rend attól függ, mennyire következetesen rendezed kézzel.",
         "Neked kell észrevenni és átírni valahová.",
         "Megkeresi a helyét a többi irat között.",
     ),
     "en/": (
+        "<strong>You still have to read the document and pull out what matters.</strong>",
+        "<strong>You do not have to read every document end to end.</strong>",
         "Order depends on how consistently you maintain it by hand.",
         "You have to notice it and copy it somewhere else.",
         "Find where it fits with your other documents.",
     ),
     "de/": (
+        "<strong>Sie müssen das Dokument selbst lesen und Wichtiges heraussuchen.</strong>",
+        "<strong>Sie müssen nicht jedes Dokument vollständig lesen.</strong>",
         "Die Ordnung hängt davon ab, wie konsequent Sie sie manuell pflegen.",
         "Sie müssen es bemerken und separat übertragen.",
         "Den Platz zwischen den anderen Unterlagen finden.",
