@@ -54,11 +54,12 @@ KEEPER_EXPECTED_LINKS = {
 }
 KEEPER_REQUIRED_MARKERS = (
     'class="keeper-status-badge"',
-    'class="keeper-matter-demo keeper-matter-demo--full"',
-    'class="keeper-scatter-map"',
-    'class="keeper-planned-note"',
-    'class="keeper-folder-tree"',
-    'class="keeper-dev-status section-pad"',
+    'class="keeper96-workcard"',
+    'class="keeper96-process-grid"',
+    'class="keeper96-compare"',
+    'class="keeper96-example-grid"',
+    'class="keeper96-trust-grid"',
+    'class="keeper-dev-status keeper96-dev section-pad"',
 )
 KEEPER_PLATFORM_MARKERS = ("iPhone", "iPad", "Apple App Store")
 
@@ -287,29 +288,32 @@ def main() -> int:
             text = source.read_text(encoding="utf-8") if source.is_file() else ""
             if f'href="{keeper_href}"' not in text:
                 errors.append(f"Keeper product entry link missing in {source}: {keeper_href}")
-            if "/assets/keeper-r87.css" not in text:
-                errors.append(f"Keeper stylesheet missing from product entry page: {source}")
-            if "/assets/keeper-r94.css" not in text:
-                errors.append(f"Keeper R94 product-story stylesheet missing from product entry page: {source}")
+            for stylesheet in ("/assets/keeper-r87.css", "/assets/keeper-r94.css", "/assets/keeper-r96.css"):
+                if stylesheet not in text:
+                    errors.append(f"Keeper stylesheet missing from product entry page: {source}: {stylesheet}")
             for marker in KEEPER_PLATFORM_MARKERS:
                 if marker not in text:
                     errors.append(f"Keeper platform marker missing in {source}: {marker}")
 
         homepage_text = homepage.read_text(encoding="utf-8") if homepage.is_file() else ""
-        if 'class="keeper-benefit-panel"' not in homepage_text:
-            errors.append(f"Keeper R95 overview benefit panel missing from product entry page: {homepage}")
-        if 'class="keeper-matter-demo keeper-matter-demo--compact"' in homepage_text:
-            errors.append(f"Keeper detailed matter demo must remain off overview page: {homepage}")
+        if 'class="keeper96-preview-panel"' not in homepage_text:
+            errors.append(f"Keeper R96 intelligence preview missing from overview page: {homepage}")
+        if 'keeper-matter-demo' in homepage_text:
+            errors.append(f"Legacy Keeper matter demo must remain off overview page: {homepage}")
 
         solutions_text = solutions.read_text(encoding="utf-8") if solutions.is_file() else ""
-        if 'class="keeper-matter-demo keeper-matter-demo--compact"' not in solutions_text:
-            errors.append(f"Keeper R94 matter demo missing from solutions page: {solutions}")
+        if 'class="keeper96-mini-process"' not in solutions_text:
+            errors.append(f"Keeper R96 mini process missing from solutions page: {solutions}")
+        if 'keeper-matter-demo' in solutions_text:
+            errors.append(f"Legacy Keeper matter demo must remain off solutions page: {solutions}")
 
         keeper_text = keeper.read_text(encoding="utf-8") if keeper.is_file() else ""
         if "/assets/keeper-r87.css" not in keeper_text:
             errors.append(f"Keeper stylesheet missing from product page: {keeper}")
         if "/assets/keeper-r94.css" not in keeper_text:
-            errors.append(f"Keeper R94 product-story stylesheet missing from product page: {keeper}")
+            errors.append(f"Keeper R94 compatibility stylesheet missing from product page: {keeper}")
+        if "/assets/keeper-r96.css" not in keeper_text:
+            errors.append(f"Keeper R96 product-story stylesheet missing from product page: {keeper}")
         for marker in KEEPER_REQUIRED_MARKERS:
             if marker not in keeper_text:
                 errors.append(f"Keeper transparency marker missing in {keeper}: {marker}")

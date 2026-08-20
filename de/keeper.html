@@ -9,11 +9,12 @@
   <link href="/assets/share-r86.css" rel="stylesheet"/>
   <link href="/assets/keeper-r87.css" rel="stylesheet"/>
   <link href="/assets/keeper-r94.css" rel="stylesheet"/>
-  <title>AXIONA Keeper | Zusammengehörige Dokumente zusammenhalten</title>
-  <meta content="AXIONA Keeper für iPhone und iPad hält zusammengehörige Unterlagen, Vorgänge, Fristen und nächste Schritte übersichtlich an einem Ort." name="description"/>
+  <link href="/assets/keeper-r96.css" rel="stylesheet"/>
+  <title>AXIONA Keeper | Privater Dokumentenassistent</title>
+  <meta content="AXIONA Keeper ist ein local-first Dokumentenassistent in Entwicklung: Dokumenterkennung, wichtige Angaben und Fristen, Zuordnung und prüfbare Vorschläge für nächste Schritte." name="description"/>
   <meta content="AXIONA Systems" property="og:site_name"/>
-  <meta content="AXIONA Keeper | Zusammengehörige Dokumente zusammenhalten" property="og:title"/>
-  <meta content="Zusammengehörige Unterlagen an einem Ort, geordnet nach Vorgängen, Fristen und nächsten Schritten." property="og:description"/>
+  <meta content="AXIONA Keeper | Privater Dokumentenassistent" property="og:title"/>
+  <meta content="Keeper soll eingehende Dokumente erkennen, wichtige Angaben hervorheben, bei der Zuordnung helfen und den nächsten Handlungsbedarf sichtbar machen." property="og:description"/>
   <meta content="website" property="og:type"/>
   <meta content="https://axiona.systems/de/keeper.html" property="og:url"/>
   <meta content="https://axiona.systems/assets/social/axiona-keeper-social-preview-r92-de.png" property="og:image"/>
@@ -23,8 +24,8 @@
   <meta content="image/png" property="og:image:type"/>
   <meta content="AXIONA Systems — system design, process design, software and automation" property="og:image:alt"/>
   <meta content="summary_large_image" name="twitter:card"/>
-  <meta content="AXIONA Keeper | Zusammengehörige Dokumente zusammenhalten" name="twitter:title"/>
-  <meta content="Zusammengehörige Unterlagen an einem Ort, geordnet nach Vorgängen, Fristen und nächsten Schritten." name="twitter:description"/>
+  <meta content="AXIONA Keeper | Privater Dokumentenassistent" name="twitter:title"/>
+  <meta content="Keeper soll eingehende Dokumente erkennen, wichtige Angaben hervorheben, bei der Zuordnung helfen und den nächsten Handlungsbedarf sichtbar machen." name="twitter:description"/>
   <meta content="https://axiona.systems/assets/social/axiona-keeper-social-preview-r92-de.png" name="twitter:image"/>
   <link href="https://axiona.systems/de/keeper.html" rel="canonical"/>
   <link href="https://axiona.systems/keeper.html" hreflang="hu" rel="alternate"/>
@@ -33,7 +34,7 @@
   <link href="https://axiona.systems/keeper.html" hreflang="x-default" rel="alternate"/>
   <link href="/favicon-32x32.png" rel="shortcut icon"/>
   <link href="/favicon-32x32.png" rel="icon"/>
-  <meta content="R94" name="axiona-release"/>
+  <meta content="R96" name="axiona-release"/>
 </head>
 <body class="antialiased page-r75 page-keeper">
 <div class="site-shell" lang="de">
@@ -46,120 +47,88 @@
   </header>
 
   <main id="content">
-    <section class="keeper-page-hero section-pad">
+    <section class="keeper96-hero section-pad">
       <div>
         <div class="keeper-product-lockup"><img alt="" height="42" src="/assets/axiona-mark.png" width="42"/><div><strong>AXIONA KEEPER</strong><span>AXIONA PRODUKT</span></div></div>
-        <div class="keeper-status-line"><b class="keeper-status-badge">IN ENTWICKLUNG</b><span class="micro">iPhone + iPad</span></div>
-        <h1>Sie sollten sich nicht merken müssen, <em>wo ein Dokument liegt.</em> Es sollte reichen zu wissen, zu welchem Vorgang es gehört.</h1>
-        <p class="keeper-hero-lead">Wichtige Unterlagen stehen selten für sich. Zu einem Vertrag kommen später Änderungen, Rechnungen, E-Mails, Fotos und Fristen. Diese Dinge verteilen sich schnell auf Smartphone, Postfach und Ordner. Keeper führt sie in einem Vorgang zusammen, damit Sie bei Bedarf sofort sehen, was dazugehört und was als Nächstes ansteht.</p>
-        <div class="keeper-scatter-map" aria-label="Unterlagen liegen oft an verschiedenen Orten: PDF im Download-Ordner, Nachricht im E-Mail-Postfach, Foto auf dem Telefon und Termin im Kalender. Keeper kann sie in einem Vorgang zusammenhalten."><span><b>PDF</b><small>Downloads</small></span><span><b>MAIL</b><small>E-Mail</small></span><span><b>FOTO</b><small>Telefon</small></span><span><b>TERMIN</b><small>Kalender</small></span><span class="keeper-scatter-result"><b aria-hidden="true">→</b><small>ein Vorgang</small></span></div>
-        <div class="actions"><a class="button button-dark" href="#so-funktioniert-es">So funktioniert es<span>↓</span></a><a class="text-link" href="/de/contact.html">Kontakt<span>→</span></a></div>
+        <div class="keeper-status-line"><b class="keeper-status-badge">IN ENTWICKLUNG</b><span class="micro">iPhone + iPad · Apple App Store</span></div>
+        <h1>Sie geben das Dokument hinein. Keeper liest es, erkennt es und ordnet die Verwaltung vor.</h1>
+        <p class="keeper96-hero-lead">Ein PDF, Bild oder Foto kommt herein. Keeper soll den Inhalt lesen, erkennen, um welche Art Dokument es sich handeln könnte, wichtige Angaben und Termine hervorheben und anschließend vorschlagen, wozu es gehört und ob etwas zu tun ist. Sie sollen nicht jede Datei erst vollständig lesen, benennen und manuell einsortieren müssen.</p>
+        <p class="keeper96-hero-note">Keeper schlägt vor und bereitet vor. Unsichere Angaben können Sie prüfen; Schritte mit tatsächlichen Folgen bleiben unter Ihrer Freigabe.</p>
+        <div class="actions"><a class="button button-dark" href="#was-keeper-macht">Was macht Keeper?<span>↓</span></a><a class="text-link" href="/de/contact.html">Kontakt<span>→</span></a></div>
       </div>
-      <aside class="keeper-matter-demo keeper-matter-demo--full" aria-label="AXIONA Keeper Vorgangsansicht mit Vertrag, zugehörigen Unterlagen, Frist und nächstem Schritt">
-        <div class="keeper-matter-bar"><span>KEEPER / VORGANG</span><b>6 DOK.</b></div>
-        <div class="keeper-matter-summary"><small>VERTRAGSVORGANG</small><strong>Vertrag und zugehörige Unterlagen</strong><div class="keeper-matter-meta"><span>6 Dokumente</span><span>1 Frist</span><span>1 Aufgabe</span></div></div>
-        <div class="keeper-matter-docs">
-        <div class="keeper-matter-doc"><span class="keeper-doc-type">PDF</span><div><b>Vertrag.pdf</b><small>Originaldokument</small></div><span class="keeper-doc-state">ORIGINAL</span></div>
-        <div class="keeper-matter-doc"><span class="keeper-doc-type">PDF</span><div><b>Änderung.pdf</b><small>zugehöriges Dokument</small></div><span class="keeper-doc-state">VERKNÜPFT</span></div>
-        <div class="keeper-matter-doc"><span class="keeper-doc-type">PDF</span><div><b>Rechnung.pdf</b><small>zugehöriges Dokument</small></div><span class="keeper-doc-state">VERKNÜPFT</span></div>
-        <div class="keeper-matter-doc"><span class="keeper-doc-type">MAIL</span><div><b>Zugehöriger Schriftverkehr</b><small>2 Dokumente</small></div><span class="keeper-doc-state">2 DOK.</span></div>
-        <div class="keeper-matter-doc"><span class="keeper-doc-type">BILD</span><div><b>Anlage.jpg</b><small>zugehöriges Dokument</small></div><span class="keeper-doc-state">VERKNÜPFT</span></div>
+      <aside class="keeper96-workcard" aria-label="Geplanter Keeper-Verarbeitungsweg für ein eingehendes Dokument">
+        <div class="keeper96-workcard-head"><span>EIN DOKUMENT DURCH KEEPER</span><b>GEPLANTER ABLAUF</b></div>
+        <div class="keeper96-incoming"><span class="keeper96-incoming-icon">PDF</span><div><small>EINGEGANGEN</small><strong>Dokument.pdf</strong></div></div>
+        <div class="keeper96-worklist">
+          <div class="keeper96-workrow"><span>01 / LESEN</span><div><strong>Inhalt in nutzbaren Text umwandeln.</strong><p>Die Grundlage ist der Dokumentinhalt, nicht nur der Dateiname.</p></div></div>
+          <div class="keeper96-workrow"><span>02 / ERKENNEN</span><div><strong>Vorschlagen, welche Dokumentart eingegangen ist.</strong><p>Zum Beispiel Rechnung, Vertrag, Mitteilung oder Schreiben.</p></div></div>
+          <div class="keeper96-workrow"><span>03 / HERVORHEBEN</span><div><strong>Wichtige Verwaltungsdaten herausziehen.</strong><p>Datum, Betrag, Referenz, Absender oder Frist — sofern die Quelle dies trägt.</p></div></div>
+          <div class="keeper96-workrow"><span>04 / ORDNEN</span><div><strong>Kategorie und Zusammenhang vorschlagen.</strong><p>Zu welcher Person, welchem Anbieter, Vertrag, Gegenstand oder Vorgang das Dokument gehören könnte; unklare Zuordnungen bleiben prüfbar.</p></div></div>
+          <div class="keeper96-workrow"><span>05 / HINWEIS</span><div><strong>Zeigen, wenn etwas Aufmerksamkeit braucht.</strong><p>Eine mögliche Frist, unsichere Angabe oder ein nächster Schritt.</p></div></div>
         </div>
-        <div class="keeper-matter-next"><span>NÄCHSTER SCHRITT</span><div><strong>Antwort erforderlich</strong><small>Frist · 12. September</small></div><b class="keeper-matter-status">WARTET</b></div>
+        <div class="keeper96-control"><span>SIE ENTSCHEIDEN</span><div><strong>Keeper führt keine folgenreichen Schritte unbemerkt im Hintergrund aus.</strong><p>Erinnerungen und andere praktische Schritte benötigen Prüfung und Freigabe.</p></div></div>
       </aside>
     </section>
 
-    <section class="keeper-intro section-pad">
-      <div class="keeper-intro-grid">
-        <div><p class="keeper-section-kicker">WARUM KEEPER?</p><h2 class="keeper-section-title">Nicht mehr Ordner. Weniger Suchen.</h2></div>
-        <div class="keeper-intro-copy">
-          <p>Ein Ordner zeigt, wo eine Datei abgelegt wurde. Monate später reicht das oft nicht, wenn eigentlich wichtig ist, zu welchem Vertrag, Fahrzeug, Objekt oder Projekt sie gehört.</p>
-          <p>Keeper hält diese Zusammenhänge zusammen. Öffnen Sie einen Vorgang, sehen Sie das Originaldokument, die zugehörigen Unterlagen, wichtige Termine und den nächsten Schritt gemeinsam.</p>
-          <div class="keeper-plain-callout"><strong>Das Ziel ist nicht, dass Sie mehr sortieren.</strong><p>Sie sollen nicht jedes Mal die ganze Geschichte neu zusammensuchen müssen, wenn Sie etwas brauchen.</p></div>
-        </div>
+    <section class="keeper96-core section-pad">
+      <div class="keeper96-core-head"><div><p class="keeper96-kicker">WARUM DAS HILFT</p><h2 class="keeper96-title">Dass die Datei gespeichert ist, reicht nicht. Sie müssen auch verstehen, was darin steckt.</h2></div><p>Ein digitales Archiv kann ein Dokument aufbewahren. Die eigentliche Verwaltung beginnt danach: verstehen, was eingegangen ist, wichtige Angaben herausziehen, den Zusammenhang erkennen und daran denken, ob etwas zu tun ist. Keeper soll Ihnen möglichst viel dieser Handarbeit abnehmen.</p></div>
+      <div class="keeper96-question-grid">
+        <article class="keeper96-question"><span>01</span><h3>Was ist das?</h3><p>Keeper kann eine Dokumentart vorschlagen, damit Sie sie nicht aus dem Dateinamen erraten müssen.</p></article>
+        <article class="keeper96-question"><span>02</span><h3>Was ist wichtig?</h3><p>Wichtige Angaben und Termine können hervorgehoben und wichtige Werte mit ihrer Quelle verbunden werden.</p></article>
+        <article class="keeper96-question"><span>03</span><h3>Wozu gehört es?</h3><p>Keeper kann Kategorie und Beziehungen zu Person, Anbieter, Vertrag, Gegenstand oder Vorgang vorschlagen.</p></article>
+        <article class="keeper96-question"><span>04</span><h3>Muss ich etwas tun?</h3><p>Wenn eine Frist oder ein nächster Schritt erkannt wird, kann Keeper darauf gesondert hinweisen.</p></article>
       </div>
     </section>
 
-    <section class="keeper-flow section-pad" id="so-funktioniert-es">
-      <div class="keeper-flow-header"><p class="keeper-section-kicker">SO NUTZEN SIE KEEPER</p><h2 class="keeper-section-title">Vom Dokument zum übersichtlichen Vorgang.</h2><p>Sie bringen das Dokument hinein. Keeper hilft dabei, es dem passenden Vorgang zuzuordnen und mit bereits vorhandenen Unterlagen zu verbinden.</p></div>
-      <div class="keeper-flow-grid">
-        <article class="keeper-flow-step"><span>01</span><h3>Dokument hinzufügen.</h3><p>PDF, Bild oder Foto. Vorheriges Umbenennen und manuelles Sortieren ist nicht nötig.</p></article>
-        <article class="keeper-flow-step"><span>02</span><h3>Wichtige Inhalte erkennen.</h3><p>Sie sehen mehr als nur den Dateinamen: Dokumenttyp und wichtige Angaben werden sichtbar.</p></article>
-        <article class="keeper-flow-step"><span>03</span><h3>Zusammengehöriges verbinden.</h3><p>Briefe, Rechnungen, Verträge, Bilder und andere Unterlagen können zum selben Vorgang gehören.</p></article>
-        <article class="keeper-flow-step"><span>04</span><h3>Sehen, was als Nächstes ansteht.</h3><p>Was Aufmerksamkeit braucht, worauf Sie warten, was bald abläuft und welcher nächste Schritt nicht vergessen werden sollte.</p></article>
-      </div>
-      <div class="keeper-planned-note"><span>GEPLANTE FUNKTION · ORDNERSTRUKTUR</span><p>Keeper kann für zusammengehörige Unterlagen einen Ordner oder Vorgang vorschlagen und sie nach Freigabe an einem Ort zusammenführen.</p></div>
-    </section>
-
-    <section class="keeper-examples section-pad">
-      <div class="keeper-examples-head"><p class="keeper-section-kicker">WO KEEPER HILFT</p><h2 class="keeper-section-title">Die gleiche Ordnung für ganz unterschiedliche Vorgänge.</h2><p class="keeper-examples-lead">Nicht die Dokumentart ist entscheidend. Wichtig ist, dass mehrere Unterlagen, Termine und Aufgaben zur gleichen Sache gehören.</p></div>
-      <div class="keeper-example-grid">
-        <article class="keeper-example-card"><span class="micro">01 / VERTRÄGE UND ABOS</span><h3>Fristen sehen, bevor Handlungsbedarf entsteht.</h3><p>Vertrag, Änderungen, Rechnungen und zugehöriger Schriftverkehr bleiben in einem Vorgang.</p><ul class="keeper-example-list"><li>Originalvertrag und Änderungen</li><li>Ablauf- oder Prüftermin</li><li>zugehöriger Schriftverkehr</li></ul></article>
-        <article class="keeper-example-card"><span class="micro">02 / FAHRZEUG UND VERSICHERUNG</span><h3>Ein Schadenfall mit seiner ganzen Geschichte.</h3><p>Police, Schadenmeldung, Gutachten, Werkstattrechnung und Versicherungsschreiben gehören zum selben Vorgang.</p><ul class="keeper-example-list"><li>zugehörige Dokumente in einem Vorgang</li><li>Ereignisse in zeitlicher Reihenfolge</li><li>nächste Frist oder erwartete Antwort</li></ul></article>
-        <article class="keeper-example-card"><span class="micro">03 / IMMOBILIE UND RENOVIERUNG</span><h3>Nicht jedes Mal den Vorgang aus mehreren Ordnern zusammensuchen.</h3><p>Angebote, Vertrag, Rechnungen, Fotos und Garantieunterlagen bleiben bei der Arbeit, zu der sie gehören.</p><ul class="keeper-example-list"><li>Angebote und Vertrag</li><li>Rechnungen und Anlagen</li><li>Übergabe und Garantieunterlagen</li></ul></article>
-        <article class="keeper-example-card"><span class="micro">04 / KLEINUNTERNEHMEN</span><h3>Unterlagen eines Projekts zusammenhalten.</h3><p>Kunden-, Arbeits- und Abrechnungsunterlagen lassen sich von einem Ort aus verfolgen.</p><ul class="keeper-example-list"><li>Angebot und Auftrag</li><li>Projektunterlagen und Schriftverkehr</li><li>Rechnungen und Buchhaltungsunterlagen</li></ul></article>
+    <section class="section-pad" id="was-keeper-macht">
+      <div class="keeper96-process-head"><p class="keeper96-kicker">WAS KEEPER IHNEN ABNIMMT</p><h2 class="keeper96-title">Sie bringen das Dokument hinein. Das System übernimmt den größten Teil der Verarbeitung.</h2><p>Der geplante Nutzerweg beginnt nicht mit dem Anlegen von Ordnern. Er beginnt mit einem Dokument, das Keeper Schritt für Schritt in nutzbare, prüfbare Verwaltungsinformation überführt.</p></div>
+      <div class="keeper96-process-grid">
+        <article class="keeper96-process-step"><span>01 / IMPORT</span><h3>PDF, Bild, Foto oder geteiltes Dokument.</h3><p>Vorheriges Umbenennen, Vorkategorisieren oder Anlegen eines Ordners soll nicht nötig sein.</p><small>IHR SCHRITT: DOKUMENT HINZUFÜGEN</small></article>
+        <article class="keeper96-process-step"><span>02 / LOKALE OCR</span><h3>Dokument lesen.</h3><p>Text wird lokal extrahiert, damit die weitere Verarbeitung auf dem Inhalt und nicht nur auf dem Dateinamen basiert.</p><small>KEEPER-ARBEIT: INHALTSERKENNUNG</small></article>
+        <article class="keeper96-process-step"><span>03 / VERSTEHEN</span><h3>Erkennen, welche Art Dokument vorliegen könnte.</h3><p>Keeper kann Vorschläge zu Dokumentart, Kategorie und wichtigen Feldern vorbereiten. Unsicherheit darf nicht stillschweigend zu Gewissheit werden.</p><small>KEEPER-ARBEIT: KLASSIFIZIERUNGSVORSCHLAG</small></article>
+        <article class="keeper96-process-step"><span>04 / WICHTIGE ANGABEN</span><h3>Hervorheben, was zählt.</h3><p>Daten, Fristen, Beträge und andere relevante Werte können getrennt angezeigt werden; die Originalquelle bleibt prüfbar.</p><small>KEEPER-ARBEIT: EXTRAKTION + QUELLE</small></article>
+        <article class="keeper96-process-step"><span>05 / ORDNEN</span><h3>Vorschlagen, wohin es gehört und womit es zusammenhängt.</h3><p>Ziel ist nicht ein starres Ordnersystem, sondern der richtige Kontext: Person, Anbieter, Vertrag, Gegenstand oder Vorgang. Automatische Vorschläge bleiben änderbar und umkehrbar.</p><small>KEEPER-ARBEIT: KONTEXT + ZUORDNUNG</small></article>
+        <article class="keeper96-process-step"><span>06 / NÄCHSTER SCHRITT</span><h3>Zeigen, wenn Handlungsbedarf bestehen könnte.</h3><p>Frist, Wartezustand oder Aufgabe können als Vorschlag erscheinen. Eine Erinnerung entsteht erst nach Ihrer Freigabe.</p><small>SIE ENTSCHEIDEN: FREIGEBEN ODER KORRIGIEREN</small></article>
       </div>
     </section>
 
-    <section class="keeper-folder-section section-pad">
-      <div class="keeper-folder-grid">
-        <div class="keeper-folder-copy"><p class="keeper-section-kicker">ORDNER UND ZUSAMMENHÄNGE</p><h2 class="keeper-section-title">Der Ordner zeigt, wo etwas liegt. Die Verbindung zeigt, wozu es gehört.</h2><p>Eine Rechnung kann gleichzeitig zu einem Vertrag, Projekt oder Gegenstand gehören. Dafür müssen Sie dieselbe Datei nicht mehrfach ablegen.</p><p>Unterlagen, Termine und Aufgaben bleiben im Vorgang gemeinsam sichtbar. Auch Monate später können Sie im vorhandenen Zusammenhang weiterarbeiten, statt alles neu zusammenzusuchen.</p></div>
-        <div class="keeper-folder-tree" aria-label="Geplante Ordner- und Vorgangsansicht für einen Vertragsvorgang">
-          <div class="keeper-folder-tree-head"><span>ORDNER UND VORGÄNGE</span><b>GEPLANTE FUNKTION</b></div>
-          <div class="keeper-tree-lines">
-            <strong>▾ Vertragsvorgang</strong>
-            <span>&nbsp;&nbsp;├─ Originaldokument</span>
-            <span>&nbsp;&nbsp;│&nbsp;&nbsp;└─ Vertrag.pdf</span>
-            <span>&nbsp;&nbsp;├─ Zugehörige Unterlagen</span>
-            <span>&nbsp;&nbsp;│&nbsp;&nbsp;├─ Änderung.pdf</span>
-            <span>&nbsp;&nbsp;│&nbsp;&nbsp;├─ Rechnung.pdf</span>
-            <span>&nbsp;&nbsp;│&nbsp;&nbsp;└─ Anlage.jpg</span>
-            <i>&nbsp;&nbsp;└─ Nächster Schritt: Antwort bis 12. September</i>
-          </div>
-          <div class="keeper-folder-rule"><strong>Die Ordnung bleibt unter Ihrer Kontrolle.</strong> Keeper kann wahrscheinliche Zusammenhänge erkennen; Sie bestätigen, wie die Unterlagen geordnet werden.</div>
-        </div>
+    <section class="keeper96-contrast section-pad">
+      <div class="keeper96-contrast-head"><div><p class="keeper96-kicker">DER UNTERSCHIED</p><h2 class="keeper96-title">Speichern ist nicht der Kern des Produkts.</h2></div><p>Die Datei aufzubewahren ist nur die Grundlage. Keeper wird dort wertvoll, wo aus einem Dokument verständliche, durchsuchbare und nutzbare Verwaltungsinformation wird.</p></div>
+      <div class="keeper96-compare">
+        <div class="keeper96-compare-head"><span>EINFACHER SPEICHER</span><span>KEEPER PRODUKTRICHTUNG</span></div>
+        <div class="keeper96-compare-row"><div><strong>Bewahrt die Datei auf.</strong><p>Das Dokument ist vorhanden, aber Sie müssen es weiterhin selbst lesen und einordnen.</p></div><div><strong>Verarbeitet den Inhalt.</strong><p>Erkennungs- und Extraktionsvorschläge geben Ihnen einen brauchbaren Ausgangspunkt.</p></div></div>
+        <div class="keeper96-compare-row"><div><strong>Zeigt Ordner und Dateinamen.</strong><p>Die Ordnung hängt davon ab, wie konsequent Sie sie manuell pflegen.</p></div><div><strong>Gibt dem Dokument Bedeutung und Kontext.</strong><p>Dokumentart, Kategorie und Bezug zu Person, Vertrag, Gegenstand oder Vorgang können Teil der Struktur werden.</p></div></div>
+        <div class="keeper96-compare-row"><div><strong>Das wichtige Datum bleibt im PDF verborgen.</strong><p>Sie müssen es bemerken und separat übertragen.</p></div><div><strong>Hebt eine mögliche Frist hervor.</strong><p>Die Quelle bleibt prüfbar; Erinnerungen bleiben freigabepflichtig.</p></div></div>
+        <div class="keeper96-compare-row"><div><strong>Sie suchen eine Datei.</strong><p>Sie verlassen sich auf Dateiname, Speicherort oder Erinnerung.</p></div><div><strong>Auch der Dokumentinhalt wird auffindbar.</strong><p>Ziel ist, dass Sie später nicht mehr wissen müssen, wo Sie etwas abgelegt haben.</p></div></div>
       </div>
     </section>
 
-    <section class="keeper-ask section-pad">
-      <div class="keeper-ask-layout">
-        <div><p class="keeper-section-kicker">SUCHE UND FRAGEN</p><h2 class="keeper-section-title">Sie müssen sich den Dateinamen nicht merken.</h2><div class="keeper-answer-note"><strong>Hinter der Antwort bleibt das Originaldokument.</strong><p>Bei einer wichtigen Angabe können Sie direkt zu dem Dokument zurückgehen, aus dem die Information stammt.</p></div></div>
-        <div><div class="keeper-question-list"><div class="keeper-question"><span>01</span><p>„Wann läuft dieser Vertrag ab?“</p></div><div class="keeper-question"><span>02</span><p>„Zu welchem Vorgang gehört diese Rechnung?“</p></div><div class="keeper-question"><span>03</span><p>„Wo ist die Reparaturrechnung vom letzten Jahr?“</p></div><div class="keeper-question"><span>04</span><p>„Auf welche Antwort warte ich noch?“</p></div></div></div>
+    <section class="section-pad">
+      <div class="keeper96-examples-head"><p class="keeper96-kicker">WIE DAS PRAKTISCH AUSSIEHT</p><h2 class="keeper96-title">Die gleiche Keeper-Arbeit bei ganz unterschiedlichen Dokumenten.</h2><p class="keeper96-examples-note">Die folgenden Beispiele veranschaulichen die geplante Produktfunktion. Es sind keine echten Nutzerdaten und keine automatischen Entscheidungen.</p></div>
+      <div class="keeper96-example-grid">
+        <article class="keeper96-example"><span>VERSICHERUNGSSCHREIBEN</span><h3>Nicht selbst Aktenzeichen und Frist aus dem Schreiben herausziehen müssen.</h3><p>Ein Schreiben der Versicherung kommt an. Zunächst ist es nur eine PDF-Datei.</p><div class="keeper96-example-work"><b>KEEPER-ARBEIT</b><ul><li>Art des Dokuments erkennen</li><li>Referenz und mögliche Frist hervorheben</li><li>zugehörigen Schadenfall oder Fahrzeug vorschlagen</li><li>auf mögliche Antwort oder Nachverfolgung hinweisen</li></ul></div></article>
+        <article class="keeper96-example"><span>RECHNUNG / ZAHLUNGSHINWEIS</span><h3>Eine Frist soll nicht nur eine Zeile im Dokument bleiben.</h3><p>Keeper versucht, aus dem Dokument strukturierte, prüfbare Information zu machen.</p><div class="keeper96-example-work"><b>KEEPER-ARBEIT</b><ul><li>Absender, Betrag und Datum als Kandidaten erkennen</li><li>Dokumentart und Kategorie vorschlagen</li><li>Quelle der Frist sichtbar machen</li><li>Erinnerung vorschlagen, die Sie freigeben</li></ul></div></article>
+        <article class="keeper96-example"><span>VERTRAG / ABONNEMENT</span><h3>Alte und neue Unterlagen nicht im Kopf zusammenführen müssen.</h3><p>Zu einem Vertrag können später Änderungen, Rechnungen oder neue Mitteilungen kommen.</p><div class="keeper96-example-work"><b>KEEPER-ARBEIT</b><ul><li>Vertragsmerkmale und Parteien erkennen</li><li>relevante Termine hervorheben</li><li>Beziehungen zu früheren Dokumenten vorschlagen</li><li>auf mögliche Prüfung oder Ablauf hinweisen</li></ul></div></article>
+        <article class="keeper96-example"><span>IMMOBILIE / RENOVIERUNG</span><h3>Aus verschiedenen Unterlagen ein verständlicheres Verwaltungsbild machen.</h3><p>Angebote, Rechnungen, Fotos und Garantien können zur gleichen Arbeit gehören, obwohl sie in verschiedenen Formaten eintreffen.</p><div class="keeper96-example-work"><b>KEEPER-ARBEIT</b><ul><li>unterschiedliche Dokumentarten erkennen</li><li>gemeinsamen Projekt- oder Vorgangskontext vorschlagen</li><li>wichtige Termine und Referenzen hervorheben</li><li>später im vorhandenen Kontext weiterarbeiten helfen</li></ul></div></article>
       </div>
     </section>
 
-    <section class="keeper-trust section-pad">
-      <p class="keeper-section-kicker">DATENSCHUTZ UND KONTROLLE</p>
-      <h2 class="keeper-section-title">Wichtige Unterlagen sollen wirklich Ihre bleiben.</h2>
-      <div class="keeper-trust-grid">
-        <article class="keeper-trust-card"><span>01</span><h3>Lokale Verarbeitung als Grundlage.</h3><p>Die Dokumentenarbeit basiert nicht auf versteckten Cloud-Uploads.</p></article>
-        <article class="keeper-trust-card"><span>02</span><h3>Das Original bleibt erhalten.</h3><p>Sie können jederzeit prüfen, was tatsächlich im Dokument steht.</p></article>
-        <article class="keeper-trust-card"><span>03</span><h3>Ihre Dokumente sind kein Trainingsmaterial.</h3><p>Die Inhalte Ihrer Dokumente werden nicht zum Trainieren von KI-Modellen verwendet.</p></article>
-        <article class="keeper-trust-card"><span>04</span><h3>Wichtige Entscheidungen bleiben bei Ihnen.</h3><p>Keeper kann vorschlagen und vorbereiten, aber folgenreiche Schritte benötigen Ihre Freigabe.</p></article>
+    <section class="keeper96-trust section-pad">
+      <div><p class="keeper96-kicker">VERTRAUEN UND KONTROLLE</p><h2 class="keeper96-title">Keeper hilft. Entscheiden tun Sie.</h2></div>
+      <div class="keeper96-trust-grid">
+        <article class="keeper96-trust-card"><span>01</span><h3>Local-first als Grundlage.</h3><p>Die Produktrichtung stellt das eigene Gerät in den Mittelpunkt der Dokumentverarbeitung, statt entfernte Verarbeitung zum Standard zu machen.</p></article>
+        <article class="keeper96-trust-card"><span>02</span><h3>Wichtige Angaben brauchen eine Quelle.</h3><p>Ziel ist, sichtbar zu machen, welcher Teil des Dokuments ein extrahiertes Datum oder einen anderen wichtigen Wert stützt.</p></article>
+        <article class="keeper96-trust-card"><span>03</span><h3>Unsicherheit muss sichtbar bleiben.</h3><p>Wenn etwas nicht zuverlässig genug ist, soll Keeper eine Prüfung verlangen statt Sicherheit vorzutäuschen.</p></article>
+        <article class="keeper96-trust-card"><span>04</span><h3>Ihre Korrektur hat Vorrang.</h3><p>Ein späterer automatischer Vorschlag darf eine bereits von Ihnen korrigierte Angabe nicht still überschreiben.</p></article>
       </div>
     </section>
 
-    <section class="keeper-profiles section-pad">
-      <p class="keeper-section-kicker">FÜR WEN?</p>
-      <h2 class="keeper-section-title">Von privaten Unterlagen bis zum Kleinunternehmen.</h2>
-      <div class="keeper-profile-grid">
-        <article class="keeper-profile-card"><span>01</span><h3>Privat</h3><p>Versicherungen, Verträge, Rechnungen, Garantien, amtliche Schreiben sowie Vorgänge rund um Arbeit, Fahrzeug oder Immobilie.</p></article>
-        <article class="keeper-profile-card"><span>02</span><h3>Haushalt</h3><p>Dienstleistungen, Geräte, Garantien, Wohnungsunterlagen und gemeinsame Familienverwaltung an einem Ort.</p></article>
-        <article class="keeper-profile-card"><span>03</span><h3>Kleinunternehmen</h3><p>Eingehende Dokumente, Rechnungen, Projektunterlagen, Verträge, Geräte und Material für die Buchhaltung.</p></article>
-      </div>
+    <section class="keeper-dev-status keeper96-dev section-pad">
+      <div><p class="keeper96-kicker">ENTWICKLUNGSSTATUS</p><h2 class="keeper96-title">Zuerst für iPhone und iPad.</h2><p>AXIONA Keeper befindet sich in Entwicklung und kann noch nicht heruntergeladen werden. Die erste geplante öffentliche Veröffentlichung erfolgt über den Apple App Store. Diese Seite beschreibt die angestrebte Produkterfahrung und stellt die App nicht als fertig dar.</p></div>
+      <div class="keeper96-dev-badge"><span>ERSTE ZIELPLATTFORM</span><strong>iPhone + iPad<br/>Apple App Store</strong></div>
     </section>
 
-    <section class="keeper-dev-status section-pad">
-      <div class="keeper-dev-layout">
-        <div class="keeper-dev-copy"><p class="keeper-section-kicker">ERSTE VERSION</p><h2 class="keeper-section-title">iPhone + iPad.</h2><p>Die erste Keeper-Version wird im Apple App Store erhältlich sein.</p><div class="actions"><a class="button button-light" href="/de/contact.html">Kontakt<span>↗</span></a></div></div>
-        <div class="keeper-status-panel"><div class="keeper-status-panel-head"><span>KEEPER</span><b>2026</b></div><div class="keeper-status-item"><span>01</span><p>Private Unterlagen. Geordnete Vorgänge. Weniger Suchen.</p></div></div>
-      </div>
-    </section>
-
-    <section class="ax-share section-pad" data-share-title="AXIONA Keeper | Zusammengehörige Dokumente zusammenhalten" data-share-text="Zusammengehörige Unterlagen an einem Ort, geordnet nach Vorgängen, Fristen und nächsten Schritten." data-share-url="https://axiona.systems/de/keeper.html" data-share-copied="Link kopiert." data-share-failed="Der Link konnte nicht kopiert werden.">
-      <div class="ax-share-copy"><span class="micro">WEITERGEBEN</span><h2>Kennen Sie jemanden, der dieselben Unterlagen immer wieder sucht?</h2><p>Schicken Sie die Keeper-Vorschau direkt weiter.</p></div>
-      <div class="ax-share-controls"><div class="ax-share-actions"><button class="ax-share-primary" type="button" data-share-native>Teilen<span>↗</span></button><button class="ax-share-copy-button" type="button" data-share-copy>Link kopieren</button></div><div class="ax-share-fallback" data-share-fallback hidden><span>Weitere Möglichkeiten</span><div class="ax-share-fallback-links"><a data-share-email href="#">E-Mail</a><a data-share-linkedin href="#" target="_blank" rel="noopener noreferrer">LinkedIn</a><a data-share-whatsapp href="#" target="_blank" rel="noopener noreferrer">WhatsApp</a></div></div><p class="ax-share-status" data-share-status aria-live="polite"></p></div>
-    </section>
+    <section class="ax-share section-pad" data-share-title="AXIONA Keeper | Privater Dokumentenassistent" data-share-text="Keeper soll eingehende Dokumente erkennen, wichtige Angaben hervorheben, bei der Zuordnung helfen und den nächsten Handlungsbedarf sichtbar machen." data-share-url="https://axiona.systems/de/keeper.html" data-share-copied="Link kopiert." data-share-failed="Der Link konnte nicht kopiert werden."><div class="ax-share-copy"><span class="micro">WEITEREMPFEHLEN</span><h2>Kennen Sie jemanden, für den das hilfreich sein könnte?</h2><p>Wenn jemand viele Unterlagen, Fristen und alltägliche Verwaltung im Blick behalten muss, können Sie die Keeper-Seite direkt weitergeben.</p></div><div class="ax-share-controls"><div class="ax-share-actions"><button class="ax-share-primary" type="button" data-share-native>Teilen<span>↗</span></button><button class="ax-share-copy-button" type="button" data-share-copy>Link kopieren</button></div><div class="ax-share-fallback" data-share-fallback hidden><span>Weitere Möglichkeiten</span><div class="ax-share-fallback-links"><a data-share-email href="#">E-Mail</a><a data-share-linkedin href="#" target="_blank" rel="noopener noreferrer">LinkedIn</a><a data-share-whatsapp href="#" target="_blank" rel="noopener noreferrer">WhatsApp</a></div></div><p class="ax-share-status" data-share-status aria-live="polite"></p></div></section>
   </main>
 
   <footer><div class="footer-brand"><img alt="" height="52" src="/assets/axiona-mark.png" width="52"/><strong>AXIONA<br/>SYSTEMS</strong></div><div><span>Planung und Entwicklung — Asztalos Zoltán</span><small>© 2026 AXIONA Systems</small></div><div class="footer-meta"><span><a href="/de/support.html">Support</a> · <a href="/de/privacy.html">Datenschutz</a> · <a href="/de/legal.html">Rechtliche Hinweise</a> · <a href="/de/security.html">Sicherheit</a></span><div><a href="/">HU</a><a href="/en/">EN</a><a href="/de/">DE</a></div></div></footer>
