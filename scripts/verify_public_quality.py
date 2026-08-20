@@ -291,11 +291,19 @@ def main() -> int:
                 errors.append(f"Keeper stylesheet missing from product entry page: {source}")
             if "/assets/keeper-r94.css" not in text:
                 errors.append(f"Keeper R94 product-story stylesheet missing from product entry page: {source}")
-            if 'class="keeper-matter-demo keeper-matter-demo--compact"' not in text:
-                errors.append(f"Keeper R94 matter demo missing from product entry page: {source}")
             for marker in KEEPER_PLATFORM_MARKERS:
                 if marker not in text:
                     errors.append(f"Keeper platform marker missing in {source}: {marker}")
+
+        homepage_text = homepage.read_text(encoding="utf-8") if homepage.is_file() else ""
+        if 'class="keeper-benefit-panel"' not in homepage_text:
+            errors.append(f"Keeper R95 overview benefit panel missing from product entry page: {homepage}")
+        if 'class="keeper-matter-demo keeper-matter-demo--compact"' in homepage_text:
+            errors.append(f"Keeper detailed matter demo must remain off overview page: {homepage}")
+
+        solutions_text = solutions.read_text(encoding="utf-8") if solutions.is_file() else ""
+        if 'class="keeper-matter-demo keeper-matter-demo--compact"' not in solutions_text:
+            errors.append(f"Keeper R94 matter demo missing from solutions page: {solutions}")
 
         keeper_text = keeper.read_text(encoding="utf-8") if keeper.is_file() else ""
         if "/assets/keeper-r87.css" not in keeper_text:

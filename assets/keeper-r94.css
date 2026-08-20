@@ -211,3 +211,40 @@
   .keeper-matter-docs{padding-left:16px;padding-right:16px}
   .keeper-matter-next{padding-left:16px;padding-right:16px}
 }
+
+
+/* AXIONA R95 — overview benefit panel. */
+.keeper-benefit-panel{
+  background:#fbfaf6;
+  color:var(--ink);
+  border:1px solid #8fa0a2;
+  box-shadow:14px 14px 0 #08181b;
+  overflow:hidden;
+}
+.keeper-benefit-head{
+  min-height:52px;
+  padding:0 20px;
+  border-bottom:1px solid #c8cfcc;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:18px;
+  background:#f5f6f1;
+}
+.keeper-benefit-head span{color:#4b5c60;font:850 9px/1 monospace;letter-spacing:.15em}
+.keeper-benefit-head b{background:var(--navy);color:var(--acid);padding:7px 9px;font:850 9px/1 monospace;letter-spacing:.09em}
+.keeper-benefit-list{padding:7px 22px 9px}
+.keeper-benefit-item{display:grid;grid-template-columns:34px minmax(0,1fr);gap:14px;padding:20px 2px;border-bottom:1px solid #d9d5cc}
+.keeper-benefit-item:last-child{border-bottom:0}
+.keeper-benefit-item>span{color:#9b3f24;font:900 11px/1.35 monospace}
+.keeper-benefit-item strong{display:block;font-size:15px;line-height:1.38;letter-spacing:-.01em}
+.keeper-benefit-item p{margin:7px 0 0;color:#555e5a;font-size:12px;line-height:1.55}
+.keeper-benefit-outcome{border-top:1px solid #3d595f;background:var(--navy);color:var(--white);padding:18px 20px 20px;display:grid;gap:7px}
+.keeper-benefit-outcome span{color:var(--acid);font:900 9px/1 monospace;letter-spacing:.14em}
+.keeper-benefit-outcome strong{font-size:15px;line-height:1.4}
+@media (max-width:760px){
+  .keeper-benefit-panel{box-shadow:9px 9px 0 #08181b}
+  .keeper-benefit-head{padding-left:16px;padding-right:16px}
+  .keeper-benefit-list{padding-left:16px;padding-right:16px}
+  .keeper-benefit-outcome{padding-left:16px;padding-right:16px}
+}
