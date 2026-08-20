@@ -9,11 +9,12 @@
   <link href="/assets/share-r86.css" rel="stylesheet"/>
   <link href="/assets/keeper-r87.css" rel="stylesheet"/>
   <link href="/assets/keeper-r94.css" rel="stylesheet"/>
-  <title>AXIONA Keeper | Dokumentumokból rendezett ügyek</title>
-  <meta content="AXIONA Keeper iPhone-ra és iPadre: kapcsolódó iratok, ügyek, határidők és teendők egy helyen, átláthatóan." name="description"/>
+  <link href="/assets/keeper-r96.css" rel="stylesheet"/>
+  <title>AXIONA Keeper | Privát dokumentum-asszisztens</title>
+  <meta content="Az AXIONA Keeper fejlesztés alatt álló, privát dokumentum-asszisztens: iratfelismerés, fontos adatok és határidők kiemelése, besorolási és teendő-javaslatok." name="description"/>
   <meta content="AXIONA Systems" property="og:site_name"/>
-  <meta content="AXIONA Keeper | Dokumentumokból rendezett ügyek" property="og:title"/>
-  <meta content="Kapcsolódó dokumentumok egy helyen, rendezett ügyekkel, határidőkkel és teendőkkel." property="og:description"/>
+  <meta content="AXIONA Keeper | Privát dokumentum-asszisztens" property="og:title"/>
+  <meta content="A Keeper célja, hogy a beérkező iratokat felismerje, a fontos adatokat kiemelje, segítsen besorolni, és jelezze a következő teendőt." property="og:description"/>
   <meta content="website" property="og:type"/>
   <meta content="https://axiona.systems/keeper.html" property="og:url"/>
   <meta content="https://axiona.systems/assets/social/axiona-keeper-social-preview-r92-hu.png" property="og:image"/>
@@ -23,8 +24,8 @@
   <meta content="image/png" property="og:image:type"/>
   <meta content="AXIONA Systems — system design, process design, software and automation" property="og:image:alt"/>
   <meta content="summary_large_image" name="twitter:card"/>
-  <meta content="AXIONA Keeper | Dokumentumokból rendezett ügyek" name="twitter:title"/>
-  <meta content="Kapcsolódó dokumentumok egy helyen, rendezett ügyekkel, határidőkkel és teendőkkel." name="twitter:description"/>
+  <meta content="AXIONA Keeper | Privát dokumentum-asszisztens" name="twitter:title"/>
+  <meta content="A Keeper célja, hogy a beérkező iratokat felismerje, a fontos adatokat kiemelje, segítsen besorolni, és jelezze a következő teendőt." name="twitter:description"/>
   <meta content="https://axiona.systems/assets/social/axiona-keeper-social-preview-r92-hu.png" name="twitter:image"/>
   <link href="https://axiona.systems/keeper.html" rel="canonical"/>
   <link href="https://axiona.systems/keeper.html" hreflang="hu" rel="alternate"/>
@@ -33,7 +34,7 @@
   <link href="https://axiona.systems/keeper.html" hreflang="x-default" rel="alternate"/>
   <link href="/favicon-32x32.png" rel="shortcut icon"/>
   <link href="/favicon-32x32.png" rel="icon"/>
-  <meta content="R94" name="axiona-release"/>
+  <meta content="R96" name="axiona-release"/>
 </head>
 <body class="antialiased page-r75 page-keeper">
 <div class="site-shell" lang="hu">
@@ -70,144 +71,88 @@
   </header>
 
   <main id="content">
-    <section class="keeper-page-hero section-pad">
+    <section class="keeper96-hero section-pad">
       <div>
         <div class="keeper-product-lockup"><img alt="" height="42" src="/assets/axiona-mark.png" width="42"/><div><strong>AXIONA KEEPER</strong><span>SAJÁT FEJLESZTÉS</span></div></div>
-        <div class="keeper-status-line"><b class="keeper-status-badge">FEJLESZTÉS ALATT</b><span class="micro">iPhone + iPad</span></div>
-        <h1>Ne azt kelljen megjegyezned, <em>hol van egy dokumentum.</em> Elég legyen tudnod, melyik ügyhöz tartozik.</h1>
-        <p class="keeper-hero-lead">A fontos iratok ritkán állnak önmagukban. Egy szerződés mellé idővel módosítás, számla, levél, fotó és határidő kerül. Ezek könnyen szétszóródnak a telefonon, az e-mailben és külön mappákban. A Keeper egy ügy köré rendezi őket, hogy amikor szükséged van rájuk, rögtön lásd, mi tartozik hozzá és mi következik.</p>
-        <div class="keeper-scatter-map" aria-label="A dokumentumok ma több helyen vannak: PDF a Letöltésekben, levél az e-mailben, fotó a telefonon, dátum a naptárban. Keeperben egy ügyhöz tartozhatnak."><span><b>PDF</b><small>Letöltések</small></span><span><b>LEVÉL</b><small>E-mail</small></span><span><b>FOTÓ</b><small>Telefon</small></span><span><b>DÁTUM</b><small>Naptár</small></span><span class="keeper-scatter-result"><b aria-hidden="true">→</b><small>egy ügyben</small></span></div>
-        <div class="actions"><a class="button button-dark" href="#hogyan-mukodik">Hogyan működik?<span>↓</span></a><a class="text-link" href="/contact.html">Kapcsolat<span>→</span></a></div>
+        <div class="keeper-status-line"><b class="keeper-status-badge">FEJLESZTÉS ALATT</b><span class="micro">iPhone + iPad · Apple App Store</span></div>
+        <h1>Behozod az iratot. A Keeper elvégzi körülötte az adminisztráció nagy részét.</h1>
+        <p class="keeper96-hero-lead">PDF, kép vagy fotó érkezik. A Keeper elolvassa, megpróbálja felismerni, miről van szó, röviden összefoglalja, kiemeli a fontos adatokat és dátumokat, majd javasolja, hová tartozik és van-e vele teendőd. Neked nem kell minden fájlt külön végigolvasni, elnevezni, besorolni és észben tartani.</p>
+        <p class="keeper96-hero-note">Ha valami bizonytalan, a Keeper ezt jelzi, és te javíthatod. Emlékeztető vagy más következő lépés csak a jóváhagyásoddal készül.</p>
+        <div class="actions"><a class="button button-dark" href="#mit-csinal">Mit csinál a Keeper?<span>↓</span></a><a class="text-link" href="/contact.html">Kapcsolat<span>→</span></a></div>
       </div>
-      <aside class="keeper-matter-demo keeper-matter-demo--full" aria-label="AXIONA Keeper ügy-nézet: egy szerződéses ügy kapcsolódó dokumentumokkal, határidővel és következő teendővel">
-        <div class="keeper-matter-bar"><span>KEEPER / ÜGY NÉZET</span><b>6 IRAT</b></div>
-        <div class="keeper-matter-summary"><small>SZERZŐDÉSES ÜGY</small><strong>Szerződés és kapcsolódó iratok</strong><div class="keeper-matter-meta"><span>6 dokumentum</span><span>1 határidő</span><span>1 teendő</span></div></div>
-        <div class="keeper-matter-docs">
-        <div class="keeper-matter-doc"><span class="keeper-doc-type">PDF</span><div><b>Szerződés.pdf</b><small>eredeti dokumentum</small></div><span class="keeper-doc-state">EREDETI</span></div>
-        <div class="keeper-matter-doc"><span class="keeper-doc-type">PDF</span><div><b>Módosítás.pdf</b><small>kapcsolódó irat</small></div><span class="keeper-doc-state">KAPCSOLÓDÓ</span></div>
-        <div class="keeper-matter-doc"><span class="keeper-doc-type">PDF</span><div><b>Számla.pdf</b><small>kapcsolódó irat</small></div><span class="keeper-doc-state">KAPCSOLÓDÓ</span></div>
-        <div class="keeper-matter-doc"><span class="keeper-doc-type">LEVÉL</span><div><b>Kapcsolódó levelezés</b><small>2 dokumentum</small></div><span class="keeper-doc-state">2 IRAT</span></div>
-        <div class="keeper-matter-doc"><span class="keeper-doc-type">KÉP</span><div><b>Melléklet.jpg</b><small>kapcsolódó irat</small></div><span class="keeper-doc-state">KAPCSOLÓDÓ</span></div>
+      <aside class="keeper96-workcard" aria-label="Egy beérkező dokumentum feldolgozásának tervezett Keeper-folyamata">
+        <div class="keeper96-workcard-head"><span>EGY IRAT ÚTJA A KEEPERBEN</span><b>TERVEZETT MŰKÖDÉS</b></div>
+        <div class="keeper96-incoming"><span class="keeper96-incoming-icon">PDF</span><div><small>BEÉRKEZETT</small><strong>Dokumentum.pdf</strong></div></div>
+        <div class="keeper96-worklist">
+          <div class="keeper96-workrow"><span>01 / ELOLVASSA</span><div><strong>Szöveggé alakítja és feldolgozza.</strong><p>Nem csak a fájlnevet látja: a dokumentum tartalma lesz az alap.</p></div></div>
+          <div class="keeper96-workrow"><span>02 / FELISMERI</span><div><strong>Megpróbálja felismerni, milyen irat érkezett.</strong><p>Például számla, szerződés, értesítő vagy levél.</p></div></div>
+          <div class="keeper96-workrow"><span>03 / KIEMELI</span><div><strong>Röviden összefoglalja, miről szól, és kiemeli, ami fontos.</strong><p>Dátum, összeg, azonosító, kibocsátó vagy határidő — és megmutathatja azt is, honnan olvasta ki.</p></div></div>
+          <div class="keeper96-workrow"><span>04 / RENDBE TESZI</span><div><strong>Javasolja a kategóriát és a kapcsolatokat.</strong><p>Mihez, kihez vagy melyik ügyhöz tartozhat az irat; a bizonytalan kapcsolat visszakérdezhető.</p></div></div>
+          <div class="keeper96-workrow"><span>05 / JELEZ</span><div><strong>Megmutatja, ha valami figyelmet kér.</strong><p>Lehetséges határidő, ellenőrizendő adat vagy következő teendő.</p></div></div>
         </div>
-        <div class="keeper-matter-next"><span>KÖVETKEZŐ</span><div><strong>Válasz szükséges</strong><small>határidő · szeptember 12.</small></div><b class="keeper-matter-status">VÁLASZRA VÁR</b></div>
+        <div class="keeper96-control"><span>TE DÖNTESZ</span><div><strong>A Keeper előkészít és javasol, de a fontos lépéseket nem végzi el helyetted.</strong><p>Amit ellenőrizni kell, azt megmutatja. Emlékeztető vagy más teendő csak a jóváhagyásoddal készül.</p></div></div>
       </aside>
     </section>
 
-    <section class="keeper-intro section-pad">
-      <div class="keeper-intro-grid">
-        <div><p class="keeper-section-kicker">MIÉRT KEEPER?</p><h2 class="keeper-section-title">Nem több mappa kell. Hanem kevesebb keresgélés.</h2></div>
-        <div class="keeper-intro-copy">
-          <p>A mappa azt mutatja meg, hová tetted a fájlt. Ez önmagában kevés, amikor hónapokkal később már arra kell emlékezni, melyik szerződéshez, autóhoz, ingatlanhoz vagy projekthez tartozott.</p>
-          <p>A Keeper ezeket a kapcsolatokat tartja egyben. Egy ügyet megnyitva együtt látod az eredeti iratot, a hozzá kapcsolódó dokumentumokat, a fontos dátumokat és azt, mi következik.</p>
-          <div class="keeper-plain-callout"><strong>A cél nem az, hogy többet rendszerezz.</strong><p>Hanem hogy amikor szükséged van valamire, ne kelljen újra összeraknod a történetet.</p></div>
-        </div>
+    <section class="keeper96-core section-pad">
+      <div class="keeper96-core-head"><div><p class="keeper96-kicker">MIÉRT JÓ EZ NEKED?</p><h2 class="keeper96-title">Nem az a lényeg, hogy megvan a fájl. Hanem hogy értsd is, mi van benne.</h2></div><p>Egy digitális irattár elteszi a dokumentumot. A valódi adminisztráció viszont ezután kezdődik: meg kell érteni, mi érkezett, ki kell szedni belőle a fontos adatot, el kell dönteni, mihez tartozik, és észben kell tartani, ha tenni kell valamit. A Keeper célja, hogy ennek a kézi munkának a nagy részét levegye rólad.</p></div>
+      <div class="keeper96-question-grid">
+        <article class="keeper96-question"><span>01</span><h3>Mi ez?</h3><p>Megpróbálja felismerni, hogy például számla, szerződés, értesítő vagy levél érkezett.</p></article>
+        <article class="keeper96-question"><span>02</span><h3>Miről szól, és mi fontos benne?</h3><p>Röviden összefoglalja, kiemeli a lényeges adatokat és dátumokat, és megmutathatja, melyik részből olvasta ki őket.</p></article>
+        <article class="keeper96-question"><span>03</span><h3>Mihez tartozik?</h3><p>Megkeresi, melyik személyhez, szolgáltatóhoz, szerződéshez, eszközhöz vagy ügyhöz kapcsolódhat.</p></article>
+        <article class="keeper96-question"><span>04</span><h3>Kell vele valamit tennem?</h3><p>Ha az iratban határidő vagy tennivaló van, külön jelzi, és javaslatot tehet a következő lépésre.</p></article>
       </div>
     </section>
 
-    <section class="keeper-flow section-pad" id="hogyan-mukodik">
-      <div class="keeper-flow-header">
-        <p class="keeper-section-kicker">HOGYAN HASZNÁLOD?</p>
-        <h2 class="keeper-section-title">Egy irattól egy átlátható ügyig.</h2>
-        <p>Behozod a dokumentumot, a Keeper pedig segít elhelyezni a megfelelő ügyben és összekapcsolni azzal, ami már ott van.</p>
-      </div>
-      <div class="keeper-flow-grid">
-        <article class="keeper-flow-step"><span>01</span><h3>Behozod az iratot.</h3><p>PDF, kép vagy fotó. Nem kell előtte átnevezni és kézzel szétszortírozni.</p></article>
-        <article class="keeper-flow-step"><span>02</span><h3>Felismeri, mi van benne.</h3><p>Nem csak a fájlnevet látod: az irat típusa és a fontos adatok is előkerülnek.</p></article>
-        <article class="keeper-flow-step"><span>03</span><h3>Összekapcsolja, ami összetartozik.</h3><p>Levelek, számlák, szerződések, képek és más iratok kerülhetnek ugyanahhoz az ügyhöz.</p></article>
-        <article class="keeper-flow-step"><span>04</span><h3>Látod, mi következik.</h3><p>Mi kér figyelmet, mire vársz, mi jár le hamarosan, és mi az a következő lépés, amit nem érdemes elfelejteni.</p></article>
-      </div>
-      <div class="keeper-planned-note">
-        <span>TERVEZETT FUNKCIÓ · MAPPÁS RENDEZÉS</span>
-        <p>A Keeper mappát vagy ügyet javasolhat az összetartozó iratokhoz, és jóváhagyás után egy helyre rendezheti őket.</p>
+    <section class="section-pad" id="mit-csinal">
+      <div class="keeper96-process-head"><p class="keeper96-kicker">MIT VESZ LE RÓLAD A KEEPER?</p><h2 class="keeper96-title">Te behozod. A feldolgozás nagy részét a Keeper végzi.</h2><p>A tervezett felhasználói út nem mappák építésével kezdődik. Egy dokumentummal kezdődik, amelyből a Keeper lépésről lépésre használható adminisztrációs információt készít.</p></div>
+      <div class="keeper96-process-grid">
+        <article class="keeper96-process-step"><span>01 / BEHOZATAL</span><h3>PDF, kép, fotó vagy megosztott irat.</h3><p>Nem kell előtte átnevezni, kategóriát választani vagy külön mappát létrehozni.</p><small>TE: BEHOZOD AZ IRATOT</small></article>
+        <article class="keeper96-process-step"><span>02 / HELYI OCR</span><h3>Elolvassa a dokumentumot.</h3><p>A szöveget helyben kinyeri, így a további feldolgozás nem pusztán a fájlnévre támaszkodik.</p><small>KEEPER: ELOLVASSA</small></article>
+        <article class="keeper96-process-step"><span>03 / MEGÉRTÉS</span><h3>Megérti, mi érkezett.</h3><p>Rövid, közérthető összefoglalót készíthet, és javaslatot adhat a dokumentum típusára és kategóriájára. Ha valami bizonytalan, ellenőrzésre hagyja.</p><small>KEEPER: MEGÉRTI ÉS ÖSSZEFOGLALJA</small></article>
+        <article class="keeper96-process-step"><span>04 / FONTOS ADATOK</span><h3>Kiemeli, ami számít.</h3><p>Dátumok, határidők, összegek és más lényeges értékek külön megjelenhetnek, az eredeti forrás visszanézhető.</p><small>KEEPER: KIEMELI ÉS MEGMUTATJA A FORRÁST</small></article>
+        <article class="keeper96-process-step"><span>05 / RENDEZÉS</span><h3>Javasolja a helyét és a kapcsolatait.</h3><p>A cél nem egyetlen merev mappa, hanem annak felismerése, hogy az irat mihez, kihez vagy melyik ügyhöz tartozik. Az automatikus javaslat javítható és visszafordítható.</p><small>KEEPER: BESOROLÁST ÉS KAPCSOLATOT JAVASOL</small></article>
+        <article class="keeper96-process-step"><span>06 / KÖVETKEZŐ LÉPÉS</span><h3>Szól, ha dolgod lehet vele.</h3><p>Határidő, várakozás vagy teendő esetén javaslat jelenhet meg. Emlékeztető csak a jóváhagyásod után készül.</p><small>TE: ELLENŐRZÖD ÉS JÓVÁHAGYOD</small></article>
       </div>
     </section>
 
-    <section class="keeper-examples section-pad">
-      <div class="keeper-examples-head"><p class="keeper-section-kicker">HOL SEGÍT?</p><h2 class="keeper-section-title">Ugyanaz a rend, egészen különböző ügyekben.</h2><p class="keeper-examples-lead">Nem a dokumentum típusa a lényeg. Az számít, hogy több irat, dátum és teendő ugyanahhoz a dologhoz tartozik.</p></div>
-      <div class="keeper-example-grid">
-        <article class="keeper-example-card"><span class="micro">01 / SZERZŐDÉS ÉS ELŐFIZETÉS</span><h3>Lásd időben, mikor kell lépni.</h3><p>Szerződés, módosítások, számlák és kapcsolódó levelek egy ügyben.</p><ul class="keeper-example-list"><li>eredeti szerződés és módosítások</li><li>lejárat vagy felülvizsgálati időpont</li><li>kapcsolódó levelezés</li></ul></article>
-        <article class="keeper-example-card"><span class="micro">02 / AUTÓ ÉS BIZTOSÍTÁS</span><h3>Egy kárügy teljes története egy helyen.</h3><p>A kötvény, kárbejelentés, szakértői irat, szervizszámla és a biztosító levelei ugyanahhoz az ügyhöz tartoznak.</p><ul class="keeper-example-list"><li>kapcsolódó dokumentumok egy ügyben</li><li>események időrendben</li><li>következő határidő vagy várt válasz</li></ul></article>
-        <article class="keeper-example-card"><span class="micro">03 / INGATLAN ÉS FELÚJÍTÁS</span><h3>Ne külön mappákból kelljen összerakni az ügyet.</h3><p>Ajánlatok, szerződés, számlák, fotók és garanciális iratok együtt maradhatnak a munkával.</p><ul class="keeper-example-list"><li>ajánlatok és szerződés</li><li>számlák és mellékletek</li><li>átadás és garanciális iratok</li></ul></article>
-        <article class="keeper-example-card"><span class="micro">04 / KISVÁLLALKOZÁS</span><h3>Egy projekt iratai együtt.</h3><p>Az ügyfélhez, munkához és elszámoláshoz tartozó dokumentumok egy helyről követhetők.</p><ul class="keeper-example-list"><li>ajánlat és megrendelés</li><li>projektiratok és levelezés</li><li>számlák és könyvelési csomag</li></ul></article>
+    <section class="keeper96-contrast section-pad">
+      <div class="keeper96-contrast-head"><div><p class="keeper96-kicker">A KÜLÖNBSÉG</p><h2 class="keeper96-title">Nem a tárolás a termék lényege.</h2></div><p>A fájl megőrzése csak az alap. A Keeper értéke ott kezdődik, amikor a dokumentumból érthető, kereshető és használható ügyintézési információ lesz.</p></div>
+      <div class="keeper96-compare">
+        <div class="keeper96-compare-head"><span>EGYSZERŰ TÁRHELY</span><span>KEEPER FEJLESZTÉSI IRÁNY</span></div>
+        <div class="keeper96-compare-row"><div><strong>Megőrzi a fájlt.</strong><p>A dokumentum ott van, de továbbra is neked kell elolvasni és értelmezni.</p></div><div><strong>Feldolgozza a tartalmát.</strong><p>Felismerési és adatkinyerési javaslatot készít, hogy ne nulláról indulj.</p></div></div>
+        <div class="keeper96-compare-row"><div><strong>Mappát és fájlnevet mutat.</strong><p>A rend attól függ, mennyire következetesen rendezed kézzel.</p></div><div><strong>Jelentést és kapcsolatot ad a dokumentumnak.</strong><p>Típus, kategória, kapcsolódó személy, szerződés, eszköz vagy ügy lehet a kontextus.</p></div></div>
+        <div class="keeper96-compare-row"><div><strong>A fontos dátum bent marad a PDF-ben.</strong><p>Neked kell észrevenni és átírni valahová.</p></div><div><strong>Kiemeli a lehetséges határidőt.</strong><p>A forrás visszanézhető, és emlékeztető csak jóváhagyás után készül.</p></div></div>
+        <div class="keeper96-compare-row"><div><strong>Keresel egy fájlt.</strong><p>Fájlnévre, helyre vagy saját emlékezetre támaszkodsz.</p></div><div><strong>A dokumentum tartalma is kereshetővé válik.</strong><p>A cél, hogy később ne azt kelljen felidézni, hová mentetted.</p></div></div>
       </div>
     </section>
 
-    <section class="keeper-folder-section section-pad">
-      <div class="keeper-folder-grid">
-        <div class="keeper-folder-copy"><p class="keeper-section-kicker">MAPPÁK ÉS KAPCSOLATOK</p><h2 class="keeper-section-title">A mappa megmutatja, hol van. A kapcsolat azt, mihez tartozik.</h2><p>Egy számla egyszerre kapcsolódhat egy szerződéshez, projekthez vagy eszközhöz. Nem kell ugyanazt a fájlt több helyre másolni.</p><p>Az ügyben együtt láthatók a kapcsolódó iratok, dátumok és teendők. Így hónapokkal később is abból a kontextusból indulhatsz, ahol abbahagytad.</p></div>
-        <div class="keeper-folder-tree" aria-label="Tervezett mappa- és ügykapcsolati nézet szerződéses ügyhöz">
-          <div class="keeper-folder-tree-head"><span>MAPPÁK ÉS ÜGYEK</span><b>TERVEZETT FUNKCIÓ</b></div>
-          <div class="keeper-tree-lines">
-            <strong>▾ Szerződéses ügy</strong>
-            <span>&nbsp;&nbsp;├─ Eredeti dokumentum</span>
-            <span>&nbsp;&nbsp;│&nbsp;&nbsp;└─ Szerződés.pdf</span>
-            <span>&nbsp;&nbsp;├─ Kapcsolódó iratok</span>
-            <span>&nbsp;&nbsp;│&nbsp;&nbsp;├─ Módosítás.pdf</span>
-            <span>&nbsp;&nbsp;│&nbsp;&nbsp;├─ Számla.pdf</span>
-            <span>&nbsp;&nbsp;│&nbsp;&nbsp;└─ Melléklet.jpg</span>
-            <i>&nbsp;&nbsp;└─ Következő: válasz szeptember 12-ig</i>
-          </div>
-          <div class="keeper-folder-rule"><strong>A rend a te kezedben marad.</strong> A Keeper felismerheti a valószínű kapcsolatokat, de a rendezést te hagyod jóvá.</div>
-        </div>
+    <section class="section-pad">
+      <div class="keeper96-examples-head"><p class="keeper96-kicker">MIT JELENT EZ A GYAKORLATBAN?</p><h2 class="keeper96-title">Ugyanaz a Keeper-munka, egészen különböző iratoknál.</h2><p class="keeper96-examples-note">Az alábbiak a tervezett termékműködés szemléltető példái. Nem kész felhasználói adatok és nem automatikus döntések.</p></div>
+      <div class="keeper96-example-grid">
+        <article class="keeper96-example"><span>BIZTOSÍTÓI LEVÉL</span><h3>Ne neked kelljen kibányászni az ügyszámot és a határidőt.</h3><p>Beérkezik egy levél a biztosítótól. A dokumentum önmagában még csak egy PDF.</p><div class="keeper96-example-work"><b>KEEPER MUNKÁJA</b><ul><li>felismeri a dokumentum jellegét</li><li>kiemeli az ügyszámot és a lehetséges határidőt</li><li>javasolja a kapcsolódó kárügyet vagy járművet</li><li>jelzi, ha válasz vagy követés lehet szükséges</li></ul></div></article>
+        <article class="keeper96-example"><span>SZÁMLA / FIZETÉSI ÉRTESÍTŐ</span><h3>A határidő ne csak egy sor legyen a dokumentumban.</h3><p>A Keeper a dokumentumból strukturált, ellenőrizhető adatot próbál készíteni.</p><div class="keeper96-example-work"><b>KEEPER MUNKÁJA</b><ul><li>kibocsátó, összeg és dátum javasolt felismerése</li><li>dokumentumtípus és kategória javaslata</li><li>határidő forrásának megmutatása</li><li>emlékeztető-javaslat, amelyet te hagysz jóvá</li></ul></div></article>
+        <article class="keeper96-example"><span>SZERZŐDÉS / ELŐFIZETÉS</span><h3>Ne neked kelljen fejben összekötni a régi és az új iratokat.</h3><p>Egy szerződéshez később módosítás, számla vagy új értesítés érkezhet.</p><div class="keeper96-example-work"><b>KEEPER MUNKÁJA</b><ul><li>felismeri a szerződés jellegét és a feleket</li><li>kiemeli a releváns dátumokat</li><li>kapcsolatot javasol a korábbi iratokhoz</li><li>jelzi, ha felülvizsgálat vagy lejárat közeledhet</li></ul></div></article>
+        <article class="keeper96-example"><span>INGATLAN / FELÚJÍTÁS</span><h3>Sok különböző iratból egy érthető adminisztrációs kép.</h3><p>Ajánlat, számla, fotó és garancia ugyanahhoz a munkához tartozhat, még ha más formátumban is érkezik.</p><div class="keeper96-example-work"><b>KEEPER MUNKÁJA</b><ul><li>felismeri az eltérő dokumentumtípusokat</li><li>javasolja a közös projekt- vagy ügykapcsolatot</li><li>kiemeli a fontos dátumokat és azonosítókat</li><li>segít később ugyanabból a kontextusból folytatni</li></ul></div></article>
       </div>
     </section>
 
-    <section class="keeper-ask section-pad">
-      <div class="keeper-ask-layout">
-        <div><p class="keeper-section-kicker">KERESÉS ÉS KÉRDÉSEK</p><h2 class="keeper-section-title">Nem kell emlékezned a fájlnévre.</h2><div class="keeper-answer-note"><strong>A válasz mögött ott marad az eredeti dokumentum.</strong><p>Egy fontos adatnál vissza tudsz menni ahhoz az irathoz, ahonnan az információ származik.</p></div></div>
-        <div><div class="keeper-question-list"><div class="keeper-question"><span>01</span><p>„Mikor jár le ez a szerződés?”</p></div><div class="keeper-question"><span>02</span><p>„Melyik ügyhöz tartozik ez a számla?”</p></div><div class="keeper-question"><span>03</span><p>„Hol van a tavalyi javítás számlája?”</p></div><div class="keeper-question"><span>04</span><p>„Mire várok még választ?”</p></div></div></div>
+    <section class="keeper96-trust section-pad">
+      <div><p class="keeper96-kicker">BIZALOM ÉS KONTROLL</p><h2 class="keeper96-title">A Keeper segít. Nem dönt helyetted.</h2></div>
+      <div class="keeper96-trust-grid">
+        <article class="keeper96-trust-card"><span>01</span><h3>Lehetőleg a saját készülékeden dolgozik.</h3><p>Az alapelv az, hogy a dokumentum feldolgozása helyben történjen, és ne kelljen feleslegesen továbbítani az irataidat.</p></article>
+        <article class="keeper96-trust-card"><span>02</span><h3>A fontos adatnak legyen forrása.</h3><p>A cél, hogy lásd, melyik rész alapján került elő egy dátum vagy más fontos érték.</p></article>
+        <article class="keeper96-trust-card"><span>03</span><h3>A bizonytalanság látszódjon.</h3><p>Ha valami nem biztos, a Keeper ne tegyen úgy, mintha az lenne. Ellenőrzést kérhet.</p></article>
+        <article class="keeper96-trust-card"><span>04</span><h3>A te javításod az első.</h3><p>A felhasználói korrekciót a rendszer nem írhatja felül csendben egy későbbi automatikus javaslattal.</p></article>
       </div>
     </section>
 
-    <section class="keeper-trust section-pad">
-      <p class="keeper-section-kicker">ADATVÉDELEM ÉS KONTROLL</p>
-      <h2 class="keeper-section-title">A fontos iratok maradjanak valóban a tieid.</h2>
-      <div class="keeper-trust-grid">
-        <article class="keeper-trust-card"><span>01</span><h3>Helyi működés az alap.</h3><p>A dokumentumkezelés nem rejtett felhőfeltöltésre épül.</p></article>
-        <article class="keeper-trust-card"><span>02</span><h3>Az eredeti irat megmarad.</h3><p>Bármikor visszanézheted, mi szerepel valójában a dokumentumban.</p></article>
-        <article class="keeper-trust-card"><span>03</span><h3>A dokumentumaid nem tanítóanyagok.</h3><p>A dokumentumaid tartalmát nem használjuk AI-modellek tanítására.</p></article>
-        <article class="keeper-trust-card"><span>04</span><h3>A fontos döntés nálad marad.</h3><p>A Keeper javasolhat és előkészíthet, de a következménnyel járó lépést te hagyod jóvá.</p></article>
-      </div>
+    <section class="keeper-dev-status keeper96-dev section-pad">
+      <div><p class="keeper96-kicker">FEJLESZTÉSI STÁTUSZ</p><h2 class="keeper96-title">Elsőként iPhone-ra és iPadre készül.</h2><p>Az AXIONA Keeper fejlesztés alatt áll, jelenleg nem tölthető le. Az első tervezett nyilvános kiadás az Apple App Store-ban jelenik meg. A weboldal a termék célját és tervezett működését mutatja; nem kész alkalmazásként mutatja be.</p></div>
+      <div class="keeper96-dev-badge"><span>ELSŐ CÉLPLATFORM</span><strong>iPhone + iPad<br/>Apple App Store</strong></div>
     </section>
 
-    <section class="keeper-profiles section-pad">
-      <p class="keeper-section-kicker">KINEK HASZNOS?</p>
-      <h2 class="keeper-section-title">Magánügyektől a kisvállalkozásig.</h2>
-      <div class="keeper-profile-grid">
-        <article class="keeper-profile-card"><span>01</span><h3>Magán</h3><p>Biztosítások, szerződések, számlák, garanciák, hivatalos levelek, autóval, munkával vagy ingatlannal kapcsolatos ügyek.</p></article>
-        <article class="keeper-profile-card"><span>02</span><h3>Háztartás</h3><p>Szolgáltatások, eszközök, jótállások, lakással és családi ügyekkel kapcsolatos dokumentumok egy helyen.</p></article>
-        <article class="keeper-profile-card"><span>03</span><h3>Kisvállalkozás</h3><p>Bejövő dokumentumok, számlák, projektiratok, szerződések, eszközök és könyveléshez előkészítendő anyagok.</p></article>
-      </div>
-    </section>
-
-    <section class="keeper-dev-status section-pad">
-      <div class="keeper-dev-layout">
-        <div class="keeper-dev-copy">
-          <p class="keeper-section-kicker">ELSŐ KIADÁS</p>
-          <h2 class="keeper-section-title">iPhone + iPad.</h2>
-          <p>A Keeper első kiadása az Apple App Store-ban lesz elérhető.</p>
-          <div class="actions"><a class="button button-light" href="/contact.html">Kapcsolat<span>↗</span></a></div>
-        </div>
-        <div class="keeper-status-panel">
-          <div class="keeper-status-panel-head"><span>KEEPER</span><b>2026</b></div>
-          <div class="keeper-status-item"><span>01</span><p>Privát dokumentumok. Rendezett ügyek. Kevesebb keresgélés.</p></div>
-        </div>
-      </div>
-    </section>
-
-    <section class="ax-share section-pad"
-      data-share-title="AXIONA Keeper | Dokumentumokból rendezett ügyek"
-      data-share-text="Kapcsolódó dokumentumok egy helyen, rendezett ügyekkel, határidőkkel és teendőkkel."
-      data-share-url="https://axiona.systems/keeper.html"
-      data-share-copied="Link másolva."
-      data-share-failed="A link másolása nem sikerült.">
-      <div class="ax-share-copy"><span class="micro">TOVÁBBADNÁD?</span><h2>Ismersz valakit, akinek pont ez hiányzik?</h2><p>Ha valaki rendszeresen keresgél szerződések, számlák, garanciák vagy ügyiratok között, innen elküldheted neki a Keeper bemutatóját.</p></div>
-      <div class="ax-share-controls">
-        <div class="ax-share-actions"><button class="ax-share-primary" type="button" data-share-native>Megosztás<span>↗</span></button><button class="ax-share-copy-button" type="button" data-share-copy>Link másolása</button></div>
-        <div class="ax-share-fallback" data-share-fallback hidden><span>Közvetlen megosztás</span><div class="ax-share-fallback-links"><a data-share-email href="#">E-mail</a><a data-share-linkedin href="#" target="_blank" rel="noopener noreferrer">LinkedIn</a><a data-share-whatsapp href="#" target="_blank" rel="noopener noreferrer">WhatsApp</a></div></div>
-        <p class="ax-share-status" data-share-status aria-live="polite"></p>
-      </div>
-    </section>
+    <section class="ax-share section-pad" data-share-title="AXIONA Keeper | Privát dokumentum-asszisztens" data-share-text="A Keeper célja, hogy a beérkező iratokat felismerje, a fontos adatokat kiemelje, segítsen besorolni, és jelezze a következő teendőt." data-share-url="https://axiona.systems/keeper.html" data-share-copied="Link másolva." data-share-failed="A link másolása nem sikerült."><div class="ax-share-copy"><span class="micro">TOVÁBBADNÁD?</span><h2>Hasznos lehet másnak is?</h2><p>Ha valaki sok irattal, határidővel és hétköznapi ügyintézéssel küzd, innen közvetlenül továbbküldheted a Keeper bemutatóját.</p></div><div class="ax-share-controls"><div class="ax-share-actions"><button class="ax-share-primary" type="button" data-share-native>Megosztás<span>↗</span></button><button class="ax-share-copy-button" type="button" data-share-copy>Link másolása</button></div><div class="ax-share-fallback" data-share-fallback hidden><span>Közvetlen megosztás</span><div class="ax-share-fallback-links"><a data-share-email href="#">E-mail</a><a data-share-linkedin href="#" target="_blank" rel="noopener noreferrer">LinkedIn</a><a data-share-whatsapp href="#" target="_blank" rel="noopener noreferrer">WhatsApp</a></div></div><p class="ax-share-status" data-share-status aria-live="polite"></p></div></section>
   </main>
 
   <footer>
