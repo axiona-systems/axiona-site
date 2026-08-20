@@ -89,7 +89,7 @@ jobs:
           echo "STOP_AXIONA_PAGES_BUILD_TIMEOUT"
           exit 1
 
-      - name: Verify live social previews and Keeper R97 human copy
+      - name: Verify live social previews and Keeper R98 semantic copy
         id: live
         shell: bash
         run: |
@@ -101,6 +101,9 @@ jobs:
             HOME_HU="$(curl --fail --silent --show-error --location https://axiona.systems/ || true)"
             HOME_EN="$(curl --fail --silent --show-error --location https://axiona.systems/en/ || true)"
             HOME_DE="$(curl --fail --silent --show-error --location https://axiona.systems/de/ || true)"
+            SOL_HU="$(curl --fail --silent --show-error --location https://axiona.systems/solutions.html || true)"
+            SOL_EN="$(curl --fail --silent --show-error --location https://axiona.systems/en/solutions.html || true)"
+            SOL_DE="$(curl --fail --silent --show-error --location https://axiona.systems/de/solutions.html || true)"
             KEEPER_HU="$(curl --fail --silent --show-error --location https://axiona.systems/keeper.html || true)"
             KEEPER_EN="$(curl --fail --silent --show-error --location https://axiona.systems/en/keeper.html || true)"
             KEEPER_DE="$(curl --fail --silent --show-error --location https://axiona.systems/de/keeper.html || true)"
@@ -109,30 +112,29 @@ jobs:
               && grep -Fq 'axiona-social-preview-r92-de.png' <<<"$DE" \
               && grep -Fq 'axiona-keeper-social-preview-r92-hu.png' <<<"$KEEPER_HU" \
               && grep -Fq '/assets/keeper-r96.css' <<<"$HOME_HU" \
-              && grep -Fq 'keeper96-preview-panel' <<<"$HOME_HU" \
-              && grep -Fq 'Kevesebb kézi adminisztráció' <<<"$HOME_HU" \
-              && grep -Fq 'keeper96-preview-panel' <<<"$HOME_EN" \
-              && grep -Fq 'Less manual admin' <<<"$HOME_EN" \
-              && grep -Fq 'keeper96-preview-panel' <<<"$HOME_DE" \
-              && grep -Fq 'Weniger manuelle Verwaltung' <<<"$HOME_DE" \
+              && grep -Fq 'Ne neked kelljen minden iratot végigolvasni, rendezni és fejben tartani.' <<<"$HOME_HU" \
+              && grep -Fq 'You should not have to read, organize and remember every document yourself.' <<<"$HOME_EN" \
+              && grep -Fq 'Sie sollten nicht jedes Dokument selbst lesen, ordnen und im Kopf behalten müssen.' <<<"$HOME_DE" \
+              && grep -Fq 'Így nem neked kell minden iratot külön végigolvasni, kézzel besorolni és fejben tartani.' <<<"$SOL_HU" \
+              && grep -Fq 'You should not have to read every document end to end, classify it by hand and remember every deadline yourself.' <<<"$SOL_EN" \
+              && grep -Fq 'Sie sollen nicht jede Unterlage vollständig lesen, von Hand zuordnen und jede Frist selbst im Kopf behalten müssen.' <<<"$SOL_DE" \
               && grep -Fq '/assets/keeper-r96.css' <<<"$KEEPER_HU" \
-              && grep -Fq 'keeper96-workcard' <<<"$KEEPER_HU" \
-              && grep -Fq 'elvégzi a vele járó adminisztráció nagy részét' <<<"$KEEPER_HU" \
-              && grep -Fq 'keeper96-process-grid' <<<"$KEEPER_HU" \
-              && grep -Fq '/assets/keeper-r96.css' <<<"$KEEPER_EN" \
-              && grep -Fq 'takes care of much of the admin around it' <<<"$KEEPER_EN" \
-              && grep -Fq '/assets/keeper-r96.css' <<<"$KEEPER_DE" \
-              && grep -Fq 'übernimmt einen großen Teil der Arbeit, die sonst daran hängen bleibt' <<<"$KEEPER_DE" \
+              && grep -Fq 'A különbség az, mennyi munka marad rád.' <<<"$KEEPER_HU" \
+              && grep -Fq 'Keeperrel nem neked kell egyedül összerakni a kapcsolatokat.' <<<"$KEEPER_HU" \
+              && grep -Fq 'The difference is how much work is still left for you.' <<<"$KEEPER_EN" \
+              && grep -Fq 'With Keeper, you do not have to piece all the relationships together yourself.' <<<"$KEEPER_EN" \
+              && grep -Fq 'Der Unterschied ist, wie viel Arbeit bei Ihnen bleibt.' <<<"$KEEPER_DE" \
+              && grep -Fq 'Mit Keeper müssen Sie die Zusammenhänge nicht allein zusammensetzen.' <<<"$KEEPER_DE" \
               && curl --fail --silent --show-error --head https://axiona.systems/assets/social/axiona-social-preview-r92-hu.png >/dev/null \
               && curl --fail --silent --show-error --head https://axiona.systems/assets/social/axiona-keeper-social-preview-r92-hu.png >/dev/null \
               && curl --fail --silent --show-error --head https://axiona.systems/assets/keeper-r96.css >/dev/null; then
-              echo "OK_AXIONA_LIVE_SOCIAL_AND_KEEPER_R97"
+              echo "OK_AXIONA_LIVE_SOCIAL_AND_KEEPER_R98"
               exit 0
             fi
-            echo "LIVE_R97_NOT_READY_ATTEMPT=${attempt}"
+            echo "LIVE_R98_NOT_READY_ATTEMPT=${attempt}"
             sleep 5
           done
-          echo "STOP_AXIONA_LIVE_R97_NOT_PUBLISHED"
+          echo "STOP_AXIONA_LIVE_R98_NOT_PUBLISHED"
           exit 1
 
       - name: Record live deployment proof
@@ -167,7 +169,7 @@ jobs:
                   "social_en": "axiona-social-preview-r92-en.png",
                   "social_de": "axiona-social-preview-r92-de.png",
                   "keeper_social_hu": "axiona-keeper-social-preview-r92-hu.png",
-                  "keeper_story": "R97",
+                  "keeper_story": "R98",
                   "keeper_stylesheet": "assets/keeper-r96.css",
                   "keeper_locales": ["hu", "en", "de"]
               }
