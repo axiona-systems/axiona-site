@@ -17,7 +17,7 @@ on:
 jobs:
   browser-audit:
     name: Lighthouse + axe
-    runs-on: ubuntu-24.04
+    runs-on: [self-hosted, Linux, X64]
     timeout-minutes: 12
     permissions:
       contents: read
