@@ -1,10 +1,10 @@
 # AXIONA Systems Website
 
-Public website for AXIONA Systems.
+Public website source for AXIONA Systems.
 
 https://axiona.systems/
 
-This is a static website published through GitHub Pages.
+This repository contains the static assets required to publish the public website through GitHub Pages.
 
 ## Local preview
 
@@ -18,22 +18,20 @@ Then open:
 http://localhost:8080/
 ```
 
-## Release and maintenance
+## Public repository boundary
 
-The canonical website maintenance and SEO/indexing checklist is:
+Only visitor-facing website source, public quality checks and publication-related configuration belong in this repository.
 
-`Docs/AXIONA_WEBSITE_MAINTENANCE.md`
+Internal governance, private infrastructure details, credentials, customer data and operational secrets are intentionally kept outside the public repository.
 
-Before every release run:
+## Security
 
-```bash
-python3 scripts/verify_seo.py
-```
+Please do not publish vulnerability reports or sensitive data in GitHub issues.
 
-Keep public pages simple, accurate and visitor-facing. Navigation, active language versions, canonical URLs, hreflang relationships, sitemap and robots configuration must remain consistent with the documented route matrix.
+See `SECURITY.md` for the public reporting route.
 
 ## Ownership
 
-Design and development: Asztalos Zoltán / AXIONA Systems.
+Design and development: AXIONA Systems.
 
 All rights reserved.
