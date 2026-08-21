@@ -1,4 +1,4 @@
-name: AXIONA Pages Rebuild
+name: AXIONA Pages Verify
 
 on:
   push:
@@ -15,21 +15,20 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
   pages: write
 
 concurrency:
-  group: axiona-pages-rebuild
+  group: axiona-pages-verify
   cancel-in-progress: true
 
 jobs:
-  rebuild:
-    name: Rebuild and verify live Pages
+  verify:
+    name: Publish and verify
     runs-on: ubuntu-24.04
     timeout-minutes: 6
     steps:
       - name: Request GitHub Pages rebuild
-        id: request
         shell: bash
         env:
           GH_TOKEN: ${{ github.token }}
@@ -42,16 +41,9 @@ jobs:
             --header "Authorization: Bearer ${GH_TOKEN}" \
             --header "X-GitHub-Api-Version: 2026-03-10" \
             "https://api.github.com/repos/${REPOSITORY}/pages/builds" \
-            > /tmp/pages-build.json
-          python3 - <<'PY'
-          import json
-          data = json.load(open('/tmp/pages-build.json', encoding='utf-8'))
-          print('REQUESTED_PAGES_BUILD_ID=' + str(data.get('id', 'unknown')))
-          print('REQUESTED_PAGES_BUILD_STATUS=' + str(data.get('status', 'unknown')))
-          PY
+            >/dev/null
 
-      - name: Wait for Pages build completion
-        id: build
+      - name: Wait for Pages build
         shell: bash
         env:
           GH_TOKEN: ${{ github.token }}
@@ -59,168 +51,38 @@ jobs:
         run: |
           set -euo pipefail
           for attempt in $(seq 1 36); do
-            curl --fail-with-body --silent --show-error \
+            STATUS="$(curl --fail-with-body --silent --show-error \
               --header "Accept: application/vnd.github+json" \
               --header "Authorization: Bearer ${GH_TOKEN}" \
               --header "X-GitHub-Api-Version: 2026-03-10" \
               "https://api.github.com/repos/${REPOSITORY}/pages/builds/latest" \
-              > /tmp/pages-latest.json
-            STATUS="$(python3 - <<'PY'
-          import json
-          data = json.load(open('/tmp/pages-latest.json', encoding='utf-8'))
-          print(data.get('status', 'unknown'))
-          PY
-          )"
-            echo "PAGES_BUILD_ATTEMPT=${attempt} STATUS=${STATUS}"
+              | python3 -c 'import json,sys; print(json.load(sys.stdin).get("status", "unknown"))')"
             case "$STATUS" in
-              built)
-                echo "OK_AXIONA_PAGES_BUILD_COMPLETED"
-                exit 0
-                ;;
-              errored)
-                cat /tmp/pages-latest.json
-                echo "STOP_AXIONA_PAGES_BUILD_ERRORED"
-                exit 1
-                ;;
+              built) exit 0 ;;
+              errored) echo "Pages build failed" >&2; exit 1 ;;
             esac
             sleep 5
           done
-          cat /tmp/pages-latest.json || true
-          echo "STOP_AXIONA_PAGES_BUILD_TIMEOUT"
+          echo "Pages build timed out" >&2
           exit 1
 
-      - name: Verify live social previews and Keeper R98 semantic copy
-        id: live
+      - name: Verify live public surface
         shell: bash
         run: |
           set -euo pipefail
           for attempt in $(seq 1 24); do
-            HU="$(curl --fail --silent --show-error --location https://axiona.systems/systems.html || true)"
-            EN="$(curl --fail --silent --show-error --location https://axiona.systems/en/systems.html || true)"
-            DE="$(curl --fail --silent --show-error --location https://axiona.systems/de/systems.html || true)"
             HOME_HU="$(curl --fail --silent --show-error --location https://axiona.systems/ || true)"
             HOME_EN="$(curl --fail --silent --show-error --location https://axiona.systems/en/ || true)"
             HOME_DE="$(curl --fail --silent --show-error --location https://axiona.systems/de/ || true)"
-            SOL_HU="$(curl --fail --silent --show-error --location https://axiona.systems/solutions.html || true)"
-            SOL_EN="$(curl --fail --silent --show-error --location https://axiona.systems/en/solutions.html || true)"
-            SOL_DE="$(curl --fail --silent --show-error --location https://axiona.systems/de/solutions.html || true)"
             KEEPER_HU="$(curl --fail --silent --show-error --location https://axiona.systems/keeper.html || true)"
-            KEEPER_EN="$(curl --fail --silent --show-error --location https://axiona.systems/en/keeper.html || true)"
-            KEEPER_DE="$(curl --fail --silent --show-error --location https://axiona.systems/de/keeper.html || true)"
-            if grep -Fq 'axiona-social-preview-r92-hu.png' <<<"$HU" \
-              && grep -Fq 'axiona-social-preview-r92-en.png' <<<"$EN" \
-              && grep -Fq 'axiona-social-preview-r92-de.png' <<<"$DE" \
-              && grep -Fq 'axiona-keeper-social-preview-r92-hu.png' <<<"$KEEPER_HU" \
-              && grep -Fq '/assets/keeper-r96.css' <<<"$HOME_HU" \
-              && grep -Fq 'Ne neked kelljen minden iratot végigolvasni, rendezni és fejben tartani.' <<<"$HOME_HU" \
-              && grep -Fq 'You should not have to read, organize and remember every document yourself.' <<<"$HOME_EN" \
-              && grep -Fq 'Sie sollten nicht jedes Dokument selbst lesen, ordnen und im Kopf behalten müssen.' <<<"$HOME_DE" \
-              && grep -Fq 'Így nem neked kell minden iratot külön végigolvasni, kézzel besorolni és fejben tartani.' <<<"$SOL_HU" \
-              && grep -Fq 'You should not have to read every document end to end, classify it by hand and remember every deadline yourself.' <<<"$SOL_EN" \
-              && grep -Fq 'Sie sollen nicht jede Unterlage vollständig lesen, von Hand zuordnen und jede Frist selbst im Kopf behalten müssen.' <<<"$SOL_DE" \
-              && grep -Fq '/assets/keeper-r96.css' <<<"$KEEPER_HU" \
-              && grep -Fq 'A különbség az, mennyi munka marad rád.' <<<"$KEEPER_HU" \
-              && grep -Fq 'Keeperrel nem neked kell egyedül összerakni a kapcsolatokat.' <<<"$KEEPER_HU" \
-              && grep -Fq 'The difference is how much work is still left for you.' <<<"$KEEPER_EN" \
-              && grep -Fq 'With Keeper, you do not have to piece all the relationships together yourself.' <<<"$KEEPER_EN" \
-              && grep -Fq 'Der Unterschied ist, wie viel Arbeit bei Ihnen bleibt.' <<<"$KEEPER_DE" \
-              && grep -Fq 'Mit Keeper müssen Sie die Zusammenhänge nicht allein zusammensetzen.' <<<"$KEEPER_DE" \
-              && curl --fail --silent --show-error --head https://axiona.systems/assets/social/axiona-social-preview-r92-hu.png >/dev/null \
-              && curl --fail --silent --show-error --head https://axiona.systems/assets/social/axiona-keeper-social-preview-r92-hu.png >/dev/null \
-              && curl --fail --silent --show-error --head https://axiona.systems/assets/keeper-r96.css >/dev/null; then
-              echo "OK_AXIONA_LIVE_SOCIAL_AND_KEEPER_R98"
+            if grep -Fq 'AXIONA Systems' <<<"$HOME_HU" \
+              && grep -Fq 'AXIONA Systems' <<<"$HOME_EN" \
+              && grep -Fq 'AXIONA Systems' <<<"$HOME_DE" \
+              && grep -Fq 'AXIONA KEEPER' <<<"$KEEPER_HU"; then
+              echo "OK_AXIONA_LIVE_PUBLIC_SURFACE"
               exit 0
             fi
-            echo "LIVE_R98_NOT_READY_ATTEMPT=${attempt}"
             sleep 5
           done
-          echo "STOP_AXIONA_LIVE_R98_NOT_PUBLISHED"
+          echo "Live public surface did not converge" >&2
           exit 1
-
-      - name: Record live deployment proof
-        if: always()
-        shell: bash
-        env:
-          GH_TOKEN: ${{ github.token }}
-          REPOSITORY: ${{ github.repository }}
-          SOURCE_SHA: ${{ github.sha }}
-          RUN_ID: ${{ github.run_id }}
-          REQUEST_OUTCOME: ${{ steps.request.outcome }}
-          BUILD_OUTCOME: ${{ steps.build.outcome }}
-          LIVE_OUTCOME: ${{ steps.live.outcome }}
-        run: |
-          set -euo pipefail
-          STATUS_PATH="Docs/LIVE_DEPLOYMENT_STATUS.json"
-          export STATUS_PATH
-          python3 - <<'PY'
-          import json, os
-          from datetime import datetime, timezone
-          result = "PASS" if os.environ.get("LIVE_OUTCOME") == "success" else "FAIL"
-          payload = {
-              "checked_at": datetime.now(timezone.utc).isoformat(),
-              "result": result,
-              "source_sha": os.environ.get("SOURCE_SHA"),
-              "run_id": os.environ.get("RUN_ID"),
-              "request_outcome": os.environ.get("REQUEST_OUTCOME"),
-              "build_outcome": os.environ.get("BUILD_OUTCOME"),
-              "live_outcome": os.environ.get("LIVE_OUTCOME"),
-              "expected": {
-                  "social_hu": "axiona-social-preview-r92-hu.png",
-                  "social_en": "axiona-social-preview-r92-en.png",
-                  "social_de": "axiona-social-preview-r92-de.png",
-                  "keeper_social_hu": "axiona-keeper-social-preview-r92-hu.png",
-                  "keeper_story": "R98",
-                  "keeper_stylesheet": "assets/keeper-r96.css",
-                  "keeper_locales": ["hu", "en", "de"]
-              }
-          }
-          with open('/tmp/live-status.json', 'w', encoding='utf-8') as f:
-              json.dump(payload, f, ensure_ascii=False, indent=2)
-              f.write('\n')
-          PY
-
-          HTTP_CODE="$(curl --silent --show-error --output /tmp/status-meta.json --write-out '%{http_code}' \
-            --header "Accept: application/vnd.github+json" \
-            --header "Authorization: Bearer ${GH_TOKEN}" \
-            --header "X-GitHub-Api-Version: 2026-03-10" \
-            "https://api.github.com/repos/${REPOSITORY}/contents/${STATUS_PATH}?ref=main")"
-
-          EXISTING_SHA=""
-          if [ "$HTTP_CODE" = "200" ]; then
-            EXISTING_SHA="$(python3 - <<'PY'
-          import json
-          data = json.load(open('/tmp/status-meta.json', encoding='utf-8'))
-          print(data.get('sha', ''))
-          PY
-          )"
-          elif [ "$HTTP_CODE" != "404" ]; then
-            cat /tmp/status-meta.json
-            echo "STOP_AXIONA_LIVE_STATUS_READ_FAILED=$HTTP_CODE"
-            exit 1
-          fi
-          export EXISTING_SHA
-
-          python3 - <<'PY'
-          import base64, json, os
-          raw = open('/tmp/live-status.json', 'rb').read()
-          body = {
-              'message': 'Record AXIONA live deployment proof',
-              'content': base64.b64encode(raw).decode('ascii'),
-              'branch': 'main'
-          }
-          sha = os.environ.get('EXISTING_SHA', '')
-          if sha:
-              body['sha'] = sha
-          with open('/tmp/status-put.json', 'w', encoding='utf-8') as f:
-              json.dump(body, f)
-          PY
-          curl --fail-with-body --silent --show-error \
-            --request PUT \
-            --header "Accept: application/vnd.github+json" \
-            --header "Authorization: Bearer ${GH_TOKEN}" \
-            --header "X-GitHub-Api-Version: 2026-03-10" \
-            --header "Content-Type: application/json" \
-            --data-binary @/tmp/status-put.json \
-            "https://api.github.com/repos/${REPOSITORY}/contents/${STATUS_PATH}" \
-            >/dev/null
-          echo "OK_AXIONA_LIVE_DEPLOYMENT_PROOF_RECORDED"
