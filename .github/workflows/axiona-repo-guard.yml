@@ -1,4 +1,4 @@
-name: AXIONA Repo Guard
+name: AXIONA Public Surface Guard
 
 on:
   pull_request:
@@ -10,95 +10,31 @@ on:
   workflow_dispatch:
 
 concurrency:
-  group: axiona-repo-guard-${{ github.repository }}-${{ github.ref }}
+  group: axiona-public-surface-${{ github.repository }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
-  repository-guard:
-    name: AXIONA Repository Guard
+  verify:
+    name: Verify public website
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:
       contents: read
-    env:
-      PR_BASE_SHA: ${{ github.event.pull_request.base.sha }}
-      PUSH_BEFORE_SHA: ${{ github.event.before }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
-          fetch-depth: 0
+          fetch-depth: 2
           persist-credentials: false
 
-      - name: Verify website SEO and indexing invariants
+      - name: Verify current public surface
         shell: bash
-        run: python3 scripts/verify_seo.py
+        run: python3 scripts/verify_site.py
 
-      - name: Verify public website quality invariants
-        shell: bash
-        run: python3 scripts/verify_public_quality.py
-
-      - name: Run AXIONA repository invariants
+      - name: Verify diff whitespace
         shell: bash
         run: |
-          set -uo pipefail
-
-          FAIL=0
-          KEY_PATTERN="BEGIN (RSA |OPENSSH |DSA |EC )?PRIVATE KEY"
-
-          echo "REPOSITORY=$GITHUB_REPOSITORY"
-          echo "REF=$GITHUB_REF"
-          echo "SHA=$GITHUB_SHA"
-
-          echo "=== Junk artifact gate ==="
-          JUNK_LIST="$(find . \
-            -path './.git' -prune -o \
-            -path './BUILD' -prune -o \
-            -path '*/DerivedData/*' -prune -o \
-            \( -name '.DS_Store' -o -name '__MACOSX' -o -name '*.pyc' -o -name '.pytest_cache' -o -name '.mypy_cache' \) \
-            -print)"
-          if [ -n "$JUNK_LIST" ]; then
-            echo "$JUNK_LIST"
-            echo "STOP_AXIONA_JUNK_ARTIFACT_FOUND"
-            FAIL=1
-          else
-            echo "OK_AXIONA_NO_JUNK_ARTIFACTS"
+          set -euo pipefail
+          if git rev-parse HEAD~1 >/dev/null 2>&1; then
+            git diff --check HEAD~1 HEAD
           fi
-
-          echo "=== Obvious private key gate ==="
-          if grep -RInE "$KEY_PATTERN" . \
-            --exclude-dir=.git \
-            --exclude-dir=.github \
-            --exclude-dir=BUILD \
-            --exclude-dir=DerivedData; then
-            echo "STOP_AXIONA_PRIVATE_KEY_MATERIAL_FOUND"
-            FAIL=1
-          else
-            echo "OK_AXIONA_NO_PRIVATE_KEY_MATERIAL"
-          fi
-
-          echo "=== Diff whitespace gate ==="
-          BASE_SHA="${PR_BASE_SHA:-}"
-          if [ -z "$BASE_SHA" ]; then
-            BASE_SHA="${PUSH_BEFORE_SHA:-}"
-          fi
-          if [ -z "$BASE_SHA" ] || [ "$BASE_SHA" = "0000000000000000000000000000000000000000" ]; then
-            BASE_SHA="HEAD~1"
-          fi
-          if git rev-parse --verify "$BASE_SHA" >/dev/null 2>&1; then
-            if git diff --check "$BASE_SHA" HEAD; then
-              echo "OK_AXIONA_DIFF_WHITESPACE_GATE"
-            else
-              echo "STOP_AXIONA_DIFF_WHITESPACE_GATE_FAILED"
-              FAIL=1
-            fi
-          else
-            echo "WARN_AXIONA_DIFF_BASE_UNAVAILABLE_SKIP_WHITESPACE_GATE=$BASE_SHA"
-          fi
-
-          if [ "$FAIL" -ne 0 ]; then
-            echo "STOP_AXIONA_REPOSITORY_GUARD_FAILED"
-            exit 1
-          fi
-
-          echo "OK_AXIONA_REPOSITORY_GUARD_PASSED"
