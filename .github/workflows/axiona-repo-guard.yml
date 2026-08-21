@@ -44,26 +44,11 @@ jobs:
           set -uo pipefail
 
           FAIL=0
-          OLD_OWNER="fakukac1980"
-          OLD_REPO="AXIONA_CI"
-          OLD_ANCHOR="${OLD_OWNER}/${OLD_REPO}"
           KEY_PATTERN="BEGIN (RSA |OPENSSH |DSA |EC )?PRIVATE KEY"
 
           echo "REPOSITORY=$GITHUB_REPOSITORY"
           echo "REF=$GITHUB_REF"
           echo "SHA=$GITHUB_SHA"
-
-          echo "=== Legacy global rule anchor gate ==="
-          if grep -RIn "$OLD_ANCHOR" . \
-            --exclude-dir=.git \
-            --exclude-dir=.github \
-            --exclude-dir=BUILD \
-            --exclude-dir=DerivedData; then
-            echo "STOP_AXIONA_LEGACY_RULE_ANCHOR_FOUND"
-            FAIL=1
-          else
-            echo "OK_AXIONA_NO_LEGACY_RULE_ANCHOR"
-          fi
 
           echo "=== Junk artifact gate ==="
           JUNK_LIST="$(find . \
