@@ -28,6 +28,11 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 6
     steps:
+      - name: Checkout canonical source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+
       - name: Request GitHub Pages rebuild
         shell: bash
         env:
@@ -71,18 +76,63 @@ jobs:
         run: |
           set -euo pipefail
           for attempt in $(seq 1 24); do
-            HOME_HU="$(curl --fail --silent --show-error --location https://axiona.systems/ || true)"
-            HOME_EN="$(curl --fail --silent --show-error --location https://axiona.systems/en/ || true)"
-            HOME_DE="$(curl --fail --silent --show-error --location https://axiona.systems/de/ || true)"
-            KEEPER_HU="$(curl --fail --silent --show-error --location https://axiona.systems/keeper.html || true)"
+            CACHE_BUST="${GITHUB_SHA}-${attempt}"
+            HOME_HU="$(curl --fail --silent --show-error --location --header 'Cache-Control: no-cache' "https://axiona.systems/?axiona_verify=${CACHE_BUST}" || true)"
+            HOME_EN="$(curl --fail --silent --show-error --location --header 'Cache-Control: no-cache' "https://axiona.systems/en/?axiona_verify=${CACHE_BUST}" || true)"
+            HOME_DE="$(curl --fail --silent --show-error --location --header 'Cache-Control: no-cache' "https://axiona.systems/de/?axiona_verify=${CACHE_BUST}" || true)"
+            KEEPER_HU="$(curl --fail --silent --show-error --location --header 'Cache-Control: no-cache' "https://axiona.systems/keeper.html?axiona_verify=${CACHE_BUST}" || true)"
             if grep -Fq 'AXIONA Systems' <<<"$HOME_HU" \
               && grep -Fq 'AXIONA Systems' <<<"$HOME_EN" \
               && grep -Fq 'AXIONA Systems' <<<"$HOME_DE" \
               && grep -Fq 'AXIONA KEEPER' <<<"$KEEPER_HU"; then
               echo "OK_AXIONA_LIVE_PUBLIC_SURFACE"
+              break
+            fi
+            if [ "$attempt" -eq 24 ]; then
+              echo "Live public surface did not converge" >&2
+              exit 1
+            fi
+            sleep 5
+          done
+
+      - name: Verify live process pages match canonical release
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          release_from_file() {
+            python3 - "$1" <<'PY'
+          import re
+          import sys
+          from pathlib import Path
+
+          text = Path(sys.argv[1]).read_text(encoding="utf-8")
+          match = re.search(r'<meta content="([^"]+)" name="axiona-release"\s*/?>', text)
+          if not match:
+              raise SystemExit(f"missing axiona-release in {sys.argv[1]}")
+          print(match.group(1))
+          PY
+          }
+
+          EXPECTED_HU="$(release_from_file process.html)"
+          EXPECTED_EN="$(release_from_file en/process.html)"
+          EXPECTED_DE="$(release_from_file de/process.html)"
+
+          for attempt in $(seq 1 24); do
+            CACHE_BUST="${GITHUB_SHA}-process-${attempt}"
+            PROCESS_HU="$(curl --fail --silent --show-error --location --header 'Cache-Control: no-cache' "https://axiona.systems/process.html?axiona_verify=${CACHE_BUST}" || true)"
+            PROCESS_EN="$(curl --fail --silent --show-error --location --header 'Cache-Control: no-cache' "https://axiona.systems/en/process.html?axiona_verify=${CACHE_BUST}" || true)"
+            PROCESS_DE="$(curl --fail --silent --show-error --location --header 'Cache-Control: no-cache' "https://axiona.systems/de/process.html?axiona_verify=${CACHE_BUST}" || true)"
+
+            if grep -Fq "content=\"${EXPECTED_HU}\" name=\"axiona-release\"" <<<"$PROCESS_HU" \
+              && grep -Fq "content=\"${EXPECTED_EN}\" name=\"axiona-release\"" <<<"$PROCESS_EN" \
+              && grep -Fq "content=\"${EXPECTED_DE}\" name=\"axiona-release\"" <<<"$PROCESS_DE"; then
+              echo "OK_AXIONA_LIVE_PROCESS_RELEASE HU=${EXPECTED_HU} EN=${EXPECTED_EN} DE=${EXPECTED_DE}"
               exit 0
             fi
             sleep 5
           done
-          echo "Live public surface did not converge" >&2
+
+          echo "Live process pages do not match canonical release" >&2
+          echo "EXPECTED HU=${EXPECTED_HU} EN=${EXPECTED_EN} DE=${EXPECTED_DE}" >&2
           exit 1
