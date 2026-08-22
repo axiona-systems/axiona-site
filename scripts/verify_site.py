@@ -31,6 +31,8 @@ SENSITIVE_PATTERNS = (
     re.compile(r"(?i)\b(?:api[_-]?key|secret|token|password)\s*[=:]\s*['\"][^'\"]{12,}['\"]"),
     re.compile(r"/Users/[^/\s]+/"),
 )
+EMAIL_PATTERN = re.compile(r"(?i)\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b")
+ALLOWED_PUBLIC_EMAIL_DOMAINS = {"axiona.systems", "users.noreply.github.com"}
 
 
 class PageParser(HTMLParser):
@@ -153,6 +155,11 @@ def main() -> int:
         for pattern in SENSITIVE_PATTERNS:
             if pattern.search(text):
                 errors.append(f"sensitive material pattern: {path.relative_to(ROOT).as_posix()}")
+                break
+        for email in EMAIL_PATTERN.findall(text):
+            domain = email.rsplit("@", 1)[1].lower()
+            if domain not in ALLOWED_PUBLIC_EMAIL_DOMAINS:
+                errors.append(f"non-public email domain: {path.relative_to(ROOT).as_posix()}")
                 break
 
     if errors:
