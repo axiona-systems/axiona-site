@@ -17,7 +17,7 @@ on:
 jobs:
   browser-audit:
     name: Lighthouse + axe
-    runs-on: ubuntu-24.04
+    runs-on: [self-hosted, Linux, X64]
     timeout-minutes: 12
     permissions:
       contents: read
@@ -27,12 +27,15 @@ jobs:
         with:
           persist-credentials: false
 
-      - name: Verify browser audit runtime
+      - name: Verify self-hosted browser audit runtime
         shell: bash
         run: |
           set -euo pipefail
+          test "${RUNNER_OS}" = "Linux"
+          test "$(uname -m)" = "x86_64"
           node --version
           npm --version
+          python3 --version
           CHROME_PATH="$(command -v google-chrome-stable || command -v google-chrome || command -v chromium || true)"
           if [ -z "$CHROME_PATH" ]; then
             echo "STOP_AXIONA_BROWSER_AUDIT_CHROME_MISSING"
@@ -41,7 +44,7 @@ jobs:
           echo "CHROME_PATH=$CHROME_PATH" >> "$GITHUB_ENV"
           echo "OK_AXIONA_BROWSER_AUDIT_CHROME=$CHROME_PATH"
 
-      - name: Install pinned browser audit tools without lifecycle scripts
+      - name: Install pinned browser audit project tools without lifecycle scripts
         shell: bash
         run: |
           npm install --no-save --ignore-scripts --no-audit --no-fund \
@@ -57,8 +60,8 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/axiona-http.log 2>&1 &
-          echo $! > /tmp/axiona-http.pid
+          python3 -m http.server 4173 --bind 127.0.0.1 > "$RUNNER_TEMP/axiona-http.log" 2>&1 &
+          echo $! > "$RUNNER_TEMP/axiona-http.pid"
           for attempt in {1..20}; do
             if curl --fail --silent http://127.0.0.1:4173/ >/dev/null; then
               echo "OK_AXIONA_STATIC_SERVER_READY"
@@ -66,7 +69,7 @@ jobs:
             fi
             sleep 0.25
           done
-          cat /tmp/axiona-http.log || true
+          cat "$RUNNER_TEMP/axiona-http.log" || true
           echo "STOP_AXIONA_STATIC_SERVER_NOT_READY"
           exit 1
 

@@ -16,7 +16,7 @@ concurrency:
 jobs:
   verify:
     name: Verify public website
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, Linux, X64]
     timeout-minutes: 10
     permissions:
       contents: read
@@ -26,6 +26,14 @@ jobs:
         with:
           fetch-depth: 2
           persist-credentials: false
+
+      - name: Verify Linux runner class
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "${RUNNER_OS}" = "Linux"
+          test "$(uname -m)" = "x86_64"
+          command -v python3 >/dev/null
 
       - name: Verify current public surface
         shell: bash
