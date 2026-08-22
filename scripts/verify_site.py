@@ -145,8 +145,11 @@ def main() -> int:
         errors.append("missing .well-known/security.txt")
 
     text_suffixes = {".html", ".md", ".txt", ".xml", ".json", ".js", ".css", ".py", ".yml", ".yaml"}
+    verifier_path = Path(__file__).resolve()
     for path in ROOT.rglob("*"):
         if not path.is_file() or ".git" in path.parts or path.suffix.lower() not in text_suffixes:
+            continue
+        if path.resolve() == verifier_path:
             continue
         try:
             text = path.read_text(encoding="utf-8")
