@@ -14,10 +14,29 @@ const paths = [
   "/solutions.html",
   "/keeper.html",
   "/contact.html",
+  "/support.html",
+  "/privacy.html",
+  "/legal.html",
   "/en/",
+  "/en/systems.html",
+  "/en/process.html",
+  "/en/security.html",
+  "/en/solutions.html",
   "/en/keeper.html",
+  "/en/contact.html",
+  "/en/support.html",
+  "/en/privacy.html",
+  "/en/legal.html",
   "/de/",
-  "/de/keeper.html"
+  "/de/systems.html",
+  "/de/process.html",
+  "/de/security.html",
+  "/de/solutions.html",
+  "/de/keeper.html",
+  "/de/contact.html",
+  "/de/support.html",
+  "/de/privacy.html",
+  "/de/legal.html"
 ];
 
 if (!chromePath) {
