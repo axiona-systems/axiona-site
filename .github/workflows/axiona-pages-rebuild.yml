@@ -136,3 +136,48 @@ jobs:
           echo "Live process pages do not match canonical release" >&2
           echo "EXPECTED HU=${EXPECTED_HU} EN=${EXPECTED_EN} DE=${EXPECTED_DE}" >&2
           exit 1
+
+      - name: Verify live security pages match canonical release
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          release_from_file() {
+            python3 - "$1" <<'PY'
+          import re
+          import sys
+          from pathlib import Path
+
+          text = Path(sys.argv[1]).read_text(encoding="utf-8")
+          match = re.search(r'<meta content="([^"]+)" name="axiona-release"\s*/?>', text)
+          if not match:
+              raise SystemExit(f"missing axiona-release in {sys.argv[1]}")
+          print(match.group(1))
+          PY
+          }
+
+          EXPECTED_HU="$(release_from_file security.html)"
+          EXPECTED_EN="$(release_from_file en/security.html)"
+          EXPECTED_DE="$(release_from_file de/security.html)"
+
+          for attempt in $(seq 1 24); do
+            CACHE_BUST="${GITHUB_SHA}-security-${attempt}"
+            SECURITY_HU="$(curl --fail --silent --show-error --location --header 'Cache-Control: no-cache' "https://axiona.systems/security.html?axiona_verify=${CACHE_BUST}" || true)"
+            SECURITY_EN="$(curl --fail --silent --show-error --location --header 'Cache-Control: no-cache' "https://axiona.systems/en/security.html?axiona_verify=${CACHE_BUST}" || true)"
+            SECURITY_DE="$(curl --fail --silent --show-error --location --header 'Cache-Control: no-cache' "https://axiona.systems/de/security.html?axiona_verify=${CACHE_BUST}" || true)"
+
+            if grep -Fq "content=\"${EXPECTED_HU}\" name=\"axiona-release\"" <<<"$SECURITY_HU" \
+              && grep -Fq 'security-trust section-pad' <<<"$SECURITY_HU" \
+              && grep -Fq "content=\"${EXPECTED_EN}\" name=\"axiona-release\"" <<<"$SECURITY_EN" \
+              && grep -Fq 'security-trust section-pad' <<<"$SECURITY_EN" \
+              && grep -Fq "content=\"${EXPECTED_DE}\" name=\"axiona-release\"" <<<"$SECURITY_DE" \
+              && grep -Fq 'security-trust section-pad' <<<"$SECURITY_DE"; then
+              echo "OK_AXIONA_LIVE_SECURITY_RELEASE HU=${EXPECTED_HU} EN=${EXPECTED_EN} DE=${EXPECTED_DE}"
+              exit 0
+            fi
+            sleep 5
+          done
+
+          echo "Live security pages do not match canonical release" >&2
+          echo "EXPECTED HU=${EXPECTED_HU} EN=${EXPECTED_EN} DE=${EXPECTED_DE}" >&2
+          exit 1
