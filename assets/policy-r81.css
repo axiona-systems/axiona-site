@@ -18,7 +18,7 @@
 .policy-intro p{margin:3px 0 0;max-width:760px;color:var(--muted);font-size:15px;line-height:1.72}
 .policy-grid{border-top:1px solid var(--line)}
 .policy-card,.policy-card.accent-orange,.policy-card.accent-cyan,.policy-card.accent-acid,.policy-card.accent-navy{display:grid;grid-template-columns:54px minmax(220px,.52fr) minmax(0,1fr);gap:22px;align-items:start;min-height:0;padding:28px 0;background:transparent;border:0;border-bottom:1px solid var(--line)}
-.policy-card .num{padding-top:4px;font:800 9px/1 monospace;letter-spacing:.12em;color:#857a71}
+.policy-card .num{padding-top:4px;font:800 9px/1 monospace;letter-spacing:.12em;color:#70665e}
 .policy-card h3{margin:0;font-size:22px;line-height:1.15;letter-spacing:-.025em}
 .policy-card p,.policy-card li{color:#59524c;font-size:14px;line-height:1.72}
 .policy-card p{margin:0}.policy-card ul{margin:0;padding-left:18px}.policy-card a{text-decoration:underline;text-underline-offset:3px}
