@@ -57,12 +57,7 @@ Exact tested PR #77 head: `f0aa422bab5a9fe9dd3a3d2fcb649710dccb7ebf`
 Exact squash-merge SHA: `25c7ffba4e9790f6b0ee951a682df3e80975a1f6`
 Final exact-head checks passed: Guard, Not Found Visual Contract, Browser Quality Audit, Lighthouse, axe/WCAG.
 
-Root `404.html` is the visual/runtime SSOT:
-- `/assets/not-found-r126.css?release=R126`
-- `/assets/js/not-found-r126.js?release=R126`
-- HU fallback, `/en/...` English, `/de/...` German;
-- `noindex,follow`;
-- no new tracking/storage/data flow.
+Root `404.html` remains the visual/runtime 404 SSOT with R126 bindings, HU fallback, `/en/...` English, `/de/...` German and `noindex,follow`.
 
 ### R127 — Utility 404 source consolidation
 Exact tested PR #78 head: `4a99777d3421d1287e3b499f5c33958583a58ea0`
@@ -73,7 +68,7 @@ Final exact-head checks passed: Public Surface Guard, Utility R127 Route Contrac
 Exact tested PR #79 head: `0515993c441547cfe3f9a2c615fc618792d3f1a5`
 Exact squash-merge main SHA: `ad55f09f97ab27d85623d8fda1c7b59af3b4dd64`
 
-R128 enforces exact physical HTML inventory, matching `<html lang>`, canonical + HU/EN/DE/x-default hreflang, release-family parity, direct current release binding, same-host reference integrity, root R126 404 invariants, sitemap URL membership, robots/security.txt existence and repository secret/public-email checks. The stronger Guard exposed and remediated a real metadata defect across 12 Systems/Process/Security/Solutions localized pages.
+R128 enforces exact physical HTML inventory, `<html lang>`, canonical + HU/EN/DE/x-default hreflang, release-family parity, direct current release binding, same-host reference integrity, root R126 404 invariants, sitemap URL membership, robots/security.txt existence and repository secret/public-email checks. The stronger Guard exposed and remediated a real metadata defect across 12 Systems/Process/Security/Solutions localized pages.
 
 Final exact-head checks passed: Public Surface Guard, R128 Contract, Systems/Process/Security/Solutions visual contracts, Browser Quality Audit, Lighthouse, axe/WCAG.
 
@@ -82,60 +77,72 @@ Exact tested PR #80 head: `bd354caac78ede77acce718043fdd1315811b55c`
 Exact squash-merge main SHA: `b97e2120254d910c5f1591e7b0abd1b9044baf1d`
 
 Accepted browser matrix:
-- Lighthouse: 12 representative routes — all 10 HU page families + EN home + DE home;
+- Lighthouse: all 10 HU page families + EN home + DE home;
 - `numberOfRuns=1` remains cost-controlled;
 - axe/WCAG: exhaustive 30 active HU/EN/DE routes;
-- `scripts/verify_browser_audit_matrix.py` fails fast before browser setup if either matrix drifts;
-- `.github/workflows/axiona-browser-r129-coverage-contract.yml` proves missing Lighthouse or axe coverage fails closed.
+- `scripts/verify_browser_audit_matrix.py` fails fast on matrix drift;
+- R129 negative contract proves missing Lighthouse or axe coverage fails closed.
 
-Final exact-head checks passed: Public Surface Guard, Browser R129 Coverage Contract, Browser Quality Audit, 12-route Lighthouse budgets, 30-route axe/WCAG.
+Final exact-head checks passed: Public Surface Guard, Browser R129 Coverage Contract, Browser Quality Audit, Lighthouse, axe/WCAG.
 
 ### R130 — Sitemap Hreflang Invariants
 Exact tested PR #81 head: `e1dc295be713e24febbfa57235e238b0a34a0282`
 Exact squash-merge main SHA: `cfa47f55b3b1f3c76f740cfe61ff4001c6d3c60b`
 
-R130 enforces:
-- exactly 30 declared sitemap URL entries;
-- one `<loc>` per entry with no duplicate locations;
-- exactly four alternates per entry: `hu`, `en`, `de`, `x-default`;
-- no duplicate hreflang keys;
-- exact route-family targets with `x-default` bound to HU;
-- focused negative contract for target drift and duplicate hreflang.
+R130 enforces exactly 30 sitemap URL entries, unique locs, exactly four alternates (`hu`, `en`, `de`, `x-default`), no duplicate hreflang keys, exact route-family targets and HU x-default.
 
-Final exact-head checks passed:
-- AXIONA Public Surface Guard — SUCCESS;
-- AXIONA Sitemap R130 Invariants Contract — SUCCESS.
+Final exact-head checks passed: Public Surface Guard and Sitemap R130 Invariants Contract.
 
-No browser-visible source changed in R130.
-
-## R131 — RFC 9116 security.txt invariants in progress
-
-Starting exact main SHA:
-`cfa47f55b3b1f3c76f740cfe61ff4001c6d3c60b`
-
-Feature branch:
-`feature/security-txt-invariants-r131`
-
-Audit finding:
-- `.well-known/security.txt` exists and its current values are sound;
-- the central Guard previously checked only file existence;
-- malformed, stale or semantically broken vulnerability-disclosure metadata could therefore pass CI.
+### R131 — RFC 9116 security.txt invariants
+Exact tested PR #83 head: `2a1b8ae079708f6f162b37e153543b7de4fc77a0`
+Exact squash-merge main SHA: `e2550e2f1ad3f7e59588f0a65227d9b5156f8537`
 
 R131 adds:
 - `scripts/verify_security_txt.py`;
-- UTF-8/size/basic field-format validation;
+- UTF-8/size/basic field validation;
 - required valid Contact URI;
-- exactly one RFC3339 Expires, future-dated and no more than 366 days ahead under AXIONA policy;
+- exactly one timezone-aware RFC3339 Expires, future-dated and no more than 366 days ahead under AXIONA policy;
 - exact HTTPS Canonical and Security Policy URLs;
 - exact HU/EN/DE Preferred-Languages set;
 - Public Surface Guard binding;
-- `.github/workflows/axiona-security-txt-r131-contract.yml` negative proof;
-- `.github/workflows/axiona-security-txt-r131-live-proof.yml` live HTTPS + `text/plain` + body verification.
+- fail-closed R131 negative contract;
+- post-merge HTTPS + `text/plain` live proof workflow.
+
+The existing `.well-known/security.txt` content did not require a content rewrite.
+
+Final exact-head checks passed: Public Surface Guard, Security.txt R131 Invariants Contract, Sitemap R130 Contract.
+
+Production push-run convergence was not independently visible through the connector, so live R131 proof must not be claimed without actual run evidence.
+
+## R132 — Social Metadata Invariants in progress
+
+Starting exact main SHA:
+`e2550e2f1ad3f7e59588f0a65227d9b5156f8537`
+
+Feature branch:
+`feature/social-metadata-invariants-r132`
+
+Audit finding:
+- Support and Privacy/Legal families retained correct social preview images but lacked core Open Graph/Twitter text and URL fields across HU/EN/DE;
+- affected source set: 9 pages total.
+
+R132 remediation restores on those 9 pages:
+- `og:site_name`, `og:title`, `og:description`, `og:type`, `og:url`;
+- `twitter:card`, `twitter:title`, `twitter:description`;
+- existing language-specific social image metadata remains unchanged.
+
+R132 whole-site hardening:
+- `scripts/verify_social_metadata.py` validates all 30 active pages;
+- requires exact core OG/Twitter metadata, same-page URL identity, language-correct general/Keeper R92 preview image and 1200×630 PNG properties;
+- verifies the six actual social image assets are 1200×630 PNGs;
+- Public Surface Guard binding;
+- `.github/workflows/axiona-social-r132-invariants-contract.yml` negative proof for missing title, wrong URL, wrong card, wrong language image and corrupted image dimensions;
+- `.github/workflows/axiona-social-r132-live-proof.yml` checks the 9 remediated live routes after merge.
 
 Release document:
-- `docs/status/R131_SECURITY_TXT_INVARIANTS.md`
+- `docs/status/R132_SOCIAL_METADATA_INVARIANTS.md`
 
-No public page UI changes. R131 is not accepted until the exact PR head passes Public Surface Guard and Security.txt R131 Invariants Contract and is squash-merged with `expected_head_sha`.
+No rendered layout/content change. R132 is not accepted until the final exact PR head passes Public Surface Guard, Social R132 Contract and all existing checks triggered by the changed HTML, then is squash-merged with `expected_head_sha`.
 
 ## Canonical documentation
 
@@ -158,13 +165,14 @@ Read before subsequent public-surface changes:
 16. `docs/status/R129_BROWSER_AUDIT_MATRIX.md`
 17. `docs/status/R130_SITEMAP_HREFLANG_INVARIANTS.md`
 18. `docs/status/R131_SECURITY_TXT_INVARIANTS.md`
-19. `docs/r114-cache-proof-note.md`
+19. `docs/status/R132_SOCIAL_METADATA_INVARIANTS.md`
+20. `docs/r114-cache-proof-note.md`
 
-## Next step after R131 acceptance
+## Next step after R132 acceptance
 
 Continue whole-site consistency/regression audit. Highest-value remaining areas:
 - navigation/footer semantic parity;
-- social/Open Graph/Twitter metadata consistency;
+- named retired-route production proof for historically published legacy routes;
 - webmanifest/favicon/static metadata consistency;
 - stale unused assets/workflows only when removal can be proven safe;
 - deployment/live-proof observability.
@@ -180,7 +188,7 @@ For every public-surface or public-quality change:
 - preserve accepted content and UX unless the task requires otherwise;
 - update languages together where applicable;
 - run Public Surface Guard + the relevant focused contract;
-- run Browser Quality Audit/Lighthouse/axe only when browser-visible source is affected or a browser-quality contract changes;
+- run Browser Quality Audit/Lighthouse/axe when browser-visible source is affected or a browser-quality contract changes;
 - no gate weakening;
 - re-resolve exact PR head and main immediately before merge;
 - squash merge using `expected_head_sha`;
