@@ -66,7 +66,7 @@ jobs:
             if(r.fitRow.cursor!=='default'||r.fitRow.opacity!=='1') throw Error(route+' informational affordance/opacity');
             if(route==='/contact.html'&&label==='desktop'){
               const probe=page.locator('.intake-form');await probe.scrollIntoViewIfNeeded();await page.waitForTimeout(220);if(!await probe.evaluate(e=>e.classList.contains('is-visible')))throw Error('reveal-on');await page.evaluate(()=>scrollTo(0,0));await page.waitForTimeout(260);if(await probe.evaluate(e=>e.classList.contains('is-visible')))throw Error('reveal-latched');await probe.scrollIntoViewIfNeeded();await page.waitForTimeout(220);if(!await probe.evaluate(e=>e.classList.contains('is-visible')))throw Error('reveal-return');
-              await page.locator('input[name="email"]').fill('test@example.com');await page.locator('textarea[name="problem"]').fill('Workflow test');
+              await page.locator('input[name="email"]').fill('test@axiona.systems');await page.locator('textarea[name="problem"]').fill('Workflow test');
               await page.locator('[data-intake-form]').evaluate(f=>f.dispatchEvent(new Event('submit',{bubbles:true,cancelable:true})));await page.waitForTimeout(80);
               const mail=await page.locator('[data-mailto-link]').evaluate(a=>({hidden:a.hidden,href:a.getAttribute('href')}));const status=await page.locator('[data-intake-status]').textContent();
               if(mail.hidden||!mail.href?.startsWith('mailto:hello@axiona.systems?subject=')||!status?.trim())throw Error('intake mail preparation failed');
