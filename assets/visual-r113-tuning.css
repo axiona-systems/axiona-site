@@ -34,7 +34,7 @@ body.page-overview .ax112-mini-dot{
     padding:18px 18px 20px;
   }
   body.page-overview .ax112-cycle li:after{
-    content:none;
+    content:none!important;
   }
   body.page-overview .ax112-cycle li.is-control{
     transform:none;
