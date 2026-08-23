@@ -5,6 +5,10 @@
   if (!nodes.length) return;
 
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // Keep readable surfaces fully opaque in every motion state. The reveal uses
+  // position only so off-screen content never loses effective WCAG contrast.
+  nodes.forEach((node) => node.style.setProperty('opacity', '1'));
   root.classList.add('systems-motion-ready');
 
   if (reduced || !('IntersectionObserver' in window)) {
