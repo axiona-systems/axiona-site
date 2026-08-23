@@ -1,0 +1,149 @@
+/* AXIONA R108 — cross-browser engineered motion.
+   Visual motion must remain restrained, deterministic and accessible.
+   Readable text stays fully opaque. Reduced-motion preference disables nonessential motion. */
+
+/* Observer-driven entry motion. JS adds .ax-motion-node and .is-in-view. */
+.ax-motion-node{
+  --ax-order:0;
+  transform:translate3d(0,30px,0);
+  transition:transform .72s cubic-bezier(.22,.72,.24,1);
+  transition-delay:calc(var(--ax-order) * 54ms);
+  will-change:transform;
+}
+.ax-motion-node.ax-from-left{transform:translate3d(-26px,0,0)}
+.ax-motion-node.ax-from-right{transform:translate3d(26px,0,0)}
+.ax-motion-node.is-in-view{transform:translate3d(0,0,0);will-change:auto}
+
+/* Stronger, clearly visible but still technical board motion. */
+.ax-motion-board{position:relative;overflow:hidden;isolation:isolate}
+.ax-motion-board::before{
+  content:"";
+  position:absolute;
+  z-index:8;
+  left:-24%;
+  right:-24%;
+  top:-2px;
+  height:2px;
+  pointer-events:none;
+  background:linear-gradient(90deg,transparent 0%,rgba(84,212,202,0) 24%,rgba(84,212,202,.78) 48%,rgba(215,239,85,.82) 52%,rgba(84,212,202,0) 76%,transparent 100%);
+  transform:translate3d(0,-4px,0);
+  animation:ax108-board-scan 8.5s cubic-bezier(.45,0,.55,1) infinite;
+}
+.ax-motion-board::after{
+  content:"";
+  position:absolute;
+  z-index:0;
+  inset:-16%;
+  pointer-events:none;
+  background-image:linear-gradient(rgba(84,212,202,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(84,212,202,.035) 1px,transparent 1px);
+  background-size:42px 42px;
+  transform:translate3d(-12px,-8px,0);
+  animation:ax108-board-grid 18s ease-in-out infinite alternate;
+}
+.ax-motion-board>*{position:relative;z-index:1}
+
+/* Sequential signal motion for process/system rows. */
+.stage-list article,.lifecycle-board li,.keeper96-preview-row,.system-board .board-row,.process-clarity-list article{position:relative}
+.stage-list article::after,.lifecycle-board li::after,.keeper96-preview-row::after,.system-board .board-row::after,.process-clarity-list article::after{
+  content:"";
+  position:absolute;
+  left:0;
+  bottom:0;
+  width:0;
+  height:2px;
+  pointer-events:none;
+  background:linear-gradient(90deg,var(--orange),var(--cyan));
+  transition:width .7s cubic-bezier(.22,.72,.24,1);
+}
+.stage-list article.is-in-view::after,.lifecycle-board li.is-in-view::after,.keeper96-preview-row.is-in-view::after,.system-board .board-row.is-in-view::after,.process-clarity-list article.is-in-view::after{width:100%}
+
+/* Continuous active-state cues that remain visible after the reveal. */
+.stage-list article.active{animation:ax108-active-breathe 4.8s ease-in-out infinite}
+.system-board .board-row:nth-child(3) em,.lifecycle-board li.is-control em,.keeper-status-badge{animation:ax108-status-pulse 3.6s ease-in-out infinite}
+.problem-card.is-accent h3::after{animation:ax108-status-pulse 2.8s ease-in-out infinite}
+
+/* Visible movement on the homepage sections even before JS is refreshed from cache. */
+.page-overview .problem-spectrum-board,.page-overview .keeper96-preview-panel,.page-overview .lifecycle-board{position:relative;overflow:hidden}
+.page-overview .problem-spectrum-board::after,.page-overview .keeper96-preview-panel::after,.page-overview .lifecycle-board::before{
+  content:"";
+  position:absolute;
+  z-index:6;
+  pointer-events:none;
+  left:-28%;
+  width:156%;
+  height:2px;
+  top:-2px;
+  background:linear-gradient(90deg,transparent,rgba(84,212,202,.75),rgba(239,107,67,.72),transparent);
+  animation:ax108-home-scan 9.5s ease-in-out infinite;
+}
+.page-overview .problem-card:nth-child(1)>span{animation:ax108-card-nudge 9s ease-in-out infinite}
+.page-overview .problem-card:nth-child(2)>span{animation:ax108-card-nudge 9s .5s ease-in-out infinite}
+.page-overview .problem-card:nth-child(3)>span{animation:ax108-card-nudge 9s 1s ease-in-out infinite}
+.page-overview .problem-card:nth-child(4)>span{animation:ax108-card-nudge 9s 1.5s ease-in-out infinite}
+.page-overview .problem-card:nth-child(5)>span{animation:ax108-card-nudge 9s 2s ease-in-out infinite}
+.page-overview .problem-card:nth-child(6)>span{animation:ax108-card-nudge 9s 2.5s ease-in-out infinite}
+
+/* Technical accent markers on large section headers. */
+.section-intro{position:relative}
+.section-intro::after{
+  content:"";
+  position:absolute;
+  width:46px;
+  height:46px;
+  right:0;
+  top:0;
+  pointer-events:none;
+  border-top:1px solid currentColor;
+  border-right:1px solid currentColor;
+  opacity:.22;
+  transform:translate3d(8px,-8px,0);
+  animation:ax108-corner-drift 7s ease-in-out infinite alternate;
+}
+
+@keyframes ax108-board-scan{
+  0%,10%{transform:translate3d(0,-4px,0)}
+  48%{transform:translate3d(0,520px,0)}
+  58%,100%{transform:translate3d(0,520px,0)}
+}
+@keyframes ax108-board-grid{
+  from{transform:translate3d(-12px,-8px,0)}
+  to{transform:translate3d(16px,10px,0)}
+}
+@keyframes ax108-home-scan{
+  0%,12%{transform:translate3d(0,-3px,0)}
+  52%{transform:translate3d(0,520px,0)}
+  62%,100%{transform:translate3d(0,520px,0)}
+}
+@keyframes ax108-active-breathe{
+  0%,100%{translate:0 0}
+  50%{translate:5px 0}
+}
+@keyframes ax108-status-pulse{
+  0%,100%{scale:1}
+  50%{scale:1.045}
+}
+@keyframes ax108-card-nudge{
+  0%,78%,100%{translate:0 0}
+  84%{translate:0 -4px}
+  90%{translate:0 0}
+}
+@keyframes ax108-corner-drift{
+  from{transform:translate3d(8px,-8px,0)}
+  to{transform:translate3d(1px,-1px,0)}
+}
+
+@media(max-width:920px){
+  .ax-motion-node{transform:translate3d(0,20px,0);transition-duration:.58s}
+  .ax-motion-node.ax-from-left,.ax-motion-node.ax-from-right{transform:translate3d(0,20px,0)}
+  .ax-motion-board::after{background-size:34px 34px}
+  .section-intro::after{width:34px;height:34px}
+}
+
+@media(prefers-reduced-motion:reduce){
+  .ax-motion-node,.ax-motion-node.ax-from-left,.ax-motion-node.ax-from-right,.ax-motion-node.is-in-view{transform:none!important;transition:none!important;will-change:auto}
+  .ax-motion-board::before,.ax-motion-board::after,
+  .stage-list article.active,.system-board .board-row:nth-child(3) em,.lifecycle-board li.is-control em,.keeper-status-badge,.problem-card.is-accent h3::after,
+  .page-overview .problem-spectrum-board::after,.page-overview .keeper96-preview-panel::after,.page-overview .lifecycle-board::before,
+  .page-overview .problem-card>span,.section-intro::after{animation:none!important;translate:none!important;scale:none!important}
+  .stage-list article::after,.lifecycle-board li::after,.keeper96-preview-row::after,.system-board .board-row::after,.process-clarity-list article::after{transition:none!important;width:100%}
+}

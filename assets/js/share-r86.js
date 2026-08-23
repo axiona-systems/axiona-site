@@ -1,5 +1,82 @@
-/* AXIONA R86 — native share with privacy-minimal fallbacks. */
+/* AXIONA R108 — native share + cross-browser motion bootstrap. */
 (() => {
+  const motionStyleId = 'axiona-motion-r108';
+  if (!document.getElementById(motionStyleId)) {
+    const link = document.createElement('link');
+    link.id = motionStyleId;
+    link.rel = 'stylesheet';
+    link.href = '/assets/motion-r108.css';
+    document.head.appendChild(link);
+  }
+
+  const reduceMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+  if (!reduceMotion && 'IntersectionObserver' in window) {
+    const revealSelectors = [
+      '.fact-strip > div',
+      '.section-intro',
+      '.problem-spectrum-intro',
+      '.problem-card',
+      '.lifecycle-story-intro',
+      '.lifecycle-board li',
+      '.lifecycle-principle',
+      '.keeper-preview-copy',
+      '.keeper96-preview-row',
+      '.system-board',
+      '.service-copy',
+      '.system-layer',
+      '.control-depth-card',
+      '.system-outcome-card',
+      '.stage-list article',
+      '.status-sheet',
+      '.process-signal',
+      '.process-clarity-copy',
+      '.process-clarity-list article',
+      '.process-handoff-grid article',
+      '.method-list article',
+      '.credit-card',
+      '.security-baseline',
+      '.security-trust-card',
+      '.security-layer',
+      '.solution-fit-card',
+      '.solution-form',
+      '.product-chain article'
+    ].join(',');
+
+    const boardSelectors = [
+      '.system-board',
+      '.status-sheet',
+      '.lifecycle-board',
+      '.problem-spectrum-board',
+      '.keeper96-preview-panel',
+      '.security-baseline'
+    ].join(',');
+
+    document.querySelectorAll(boardSelectors).forEach((element) => {
+      element.classList.add('ax-motion-board');
+    });
+
+    const observer = new IntersectionObserver((entries, currentObserver) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add('is-in-view');
+        currentObserver.unobserve(entry.target);
+      });
+    }, { root: null, rootMargin: '0px 0px -8% 0px', threshold: 0.12 });
+
+    document.querySelectorAll(revealSelectors).forEach((element) => {
+      element.classList.add('ax-motion-node');
+      const siblings = Array.from(element.parentElement?.children || []);
+      const siblingIndex = Math.max(0, siblings.indexOf(element));
+      element.style.setProperty('--ax-order', String(Math.min(siblingIndex, 6)));
+      if (element.matches('.system-board,.status-sheet,.lifecycle-board,.problem-spectrum-board,.keeper96-preview-panel,.security-baseline')) {
+        element.classList.add('ax-from-left');
+      } else if (element.matches('.service-copy,.lifecycle-principle,.credit-card')) {
+        element.classList.add('ax-from-right');
+      }
+      observer.observe(element);
+    });
+  }
+
   const sections = document.querySelectorAll('.ax-share');
   if (!sections.length) return;
 
