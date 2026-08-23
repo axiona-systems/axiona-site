@@ -1,0 +1,84 @@
+name: AXIONA R113 Production Proof
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/axiona-r113-production-proof.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: read
+
+jobs:
+  prove-production:
+    name: Prove R113 production convergence
+    runs-on: ubuntu-24.04
+    timeout-minutes: 6
+    steps:
+      - name: Verify exact Pages build and live R113 assets
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPOSITORY: ${{ github.repository }}
+          EXPECTED_MAIN: 8e4248a7442991b894b0b377b6f12c24803dabc4
+        run: |
+          set -euo pipefail
+
+          latest_pages() {
+            curl --fail-with-body --silent --show-error \
+              --header "Accept: application/vnd.github+json" \
+              --header "Authorization: Bearer ${GH_TOKEN}" \
+              --header "X-GitHub-Api-Version: 2026-03-10" \
+              "https://api.github.com/repos/${REPOSITORY}/pages/builds/latest"
+          }
+
+          for attempt in $(seq 1 36); do
+            PAYLOAD="$(latest_pages)"
+            read -r STATUS COMMIT < <(printf '%s' "$PAYLOAD" | python3 -c 'import json,sys; d=json.load(sys.stdin); print(d.get("status","unknown"), d.get("commit","missing"))')
+            echo "PAGES_ATTEMPT=${attempt} STATUS=${STATUS} COMMIT=${COMMIT} EXPECTED=${EXPECTED_MAIN}"
+            if [ "$COMMIT" = "$EXPECTED_MAIN" ] && [ "$STATUS" = "built" ]; then
+              break
+            fi
+            if [ "$attempt" = 36 ]; then
+              echo "STOP_AXIONA_R113_EXACT_PAGES_BUILD_NOT_READY" >&2
+              exit 1
+            fi
+            sleep 5
+          done
+
+          for attempt in $(seq 1 30); do
+            KEY="${EXPECTED_MAIN}-r113-production-${attempt}"
+            HU="$(curl --fail --silent --show-error --location --header 'Cache-Control: no-cache' "https://axiona.systems/?proof=${KEY}" || true)"
+            EN="$(curl --fail --silent --show-error --location --header 'Cache-Control: no-cache' "https://axiona.systems/en/?proof=${KEY}" || true)"
+            DE="$(curl --fail --silent --show-error --location --header 'Cache-Control: no-cache' "https://axiona.systems/de/?proof=${KEY}" || true)"
+            ENTRY="$(curl --fail --silent --show-error --location --header 'Cache-Control: no-cache' "https://axiona.systems/assets/visual-r110.css?proof=${KEY}" || true)"
+            R113="$(curl --fail --silent --show-error --location --header 'Cache-Control: no-cache' "https://axiona.systems/assets/visual-r113.css?release=R113&proof=${KEY}" || true)"
+            TUNING="$(curl --fail --silent --show-error --location --header 'Cache-Control: no-cache' "https://axiona.systems/assets/visual-r113-tuning.css?release=R113&proof=${KEY}" || true)"
+
+            overview_ok() {
+              local html="$1"
+              grep -Fq 'content="R112" name="axiona-release"' <<<"$html" \
+                && grep -Fq 'class="ax112-hero"' <<<"$html" \
+                && grep -Fq 'class="ax112-model"' <<<"$html" \
+                && grep -Fq 'class="ax112-story"' <<<"$html" \
+                && grep -Fq 'class="ax112-cycle"' <<<"$html" \
+                && ! grep -Fq 'class="project-sheet"' <<<"$html"
+            }
+
+            if overview_ok "$HU" && overview_ok "$EN" && overview_ok "$DE" \
+              && grep -Fq '/assets/visual-r113.css?release=R113' <<<"$ENTRY" \
+              && grep -Fq '/assets/visual-r113-tuning.css?release=R113' <<<"$ENTRY" \
+              && grep -Fq 'AXIONA R113 — Keeper-calibrated overview visual language' <<<"$R113" \
+              && grep -Fq 'AXIONA R113 — final homepage calibration' <<<"$TUNING" \
+              && grep -Fq 'content:none!important' <<<"$TUNING"; then
+              echo "OK_AXIONA_R113_PRODUCTION_CONVERGED=${EXPECTED_MAIN}"
+              exit 0
+            fi
+            sleep 5
+          done
+
+          echo "STOP_AXIONA_R113_PRODUCTION_NOT_CONVERGED" >&2
+          exit 1
