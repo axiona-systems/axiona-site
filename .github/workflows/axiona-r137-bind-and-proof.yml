@@ -1,0 +1,195 @@
+name: AXIONA R137 Bind and Proof
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/axiona-r137-bind-and-proof.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: axiona-r137-bind-and-proof
+  cancel-in-progress: false
+
+jobs:
+  bind-and-proof:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    steps:
+      - name: Checkout canonical source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: true
+          fetch-depth: 0
+
+      - name: Bind exactly one R137 stylesheet
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import re
+          from pathlib import Path
+
+          roots = [Path('.'), Path('en'), Path('de')]
+          changed = []
+          for root in roots:
+              for path in sorted(root.glob('*.html')):
+                  text = path.read_text(encoding='utf-8')
+                  if 'class="topbar"' not in text:
+                      continue
+                  original = text
+                  text = re.sub(r'<link\s+href="/assets/r13[567]-ux-fixes\.css(?:\?release=R13[567])?"\s+rel="stylesheet"\s*/>', '', text)
+                  marker = '<link href="/assets/r137-ux-fixes.css?release=R137" rel="stylesheet"/>'
+                  text = text.replace('</head>', marker + '</head>', 1)
+                  if text != original:
+                      path.write_text(text, encoding='utf-8')
+                      changed.append(str(path))
+
+          print('R137_BOUND_FILES=' + ','.join(changed))
+
+          for root in roots:
+              for path in sorted(root.glob('*.html')):
+                  text = path.read_text(encoding='utf-8')
+                  if 'class="topbar"' not in text:
+                      continue
+                  if text.count('/assets/r137-ux-fixes.css?release=R137') != 1:
+                      raise SystemExit(f'{path}: R137 binding count != 1')
+                  if '/assets/r135-ux-fixes.css' in text or '/assets/r136-ux-fixes.css' in text:
+                      raise SystemExit(f'{path}: stale R135/R136 binding remains')
+          PY
+
+      - name: Verify browser runtime
+        shell: bash
+        run: |
+          set -euo pipefail
+          CHROME_PATH="$(command -v google-chrome-stable || command -v google-chrome || command -v chromium || true)"
+          test -n "$CHROME_PATH"
+          echo "CHROME_PATH=$CHROME_PATH" >> "$GITHUB_ENV"
+
+      - name: Install pinned render inspector
+        shell: bash
+        run: npm install --no-save --ignore-scripts --no-audit --no-fund playwright-core@1.62.1
+
+      - name: Start static server
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m http.server 4175 --bind 127.0.0.1 >/tmp/axiona-r137-http.log 2>&1 &
+          echo $! >/tmp/axiona-r137-http.pid
+          for attempt in {1..20}; do
+            curl --fail --silent http://127.0.0.1:4175/systems.html >/dev/null && exit 0
+            sleep .25
+          done
+          cat /tmp/axiona-r137-http.log
+          exit 1
+
+      - name: Render and prove navigation plus Systems separation
+        shell: bash
+        env:
+          AXIONA_BASE: http://127.0.0.1:4175
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import { chromium } from 'playwright-core';
+
+          const browser = await chromium.launch({
+            executablePath: process.env.CHROME_PATH,
+            headless: true,
+            args: ['--no-sandbox']
+          });
+
+          const navRoutes = ['/', '/systems.html', '/process.html', '/security.html', '/solutions.html', '/contact.html'];
+          for (const route of navRoutes) {
+            const page = await browser.newPage({ viewport: { width: 1440, height: 1000 } });
+            await page.goto(process.env.AXIONA_BASE + route, { waitUntil: 'networkidle' });
+            const result = await page.evaluate(() => {
+              const nav = document.querySelector('.topbar > nav');
+              const active = nav?.querySelectorAll('a.active') || [];
+              const el = active[0];
+              if (!el) return { count: active.length };
+              const style = getComputedStyle(el);
+              const after = getComputedStyle(el, '::after');
+              const hrefs = [...document.styleSheets].map(s => s.href || '');
+              return {
+                count: active.length,
+                boxShadow: style.boxShadow,
+                afterDisplay: after.display,
+                afterContent: after.content,
+                r137Count: hrefs.filter(h => h.includes('/assets/r137-ux-fixes.css?release=R137')).length,
+                staleCount: hrefs.filter(h => h.includes('/assets/r135-ux-fixes.css') || h.includes('/assets/r136-ux-fixes.css')).length
+              };
+            });
+            console.log(`NAV ${route} ${JSON.stringify(result)}`);
+            if (result.count !== 1) throw new Error(`${route}: desktop active nav count ${result.count}`);
+            if (result.r137Count !== 1 || result.staleCount !== 0) throw new Error(`${route}: stylesheet binding not canonical`);
+            if (!result.boxShadow.includes('inset')) throw new Error(`${route}: persistent marker missing`);
+            if (result.afterDisplay !== 'none' || (result.afterContent !== 'none' && result.afterContent !== 'normal')) {
+              throw new Error(`${route}: duplicate pseudo-element marker still visible`);
+            }
+            await page.close();
+          }
+
+          const widths = [1280, 1440, 1512, 1728, 1920];
+          for (const width of widths) {
+            const page = await browser.newPage({ viewport: { width, height: 1000 } });
+            await page.goto(process.env.AXIONA_BASE + '/systems.html', { waitUntil: 'networkidle' });
+            const result = await page.evaluate(() => {
+              const a = document.querySelector('.services > .section-intro').getBoundingClientRect();
+              const b = document.querySelector('.services > .system-service').getBoundingClientRect();
+              const services = getComputedStyle(document.querySelector('.services'));
+              const overlapX = Math.max(0, Math.min(a.right,b.right) - Math.max(a.left,b.left));
+              const overlapY = Math.max(0, Math.min(a.bottom,b.bottom) - Math.max(a.top,b.top));
+              return {
+                intro: {left:a.left,right:a.right,top:a.top,bottom:a.bottom,width:a.width},
+                visual: {left:b.left,right:b.right,top:b.top,bottom:b.bottom,width:b.width},
+                grid: services.gridTemplateColumns,
+                rowGap: services.rowGap,
+                overlapArea: overlapX * overlapY,
+                verticalClearance: b.top - a.bottom
+              };
+            });
+            console.log(`SYSTEMS width=${width} ${JSON.stringify(result)}`);
+            if (result.overlapArea > 0.5) throw new Error(`systems ${width}: intro and visual overlap`);
+            if (width < 1800 && result.verticalClearance < 30) throw new Error(`systems ${width}: stacked clearance too small ${result.verticalClearance}`);
+            await page.close();
+          }
+
+          await browser.close();
+          console.log('OK_AXIONA_R137_RENDER_CONTRACT');
+          NODE
+
+      - name: Record proof and retire one-shot workflow
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p docs/status
+          cat > docs/status/R137_UX_FIX_RENDER_PROOF.md <<'EOF'
+          # AXIONA R137 UX render proof
+
+          R137 is the single canonical hotfix layer for the reported navigation and Systems section-01 defects.
+
+          Verified with Chromium/Playwright:
+          - exactly one R137 stylesheet binding on every topbar HTML page;
+          - no R135/R136 hotfix stylesheet bindings remain;
+          - exactly one desktop active navigation item on Overview, Systems, Process, Security, Solutions and Contact;
+          - active navigation pseudo-element is disabled, preventing doubled markers;
+          - the single persistent marker is the computed inset lower edge;
+          - Systems section 01 intro and visual have zero geometric overlap at 1280, 1440, 1512, 1728 and 1920 px viewport widths;
+          - below 1800 px the two blocks are stacked with at least 30 px measured clearance.
+
+          Result: PASS
+          EOF
+
+          git rm --ignore-unmatch .github/workflows/axiona-r137-bind-and-proof.yml
+          git config user.name "AXIONA Release Automation"
+          git config user.email "actions@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "R137_ALREADY_CANONICAL"
+            exit 0
+          fi
+          git commit -m "R137: bind canonical UX fix and prove rendered separation"
+          git push origin HEAD:main
