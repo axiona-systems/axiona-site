@@ -1,4 +1,4 @@
-/* AXIONA share helpers + legacy reveal class coordination. */
+/* AXIONA share helpers + legacy reveal class coordination. R143 retires the old dynamic motion stylesheet injection. */
 (() => {
   const reduceMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
   if (!reduceMotion && 'IntersectionObserver' in window) {
