@@ -8,7 +8,9 @@ on:
       - "index.html"
       - "en/index.html"
       - "de/index.html"
+      - "assets/visual-r110.css"
       - "assets/visual-r112.css"
+      - "assets/visual-r113.css"
       - "assets/js/visual-r112.js"
       - ".github/workflows/axiona-overview-visual-contract.yml"
   workflow_dispatch:
@@ -46,16 +48,16 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          python3 -m http.server 4174 --bind 127.0.0.1 > /tmp/axiona-r112-http.log 2>&1 &
-          echo $! > /tmp/axiona-r112-http.pid
+          python3 -m http.server 4174 --bind 127.0.0.1 > /tmp/axiona-r113-http.log 2>&1 &
+          echo $! > /tmp/axiona-r113-http.pid
           for attempt in {1..20}; do
             if curl --fail --silent http://127.0.0.1:4174/ >/dev/null; then
-              echo "OK_AXIONA_R112_SERVER_READY"
+              echo "OK_AXIONA_R113_SERVER_READY"
               exit 0
             fi
             sleep 0.25
           done
-          cat /tmp/axiona-r112-http.log || true
+          cat /tmp/axiona-r113-http.log || true
           exit 1
 
       - name: Verify desktop and mobile composition
@@ -80,6 +82,11 @@ jobs:
             const page = await browser.newPage({ viewport: { width, height } });
             await page.goto(`${process.env.AXIONA_BASE}${route}`, { waitUntil: 'networkidle' });
 
+            const r113Text = await page.evaluate(async () => (await fetch('/assets/visual-r113.css?contract=R113')).text());
+            if (!r113Text.includes('AXIONA R113 — Keeper-calibrated overview visual language')) {
+              throw new Error(`${route} R113 stylesheet marker missing`);
+            }
+
             const result = await page.evaluate(({ legacySelectors }) => {
               const one = (selector) => document.querySelector(selector);
               const rect = (selector) => {
@@ -90,14 +97,14 @@ jobs:
                 return {
                   left: Math.round(r.left), top: Math.round(r.top), right: Math.round(r.right), bottom: Math.round(r.bottom),
                   width: Math.round(r.width), height: Math.round(r.height), display: s.display,
-                  grid: s.gridTemplateColumns, fontSize: s.fontSize, background: s.backgroundColor,
-                  backgroundImage: s.backgroundImage
+                  grid: s.gridTemplateColumns, fontSize: s.fontSize, color: s.color,
+                  background: s.backgroundColor, backgroundImage: s.backgroundImage,
+                  boxShadow: s.boxShadow, transform: s.transform
                 };
               };
 
               return {
                 release: document.querySelector('meta[name="axiona-release"]')?.content || null,
-                r112Sheet: [...document.styleSheets].some(sheet => sheet.href?.includes('/assets/visual-r112.css')),
                 scrollWidth: document.documentElement.scrollWidth,
                 clientWidth: document.documentElement.clientWidth,
                 counts: {
@@ -118,26 +125,38 @@ jobs:
                 model: rect('.ax112-model'),
                 story: rect('.ax112-story'),
                 firstStep: rect('.ax112-step'),
+                currentStep: rect('.ax112-step.is-current'),
+                field: rect('.ax112-field'),
                 cycle: rect('.ax112-cycle'),
-                caseStudy: rect('.ax112-case')
+                trust: rect('.ax112-trust'),
+                caseStudy: rect('.ax112-case'),
+                device: rect('.ax112-device')
               };
             }, { legacySelectors });
 
-            console.log(`AXIONA_R112_${route.replaceAll('/', '_') || 'root'}_${label}=${JSON.stringify(result)}`);
+            console.log(`AXIONA_R113_${route.replaceAll('/', '_') || 'root'}_${label}=${JSON.stringify(result)}`);
 
             const expected = result.counts.hero === 1 && result.counts.model === 1 && result.counts.steps === 3 && result.counts.fields === 6 && result.counts.cycle === 6 && result.counts.trust === 1 && result.counts.caseStudy === 1 && result.counts.cta === 1;
-            if (result.release !== 'R112') throw new Error(`${route} release is ${result.release}`);
-            if (!result.r112Sheet) throw new Error(`${route} visual-r112.css is not active`);
+            if (result.release !== 'R112') throw new Error(`${route} structural release unexpectedly changed to ${result.release}`);
             if (!expected) throw new Error(`${route} structural counts mismatch: ${JSON.stringify(result.counts)}`);
             if (result.counts.legacy !== 0) throw new Error(`${route} still contains legacy overview components`);
             if (result.scrollWidth > result.clientWidth + 2) throw new Error(`${route} ${label} horizontal overflow ${result.scrollWidth}/${result.clientWidth}`);
 
+            // Brand-character assertions: warm paper around a contained petrol model,
+            // one deliberate dark trust chapter, light story field with one dark active step.
+            if (!result.visual || !result.visual.background.includes('229, 223, 211')) throw new Error(`${route} Keeper-like warm visual field missing: ${result.visual?.background}`);
+            if (!result.model || !result.model.background.includes('11, 30, 37')) throw new Error(`${route} contained petrol model missing: ${result.model?.background}`);
+            if (!result.story || !result.story.background.includes('229, 223, 211')) throw new Error(`${route} story is not warm editorial field: ${result.story?.background}`);
+            if (!result.currentStep || !result.currentStep.background.includes('11, 30, 37')) throw new Error(`${route} active story step is not contained dark focus: ${result.currentStep?.background}`);
+            if (!result.trust || !result.trust.background.includes('11, 30, 37')) throw new Error(`${route} trust chapter lost deliberate dark AXIONA surface: ${result.trust?.background}`);
+            if (!result.device || !result.device.background.includes('251, 250, 246')) throw new Error(`${route} Keeper-like case device surface missing: ${result.device?.background}`);
+
             if (width >= 1000) {
               if (!result.hero || result.hero.display !== 'grid') throw new Error(`${route} desktop hero is not grid`);
-              if (!result.visual || result.visual.width < 500) throw new Error(`${route} desktop system visual too small: ${result.visual?.width}`);
-              if (!result.model || result.model.width < 480) throw new Error(`${route} desktop system model too small: ${result.model?.width}`);
-              if (!result.h1 || parseFloat(result.h1.fontSize) < 70) throw new Error(`${route} desktop headline lacks editorial scale: ${result.h1?.fontSize}`);
-              if (!result.story || !result.story.background.includes('11, 32, 36')) throw new Error(`${route} dark story chapter not active: ${result.story?.background}`);
+              if (!result.visual || result.visual.width < 470) throw new Error(`${route} desktop visual too small: ${result.visual?.width}`);
+              if (!result.model || result.model.width < 450) throw new Error(`${route} desktop system model too small: ${result.model?.width}`);
+              const heroSize = parseFloat(result.h1?.fontSize || '0');
+              if (heroSize < 72 || heroSize > 108) throw new Error(`${route} desktop headline outside calmer editorial scale: ${result.h1?.fontSize}`);
             } else {
               if (!result.copy || !result.visual || result.visual.top < result.copy.bottom - 2) throw new Error(`${route} mobile hero does not stack copy before system visual`);
               if (!result.h1 || parseFloat(result.h1.fontSize) < 50) throw new Error(`${route} mobile headline lacks visual scale: ${result.h1?.fontSize}`);
@@ -153,5 +172,5 @@ jobs:
           }
 
           await browser.close();
-          console.log('OK_AXIONA_R112_RENDERED_VISUAL_CONTRACT');
+          console.log('OK_AXIONA_R113_KEEPER_CALIBRATED_VISUAL_CONTRACT');
           NODE
