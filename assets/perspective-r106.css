@@ -1,0 +1,108 @@
+/* AXIONA R106 — broader problem spectrum
+   Purpose: widen the homepage beyond time/admin/document pain without diluting
+   the core system-design positioning. Text remains fully opaque for accessibility. */
+
+.problem-spectrum{
+  position:relative;
+  display:grid;
+  grid-template-columns:minmax(0,.8fr) minmax(560px,1.2fr);
+  gap:clamp(56px,7vw,112px);
+  align-items:start;
+  background:#e7e3d9;
+  border-top:1px solid var(--ink);
+  border-bottom:1px solid var(--ink);
+}
+.problem-spectrum:before{
+  content:"AX / PROBLEM FIELD";
+  position:absolute;
+  top:26px;
+  right:max(32px,calc((100vw - var(--max))/2));
+  letter-spacing:.18em;
+  font:800 9px/1 monospace;
+  color:#68706a;
+}
+.problem-spectrum-intro{max-width:620px;padding-top:8px}
+.problem-spectrum-intro h2{
+  margin:0;
+  max-width:700px;
+  letter-spacing:-.055em;
+  font-size:clamp(44px,4.8vw,82px);
+  font-weight:740;
+  line-height:.96;
+}
+.problem-spectrum-intro h2 span{display:block;color:#42514b}
+.problem-spectrum-intro>p:last-child{
+  max-width:600px;
+  margin:34px 0 0;
+  color:#454d48;
+  font-size:16px;
+  line-height:1.7;
+}
+.problem-spectrum-board{
+  background:#f7f4ed;
+  border:1px solid #a9a398;
+  box-shadow:22px 22px #cbc4b8;
+}
+.problem-spectrum-head,.problem-spectrum-foot{
+  min-height:48px;
+  padding:0 18px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:24px;
+  letter-spacing:.13em;
+  font:800 9px/1.25 monospace;
+}
+.problem-spectrum-head{border-bottom:1px solid var(--line)}
+.problem-spectrum-head b{background:var(--orange);padding:6px 8px;color:var(--ink)}
+.problem-spectrum-grid{display:grid;grid-template-columns:1fr 1fr}
+.problem-card{
+  min-height:168px;
+  padding:22px 22px 20px;
+  border-bottom:1px solid var(--line);
+  border-right:1px solid var(--line);
+  position:relative;
+  transition:transform .2s ease,background .2s ease;
+}
+.problem-card:nth-child(even){border-right:0}
+.problem-card:nth-last-child(-n+2){border-bottom:0}
+.problem-card:hover{transform:translateY(-3px);background:#fffdf8}
+.problem-card>span{
+  display:block;
+  margin-bottom:26px;
+  color:#6b726d;
+  font:800 10px/1 monospace;
+}
+.problem-card h3{margin:0 0 9px;font-size:21px;letter-spacing:-.025em}
+.problem-card p{margin:0;color:#59615c;font-size:13px;line-height:1.55}
+.problem-card.is-accent{background:var(--navy);color:var(--white)}
+.problem-card.is-accent>span,.problem-card.is-accent p{color:#b9c9c6}
+.problem-card.is-accent h3:after{content:"";display:inline-block;width:7px;height:7px;margin-left:8px;background:var(--acid);vertical-align:middle}
+.problem-card.is-accent:hover{background:var(--navy-2)}
+.problem-spectrum-foot{border-top:1px solid var(--line);min-height:56px}
+.problem-spectrum-foot span{color:#5a625d}
+.problem-spectrum-foot b{color:var(--navy)}
+.problem-spectrum-note{
+  grid-column:1/-1;
+  max-width:980px;
+  margin:0;
+  padding-top:4px;
+  color:#4e5651;
+  font:italic 16px/1.6 Georgia,serif;
+}
+
+@media (max-width:980px){
+  .problem-spectrum{grid-template-columns:1fr;gap:44px}
+  .problem-spectrum-intro{max-width:760px}
+  .problem-spectrum-board{max-width:760px}
+}
+@media (max-width:640px){
+  .problem-spectrum{padding-top:86px;padding-bottom:86px}
+  .problem-spectrum:before{top:22px;right:22px}
+  .problem-spectrum-grid{grid-template-columns:1fr}
+  .problem-card{min-height:0;border-right:0!important;border-bottom:1px solid var(--line)!important}
+  .problem-card:last-child{border-bottom:0!important}
+  .problem-spectrum-head,.problem-spectrum-foot{align-items:flex-start;flex-direction:column;padding:14px 16px;gap:8px}
+  .problem-card>span{margin-bottom:16px}
+}
+@media (prefers-reduced-motion:reduce){.problem-card{transition:none}.problem-card:hover{transform:none}}
