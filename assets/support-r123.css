@@ -55,6 +55,22 @@ body.page-support-r123 .method-list article,body.page-support-r123 .stage-list a
 body.page-support-r123.support-motion-ready [data-support-reveal]{opacity:1!important;transform:translateY(12px)!important;transition:transform .42s cubic-bezier(.2,.75,.25,1)!important}
 body.page-support-r123.support-motion-ready [data-support-reveal].is-visible{opacity:1!important;transform:translateY(0)!important}
 
+/* AXIONA R135 — persistent current-page nav state and readable number markers. */
+body.page-support-r123 .topbar nav a.active:not(.nav-contact):after{right:0!important}
+body.page-support-r123 .topbar nav a.active:not(.nav-contact){font-weight:850!important}
+body.page-support-r123 .topbar nav .nav-contact.active{box-shadow:inset 0 -3px 0 var(--sup-orange)!important}
+body.page-support-r123 .stage-list article>span,
+body.page-support-r123 .stage-list article.active>span,
+body.page-support-r123 .method-list article>span{
+  display:inline-flex!important;align-items:center!important;justify-content:center!important;
+  width:34px!important;min-width:34px!important;min-height:25px!important;height:max-content!important;
+  padding:6px 7px!important;position:static!important;grid-row:auto!important;
+  background:var(--sup-petrol)!important;color:var(--sup-acid)!important;
+  border:1px solid #355159!important;box-shadow:none!important;
+  font:900 9px/1 ui-monospace,SFMono-Regular,Menlo,monospace!important;letter-spacing:.08em!important
+}
+body.page-support-r123 .method-list p{grid-column:2!important}
+
 @media(max-width:980px){body.page-support-r123 .method-layout{grid-template-columns:1fr!important}body.page-support-r123 .credit-card{min-height:300px!important}body.page-support-r123 .contact.standalone-contact{grid-template-columns:1fr!important;gap:44px!important}}
 @media(max-width:680px){body.page-support-r123 .method,body.page-support-r123 .anatomy,body.page-support-r123 .contact.standalone-contact{padding-left:22px!important;padding-right:22px!important}body.page-support-r123 .method>.section-intro h1{font-size:clamp(42px,12vw,58px)!important}body.page-support-r123 .method-layout,body.page-support-r123 .stage-list,body.page-support-r123 .contact>aside{box-shadow:8px 8px 0 #cbbdac!important}body.page-support-r123 .method-list,body.page-support-r123 .stage-list{grid-template-columns:1fr!important}body.page-support-r123 .method-list article{min-height:0!important;border-right:0!important;border-bottom:1px solid #d7d4cc!important;padding:24px 20px!important}body.page-support-r123 .method-list article:last-child{border-bottom:0!important}body.page-support-r123 .stage-list article,body.page-support-r123 .stage-list article.active{min-height:0!important;padding:22px 20px!important}body.page-support-r123 .credit-card{padding:28px 24px!important}body.page-support-r123 .credit-card h3{margin-top:48px!important}body.page-support-r123 .contact>aside p{padding:16px!important}}
 @media(prefers-reduced-motion:reduce){body.page-support-r123 [data-support-reveal]{opacity:1!important;transform:none!important;transition:none!important}}
