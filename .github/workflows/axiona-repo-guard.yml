@@ -35,6 +35,10 @@ jobs:
         shell: bash
         run: python3 scripts/verify_sitemap_hreflang.py
 
+      - name: Verify navigation and footer parity
+        shell: bash
+        run: python3 scripts/verify_navigation_parity.py
+
       - name: Verify diff whitespace
         shell: bash
         run: |
