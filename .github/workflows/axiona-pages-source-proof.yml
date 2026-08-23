@@ -126,8 +126,8 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          node <<'NODE'
-          const { chromium } = require('playwright-core');
+          node --input-type=module <<'NODE'
+          import { chromium } from 'playwright-core';
 
           const browser = await chromium.launch({
             executablePath: process.env.CHROME_PATH,
