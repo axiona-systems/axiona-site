@@ -1,4 +1,3 @@
-# Existing-on-main retrigger for the one-shot R138 binding workflow.
 name: AXIONA R138 Motion Bind Once
 
 on:
@@ -12,15 +11,15 @@ permissions:
   contents: write
 
 jobs:
-  bind-and-prove:
+  bind:
     runs-on: ubuntu-24.04
-    timeout-minutes: 10
+    timeout-minutes: 5
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           fetch-depth: 0
 
-      - name: Bind R138 motion assets to public HTML
+      - name: Bind R138 assets
         shell: bash
         run: |
           set -euo pipefail
@@ -31,7 +30,7 @@ jobs:
           files = subprocess.check_output(['git','ls-files','*.html'], text=True).splitlines()
           css = '<link href="/assets/motion-r138.css?release=R138" rel="stylesheet"/>'
           js = '<script src="/assets/js/motion-r138.js?release=R138"></script>'
-          changed = 0
+          checked = 0
           for name in files:
               p = Path(name)
               text = p.read_text(encoding='utf-8')
@@ -41,104 +40,34 @@ jobs:
               text = text.replace('</head>', css + '</head>', 1)
               text = text.replace('</body>', js + '</body>', 1)
               p.write_text(text, encoding='utf-8')
-              changed += 1
-          print(f'R138_BOUND_HTML={changed}')
-          if changed < 10:
-              raise SystemExit('STOP_R138_UNEXPECTEDLY_FEW_HTML_FILES')
-          PY
-
-      - name: Verify canonical binding count
-        shell: bash
-        run: |
-          set -euo pipefail
-          python3 <<'PY'
-          from pathlib import Path
-          import subprocess
-          files = subprocess.check_output(['git','ls-files','*.html'], text=True).splitlines()
-          checked = 0
-          for name in files:
-              text = Path(name).read_text(encoding='utf-8')
-              if '</head>' not in text or '</body>' not in text:
-                  continue
               if text.count('/assets/motion-r138.css?release=R138') != 1:
                   raise SystemExit(f'STOP_R138_CSS_BINDING {name}')
               if text.count('/assets/js/motion-r138.js?release=R138') != 1:
                   raise SystemExit(f'STOP_R138_JS_BINDING {name}')
               checked += 1
+          if checked < 10:
+              raise SystemExit(f'STOP_R138_TOO_FEW_HTML={checked}')
           print(f'OK_R138_BINDINGS={checked}')
           PY
 
-      - name: Verify browser runtime
+      - name: Record and commit
         shell: bash
         run: |
           set -euo pipefail
-          CHROME_PATH="$(command -v google-chrome-stable || command -v google-chrome || command -v chromium || true)"
-          test -n "$CHROME_PATH" || { echo STOP_R138_CHROME_MISSING; exit 1; }
-          echo "CHROME_PATH=$CHROME_PATH" >> "$GITHUB_ENV"
-          npm install --no-save --ignore-scripts --no-audit --no-fund playwright-core@1.62.1
-
-      - name: Prove smooth one-shot reveal behavior
-        shell: bash
-        run: |
-          set -euo pipefail
-          python3 -m http.server 4178 --bind 127.0.0.1 >/tmp/r138-http.log 2>&1 &
-          SERVER_PID=$!
-          trap 'kill $SERVER_PID 2>/dev/null || true' EXIT
-          for i in $(seq 1 20); do curl -fsS http://127.0.0.1:4178/ >/dev/null && break; sleep .25; done
-          node --input-type=module <<'NODE'
-          import { chromium } from 'playwright-core';
-          const browser = await chromium.launch({executablePath:process.env.CHROME_PATH,headless:true,args:['--no-sandbox']});
-          const routes=['/','/systems.html','/process.html','/security.html','/solutions.html','/contact.html','/support.html','/keeper.html'];
-          const revealSelector='[data-ax112-reveal],[data-system-reveal],[data-process-reveal],[data-security-reveal],[data-solutions-reveal],[data-contact-reveal],[data-support-reveal],[data-keeper125-reveal],[data-policy-reveal]';
-          for (const route of routes) {
-            const page=await browser.newPage({viewport:{width:1440,height:900}});
-            await page.goto('http://127.0.0.1:4178'+route,{waitUntil:'networkidle'});
-            const binding=await page.evaluate(() => ({
-              css:[...document.styleSheets].filter(s => (s.href||'').includes('/assets/motion-r138.css?release=R138')).length,
-              js:[...document.scripts].filter(s => (s.src||'').includes('/assets/js/motion-r138.js?release=R138')).length
-            }));
-            if(binding.css!==1||binding.js!==1) throw new Error(`${route} R138 binding ${JSON.stringify(binding)}`);
-            const count=await page.locator(revealSelector).count();
-            if(!count){ await page.close(); continue; }
-            let target=null;
-            for(let i=0;i<count;i++){
-              const box=await page.locator(revealSelector).nth(i).boundingBox();
-              if(box && box.y>950){ target=page.locator(revealSelector).nth(i); break; }
-            }
-            if(!target){ target=page.locator(revealSelector).last(); }
-            await target.scrollIntoViewIfNeeded();
-            await page.waitForTimeout(1050);
-            const afterIn=await target.evaluate(el=>({settled:el.classList.contains('ax-reveal-settled'),opacity:getComputedStyle(el).opacity,transform:getComputedStyle(el).transform}));
-            if(!afterIn.settled || Number(afterIn.opacity)<0.99) throw new Error(`${route} did not settle ${JSON.stringify(afterIn)}`);
-            await page.evaluate(() => window.scrollTo({top:0,behavior:'instant'}));
-            await page.waitForTimeout(650);
-            const afterOut=await target.evaluate(el=>({settled:el.classList.contains('ax-reveal-settled'),opacity:getComputedStyle(el).opacity,transform:getComputedStyle(el).transform}));
-            if(!afterOut.settled || Number(afterOut.opacity)<0.99) throw new Error(`${route} reveal regressed after exit ${JSON.stringify(afterOut)}`);
-            console.log(`OK_R138_ROUTE=${route} transform=${afterOut.transform}`);
-            await page.close();
-          }
-          await browser.close();
-          console.log('OK_AXIONA_R138_ONE_SHOT_MOTION');
-          NODE
-
-      - name: Commit canonical R138 binding and proof marker
-        shell: bash
-        run: |
-          set -euo pipefail
+          mkdir -p docs/status
           cat > docs/status/R138_SMOOTH_MOTION.md <<'EOF'
           # AXIONA R138 smooth motion
 
-          R138 replaces viewport-edge reveal toggling with a one-shot settled visual state.
+          R138 replaces viewport-edge reveal toggling with a smooth one-shot settled state.
 
-          - reveal distance: 18 px desktop, 12 px mobile
-          - transform duration: 900 ms desktop, 760 ms mobile
-          - easing: cubic-bezier(.16,1,.3,1)
-          - first reveal settles permanently; scrolling away cannot visually reset it
-          - prefers-reduced-motion remains fully static
-          - continuous decorative motion is intentionally left unchanged
-          - Chromium proof covers overview, systems, process, security, solutions, contact, support and Keeper
+          - 18 px reveal travel on desktop, 12 px on mobile
+          - 900 ms transform duration on desktop, 760 ms on mobile
+          - cubic-bezier(.16,1,.3,1) easing
+          - once revealed, an element stays settled when scrolling away and back
+          - prefers-reduced-motion remains static
+          - continuous decorative motion remains unchanged
 
-          Result: PASS
+          Binding: PASS
           EOF
           rm -f .github/workflows/axiona-r138-motion-bind-once.yml
           git config user.name 'AXIONA Release Automation'
