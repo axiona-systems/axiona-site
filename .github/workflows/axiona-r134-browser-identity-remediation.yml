@@ -1,0 +1,83 @@
+name: AXIONA R134 Browser Identity Remediation
+
+on:
+  push:
+    branches: [feature/browser-identity-r134]
+    paths:
+      - .github/workflows/axiona-r134-browser-identity-remediation.yml
+
+permissions:
+  contents: write
+
+jobs:
+  remediate:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    steps:
+      - name: Checkout feature branch
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          ref: feature/browser-identity-r134
+          fetch-depth: 0
+
+      - name: Normalize identity links on all public HTML
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+
+          routes=(
+              'index.html','systems.html','process.html','security.html','solutions.html',
+              'keeper.html','contact.html','privacy.html','legal.html','support.html'
+          )
+          targets=[Path(route) for route in routes]
+          targets += [Path('en')/route for route in routes]
+          targets += [Path('de')/route for route in routes]
+          targets += [Path('404.html')]
+
+          block=(
+              '<link rel="icon" href="/favicon.svg" type="image/svg+xml"/>'
+              '<link rel="icon" href="/favicon-32x32.png" type="image/png" sizes="32x32"/>'
+              '<link rel="icon" href="/favicon-16x16.png" type="image/png" sizes="16x16"/>'
+              '<link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180"/>'
+              '<link rel="manifest" href="/site.webmanifest"/>'
+          )
+
+          link_re=re.compile(r'<link\b[^>]*>',re.I)
+          rel_re=re.compile(r'\brel=["\']([^"\']+)["\']',re.I)
+
+          for path in targets:
+              text=path.read_text(encoding='utf-8')
+              def keep_or_remove(match):
+                  tag=match.group(0)
+                  rel=rel_re.search(tag)
+                  if not rel:
+                      return tag
+                  tokens={token.lower() for token in rel.group(1).split()}
+                  if tokens & {'icon','apple-touch-icon','manifest'}:
+                      return ''
+                  return tag
+              text=link_re.sub(keep_or_remove,text)
+              if '</head>' not in text:
+                  raise RuntimeError(f'{path}: </head> missing')
+              text=text.replace('</head>',block+'</head>',1)
+              path.write_text(text,encoding='utf-8')
+          PY
+
+          python3 scripts/verify_site.py
+          python3 scripts/verify_social_metadata.py
+          python3 scripts/verify_browser_identity.py
+          git diff --check
+
+      - name: Commit remediation and remove migration workflow
+        shell: bash
+        run: |
+          set -euo pipefail
+          git rm .github/workflows/axiona-r134-browser-identity-remediation.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add '*.html' en/*.html de/*.html
+          git commit -m 'R134: normalize browser identity bindings'
+          git push origin HEAD:feature/browser-identity-r134
