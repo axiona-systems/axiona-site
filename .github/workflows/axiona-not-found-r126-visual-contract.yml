@@ -1,0 +1,109 @@
+name: AXIONA Not Found R126 Visual Contract
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 404.html
+      - assets/not-found-r126.css
+      - assets/js/not-found-r126.js
+      - .github/workflows/axiona-not-found-r126-visual-contract.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  rendered-contract:
+    name: Verify localized 404 recovery contract
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - name: Prepare browser inspector and 404-aware server
+        shell: bash
+        run: |
+          set -euo pipefail
+          CHROME_PATH="$(command -v google-chrome-stable || command -v google-chrome || command -v chromium || true)"
+          test -n "$CHROME_PATH" || exit 1
+          echo "CHROME_PATH=$CHROME_PATH" >> "$GITHUB_ENV"
+          npm install --no-save --ignore-scripts --no-audit --no-fund playwright-core@1.62.1
+          cat >/tmp/r126-server.mjs <<'NODE'
+          import http from 'node:http';
+          import fs from 'node:fs';
+          import path from 'node:path';
+          const root=process.cwd();
+          const types={'.html':'text/html; charset=utf-8','.css':'text/css; charset=utf-8','.js':'text/javascript; charset=utf-8','.png':'image/png','.ico':'image/x-icon'};
+          http.createServer((req,res)=>{
+            const pathname=decodeURIComponent(new URL(req.url,'http://local').pathname);
+            let file=path.join(root, pathname==='/' ? 'index.html' : pathname.replace(/^\//,''));
+            let status=200;
+            if(!fs.existsSync(file)||fs.statSync(file).isDirectory()){file=path.join(root,'404.html');status=404;}
+            res.writeHead(status,{'Content-Type':types[path.extname(file)]||'application/octet-stream','Cache-Control':'no-store'});
+            fs.createReadStream(file).pipe(res);
+          }).listen(4183,'127.0.0.1');
+          NODE
+          node /tmp/r126-server.mjs >/tmp/r126-http.log 2>&1 &
+          for i in {1..20}; do code="$(curl -sS -o /tmp/r126-probe -w '%{http_code}' http://127.0.0.1:4183/__missing__ || true)"; [ "$code" = 404 ] && exit 0; sleep .25; done
+          cat /tmp/r126-http.log || true
+          exit 1
+      - name: Verify HU EN DE desktop and mobile 404 behavior
+        shell: bash
+        env:
+          BASE: http://127.0.0.1:4183
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/r126-shots
+          node --input-type=module <<'NODE'
+          import { chromium } from 'playwright-core';
+          const browser=await chromium.launch({executablePath:process.env.CHROME_PATH,headless:true,args:['--no-sandbox']});
+          const cases=[
+            ['/missing-r126','hu','Ez az oldal nincs itt.','/solutions.html'],
+            ['/en/missing-r126','en','This page is not here.','/en/solutions.html'],
+            ['/de/missing-r126','de','Diese Seite ist nicht hier.','/de/solutions.html']
+          ];
+          const has=(v,x)=>v?.includes(x);
+          for(const [route,lang,heading,solutionsHref] of cases) for(const [label,w,h] of [['desktop',1440,1000],['mobile',390,844]]){
+            const page=await browser.newPage({viewport:{width:w,height:h}});
+            const response=await page.goto(process.env.BASE+route,{waitUntil:'networkidle'});
+            if(response.status()!==404) throw Error(route+' status '+response.status());
+            const markers=await page.evaluate(async()=>({css:await(await fetch('/assets/not-found-r126.css')).text(),js:await(await fetch('/assets/js/not-found-r126.js')).text()}));
+            if(!markers.css.includes('AXIONA R126 — localized 404 recovery sheet')||!markers.js.includes('AXIONA R126 — localized 404 recovery + transform-only motion')) throw Error(route+' asset marker');
+            const r=await page.evaluate(()=>{const st=q=>{const e=document.querySelector(q),s=e&&getComputedStyle(e);return s&&{bg:s.backgroundColor,bgi:s.backgroundImage,cursor:s.cursor,opacity:s.opacity}};return{
+              release:document.querySelector('meta[name="axiona-release"]')?.content,
+              lang:document.documentElement.lang,
+              css:[...document.styleSheets].some(x=>(x.href||'').includes('/assets/not-found-r126.css?release=R126')),
+              js:[...document.scripts].some(x=>(x.src||'').includes('/assets/js/not-found-r126.js?release=R126')),
+              sw:document.documentElement.scrollWidth,cw:document.documentElement.clientWidth,
+              h1:(document.querySelector('main h1')?.textContent||'').trim(),
+              counts:[document.querySelectorAll('main h1').length,document.querySelectorAll('.not-found-sheet').length,document.querySelectorAll('.not-found-route').length,document.querySelectorAll('footer').length],
+              solutions:document.querySelector('.not-found-route[data-route="solutions"]')?.getAttribute('href'),
+              active:document.querySelector('.language-switch a.active')?.getAttribute('data-locale'),
+              robots:document.querySelector('meta[name="robots"]')?.content,
+              bodyClass:document.body.className,
+              body:st('body'),sheet:st('.not-found-sheet'),route:st('.not-found-route')};});
+            if(r.release!=='R126'||r.lang!==lang||!r.css||!r.js||r.sw>r.cw+2) throw Error(route+' binding/overflow');
+            if(r.h1!==heading||JSON.stringify(r.counts)!==JSON.stringify([1,1,3,1])) throw Error(route+' localized structure');
+            if(r.solutions!==solutionsHref||r.active!==lang) throw Error(route+' locale routing');
+            if(r.robots!=='noindex,follow'||r.bodyClass.includes('page-overview')) throw Error(route+' 404 semantics');
+            if(!has(r.body.bg,'241, 238, 230')||!has(r.sheet.bg,'11, 30, 37')||r.route.cursor!=='pointer'||r.route.opacity!=='1') throw Error(route+' visual/affordance');
+            if(route==='/missing-r126'&&label==='desktop'){
+              const probe=page.locator('.not-found-sheet');
+              await probe.scrollIntoViewIfNeeded();await page.waitForTimeout(180);
+              if(!await probe.evaluate(e=>e.classList.contains('is-visible'))) throw Error('reveal-on');
+            }
+            await page.evaluate(()=>document.querySelectorAll('[data-error-reveal]').forEach(e=>e.classList.add('is-visible')));
+            await page.screenshot({path:`/tmp/r126-shots/${lang}-${label}.png`,fullPage:true});
+            await page.close();
+          }
+          await browser.close();
+          console.log('OK_AXIONA_NOT_FOUND_R126_VISUAL_CONTRACT');
+          NODE
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: axiona-not-found-r126-render-evidence
+          path: /tmp/r126-shots/*.png
+          if-no-files-found: error
+          retention-days: 3
