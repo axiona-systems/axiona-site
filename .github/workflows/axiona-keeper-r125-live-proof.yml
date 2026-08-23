@@ -1,0 +1,50 @@
+name: AXIONA Keeper R125 Live Proof
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - keeper.html
+      - en/keeper.html
+      - de/keeper.html
+      - assets/keeper-r125.css
+      - assets/js/keeper-r125.js
+      - .github/workflows/axiona-keeper-r125-live-proof.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  prove-live:
+    name: Verify live R125 Keeper release
+    runs-on: ubuntu-24.04
+    timeout-minutes: 6
+    steps:
+      - name: Verify exact live R125 bindings and assets
+        shell: bash
+        run: |
+          set -euo pipefail
+          for attempt in $(seq 1 36); do
+            KEY="${GITHUB_SHA}-keeper-r125-${attempt}"
+            HU="$(curl --fail --silent --show-error --location --header 'Cache-Control: no-cache' "https://axiona.systems/keeper.html?proof=${KEY}" || true)"
+            EN="$(curl --fail --silent --show-error --location --header 'Cache-Control: no-cache' "https://axiona.systems/en/keeper.html?proof=${KEY}" || true)"
+            DE="$(curl --fail --silent --show-error --location --header 'Cache-Control: no-cache' "https://axiona.systems/de/keeper.html?proof=${KEY}" || true)"
+            CSS="$(curl --fail --silent --show-error --location --header 'Cache-Control: no-cache' "https://axiona.systems/assets/keeper-r125.css?release=R125&proof=${KEY}" || true)"
+            JS="$(curl --fail --silent --show-error --location --header 'Cache-Control: no-cache' "https://axiona.systems/assets/js/keeper-r125.js?release=R125&proof=${KEY}" || true)"
+            ok=true
+            for PAGE in "$HU" "$EN" "$DE"; do
+              grep -Fq '/assets/keeper-r125.css?release=R125' <<<"$PAGE" || ok=false
+              grep -Fq '/assets/js/keeper-r125.js?release=R125' <<<"$PAGE" || ok=false
+              grep -Fq 'content="R125" name="axiona-release"' <<<"$PAGE" || ok=false
+              grep -Fq 'class="ax-share section-pad"' <<<"$PAGE" || ok=false
+            done
+            if [ "$ok" = true ] && grep -Fq 'AXIONA R125 — Keeper visual alignment and cache-safe hardening' <<<"$CSS" && grep -Fq 'AXIONA R125 — repeatable, progressive-enhancement Keeper reveal motion' <<<"$JS"; then
+              echo "OK_AXIONA_KEEPER_R125_LIVE"
+              echo "PROVEN_PAGES_SOURCE_SHA=${GITHUB_SHA}"
+              exit 0
+            fi
+            sleep 5
+          done
+          echo "STOP_AXIONA_KEEPER_R125_NOT_LIVE_FOR_SHA=${GITHUB_SHA}" >&2
+          exit 1
