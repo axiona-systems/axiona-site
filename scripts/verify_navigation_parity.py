@@ -30,6 +30,8 @@ PRIMARY_NAV = (
     "solutions.html",
     "contact.html",
 )
+# Keeper is an AXIONA solution/product detail page, so Solutions is intentionally active.
+ACTIVE_PRIMARY_ROUTE = {route: route for route in PRIMARY_NAV} | {"keeper.html": "solutions.html"}
 FOOTER_UTILITY = ("support.html", "privacy.html", "legal.html", "security.html")
 VOID_TAGS = {
     "area", "base", "br", "col", "embed", "hr", "img", "input", "link", "meta",
@@ -98,7 +100,6 @@ class NavigationParser(HTMLParser):
             self.stack.append((tag, markers))
 
     def handle_startendtag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
-        # No relevant navigation anchors are self-closing; intentionally ignore void markup.
         return
 
     def handle_endtag(self, tag: str) -> None:
@@ -137,10 +138,11 @@ def verify(root: Path) -> list[str]:
             if desktop_hrefs != mobile_hrefs:
                 errors.append(f"desktop/mobile nav drift: {label}")
 
-            current_primary_index = PRIMARY_NAV.index(route) if route in PRIMARY_NAV else None
-            expected_active = [index == current_primary_index for index in range(len(PRIMARY_NAV))]
-            desktop_active = [active for _, active in parser.desktop_nav]
-            mobile_active = [active for _, active in parser.mobile_nav]
+            active_route = ACTIVE_PRIMARY_ROUTE.get(route)
+            active_index = PRIMARY_NAV.index(active_route) if active_route else None
+            expected_active = [index == active_index for index in range(len(PRIMARY_NAV))]
+            desktop_active = [item_active for _, item_active in parser.desktop_nav]
+            mobile_active = [item_active for _, item_active in parser.mobile_nav]
             if desktop_active != expected_active:
                 errors.append(f"desktop active-state mismatch: {label} -> {desktop_active}")
             if mobile_active != expected_active:
@@ -150,7 +152,7 @@ def verify(root: Path) -> list[str]:
             expected_languages = expected_language_switch(route)
             if language_hrefs != expected_languages:
                 errors.append(f"language switch mismatch: {label} -> {language_hrefs}, expected {expected_languages}")
-            language_active = [active for _, active in parser.language_switch]
+            language_active = [item_active for _, item_active in parser.language_switch]
             expected_language_active = [item_lang == lang for item_lang in LANGS]
             if language_active != expected_language_active:
                 errors.append(f"language active-state mismatch: {label} -> {language_active}")
