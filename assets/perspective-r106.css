@@ -2,6 +2,8 @@
    Purpose: widen the homepage beyond time/admin/document pain without diluting
    the core system-design positioning. Text remains fully opaque for accessibility. */
 
+@import url("/assets/motion-r105.css");
+
 .problem-spectrum{
   position:relative;
   display:grid;
