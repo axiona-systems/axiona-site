@@ -1,143 +1,127 @@
-# AXIONA R143 repository audit
+# AXIONA R143 repository hygiene, hardening and optimization closeout
 
-- tracked files: **199**
-- tracked size: **2.48 MiB**
-- public HTML files: **31**
-- asset files: **62**
-- workflow files: **40**
-- release-numbered workflows: **36**
-- runtime-unreferenced asset candidates: **4**
-- unpinned external action refs: **1**
-- workflows without explicit permissions block: **0**
+Date: 2026-08-23
 
-## External runtime hosts
-- `wa.me`
-- `www.linkedin.com`
-- `yzhmqygbqitfqdabqkqr.supabase.co`
+## Result
 
-## Runtime-unreferenced asset candidates
-- `assets/brand/axiona-icon-192.png`
-- `assets/brand/axiona-icon-512.png`
-- `assets/r135-ux-fixes.css`
-- `assets/r136-ux-fixes.css`
+R143 completed the repository cleanup and replaced the accumulated release-specific CI history with a smaller canonical verification surface.
 
-## Release-numbered workflows
-- `.github/workflows/axiona-browser-identity-r134-contract.yml`
-- `.github/workflows/axiona-browser-identity-r134-live-proof.yml`
-- `.github/workflows/axiona-browser-r129-coverage-contract.yml`
-- `.github/workflows/axiona-contact-r122-live-proof.yml`
-- `.github/workflows/axiona-contact-r122-visual-contract.yml`
-- `.github/workflows/axiona-keeper-r125-live-proof.yml`
-- `.github/workflows/axiona-keeper-r125-visual-contract.yml`
-- `.github/workflows/axiona-not-found-r126-live-proof.yml`
-- `.github/workflows/axiona-not-found-r126-visual-contract.yml`
-- `.github/workflows/axiona-policy-r124-live-proof.yml`
-- `.github/workflows/axiona-policy-r124-visual-contract.yml`
-- `.github/workflows/axiona-process-r119-live-proof.yml`
-- `.github/workflows/axiona-process-r119-visual-contract.yml`
-- `.github/workflows/axiona-public-invariants-r128-contract.yml`
-- `.github/workflows/axiona-r110-live-binding-proof.yml`
-- `.github/workflows/axiona-r113-live-proof.yml`
-- `.github/workflows/axiona-r116-overview-ux-contract.yml`
-- `.github/workflows/axiona-r143-repo-audit-once.yml`
-- `.github/workflows/axiona-retired-routes-r133-contract.yml`
-- `.github/workflows/axiona-retired-routes-r133-live-proof.yml`
-- `.github/workflows/axiona-security-r120-live-proof.yml`
-- `.github/workflows/axiona-security-r120-visual-contract.yml`
-- `.github/workflows/axiona-security-txt-r131-contract.yml`
-- `.github/workflows/axiona-security-txt-r131-live-proof.yml`
-- `.github/workflows/axiona-sitemap-r130-invariants-contract.yml`
-- `.github/workflows/axiona-social-r132-invariants-contract.yml`
-- `.github/workflows/axiona-social-r132-live-proof.yml`
-- `.github/workflows/axiona-solutions-r121-live-proof.yml`
-- `.github/workflows/axiona-solutions-r121-visual-contract.yml`
-- `.github/workflows/axiona-support-r123-live-proof.yml`
-- `.github/workflows/axiona-support-r123-visual-contract.yml`
-- `.github/workflows/axiona-systems-r118-live-proof.yml`
-- `.github/workflows/axiona-systems-r118-visual-contract.yml`
-- `.github/workflows/axiona-utility-r127-live-proof.yml`
-- `.github/workflows/axiona-utility-r127-route-contract.yml`
-- `.github/workflows/axiona-visual-r109-live-proof.yml`
+Primary implementation merge:
+- PR: `#87`
+- merge commit: `a00b43f5fbe8c6bcedf196afc47bbfbeafde85b1`
+- merge method: squash
+- GitHub signature: verified
 
-## Unpinned external actions
-- `.github/workflows/axiona-r143-repo-audit-once.yml` → `\s*([^@\s]+)@([^\s`
+## Before → after
 
-## Workflows without explicit permissions
-- none
+| Area | Before R143 | After R143 |
+| --- | ---: | ---: |
+| GitHub Actions workflows | 40 | 4 |
+| Release-numbered historical workflows | 36 | 0 |
+| Public HTML files | 31 | 31 |
+| R135/R136 stale UX override files | 2 | 0 |
+| R105/R108 motion compatibility shims | 2 | 0 |
+| Canonical repository-policy guards | fragmented | consolidated |
 
-## Heaviest public pages by stylesheet/script count
-- `index.html` — 16 stylesheets, 5 external scripts, 19.8 KiB HTML
-- `en/index.html` — 16 stylesheets, 5 external scripts, 18.3 KiB HTML
-- `de/index.html` — 16 stylesheets, 5 external scripts, 18.8 KiB HTML
-- `solutions.html` — 10 stylesheets, 4 external scripts, 14.3 KiB HTML
-- `en/solutions.html` — 10 stylesheets, 4 external scripts, 14.1 KiB HTML
-- `de/solutions.html` — 10 stylesheets, 4 external scripts, 14.7 KiB HTML
-- `keeper.html` — 9 stylesheets, 4 external scripts, 21.1 KiB HTML
-- `en/keeper.html` — 9 stylesheets, 4 external scripts, 20.4 KiB HTML
-- `de/keeper.html` — 9 stylesheets, 4 external scripts, 21.3 KiB HTML
-- `systems.html` — 7 stylesheets, 4 external scripts, 14.2 KiB HTML
-- `security.html` — 7 stylesheets, 4 external scripts, 15.7 KiB HTML
-- `process.html` — 7 stylesheets, 4 external scripts, 14.3 KiB HTML
-- `en/systems.html` — 7 stylesheets, 4 external scripts, 13.5 KiB HTML
-- `en/security.html` — 7 stylesheets, 4 external scripts, 14.9 KiB HTML
-- `en/process.html` — 7 stylesheets, 4 external scripts, 14.0 KiB HTML
-- `de/systems.html` — 7 stylesheets, 4 external scripts, 14.2 KiB HTML
-- `de/security.html` — 7 stylesheets, 4 external scripts, 15.8 KiB HTML
-- `de/process.html` — 7 stylesheets, 4 external scripts, 14.7 KiB HTML
-- `support.html` — 6 stylesheets, 3 external scripts, 8.1 KiB HTML
-- `en/support.html` — 6 stylesheets, 3 external scripts, 7.8 KiB HTML
+The two PWA icon files originally reported as possible orphan candidates were retained because `site.webmanifest` references them. They were not dead assets.
 
-## Largest tracked files
-- `assets/brand/axiona-icon-512.png` — 191.7 KiB
-- `assets/social/axiona-social-preview-r92-hu.png` — 188.4 KiB
-- `assets/social/axiona-social-preview-r92-de.png` — 186.0 KiB
-- `assets/social/axiona-social-preview-r92-en.png` — 185.0 KiB
-- `assets/social/axiona-keeper-social-preview-r92-hu.png` — 180.3 KiB
-- `assets/social/axiona-keeper-social-preview-r92-de.png` — 178.4 KiB
-- `assets/social/axiona-keeper-social-preview-r92-en.png` — 177.7 KiB
-- `favicon.ico` — 79.2 KiB
-- `assets/brand/axiona-icon-192.png` — 40.8 KiB
-- `assets/visual-r112.css` — 28.2 KiB
-- `apple-touch-icon.png` — 26.6 KiB
-- `de/keeper.html` — 21.3 KiB
-- `keeper.html` — 21.1 KiB
-- `assets/styles-r71.css` — 20.8 KiB
-- `assets/systems-r118.css` — 20.8 KiB
-- `en/keeper.html` — 20.4 KiB
-- `index.html` — 19.8 KiB
-- `assets/solutions-r121.css` — 19.5 KiB
-- `assets/process-r119.css` — 19.4 KiB
-- `de/index.html` — 18.8 KiB
+## Canonical workflows
 
-## Live response headers
-```text
-Date: Sun, 23 Aug 2026 19:39:27 GMT
-Content-Type: text/html; charset=utf-8
-Connection: close
-Server: cloudflare
-last-modified: Sun, 23 Aug 2026 19:28:17 GMT
-access-control-allow-origin: *
-expires: Sun, 23 Aug 2026 19:49:27 GMT
-Cache-Control: max-age=600
-Nel: {"report_to":"cf-nel","success_fraction":0.0,"max_age":604800}
-x-proxy-cache: MISS
-x-github-request-id: EDA8:13E451:10921EA:1150008:6A8B4C6E
-x-github-edge-region: sea
-Server-Timing: cfCacheStatus;desc="DYNAMIC"
-Server-Timing: cfEdge;dur=30,cfOrigin;dur=87
-Age: 0
-via: 1.1 varnish
-x-served-by: cache-bfi-krnt7300035-BFI
-x-cache: MISS
-x-cache-hits: 0
-x-timer: S1787513968.549322,VS0,VE79
-vary: Accept-Encoding
-x-fastly-request-id: 11d35208eb5704859b71987b72116243d20c378f
-Report-To: {"group":"cf-nel","max_age":604800,"endpoints":[{"url":"https://a.nel.cloudflare.com/report/v4?s=S%2BxJBz3NUftMRwZm4hycHc5kiMvgCn9fWnmaZohvRlllqbgVS9R1VFGMqglZ%2FdzF0OEtpEXxvRqSMUkHUl1iQcpPdwLYjndJUyLNcS%2BeJj1Uf400aUxjaxmx3d0N%2FEcizA%3D%3D"}]}
-cf-cache-status: DYNAMIC
-CF-RAY: a2fc9558fd54b9a6-SEA
-alt-svc: h3=":443"; ma=86400
-```
+Only these workflows remain under `.github/workflows/`:
 
-## Guard result
-Local canonical guards: **PASS**
+1. `axiona-repo-guard.yml`
+   - public-source invariants
+   - sitemap / hreflang
+   - RFC 9116 `security.txt`
+   - social metadata
+   - retired routes
+   - browser identity metadata
+   - runtime asset graph
+   - Actions hardening
+   - whitespace check
+
+2. `axiona-browser-audit.yml`
+   - Lighthouse quality budgets
+   - axe WCAG audit
+   - pinned browser-audit dependencies
+
+3. `axiona-render-contract.yml`
+   - current route/render contract
+   - desktop/mobile overflow checks
+   - canonical R137/R142 bindings
+   - navigation state
+   - Systems geometry
+   - bidirectional motion behavior
+
+4. `axiona-pages-rebuild.yml`
+   - exact-main GitHub Pages rebuild
+   - exact build commit verification
+   - live canonical route verification
+   - live `security.txt` verification
+
+## Cleanup completed
+
+Removed:
+- stale `assets/r135-ux-fixes.css`
+- stale `assets/r136-ux-fixes.css`
+- superseded `assets/motion-r105.css`
+- superseded `assets/motion-r108.css`
+- old release-specific visual/live-proof workflows
+- obsolete R140 diagnostic text
+- transient candidate validation proof log
+- accidental `candidate` gitlink left by a temporary validation checkout
+
+Dependency-chain cleanup:
+- `assets/multipage-r78.css` no longer references the missing `multipage-r74.css` entrypoint;
+- multipage/perspective layers bind their required R109 compatibility layer directly;
+- `assets/js/share-r86.js` no longer injects the obsolete R108 stylesheet at runtime;
+- browser audit uses `axe-core@4.13.0`;
+- npm audit-tool installation continues to use `--ignore-scripts --no-audit --no-fund`.
+
+## Hardening added
+
+`verify_asset_references.py` now fails closed on missing local runtime asset references.
+
+`verify_workflow_hardening.py` now enforces the current Actions policy, including:
+- immutable 40-character action SHA pins;
+- explicit workflow permissions;
+- least-privilege validation permissions;
+- checkout credential persistence disabled where credentials are not required.
+
+The canonical verification workflows passed on exact candidate head `8b336e334b2bc844b293c72150b16374e78af3ef` before merge:
+- Public Surface Guard: PASS
+- Render Contract: PASS
+- Browser Quality Audit: PASS
+- Lighthouse 12-route matrix: PASS
+- axe WCAG audit: PASS
+
+## Motion conflict found and corrected
+
+The repository review found a real layering conflict between the accepted R115 overview stylesheet and the current R142 motion coordinator.
+
+R115 still contained a historical 18 px `!important` transform for overview story steps. R142 specified the current 7 px desktop / 5 px mobile movement, but the older higher-specificity rule could still win for those elements.
+
+R142 is now explicitly authoritative for the affected overview reveal states while preserving the accepted R115 visual composition. The current tuning remains:
+- desktop: 7 px / 900 ms
+- mobile: 5 px / 760 ms
+- reduced-motion: transform and transition disabled
+
+The corrected state passed the full render contract before merge.
+
+## Public runtime check
+
+After merge, the public AXIONA routes remained reachable, including the overview, Systems, Process, Security, Solutions and Contact surfaces. The canonical Pages workflow itself also contains exact-main build matching and live-route convergence checks so future publication is not treated as successful merely because a push completed.
+
+## Remaining repository-setting hardening
+
+One item is outside the repository source itself:
+
+**GitHub `main` branch protection is currently disabled.**
+
+The source-level guards are in place, but the repository should additionally use GitHub branch protection / rulesets so `main` cannot be changed without the intended PR/check policy. The currently available GitHub connection does not expose a branch-protection write action, so R143 does not silently simulate this protection in source code.
+
+## Final assessment
+
+R143 repository state: **CLEAN / HARDENED / CANONICAL CI CONSOLIDATED**
+
+No public-content redesign was introduced by this cleanup. R137 layout/navigation behavior and the intended R142 motion tuning remain the accepted public baseline.
