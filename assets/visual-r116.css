@@ -1,0 +1,60 @@
+/* AXIONA R116 — interaction affordance cleanup + share strip integration.
+   Keep informative rows visibly non-interactive and restore the share utility
+   without disturbing the accepted R115 composition. */
+
+body.page-overview .ax112-field-row{
+  cursor:default;
+}
+body.page-overview .ax112-field-row>b{
+  display:none!important;
+}
+@media(hover:hover){
+  body.page-overview .ax112-field-row:hover{
+    background:transparent!important;
+    padding-left:0!important;
+  }
+  body.page-overview .ax112-field-row:hover h3,
+  body.page-overview .ax112-field-row:hover p,
+  body.page-overview .ax112-field-row:hover>span{
+    color:inherit;
+  }
+}
+
+body.page-overview .ax116-share{
+  width:100%;
+  margin:0;
+  padding-left:max(28px,calc((100vw - 1480px)/2))!important;
+  padding-right:max(28px,calc((100vw - 1480px)/2))!important;
+  background:#e5dfd3;
+  border-top:1px solid #c8c2b7;
+  border-bottom:0;
+}
+body.page-overview .ax116-share:before{
+  left:max(28px,calc((100vw - 1480px)/2));
+  width:52px;
+  background:#ef6b43;
+}
+body.page-overview .ax116-share .ax-share-copy h2{
+  color:#111917;
+  font-size:18px;
+}
+body.page-overview .ax116-share .ax-share-copy p{
+  color:#59615c;
+}
+body.page-overview .ax116-share .ax-share-primary{
+  background:#0b1e25;
+  border-color:#0b1e25;
+  color:#fbfaf6;
+}
+body.page-overview .ax116-share .ax-share-copy-button{
+  border-color:#0b1e25;
+  color:#111917;
+}
+
+@media(max-width:640px){
+  body.page-overview .ax116-share{
+    padding-left:20px!important;
+    padding-right:20px!important;
+  }
+  body.page-overview .ax116-share:before{left:20px}
+}
