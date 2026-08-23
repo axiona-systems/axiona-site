@@ -16,30 +16,95 @@ jobs:
   prove-source:
     name: Prove actual Pages source
     runs-on: ubuntu-24.04
-    timeout-minutes: 3
+    timeout-minutes: 4
     steps:
-      - name: Read GitHub Pages configuration
+      - name: Read GitHub Pages configuration and latest build
         shell: bash
         env:
           GH_TOKEN: ${{ github.token }}
           REPOSITORY: ${{ github.repository }}
         run: |
           set -euo pipefail
-          RESPONSE="$(curl --fail-with-body --silent --show-error \
+
+          curl --fail-with-body --silent --show-error \
             --header "Accept: application/vnd.github+json" \
             --header "Authorization: Bearer ${GH_TOKEN}" \
             --header "X-GitHub-Api-Version: 2026-03-10" \
-            "https://api.github.com/repos/${REPOSITORY}/pages")"
+            "https://api.github.com/repos/${REPOSITORY}/pages" > /tmp/pages.json
 
-          printf '%s' "$RESPONSE" | python3 -c '
-          import json, sys
-          data = json.load(sys.stdin)
-          source = data.get("source") or {}
-          print(f"AXIONA_PAGES_BUILD_TYPE={data.get(chr(98)+chr(117)+chr(105)+chr(108)+chr(100)+chr(95)+chr(116)+chr(121)+chr(112)+chr(101))}")
-          print(f"AXIONA_PAGES_SOURCE_BRANCH={source.get(chr(98)+chr(114)+chr(97)+chr(110)+chr(99)+chr(104))}")
-          print(f"AXIONA_PAGES_SOURCE_PATH={source.get(chr(112)+chr(97)+chr(116)+chr(104))}")
-          print(f"AXIONA_PAGES_CNAME={data.get(chr(99)+chr(110)+chr(97)+chr(109)+chr(101))}")
-          print(f"AXIONA_PAGES_STATUS={data.get(chr(115)+chr(116)+chr(97)+chr(116)+chr(117)+chr(115))}")
-          if not source.get("branch"):
-              raise SystemExit("STOP_AXIONA_PAGES_SOURCE_BRANCH_MISSING")
-          '
+          curl --fail-with-body --silent --show-error \
+            --header "Accept: application/vnd.github+json" \
+            --header "Authorization: Bearer ${GH_TOKEN}" \
+            --header "X-GitHub-Api-Version: 2026-03-10" \
+            "https://api.github.com/repos/${REPOSITORY}/pages/builds/latest" > /tmp/pages-latest.json
+
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          pages = json.loads(Path('/tmp/pages.json').read_text())
+          latest = json.loads(Path('/tmp/pages-latest.json').read_text())
+          source = pages.get('source') or {}
+
+          print(f"AXIONA_PAGES_BUILD_TYPE={pages.get('build_type')}")
+          print(f"AXIONA_PAGES_SOURCE_BRANCH={source.get('branch')}")
+          print(f"AXIONA_PAGES_SOURCE_PATH={source.get('path')}")
+          print(f"AXIONA_PAGES_CNAME={pages.get('cname')}")
+          print(f"AXIONA_PAGES_STATUS={pages.get('status')}")
+          print(f"AXIONA_PAGES_LATEST_BUILD_STATUS={latest.get('status')}")
+          print(f"AXIONA_PAGES_LATEST_BUILD_COMMIT={latest.get('commit')}")
+          print(f"AXIONA_PAGES_LATEST_BUILD_UPDATED_AT={latest.get('updated_at')}")
+
+          if not source.get('branch'):
+              raise SystemExit('STOP_AXIONA_PAGES_SOURCE_BRANCH_MISSING')
+          PY
+
+      - name: Inspect live HTML and visual assets
+        shell: bash
+        env:
+          PROOF_SHA: ${{ github.event.pull_request.base.sha || github.sha }}
+        run: |
+          set -euo pipefail
+          STAMP="${PROOF_SHA}-$(date +%s)-r111"
+
+          curl --fail --silent --show-error --location \
+            --header 'Cache-Control: no-cache' \
+            "https://axiona.systems/?axiona_source_proof=${STAMP}" > /tmp/live-home.html
+
+          curl --fail --silent --show-error --location \
+            --header 'Cache-Control: no-cache' \
+            "https://axiona.systems/assets/visual-r110.css?axiona_source_proof=${STAMP}" > /tmp/live-r110.css
+
+          curl --fail --silent --show-error --location \
+            --header 'Cache-Control: no-cache' \
+            "https://axiona.systems/assets/visual-r109.css?release=R110&axiona_source_proof=${STAMP}" > /tmp/live-r109.css
+
+          python3 - <<'PY'
+          import hashlib
+          import re
+          from pathlib import Path
+
+          home = Path('/tmp/live-home.html').read_text(errors='replace')
+          r110 = Path('/tmp/live-r110.css').read_text(errors='replace')
+          r109 = Path('/tmp/live-r109.css').read_text(errors='replace')
+
+          release = re.search(r'<meta content="([^"]+)" name="axiona-release"\s*/?>', home)
+          release_value = release.group(1) if release else 'MISSING'
+          direct_link = '<link href="/assets/visual-r110.css" rel="stylesheet"/>' in home
+          r110_import = 'visual-r109.css?release=R110' in r110
+          r109_marker = 'AXIONA R109 — engineered visual composition' in r109
+
+          print(f"AXIONA_LIVE_RELEASE={release_value}")
+          print(f"AXIONA_LIVE_DIRECT_R110_LINK={str(direct_link).lower()}")
+          print(f"AXIONA_LIVE_R110_IMPORT={str(r110_import).lower()}")
+          print(f"AXIONA_LIVE_R109_MARKER={str(r109_marker).lower()}")
+          print(f"AXIONA_LIVE_HOME_SHA256={hashlib.sha256(home.encode()).hexdigest()}")
+          print(f"AXIONA_LIVE_R110_SHA256={hashlib.sha256(r110.encode()).hexdigest()}")
+          print(f"AXIONA_LIVE_R109_SHA256={hashlib.sha256(r109.encode()).hexdigest()}")
+          print(f"AXIONA_LIVE_HOME_BYTES={len(home.encode())}")
+          print(f"AXIONA_LIVE_R110_BYTES={len(r110.encode())}")
+          print(f"AXIONA_LIVE_R109_BYTES={len(r109.encode())}")
+
+          if not (release_value == 'R110' and direct_link and r110_import and r109_marker):
+              raise SystemExit('STOP_AXIONA_LIVE_R110_NOT_MATERIALIZED')
+          PY
