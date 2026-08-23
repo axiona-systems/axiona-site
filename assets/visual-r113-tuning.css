@@ -1,5 +1,10 @@
 /* AXIONA R113 — final homepage calibration after rendered screenshot review. */
 
+/* Keep tiny technical metadata comfortably above WCAG contrast thresholds. */
+body.page-overview .ax112-kicker span:first-child{
+  color:#5f6862;
+}
+
 /* Keep the editorial story strong without returning to R112's poster scale. */
 body.page-overview .ax112-story-head h2{
   max-width:560px;
