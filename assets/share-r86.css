@@ -7,5 +7,33 @@
 /* Security-page metadata contrast. */
 .security-baseline>p{color:#91aaae}
 .security-principles article>span{color:#56645d}
+
+/* AXIONA R135 — navigation state + readability/containment fixes.
+   Keep the existing animated underline, but leave it visible on the current page. */
+.topbar nav a.active:not(.nav-contact):after{right:0!important}
+.topbar nav a.active:not(.nav-contact){font-weight:850!important}
+.topbar nav .nav-contact.active{box-shadow:inset 0 -3px 0 var(--orange)!important}
+
+/* Systems / section 01: the operational board must never cover the copy. */
+body.page-systems-r118 .services{grid-template-columns:minmax(0,.82fr) minmax(0,1.18fr)!important}
+body.page-systems-r118 .services>.section-intro,
+body.page-systems-r118 .system-service,
+body.page-systems-r118 .system-service .system-board,
+body.page-systems-r118 .system-service .service-copy{min-width:0!important}
+body.page-systems-r118 .system-service{position:relative!important;isolation:isolate!important;overflow:hidden!important}
+body.page-systems-r118 .system-service .system-board{position:relative!important;z-index:1!important;max-width:100%!important;overflow:hidden!important}
+body.page-systems-r118 .system-service .service-copy{position:relative!important;z-index:2!important;overflow-wrap:anywhere!important}
+
+/* Process / section 01: explicit high-contrast step markers. */
+body.page-process-r119 .stage-list article>span,
+body.page-process-r119 .stage-list article.active>span{
+  display:inline-flex!important;align-items:center!important;justify-content:center!important;
+  width:34px!important;min-width:34px!important;min-height:25px!important;padding:6px 7px!important;
+  position:static!important;background:var(--pro-petrol,#0b1e25)!important;
+  color:var(--pro-acid,#d7ef55)!important;border:1px solid #355159!important;
+  box-shadow:none!important;font:900 9px/1 ui-monospace,SFMono-Regular,Menlo,monospace!important;
+  letter-spacing:.08em!important
+}
+
 @media(max-width:920px){.ax-share{grid-template-columns:1fr auto;gap:20px}.ax-share:before{left:24px}.ax-share-copy p{display:none}}
 @media(max-width:640px){.ax-share{grid-template-columns:1fr;padding-left:20px!important;padding-right:20px!important}.ax-share:before{left:20px}.ax-share-controls{justify-self:stretch}.ax-share-actions{display:grid;grid-template-columns:1fr 1fr}.ax-share-primary,.ax-share-copy-button{width:100%}.ax-share-fallback{position:static;margin-top:8px;min-width:0}.ax-share-status{min-height:14px}}
