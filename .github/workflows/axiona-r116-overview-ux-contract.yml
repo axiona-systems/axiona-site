@@ -1,0 +1,169 @@
+name: AXIONA R116 Overview UX Contract
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "index.html"
+      - "en/index.html"
+      - "de/index.html"
+      - "assets/visual-r116.css"
+      - "assets/js/overview-r116.js"
+      - ".github/workflows/axiona-r116-overview-ux-contract.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  ux-contract:
+    name: Verify R116 overview affordances and sharing
+    runs-on: ubuntu-24.04
+    timeout-minutes: 6
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+
+      - name: Verify browser runtime
+        shell: bash
+        run: |
+          set -euo pipefail
+          CHROME_PATH="$(command -v google-chrome-stable || command -v google-chrome || command -v chromium || true)"
+          if [ -z "$CHROME_PATH" ]; then
+            echo "STOP_AXIONA_R116_CHROME_MISSING"
+            exit 1
+          fi
+          echo "CHROME_PATH=$CHROME_PATH" >> "$GITHUB_ENV"
+
+      - name: Install pinned render inspector
+        shell: bash
+        run: npm install --no-save --ignore-scripts --no-audit --no-fund playwright-core@1.62.1
+
+      - name: Start static server
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m http.server 4176 --bind 127.0.0.1 > /tmp/axiona-r116-http.log 2>&1 &
+          echo $! > /tmp/axiona-r116-http.pid
+          for attempt in {1..20}; do
+            if curl --fail --silent http://127.0.0.1:4176/ >/dev/null; then
+              echo "OK_AXIONA_R116_SERVER_READY"
+              exit 0
+            fi
+            sleep 0.25
+          done
+          cat /tmp/axiona-r116-http.log || true
+          exit 1
+
+      - name: Verify R116 UX behavior
+        shell: bash
+        env:
+          AXIONA_BASE: http://127.0.0.1:4176
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/r116-shots
+          node --input-type=module <<'NODE'
+          import { chromium } from 'playwright-core';
+
+          const browser = await chromium.launch({
+            executablePath: process.env.CHROME_PATH,
+            headless: true,
+            args: ['--no-sandbox']
+          });
+
+          const cases = [
+            { route: '/', lang: 'hu', share: 'Megosztás', copy: 'Link másolása' },
+            { route: '/en/', lang: 'en', share: 'Share', copy: 'Copy link' },
+            { route: '/de/', lang: 'de', share: 'Teilen', copy: 'Link kopieren' }
+          ];
+
+          async function inspect(testCase, label, width, height) {
+            const page = await browser.newPage({ viewport: { width, height } });
+            await page.goto(`${process.env.AXIONA_BASE}${testCase.route}`, { waitUntil: 'networkidle' });
+
+            const state = await page.evaluate(() => {
+              const hrefs = [...document.styleSheets].map(sheet => sheet.href || '');
+              const scripts = [...document.scripts].map(script => script.src || '');
+              const row = document.querySelector('.ax112-field-row');
+              const arrow = row?.querySelector(':scope > b');
+              const share = document.querySelector('.ax-share');
+              const native = share?.querySelector('[data-share-native]');
+              const copy = share?.querySelector('[data-share-copy]');
+              return {
+                directCss: hrefs.some(href => href.includes('/assets/visual-r116.css?release=R116')),
+                directJs: scripts.some(src => src.includes('/assets/js/overview-r116.js?release=R116')),
+                shareCount: document.querySelectorAll('.ax-share').length,
+                shareLabel: native?.textContent?.replace('↗','').trim() || '',
+                copyLabel: copy?.textContent?.trim() || '',
+                fieldRows: document.querySelectorAll('.ax112-field-row').length,
+                arrowDisplay: arrow ? getComputedStyle(arrow).display : null,
+                cursor: row ? getComputedStyle(row).cursor : null,
+                rowBackground: row ? getComputedStyle(row).backgroundColor : null,
+                rowPaddingLeft: row ? getComputedStyle(row).paddingLeft : null,
+                scrollWidth: document.documentElement.scrollWidth,
+                clientWidth: document.documentElement.clientWidth
+              };
+            });
+
+            if (!state.directCss) throw new Error(`${testCase.route} R116 CSS is not directly bound`);
+            if (!state.directJs) throw new Error(`${testCase.route} R116 JS is not directly bound`);
+            if (state.shareCount !== 1) throw new Error(`${testCase.route} expected exactly one share section, got ${state.shareCount}`);
+            if (state.shareLabel !== testCase.share) throw new Error(`${testCase.route} share label mismatch: ${state.shareLabel}`);
+            if (state.copyLabel !== testCase.copy) throw new Error(`${testCase.route} copy label mismatch: ${state.copyLabel}`);
+            if (state.fieldRows !== 6) throw new Error(`${testCase.route} expected six informational problem rows`);
+            if (state.arrowDisplay !== 'none') throw new Error(`${testCase.route} false action arrow still visible: ${state.arrowDisplay}`);
+            if (state.cursor !== 'default') throw new Error(`${testCase.route} problem row still advertises interaction: ${state.cursor}`);
+            if (state.scrollWidth > state.clientWidth + 2) throw new Error(`${testCase.route} ${label} horizontal overflow ${state.scrollWidth}/${state.clientWidth}`);
+
+            const firstRow = page.locator('.ax112-field-row').first();
+            const before = await firstRow.evaluate(el => ({
+              left: Math.round(el.getBoundingClientRect().left),
+              background: getComputedStyle(el).backgroundColor,
+              paddingLeft: getComputedStyle(el).paddingLeft
+            }));
+            await firstRow.hover();
+            await page.waitForTimeout(350);
+            const after = await firstRow.evaluate(el => ({
+              left: Math.round(el.getBoundingClientRect().left),
+              background: getComputedStyle(el).backgroundColor,
+              paddingLeft: getComputedStyle(el).paddingLeft
+            }));
+            if (before.left !== after.left || before.paddingLeft !== after.paddingLeft || before.background !== after.background) {
+              throw new Error(`${testCase.route} problem row still behaves like a clickable hover target: ${JSON.stringify({before,after})}`);
+            }
+
+            const fallback = page.locator('[data-share-fallback]');
+            if (await fallback.isVisible()) throw new Error(`${testCase.route} share fallback should start hidden`);
+            await page.locator('[data-share-native]').click();
+            await page.waitForTimeout(100);
+            if (!(await fallback.isVisible())) throw new Error(`${testCase.route} share control is present but not wired to fallback behavior`);
+
+            console.log(`AXIONA_R116_${testCase.lang}_${label}=${JSON.stringify(state)}`);
+
+            if (testCase.lang === 'hu') {
+              await page.locator('.ax112-field').screenshot({ path: `/tmp/r116-shots/axiona-r116-${label}-field.png` });
+              await page.locator('.ax-share').screenshot({ path: `/tmp/r116-shots/axiona-r116-${label}-share.png` });
+            }
+            await page.close();
+          }
+
+          for (const testCase of cases) {
+            await inspect(testCase, 'desktop', 1440, 1000);
+            await inspect(testCase, 'mobile', 390, 844);
+          }
+
+          await browser.close();
+          console.log('OK_AXIONA_R116_OVERVIEW_UX_CONTRACT');
+          NODE
+
+      - name: Upload rendered R116 evidence
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: axiona-r116-ux-evidence
+          path: /tmp/r116-shots/*.png
+          if-no-files-found: error
+          retention-days: 3
+          compression-level: 6
