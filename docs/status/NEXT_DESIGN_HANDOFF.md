@@ -91,58 +91,51 @@ Production push-run convergence was not independently visible through the connec
 ### R132 — Social Metadata Invariants
 Exact tested PR #84 head: `def53da157efbfd77b12a560a241c2ed7db512d9`
 Exact squash-merge main SHA: `62ef0fb2cd25b518695f6938d506e362c9564a82`
-
 R132 repaired a real 9-page social metadata defect across Support and Privacy/Legal HU/EN/DE by restoring core Open Graph/Twitter title/description/type/url/card fields while preserving existing page copy, canonical URLs and language-specific R92 images.
-
-Whole-site hardening:
-- `scripts/verify_social_metadata.py` validates all 30 active pages;
-- exact OG/Twitter core metadata and same-page URL identity;
-- language-correct general/Keeper R92 preview images;
-- actual six social PNG assets verified at 1200×630;
-- Public Surface Guard binding;
-- negative social metadata contract and post-merge live-proof workflow.
-
-Final exact-head checks passed:
-- Public Surface Guard;
-- Social Metadata R132 Invariants Contract;
-- Support R123 Visual Contract;
-- Policy R124 Visual Contract;
-- Sitemap R130 Contract;
-- Security.txt R131 Contract;
-- Browser Quality Audit;
-- Lighthouse;
-- axe/WCAG.
-
+Whole-site hardening: `scripts/verify_social_metadata.py` validates all 30 active pages, exact OG/Twitter core metadata and same-page URL identity, language-correct general/Keeper R92 preview images and actual six social PNG assets at 1200×630.
+Final exact-head checks passed: Public Surface Guard, Social Metadata R132 Invariants Contract, Support R123 Visual Contract, Policy R124 Visual Contract, Sitemap R130 Contract, Security.txt R131 Contract, Browser Quality Audit, Lighthouse, axe/WCAG.
 Production push-run convergence must not be claimed without actual push-run evidence.
 
-## R133 — Retired Route Production Proof in progress
+### R133 — Retired Route Production Proof
+Exact tested PR #85 head: `f1faf489a6cfb3c84ec3f721b6c41392d19a34e1`
+Exact squash-merge main SHA: `9d5ecb2c823621b29787e4f5aec9b9afa4634473`
+R133 establishes one 20-route retirement registry covering six historical basenames across root/HU, EN and DE plus the retired `/en/404.html` and `/de/404.html` aliases. Source resurrection, sitemap reintroduction and active HTML links now fail closed; the post-merge live workflow requires every named retired route to return real HTTP 404 with the R126 recovery bindings.
+Final exact-head checks passed: Public Surface Guard, Retired Routes R133 Contract, Sitemap R130 Contract, Security.txt R131 Contract and Social Metadata R132 Contract.
+Production push-run convergence must not be claimed without actual push-run evidence.
+
+## R134 — Browser Identity Invariants in progress
 
 Starting exact main SHA:
-`62ef0fb2cd25b518695f6938d506e362c9564a82`
+`9d5ecb2c823621b29787e4f5aec9b9afa4634473`
 
 Feature branch:
-`feature/retired-route-live-proof-r133`
+`feature/browser-identity-r134`
 
-Audit finding:
-- R127 proves generic missing paths use the root R126 recovery SSOT;
-- R127 live proof does not name the historical routes that stale locale 404 pages used to advertise;
-- source history identifies six obsolete basenames: `impact.html`, `applications.html`, `automation.html`, `company.html`, `case-study.html`, `practical-tips.html`.
+PR:
+`#86`
 
-R133 creates a single 20-route retirement registry:
-- all six basenames in root/HU, EN and DE variants = 18 routes;
-- retired `/en/404.html` and `/de/404.html` aliases = 2 routes.
+Audit findings:
+- `site.webmanifest` existed but active pages did not bind it;
+- `apple-touch-icon.png` existed but active pages did not bind it;
+- `favicon.svg` existed but active pages did not use it as the scalable icon;
+- legacy `shortcut icon` relations remained;
+- the manifest declared `assets/brand/axiona-icon-512.png` as 512×512 while the physical PNG was 512×474.
 
-R133 adds:
-- `scripts/verify_retired_routes.py` as route registry + source verifier;
-- prevention of physical source resurrection, sitemap reintroduction and active HTML links;
-- Public Surface Guard binding;
-- `.github/workflows/axiona-retired-routes-r133-contract.yml` negative proof;
-- `.github/workflows/axiona-retired-routes-r133-live-proof.yml` production proof requiring all 20 named routes to return HTTP 404 with the R126 recovery bindings.
+R134 remediation:
+- all 30 active HU/EN/DE pages plus root `404.html` now bind exactly SVG favicon, 32×32 PNG fallback, 16×16 PNG fallback, 180×180 Apple touch icon and `/site.webmanifest`;
+- legacy `shortcut icon` bindings are removed;
+- the 512×474 manifest icon is centered without stretching on a transparent 512×512 canvas;
+- `scripts/verify_browser_identity.py` validates all 31 HTML pages, physical icon dimensions and exact manifest identity/icon fields;
+- Public Surface Guard calls the new verifier;
+- `.github/workflows/axiona-browser-identity-r134-contract.yml` proves key regressions fail closed;
+- `.github/workflows/axiona-browser-identity-r134-live-proof.yml` checks all 30 live active routes, a real 404, live manifest and live 192/512 icon dimensions.
+
+The branch-local remediation workflow successfully validated Public Surface + Social Metadata + Browser Identity, committed the HTML/icon remediation, and removed itself. It must remain absent from the final PR diff.
 
 Release document:
-- `docs/status/R133_RETIRED_ROUTE_PROOF.md`
+- `docs/status/R134_BROWSER_IDENTITY_INVARIANTS.md`
 
-No public UI/runtime implementation changes. R133 is not accepted until the exact PR head passes Public Surface Guard, Retired Routes R133 Contract and any static invariant contracts triggered by the Guard change, then is squash-merged with `expected_head_sha`.
+R134 is not accepted until its final exact PR head passes Public Surface Guard, Browser Identity R134 Contract, all existing triggered visual/invariant checks and Browser Quality Audit/Lighthouse/axe, then is squash-merged with `expected_head_sha` after re-resolving PR head and `main`.
 
 ## Canonical documentation
 
@@ -167,17 +160,17 @@ Read before subsequent public-surface changes:
 18. `docs/status/R131_SECURITY_TXT_INVARIANTS.md`
 19. `docs/status/R132_SOCIAL_METADATA_INVARIANTS.md`
 20. `docs/status/R133_RETIRED_ROUTE_PROOF.md`
-21. `docs/r114-cache-proof-note.md`
+21. `docs/status/R134_BROWSER_IDENTITY_INVARIANTS.md`
+22. `docs/r114-cache-proof-note.md`
 
-## Next step after R133 acceptance
+## Next step after R134 acceptance
 
-Continue whole-site consistency/regression audit. Highest-value remaining areas:
+Continue whole-site consistency/regression audit only for concrete findings. Highest-value remaining areas:
 - navigation/footer semantic parity;
-- webmanifest/favicon/static metadata consistency;
 - stale unused assets/workflows only when removal can be proven safe;
 - deployment/live-proof observability.
 
-Create another release only for a concrete finding. If no meaningful public inconsistency remains, keep the accepted UI stable and rely on regression-hardening contracts.
+Do not redesign accepted pages without a real finding.
 
 ## Required delivery discipline
 
