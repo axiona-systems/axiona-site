@@ -1,3 +1,4 @@
+# Existing-on-main retrigger for the one-shot R138 binding workflow.
 name: AXIONA R138 Motion Bind Once
 
 on:
@@ -36,7 +37,6 @@ jobs:
               text = p.read_text(encoding='utf-8')
               if '</head>' not in text or '</body>' not in text:
                   continue
-              # Idempotent canonical binding.
               text = text.replace(css, '').replace(js, '')
               text = text.replace('</head>', css + '</head>', 1)
               text = text.replace('</body>', js + '</body>', 1)
