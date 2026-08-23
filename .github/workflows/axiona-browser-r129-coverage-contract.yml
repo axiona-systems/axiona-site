@@ -1,0 +1,82 @@
+name: AXIONA Browser R129 Coverage Contract
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "lighthouserc.json"
+      - "scripts/axe-audit.mjs"
+      - "scripts/verify_browser_audit_matrix.py"
+      - ".github/workflows/axiona-browser-audit.yml"
+      - ".github/workflows/axiona-browser-r129-coverage-contract.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  coverage-contract:
+    name: Prove browser audit matrix fails closed
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+
+      - name: Baseline matrix must pass
+        shell: bash
+        run: python3 scripts/verify_browser_audit_matrix.py
+
+      - name: Negative coverage fixtures must fail
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          make_case() {
+            rm -rf /tmp/r129-case
+            mkdir -p /tmp/r129-case
+            tar --exclude=.git -cf - . | tar -xf - -C /tmp/r129-case
+          }
+
+          expect_fail() {
+            local marker="$1"
+            if python3 /tmp/r129-case/scripts/verify_browser_audit_matrix.py --root /tmp/r129-case >/tmp/r129-out 2>&1; then
+              echo "STOP_R129_NEGATIVE_CASE_PASSED_UNEXPECTEDLY: $marker"
+              cat /tmp/r129-out
+              exit 1
+            fi
+            grep -Fq "$marker" /tmp/r129-out || {
+              echo "STOP_R129_EXPECTED_MARKER_MISSING: $marker"
+              cat /tmp/r129-out
+              exit 1
+            }
+          }
+
+          make_case
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('/tmp/r129-case/lighthouserc.json')
+          data=json.loads(p.read_text(encoding='utf-8'))
+          urls=data['ci']['collect']['url']
+          urls.remove('http://localhost/legal.html')
+          p.write_text(json.dumps(data, indent=2)+"\n", encoding='utf-8')
+          PY
+          expect_fail "Lighthouse coverage mismatch"
+
+          make_case
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('/tmp/r129-case/scripts/axe-audit.mjs')
+          t=p.read_text(encoding='utf-8')
+          old='  "/de/privacy.html",\n  "/de/legal.html"\n'
+          new='  "/de/privacy.html"\n'
+          assert old in t
+          p.write_text(t.replace(old,new,1),encoding='utf-8')
+          PY
+          expect_fail "axe coverage mismatch"
+
+          echo OK_AXIONA_BROWSER_R129_NEGATIVE_COVERAGE_CONTRACT

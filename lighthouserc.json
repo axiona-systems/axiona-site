@@ -9,7 +9,12 @@
         "http://localhost/security.html",
         "http://localhost/solutions.html",
         "http://localhost/keeper.html",
-        "http://localhost/contact.html"
+        "http://localhost/contact.html",
+        "http://localhost/support.html",
+        "http://localhost/privacy.html",
+        "http://localhost/legal.html",
+        "http://localhost/en/",
+        "http://localhost/de/"
       ],
       "numberOfRuns": 1,
       "settings": {
