@@ -1,0 +1,59 @@
+name: AXIONA Process R119 Live Proof
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "process.html"
+      - "en/process.html"
+      - "de/process.html"
+      - "assets/process-r119.css"
+      - "assets/js/process-r119.js"
+      - ".github/workflows/axiona-process-r119-live-proof.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  prove-live:
+    name: Verify live R119 process release
+    runs-on: ubuntu-24.04
+    timeout-minutes: 6
+    steps:
+      - name: Verify exact live R119 bindings and assets
+        shell: bash
+        run: |
+          set -euo pipefail
+          for attempt in $(seq 1 36); do
+            KEY="${GITHUB_SHA}-process-r119-${attempt}"
+            HU="$(curl --fail --silent --show-error --location --header 'Cache-Control: no-cache' "https://axiona.systems/process.html?proof=${KEY}" || true)"
+            EN="$(curl --fail --silent --show-error --location --header 'Cache-Control: no-cache' "https://axiona.systems/en/process.html?proof=${KEY}" || true)"
+            DE="$(curl --fail --silent --show-error --location --header 'Cache-Control: no-cache' "https://axiona.systems/de/process.html?proof=${KEY}" || true)"
+            CSS="$(curl --fail --silent --show-error --location --header 'Cache-Control: no-cache' "https://axiona.systems/assets/process-r119.css?release=R119&proof=${KEY}" || true)"
+            JS="$(curl --fail --silent --show-error --location --header 'Cache-Control: no-cache' "https://axiona.systems/assets/js/process-r119.js?release=R119&proof=${KEY}" || true)"
+
+            bindings_ok=true
+            for PAGE in "$HU" "$EN" "$DE"; do
+              grep -Fq '/assets/process-r119.css?release=R119' <<<"$PAGE" || bindings_ok=false
+              grep -Fq '/assets/js/process-r119.js?release=R119' <<<"$PAGE" || bindings_ok=false
+              grep -Fq 'content="R119" name="axiona-release"' <<<"$PAGE" || bindings_ok=false
+              grep -Fq 'class="ax-share section-pad"' <<<"$PAGE" || bindings_ok=false
+            done
+
+            if [ "$bindings_ok" = true ] \
+              && grep -Fq 'AXIONA R119 — Process page visual contract' <<<"$CSS" \
+              && grep -Fq 'AXIONA R119 — repeatable, progressive-enhancement process reveal motion' <<<"$JS" \
+              && ! grep -Fq 'STATUS SHEET / 024' <<<"$HU$EN$DE" \
+              && ! grep -Fq 'STATUSBLATT / 024' <<<"$HU$EN$DE" \
+              && ! grep -Fq 'ÁLLAPOTLAP / 024' <<<"$HU$EN$DE"; then
+              echo "OK_AXIONA_PROCESS_R119_LIVE"
+              echo "PROVEN_PAGES_SOURCE_SHA=${GITHUB_SHA}"
+              exit 0
+            fi
+            sleep 5
+          done
+
+          echo "STOP_AXIONA_PROCESS_R119_NOT_LIVE_FOR_SHA=${GITHUB_SHA}" >&2
+          exit 1
