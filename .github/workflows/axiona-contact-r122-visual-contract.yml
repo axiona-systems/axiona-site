@@ -1,0 +1,84 @@
+name: AXIONA Contact R122 Visual Contract
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - contact.html
+      - en/contact.html
+      - de/contact.html
+      - assets/contact-r122.css
+      - assets/js/contact-r122.js
+      - assets/js/contact-intake.js
+      - .github/workflows/axiona-contact-r122-visual-contract.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  rendered-contract:
+    name: Verify rendered contact page contract
+    runs-on: ubuntu-24.04
+    timeout-minutes: 7
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - name: Prepare browser inspector
+        shell: bash
+        run: |
+          set -euo pipefail
+          CHROME_PATH="$(command -v google-chrome-stable || command -v google-chrome || command -v chromium || true)"
+          test -n "$CHROME_PATH" || exit 1
+          echo "CHROME_PATH=$CHROME_PATH" >> "$GITHUB_ENV"
+          npm install --no-save --ignore-scripts --no-audit --no-fund playwright-core@1.62.1
+          python3 -m http.server 4179 --bind 127.0.0.1 >/tmp/r122-http.log 2>&1 &
+          for i in {1..20}; do curl -fsS http://127.0.0.1:4179/contact.html >/dev/null && exit 0; sleep .25; done
+          exit 1
+      - name: Verify HU EN DE desktop mobile and intake behavior
+        shell: bash
+        env:
+          BASE: http://127.0.0.1:4179
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/r122-shots
+          node --input-type=module <<'NODE'
+          import {chromium} from 'playwright-core';
+          const browser=await chromium.launch({executablePath:process.env.CHROME_PATH,headless:true,args:['--no-sandbox']});
+          const routes=[['/contact.html','hu'],['/en/contact.html','en'],['/de/contact.html','de']];
+          const has=(v,x)=>v?.includes(x);
+          for(const [route,lang] of routes) for(const [label,w,h] of [['desktop',1440,1000],['mobile',390,844]]){
+            const page=await browser.newPage({viewport:{width:w,height:h}});
+            await page.goto(process.env.BASE+route,{waitUntil:'networkidle'});
+            const marker=await page.evaluate(async()=>({css:await(await fetch('/assets/contact-r122.css')).text(),js:await(await fetch('/assets/js/contact-r122.js')).text(),intake:await(await fetch('/assets/js/contact-intake.js')).text()}));
+            if(!marker.css.includes('AXIONA R122 — Contact page visual contract')||!marker.js.includes('AXIONA R122 — repeatable, progressive-enhancement contact reveal motion')||!marker.intake.includes('data-intake-form')) throw Error(route+' asset marker');
+            const r=await page.evaluate(()=>{const st=q=>{const e=document.querySelector(q),s=e&&getComputedStyle(e);return s&&{bg:s.backgroundColor,bgi:s.backgroundImage,cursor:s.cursor,opacity:s.opacity}};return{
+              release:document.querySelector('meta[name="axiona-release"]')?.content,lang:document.documentElement.lang,
+              css:[...document.styleSheets].some(x=>(x.href||'').includes('/assets/contact-r122.css?release=R122')),js:[...document.scripts].some(x=>(x.src||'').includes('/assets/js/contact-r122.js?release=R122')),intake:[...document.scripts].some(x=>(x.src||'').endsWith('/assets/js/contact-intake.js')),
+              sw:document.documentElement.scrollWidth,cw:document.documentElement.clientWidth,
+              c:[document.querySelectorAll('main h1').length,document.querySelectorAll('.contact-fit').length,document.querySelectorAll('.contact-fit-list li').length,document.querySelectorAll('[data-intake-form]').length,document.querySelectorAll('[data-intake-field]').length,document.querySelectorAll('[data-intake-field][required]').length,document.querySelectorAll('.intake-safety').length,document.querySelectorAll('.contact-direct a[href^="mailto:"]').length,document.querySelectorAll('.contact-support-link a').length,document.querySelectorAll('footer').length],
+              body:st('body'),section:st('.contact-intake-section'),fit:st('.contact-fit'),fitRow:st('.contact-fit-list li'),form:st('.intake-form'),grid:st('.intake-grid'),privacy:st('.contact-lead:nth-of-type(3)'),safety:st('.intake-safety'),button:st('.intake-submit')};});
+            if(r.release!=='R122'||r.lang!==lang||!r.css||!r.js||!r.intake||r.sw>r.cw+2) throw Error(route+' binding/overflow');
+            if(JSON.stringify(r.c)!==JSON.stringify([1,1,4,1,6,2,1,1,1,1])) throw Error(route+' structure '+JSON.stringify(r.c));
+            if(!has(r.body.bg,'241, 238, 230')||!has(r.section.bg,'241, 238, 230')||r.section.bgi!=='none') throw Error(route+' paper field');
+            if(!has(r.fit.bg,'251, 250, 246')||!has(r.form.bg,'11, 30, 37')||!has(r.grid.bg,'255, 253, 248')||!has(r.privacy.bg,'232, 235, 229')||!has(r.safety.bg,'240, 213, 200')||!has(r.button.bg,'11, 30, 37')) throw Error(route+' surfaces');
+            if(r.fitRow.cursor!=='default'||r.fitRow.opacity!=='1') throw Error(route+' informational affordance/opacity');
+            if(route==='/contact.html'&&label==='desktop'){
+              const probe=page.locator('.intake-form');await probe.scrollIntoViewIfNeeded();await page.waitForTimeout(220);if(!await probe.evaluate(e=>e.classList.contains('is-visible')))throw Error('reveal-on');await page.evaluate(()=>scrollTo(0,0));await page.waitForTimeout(260);if(await probe.evaluate(e=>e.classList.contains('is-visible')))throw Error('reveal-latched');await probe.scrollIntoViewIfNeeded();await page.waitForTimeout(220);if(!await probe.evaluate(e=>e.classList.contains('is-visible')))throw Error('reveal-return');
+              await page.locator('input[name="email"]').fill('test@example.com');await page.locator('textarea[name="problem"]').fill('Workflow test');
+              await page.locator('[data-intake-form]').evaluate(f=>f.dispatchEvent(new Event('submit',{bubbles:true,cancelable:true})));await page.waitForTimeout(80);
+              const mail=await page.locator('[data-mailto-link]').evaluate(a=>({hidden:a.hidden,href:a.getAttribute('href')}));const status=await page.locator('[data-intake-status]').textContent();
+              if(mail.hidden||!mail.href?.startsWith('mailto:hello@axiona.systems?subject=')||!status?.trim())throw Error('intake mail preparation failed');
+            }
+            await page.evaluate(()=>document.querySelectorAll('[data-contact-reveal]').forEach(e=>e.classList.add('is-visible')));
+            await page.screenshot({path:`/tmp/r122-shots/${lang}-${label}.png`,fullPage:true});await page.close();
+          }
+          await browser.close();console.log('OK_AXIONA_CONTACT_R122_VISUAL_CONTRACT');
+          NODE
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: axiona-contact-r122-render-evidence
+          path: /tmp/r122-shots/*.png
+          if-no-files-found: error
+          retention-days: 3
