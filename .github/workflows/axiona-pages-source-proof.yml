@@ -16,7 +16,7 @@ jobs:
   prove-source:
     name: Prove actual Pages source
     runs-on: ubuntu-24.04
-    timeout-minutes: 4
+    timeout-minutes: 7
     steps:
       - name: Read GitHub Pages configuration and latest build
         shell: bash
@@ -108,3 +108,88 @@ jobs:
           if not (release_value == 'R110' and direct_link and r110_import and r109_marker):
               raise SystemExit('STOP_AXIONA_LIVE_R110_NOT_MATERIALIZED')
           PY
+
+      - name: Verify browser runtime
+        shell: bash
+        run: |
+          set -euo pipefail
+          CHROME_PATH="$(command -v google-chrome-stable || command -v google-chrome || command -v chromium || true)"
+          test -n "$CHROME_PATH"
+          echo "CHROME_PATH=$CHROME_PATH" >> "$GITHUB_ENV"
+          echo "OK_AXIONA_CHROME=$CHROME_PATH"
+
+      - name: Install pinned render inspector
+        shell: bash
+        run: npm install --no-save --ignore-scripts --no-audit --no-fund playwright-core@1.62.1
+
+      - name: Inspect live computed composition
+        shell: bash
+        run: |
+          set -euo pipefail
+          node <<'NODE'
+          const { chromium } = require('playwright-core');
+
+          const browser = await chromium.launch({
+            executablePath: process.env.CHROME_PATH,
+            headless: true,
+            args: ['--no-sandbox']
+          });
+
+          async function inspect(label, width, height) {
+            const page = await browser.newPage({ viewport: { width, height } });
+            const stamp = `${Date.now()}-${label}`;
+            await page.goto(`https://axiona.systems/?axiona_render_proof=${stamp}`, { waitUntil: 'networkidle' });
+
+            const result = await page.evaluate(() => {
+              const pick = (selector) => {
+                const el = document.querySelector(selector);
+                if (!el) return null;
+                const s = getComputedStyle(el);
+                const r = el.getBoundingClientRect();
+                return {
+                  selector,
+                  display: s.display,
+                  position: s.position,
+                  color: s.color,
+                  backgroundColor: s.backgroundColor,
+                  backgroundImage: s.backgroundImage,
+                  fontSize: s.fontSize,
+                  lineHeight: s.lineHeight,
+                  transform: s.transform,
+                  boxShadow: s.boxShadow,
+                  width: Math.round(r.width),
+                  height: Math.round(r.height),
+                  top: Math.round(r.top)
+                };
+              };
+
+              return {
+                release: document.querySelector('meta[name="axiona-release"]')?.content || null,
+                sheets: [...document.styleSheets].map(s => s.href).filter(Boolean),
+                hero: pick('.page-overview .hero'),
+                heroH1: pick('.page-overview .hero-copy h1'),
+                projectSheet: pick('.page-overview .project-sheet'),
+                problem: pick('.page-overview .problem-spectrum'),
+                problemIntro: pick('.page-overview .problem-spectrum-intro'),
+                lifecycle: pick('.page-overview .lifecycle-story'),
+                lifecycleBoard: pick('.page-overview .lifecycle-board'),
+                keeper: pick('.page-overview .keeper-preview'),
+                keeperPanel: pick('.page-overview .keeper96-preview-panel')
+              };
+            });
+
+            console.log(`AXIONA_RENDER_${label.toUpperCase()}=${JSON.stringify(result)}`);
+
+            if (result.release !== 'R110') throw new Error(`live release mismatch: ${result.release}`);
+            if (!result.sheets.some(href => href && href.includes('/assets/visual-r110.css'))) throw new Error('visual-r110 stylesheet missing from rendered page');
+            if (!result.heroH1 || parseFloat(result.heroH1.fontSize) < (width >= 1000 ? 70 : 48)) throw new Error(`hero typography not materially active: ${result.heroH1?.fontSize}`);
+            if (!result.projectSheet || result.projectSheet.transform === 'none') throw new Error('project sheet perspective transform missing');
+            if (!result.problem || !result.problem.backgroundImage.includes('gradient')) throw new Error('problem chapter composition missing');
+            if (!result.keeper || !result.keeper.backgroundColor) throw new Error('keeper chapter composition missing');
+            await page.close();
+          }
+
+          await inspect('desktop', 1440, 1100);
+          await inspect('mobile', 390, 844);
+          await browser.close();
+          NODE
