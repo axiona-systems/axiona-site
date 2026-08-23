@@ -1,0 +1,157 @@
+name: AXIONA Overview Visual Contract
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "index.html"
+      - "en/index.html"
+      - "de/index.html"
+      - "assets/visual-r112.css"
+      - "assets/js/visual-r112.js"
+      - ".github/workflows/axiona-overview-visual-contract.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  rendered-contract:
+    name: Verify rendered overview structure
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+
+      - name: Verify browser runtime
+        shell: bash
+        run: |
+          set -euo pipefail
+          CHROME_PATH="$(command -v google-chrome-stable || command -v google-chrome || command -v chromium || true)"
+          if [ -z "$CHROME_PATH" ]; then
+            echo "STOP_AXIONA_VISUAL_CONTRACT_CHROME_MISSING"
+            exit 1
+          fi
+          echo "CHROME_PATH=$CHROME_PATH" >> "$GITHUB_ENV"
+
+      - name: Install pinned render inspector
+        shell: bash
+        run: npm install --no-save --ignore-scripts --no-audit --no-fund playwright-core@1.62.1
+
+      - name: Start static server
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m http.server 4174 --bind 127.0.0.1 > /tmp/axiona-r112-http.log 2>&1 &
+          echo $! > /tmp/axiona-r112-http.pid
+          for attempt in {1..20}; do
+            if curl --fail --silent http://127.0.0.1:4174/ >/dev/null; then
+              echo "OK_AXIONA_R112_SERVER_READY"
+              exit 0
+            fi
+            sleep 0.25
+          done
+          cat /tmp/axiona-r112-http.log || true
+          exit 1
+
+      - name: Verify desktop and mobile composition
+        shell: bash
+        env:
+          AXIONA_BASE: http://127.0.0.1:4174
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import { chromium } from 'playwright-core';
+
+          const browser = await chromium.launch({
+            executablePath: process.env.CHROME_PATH,
+            headless: true,
+            args: ['--no-sandbox']
+          });
+
+          const routes = ['/', '/en/', '/de/'];
+          const legacySelectors = ['.project-sheet', '.fact-strip', '.problem-spectrum', '.lifecycle-board', '.keeper96-preview-panel'];
+
+          async function inspect(route, label, width, height) {
+            const page = await browser.newPage({ viewport: { width, height } });
+            await page.goto(`${process.env.AXIONA_BASE}${route}`, { waitUntil: 'networkidle' });
+
+            const result = await page.evaluate(({ legacySelectors }) => {
+              const one = (selector) => document.querySelector(selector);
+              const rect = (selector) => {
+                const el = one(selector);
+                if (!el) return null;
+                const r = el.getBoundingClientRect();
+                const s = getComputedStyle(el);
+                return {
+                  left: Math.round(r.left), top: Math.round(r.top), right: Math.round(r.right), bottom: Math.round(r.bottom),
+                  width: Math.round(r.width), height: Math.round(r.height), display: s.display,
+                  grid: s.gridTemplateColumns, fontSize: s.fontSize, background: s.backgroundColor,
+                  backgroundImage: s.backgroundImage
+                };
+              };
+
+              return {
+                release: document.querySelector('meta[name="axiona-release"]')?.content || null,
+                r112Sheet: [...document.styleSheets].some(sheet => sheet.href?.includes('/assets/visual-r112.css')),
+                scrollWidth: document.documentElement.scrollWidth,
+                clientWidth: document.documentElement.clientWidth,
+                counts: {
+                  hero: document.querySelectorAll('.ax112-hero').length,
+                  model: document.querySelectorAll('.ax112-model').length,
+                  steps: document.querySelectorAll('.ax112-step').length,
+                  fields: document.querySelectorAll('.ax112-field-row').length,
+                  cycle: document.querySelectorAll('.ax112-cycle > li').length,
+                  trust: document.querySelectorAll('.ax112-trust').length,
+                  caseStudy: document.querySelectorAll('.ax112-case').length,
+                  cta: document.querySelectorAll('.ax112-cta').length,
+                  legacy: legacySelectors.reduce((sum, selector) => sum + document.querySelectorAll(selector).length, 0)
+                },
+                hero: rect('.ax112-hero'),
+                copy: rect('.ax112-hero-copy'),
+                visual: rect('.ax112-hero-visual'),
+                h1: rect('.ax112-hero h1'),
+                model: rect('.ax112-model'),
+                story: rect('.ax112-story'),
+                firstStep: rect('.ax112-step'),
+                cycle: rect('.ax112-cycle'),
+                caseStudy: rect('.ax112-case')
+              };
+            }, { legacySelectors });
+
+            console.log(`AXIONA_R112_${route.replaceAll('/', '_') || 'root'}_${label}=${JSON.stringify(result)}`);
+
+            const expected = result.counts.hero === 1 && result.counts.model === 1 && result.counts.steps === 3 && result.counts.fields === 6 && result.counts.cycle === 6 && result.counts.trust === 1 && result.counts.caseStudy === 1 && result.counts.cta === 1;
+            if (result.release !== 'R112') throw new Error(`${route} release is ${result.release}`);
+            if (!result.r112Sheet) throw new Error(`${route} visual-r112.css is not active`);
+            if (!expected) throw new Error(`${route} structural counts mismatch: ${JSON.stringify(result.counts)}`);
+            if (result.counts.legacy !== 0) throw new Error(`${route} still contains legacy overview components`);
+            if (result.scrollWidth > result.clientWidth + 2) throw new Error(`${route} ${label} horizontal overflow ${result.scrollWidth}/${result.clientWidth}`);
+
+            if (width >= 1000) {
+              if (!result.hero || result.hero.display !== 'grid') throw new Error(`${route} desktop hero is not grid`);
+              if (!result.visual || result.visual.width < 500) throw new Error(`${route} desktop system visual too small: ${result.visual?.width}`);
+              if (!result.model || result.model.width < 480) throw new Error(`${route} desktop system model too small: ${result.model?.width}`);
+              if (!result.h1 || parseFloat(result.h1.fontSize) < 70) throw new Error(`${route} desktop headline lacks editorial scale: ${result.h1?.fontSize}`);
+              if (!result.story || !result.story.background.includes('11, 32, 36')) throw new Error(`${route} dark story chapter not active: ${result.story?.background}`);
+            } else {
+              if (!result.copy || !result.visual || result.visual.top < result.copy.bottom - 2) throw new Error(`${route} mobile hero does not stack copy before system visual`);
+              if (!result.h1 || parseFloat(result.h1.fontSize) < 50) throw new Error(`${route} mobile headline lacks visual scale: ${result.h1?.fontSize}`);
+              if (!result.model || result.model.width > result.clientWidth) throw new Error(`${route} mobile model exceeds viewport`);
+            }
+
+            await page.close();
+          }
+
+          for (const route of routes) {
+            await inspect(route, 'desktop', 1440, 1000);
+            await inspect(route, 'mobile', 390, 844);
+          }
+
+          await browser.close();
+          console.log('OK_AXIONA_R112_RENDERED_VISUAL_CONTRACT');
+          NODE
