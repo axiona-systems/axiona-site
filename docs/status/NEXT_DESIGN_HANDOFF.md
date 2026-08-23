@@ -51,77 +51,75 @@ Production Pages convergence was not independently observable through the connec
 
 ### R125 — Keeper alignment + hardening
 Targets: `keeper.html`, `en/keeper.html`, `de/keeper.html`.
-R125 intentionally preserved the accepted Keeper composition and product copy; it added cache-safe current bindings, affordance/palette alignment, transform-only motion and a dedicated current Keeper render contract.
+R125 preserved the accepted Keeper composition and product copy and added cache-safe bindings, affordance/palette alignment, transform-only motion and a dedicated current Keeper render contract.
 
 Direct bindings:
 - `/assets/keeper-r125.css?release=R125`
 - `/assets/js/keeper-r125.js?release=R125`
 
-Exact tested PR #76 head:
-`e727c60f745e635685707502b1b5eeb15bc054f9`
-
-Final exact-head checks passed:
-- AXIONA Public Surface Guard;
-- AXIONA Keeper R125 Visual Contract;
-- AXIONA Browser Quality Audit;
-- Lighthouse;
-- axe/WCAG.
-
-Exact squash-merge main SHA:
-`bb19fa77c304b467e8e9aae029a530a4fcb47176`
-
+Exact tested PR #76 head: `e727c60f745e635685707502b1b5eeb15bc054f9`
+Exact squash-merge main SHA: `bb19fa77c304b467e8e9aae029a530a4fcb47176`
+Final exact-head checks passed: Guard, Keeper Visual Contract, Browser Quality Audit, Lighthouse, axe/WCAG.
 Production Pages convergence was not independently observable through the connector (`statuses=[]`).
 
-## R126 — Localized 404 recovery in progress
+### R126 — Localized 404 recovery
+Target: root `404.html`.
 
-Target:
-- `404.html`
-
-Starting exact main SHA:
-`bb19fa77c304b467e8e9aae029a530a4fcb47176`
-
-Feature branch:
-`feature/not-found-r126`
-
-Reason for release:
-- the public 404 surface was still marked R81;
-- EN/DE missing URLs received Hungarian error copy;
-- the utility surface had no current exact render contract or cache-safe release binding.
-
-R126 behavior:
-- one GitHub Pages `404.html` remains the source;
-- requested URL prefix selects HU/EN/DE client-side copy;
-- HU is the fallback;
-- navigation, recovery actions and footer routes remain locale-correct;
-- URL-path locale selection creates no storage, tracking or new data flow;
-- `noindex,follow` remains intact.
-
-Visual model:
-- warm paper recovery field;
-- contained deep-petrol recovery sheet;
-- restrained orange/cyan accents;
-- acid only as compact recovery status;
-- only real links receive interactive affordance;
-- no fake diagnostics/telemetry UI.
+R126 replaced the stale R81 utility surface with a single localized recovery SSOT:
+- HU fallback;
+- `/en/...` → English;
+- `/de/...` → German;
+- locale-correct navigation/recovery/footer routes;
+- `noindex,follow` preserved;
+- no storage/tracking/new data flow.
 
 Direct bindings:
 - `/assets/not-found-r126.css?release=R126`
 - `/assets/js/not-found-r126.js?release=R126`
 
-Page-specific proof:
-- `.github/workflows/axiona-not-found-r126-visual-contract.yml`
+Exact tested PR #77 head: `f0aa422bab5a9fe9dd3a3d2fcb649710dccb7ebf`
+Exact squash-merge main SHA: `25c7ffba4e9790f6b0ee951a682df3e80975a1f6`
+Final exact-head checks passed: Guard, Not Found R126 Visual Contract, Browser Quality Audit, Lighthouse, axe/WCAG.
+Production Pages convergence was not independently observable through the connector (`statuses=[]`).
+
+## R127 — Utility 404 source consolidation in progress
+
+Starting exact main SHA:
+`25c7ffba4e9790f6b0ee951a682df3e80975a1f6`
+
+Feature branch:
+`feature/utility-route-consistency-r127`
+
+Post-R126 route inventory found two legacy physical duplicate pages:
+- `en/404.html`
+- `de/404.html`
+
+Those files still used the obsolete dark AXIONA CORE-era UI and stale routes such as `impact.html`, `applications.html`, `automation.html`, `company.html`, `case-study.html` and `practical-tips.html`.
+
+R127 decision:
+- delete the two duplicate locale 404 files;
+- keep root `404.html` as the only physical custom-404 SSOT;
+- let `/en/404.html`, `/de/404.html` and arbitrary missing EN/DE paths fall through as real HTTP 404 responses to the root R126 recovery implementation;
+- do not create a redundant R127 visual asset copy because no recovery UI behavior changes.
+
+R126 remains the visual/runtime binding:
+- `/assets/not-found-r126.css?release=R126`
+- `/assets/js/not-found-r126.js?release=R126`
+
+Page/route proof:
+- `.github/workflows/axiona-utility-r127-route-contract.yml`
 
 Post-merge live proof:
-- `.github/workflows/axiona-not-found-r126-live-proof.yml`
+- `.github/workflows/axiona-utility-r127-live-proof.yml`
 
 Release document:
-- `docs/status/R126_NOT_FOUND_RECOVERY.md`
+- `docs/status/R127_UTILITY_404_SOURCE_CONSOLIDATION.md`
 
-R126 is not accepted until its exact tested PR head passes Public Surface Guard, R126 Visual Contract, Browser Quality Audit, Lighthouse and axe/WCAG and is squash-merged with `expected_head_sha`.
+R127 is not accepted until the exact PR head passes Public Surface Guard, R127 Route Contract, Browser Quality Audit, Lighthouse and axe/WCAG and is squash-merged with `expected_head_sha`.
 
 ## Canonical documentation
 
-Read before subsequent visual releases:
+Read before subsequent visual/utility releases:
 1. `docs/AXIONA_WEB_VISUAL_UX_RULES.md`
 2. `docs/AXIONA_VISUAL_RELEASE_CHECKLIST.md`
 3. `docs/status/R115_VISUAL_REFERENCE.md`
@@ -135,28 +133,31 @@ Read before subsequent visual releases:
 11. `docs/status/R124_PRIVACY_LEGAL_REDESIGN.md`
 12. `docs/status/R125_KEEPER_ALIGNMENT.md`
 13. `docs/status/R126_NOT_FOUND_RECOVERY.md`
-14. `docs/r114-cache-proof-note.md`
+14. `docs/status/R127_UTILITY_404_SOURCE_CONSOLIDATION.md`
+15. `docs/r114-cache-proof-note.md`
 
-## Next step after R126 acceptance
+## Next step after R127 acceptance
 
-Do not start another redesign by release number alone. Re-inventory the public tree and distinguish:
-- already accepted current surfaces;
-- redirects/static machine files that do not need visual work;
-- any genuinely stale or unproved public UI.
+Continue the whole-site consistency/regression audit rather than redesigning accepted pages. Audit:
+- HU/EN/DE file parity;
+- canonical/hreflang parity;
+- current navigation/footer route integrity;
+- release-binding consistency;
+- stale public files and dead internal links;
+- utility/static public surfaces.
 
-If no meaningful public visual gap remains, switch from redesign releases to a whole-site consistency/regression audit instead of changing accepted pages unnecessarily.
+Create another release only for a concrete finding. If no meaningful public inconsistency remains, stop the redesign sequence and keep the site under regression-hardening contracts.
 
 ## Required delivery discipline
 
-Every visual release:
+For every public-surface change:
 - re-resolve exact `main` SHA;
 - create feature branch before every write;
 - explicitly target that branch for every write;
 - update languages together where applicable;
-- direct versioned HTML-level asset binding;
-- preserve content depth, navigation and utilities;
-- desktop/mobile rendered evidence and language parity;
-- Public Surface Guard + page-specific contract + Browser Quality Audit + Lighthouse + axe/WCAG;
+- preserve accepted content and UX unless the task requires otherwise;
+- desktop/mobile rendered evidence where UI is affected;
+- Public Surface Guard + relevant page/route contract + Browser Quality Audit + Lighthouse + axe/WCAG;
 - no gate weakening;
 - re-resolve exact PR head and main immediately before merge;
 - squash merge using `expected_head_sha`;

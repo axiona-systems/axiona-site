@@ -1,0 +1,44 @@
+name: AXIONA Utility R127 Live Proof
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 404.html
+      - en/404.html
+      - de/404.html
+      - .github/workflows/axiona-utility-r127-live-proof.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  prove-live:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Prove deleted locale aliases fall through to root R126 404
+        shell: bash
+        run: |
+          set -euo pipefail
+          for i in {1..36}; do
+            ok=1
+            for route in "/en/404.html" "/de/404.html" "/en/__r127-${GITHUB_SHA}" "/de/__r127-${GITHUB_SHA}"; do
+              file="/tmp/r127-$(echo "$route" | tr '/:' '__').html"
+              code="$(curl -sS -L -o "$file" -w '%{http_code}' "https://axiona.systems${route}?proof=${GITHUB_SHA}" || true)"
+              [ "$code" = 404 ] || ok=0
+              grep -Fq '/assets/not-found-r126.css?release=R126' "$file" || ok=0
+              grep -Fq '/assets/js/not-found-r126.js?release=R126' "$file" || ok=0
+              grep -Fq 'name="axiona-release" content="R126"' "$file" || ok=0
+              ! grep -Eq 'impact\.html|applications\.html|automation\.html|company\.html|case-study\.html|practical-tips\.html' "$file" || ok=0
+            done
+            if [ "$ok" = 1 ]; then
+              echo "OK_AXIONA_UTILITY_R127_LIVE"
+              echo "PROVEN_PAGES_SOURCE_SHA=${GITHUB_SHA}"
+              exit 0
+            fi
+            sleep 5
+          done
+          echo "STOP_AXIONA_UTILITY_R127_NOT_LIVE_FOR_SHA=${GITHUB_SHA}"
+          exit 1
