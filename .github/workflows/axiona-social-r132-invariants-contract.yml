@@ -1,0 +1,116 @@
+name: AXIONA Social Metadata R132 Invariants Contract
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '*.html'
+      - 'en/*.html'
+      - 'de/*.html'
+      - 'assets/social/**'
+      - 'scripts/verify_social_metadata.py'
+      - '.github/workflows/axiona-repo-guard.yml'
+      - '.github/workflows/axiona-social-r132-invariants-contract.yml'
+      - 'docs/status/R132_SOCIAL_METADATA_INVARIANTS.md'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  social-contract:
+    name: Prove social metadata invariants fail closed
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+
+      - name: Baseline must pass
+        shell: bash
+        run: python3 scripts/verify_social_metadata.py
+
+      - name: Negative social fixtures must fail
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          make_case() {
+            rm -rf /tmp/r132-case
+            mkdir -p /tmp/r132-case
+            tar --exclude=.git -cf - . | tar -xf - -C /tmp/r132-case
+          }
+
+          expect_fail() {
+            local marker="$1"
+            if python3 scripts/verify_social_metadata.py --root /tmp/r132-case >/tmp/r132-out 2>&1; then
+              echo "STOP_R132_NEGATIVE_CASE_PASSED_UNEXPECTEDLY: $marker"
+              cat /tmp/r132-out
+              exit 1
+            fi
+            grep -Fq "$marker" /tmp/r132-out || {
+              echo "STOP_R132_EXPECTED_MARKER_MISSING: $marker"
+              cat /tmp/r132-out
+              exit 1
+            }
+          }
+
+          make_case
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          p=Path('/tmp/r132-case/support.html')
+          t=p.read_text(encoding='utf-8')
+          t,n=re.subn(r'<meta\b(?=[^>]*property="og:title")[^>]*>','',t,count=1)
+          assert n == 1
+          p.write_text(t,encoding='utf-8')
+          PY
+          expect_fail "social OG field mismatch: support.html -> og:title=<missing>"
+
+          make_case
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('/tmp/r132-case/en/privacy.html')
+          t=p.read_text(encoding='utf-8')
+          old='content="https://axiona.systems/en/privacy.html" property="og:url"'
+          assert old in t
+          p.write_text(t.replace(old,'content="https://axiona.systems/en/wrong-r132.html" property="og:url"',1),encoding='utf-8')
+          PY
+          expect_fail "social og:url mismatch: en/privacy.html"
+
+          make_case
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('/tmp/r132-case/de/legal.html')
+          t=p.read_text(encoding='utf-8')
+          old='content="summary_large_image" name="twitter:card"'
+          assert old in t
+          p.write_text(t.replace(old,'content="summary" name="twitter:card"',1),encoding='utf-8')
+          PY
+          expect_fail "social twitter:card mismatch: de/legal.html"
+
+          make_case
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('/tmp/r132-case/en/support.html')
+          t=p.read_text(encoding='utf-8')
+          old='https://axiona.systems/assets/social/axiona-social-preview-r92-en.png'
+          assert old in t
+          p.write_text(t.replace(old,'https://axiona.systems/assets/social/axiona-social-preview-r92-de.png',1),encoding='utf-8')
+          PY
+          expect_fail "social og:image mismatch: en/support.html"
+
+          make_case
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('/tmp/r132-case/assets/social/axiona-social-preview-r92-hu.png')
+          raw=bytearray(p.read_bytes())
+          assert raw[:8] == b'\x89PNG\r\n\x1a\n'
+          raw[20:24]=(629).to_bytes(4,'big')
+          p.write_bytes(raw)
+          PY
+          expect_fail "social image asset mismatch: assets/social/axiona-social-preview-r92-hu.png"
+
+          echo OK_AXIONA_SOCIAL_METADATA_R132_NEGATIVE_CONTRACT
