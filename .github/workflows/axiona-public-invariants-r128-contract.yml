@@ -1,0 +1,112 @@
+name: AXIONA Public Invariants R128 Contract
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - scripts/verify_site.py
+      - .github/workflows/axiona-public-invariants-r128-contract.yml
+      - docs/status/R128_PUBLIC_SURFACE_INVARIANTS.md
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  invariant-contract:
+    name: Prove whole-site public invariants fail closed
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - name: Baseline must pass
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 scripts/verify_site.py
+      - name: Negative invariant fixtures must fail
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          make_case() {
+            rm -rf /tmp/r128-case
+            mkdir -p /tmp/r128-case
+            tar --exclude=.git -cf - . | tar -xf - -C /tmp/r128-case
+          }
+
+          expect_fail() {
+            local marker="$1"
+            if python3 scripts/verify_site.py --root /tmp/r128-case >/tmp/r128-out 2>&1; then
+              echo "STOP_R128_NEGATIVE_CASE_PASSED_UNEXPECTEDLY: $marker"
+              cat /tmp/r128-out
+              exit 1
+            fi
+            grep -Fq "$marker" /tmp/r128-out || {
+              echo "STOP_R128_EXPECTED_MARKER_MISSING: $marker"
+              cat /tmp/r128-out
+              exit 1
+            }
+          }
+
+          # 1. Any stale/extra physical HTML under the published tree must fail.
+          make_case
+          cp /tmp/r128-case/en/index.html /tmp/r128-case/en/stale-r128.html
+          expect_fail "unexpected public html: en/stale-r128.html"
+
+          # 2. Canonical drift must fail even when the target remains on axiona.systems.
+          make_case
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          p=Path('/tmp/r128-case/en/systems.html')
+          t=p.read_text(encoding='utf-8')
+          pattern=r'(<link\b(?=[^>]*\brel="canonical")[^>]*?\bhref=")[^"]+("[^>]*>)'
+          t2,n=re.subn(pattern,r'\1https://axiona.systems/en/wrong-r128.html\2',t,count=1)
+          assert n==1
+          p.write_text(t2,encoding='utf-8')
+          PY
+          expect_fail "canonical mismatch: en/systems.html"
+
+          # 3. Hreflang family drift must fail.
+          make_case
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('/tmp/r128-case/en/systems.html')
+          t=p.read_text(encoding='utf-8')
+          old='https://axiona.systems/de/systems.html'
+          assert old in t
+          p.write_text(t.replace(old,'https://axiona.systems/de/wrong-r128.html',1),encoding='utf-8')
+          PY
+          expect_fail "hreflang mismatch: en/systems.html"
+
+          # 4. One language carrying a different release marker must fail.
+          make_case
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          p=Path('/tmp/r128-case/en/systems.html')
+          t=p.read_text(encoding='utf-8')
+          m=re.search(r'<meta\b(?=[^>]*\bname="axiona-release")[^>]*>',t)
+          assert m
+          tag=m.group(0)
+          changed,n=re.subn(r'content="[^"]+"','content="R999"',tag,count=1)
+          assert n==1
+          p.write_text(t[:m.start()]+changed+t[m.end():],encoding='utf-8')
+          PY
+          expect_fail "language release mismatch: systems.html"
+
+          # 5. Absolute same-host dead links must be treated as local and fail.
+          make_case
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('/tmp/r128-case/index.html')
+          t=p.read_text(encoding='utf-8')
+          assert '</body>' in t
+          p.write_text(t.replace('</body>','<a href="https://axiona.systems/definitely-missing-r128.html">probe</a></body>',1),encoding='utf-8')
+          PY
+          expect_fail "broken local reference: index.html -> https://axiona.systems/definitely-missing-r128.html"
+
+          echo OK_AXIONA_PUBLIC_INVARIANTS_R128_NEGATIVE_CONTRACT
