@@ -10,6 +10,7 @@ on:
       - "de/*.html"
       - "assets/**"
       - "scripts/axe-audit.mjs"
+      - "scripts/verify_browser_audit_matrix.py"
       - "lighthouserc.json"
       - ".github/workflows/axiona-browser-audit.yml"
   workflow_dispatch:
@@ -26,6 +27,10 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           persist-credentials: false
+
+      - name: Verify audit route matrix
+        shell: bash
+        run: python3 scripts/verify_browser_audit_matrix.py
 
       - name: Verify browser audit runtime
         shell: bash
