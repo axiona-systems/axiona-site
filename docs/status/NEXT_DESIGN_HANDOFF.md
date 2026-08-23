@@ -6,138 +6,121 @@ Canonical branch: `main`
 
 ## Accepted design baseline
 
-R115/R116 remain the visual and interaction baseline:
+R115/R116 remain canonical visual/interaction guidance:
 - warm paper/off-white dominant field;
 - contained deep-petrol work/control surfaces;
 - restrained orange;
-- acid green only for small status/control signals;
-- cyan only as a secondary technical accent;
-- thin borders and solid offset shadows;
-- Keeper-derived product/work-surface representation;
-- generous negative space and stable surfaces;
-- no CAD/relation-map identity, scanner/glow/particles, fake telemetry or hero pointer tilt;
-- informational rows must not look clickable;
-- repeatable restrained motion;
-- Share + Copy link + fallback sharing retained.
+- acid green only for compact status/control signals;
+- cyan as secondary technical accent;
+- thin borders, solid offset shadows and generous negative space;
+- Keeper-derived working/document surfaces;
+- no CAD/relation-map identity, fake telemetry, scanner/glow/particles or pseudo-controls;
+- informational surfaces must not look clickable;
+- restrained repeatable motion; opacity-sensitive accessibility regressions are prohibited.
 
-## R118 — System design
+## Accepted secondary-page releases
 
-Targets:
-- `systems.html`
-- `en/systems.html`
-- `de/systems.html`
+### R118 — System design
+Targets: `systems.html`, `en/systems.html`, `de/systems.html`
 
 Direct bindings:
 - `/assets/systems-r118.css?release=R118`
 - `/assets/js/systems-r118.js?release=R118`
 
-Release document:
-- `docs/status/R118_SYSTEMS_PAGE_REDESIGN.md`
-
 Exact squash-merge main SHA:
 `9b3027076e0a48efb9ebda20039d8249bc4fe796`
 
-## R119 — Process design
-
-Targets:
-- `process.html`
-- `en/process.html`
-- `de/process.html`
-
-R119 preserves the substantive process journey and uses a process-dossier / working-sheet composition. Motion is transform-only with opacity always `1`.
+### R119 — Process design
+Targets: `process.html`, `en/process.html`, `de/process.html`
 
 Direct bindings:
 - `/assets/process-r119.css?release=R119`
 - `/assets/js/process-r119.js?release=R119`
 
-Release document:
-- `docs/status/R119_PROCESS_PAGE_REDESIGN.md`
-
 Exact squash-merge main SHA:
 `05f55b49d82dbe0349529b3c82f0ca44936fd65a`
 
-Independent production Pages convergence was not exposed through the available connector and must not be treated as proven evidence.
-
-## R120 — Security
-
-Targets:
-- `security.html`
-- `en/security.html`
-- `de/security.html`
-
-R120 preserves the security substance: data minimization, role/task access, backup/recovery, traceability, maintained dependencies, licensing/handover, realistic failure modes and trust-proof content. It uses a security-dossier / control-sheet composition rather than a fake security console.
+### R120 — Security
+Targets: `security.html`, `en/security.html`, `de/security.html`
 
 Direct bindings:
 - `/assets/security-r120.css?release=R120`
 - `/assets/js/security-r120.js?release=R120`
 
-Release document:
-- `docs/status/R120_SECURITY_PAGE_REDESIGN.md`
-
-Starting main SHA:
-`05f55b49d82dbe0349529b3c82f0ca44936fd65a`
-
-Feature branch:
-`feature/security-page-r120`
-
-Exact tested PR head:
+Exact tested PR #71 head:
 `896edb6731bd9b08d486a1efd0cb609fa2aee400`
-
-PR #71 exact-head checks passed:
-- AXIONA Public Surface Guard;
-- AXIONA Security R120 Visual Contract;
-- AXIONA Browser Quality Audit;
-- Lighthouse;
-- axe/WCAG.
 
 Exact squash-merge main SHA:
 `0c5e9c25bf189b24d74415a628aa07abde663dcd`
 
-The GitHub connector returned no push/check status entries for the merge SHA, so exact production Pages convergence remains unproven through this interface and must not be inferred.
+### R121 — Solutions
+Targets: `solutions.html`, `en/solutions.html`, `de/solutions.html`
 
-## R121 — Solutions
-
-Targets:
-- `solutions.html`
-- `en/solutions.html`
-- `de/solutions.html`
-
-R121 uses a solution-brief / option-matrix composition. It preserves:
-- implementation forms;
-- four problem-to-direction examples;
-- five system layers;
-- the technology-neutral first-conversation message;
-- the AXIONA Keeper own-product section;
-- sharing, footer/legal/support and visit-counter bindings.
-
-Websites/webshops remain one possible implementation form rather than the primary positioning.
+R121 uses a solution-brief / option-matrix composition and preserves implementation forms, four problem-to-direction examples, five system layers, technology-neutral first-conversation guidance, Keeper, sharing and footer/legal/support bindings.
 
 Direct bindings:
 - `/assets/solutions-r121.css?release=R121`
 - `/assets/js/solutions-r121.js?release=R121`
 
-R121 motion is transform-only and keeps reveal opacity at `1`. Informational problem cards, system-layer rows and Keeper process rows remain default-cursor, stable surfaces.
+Exact tested PR #72 head:
+`c0f5928130373db371a449db9b6ad0ffb55af41f`
 
-Release document:
-- `docs/status/R121_SOLUTIONS_PAGE_REDESIGN.md`
+Exact-head checks passed:
+- AXIONA Public Surface Guard;
+- AXIONA Solutions R121 Visual Contract;
+- AXIONA Browser Quality Audit;
+- Lighthouse;
+- axe/WCAG.
 
-Starting main SHA:
-`0c5e9c25bf189b24d74415a628aa07abde663dcd`
+Exact squash-merge main SHA:
+`4600eaabaa1e174cdcc199830c1b97672b913bed`
+
+The GitHub connector returned `statuses=[]` for the merge SHA, so production Pages convergence is not independently proven through this interface.
+
+## R122 — Contact in progress
+
+Targets:
+- `contact.html`
+- `en/contact.html`
+- `de/contact.html`
+
+Starting exact main SHA:
+`4600eaabaa1e174cdcc199830c1b97672b913bed`
 
 Feature branch:
-`feature/solutions-page-r121`
+`feature/contact-page-r122`
 
-Page-specific render contract:
-- `.github/workflows/axiona-solutions-r121-visual-contract.yml`
+R122 is a first-conversation brief + privacy-minimal mail-preparation sheet. It preserves the existing local `mailto:` flow rather than introducing a form database.
+
+Functional content retained:
+- technology-neutral problem description;
+- explicit no-separate-form-database explanation;
+- four practical starting-point examples;
+- support route for existing users;
+- direct `hello@axiona.systems` path;
+- six structured fields, two required;
+- sensitive-data warning;
+- `assets/js/contact-intake.js` behavior;
+- footer/legal/privacy/security/support and visit counter.
+
+Direct bindings:
+- `/assets/contact-r122.css?release=R122`
+- `/assets/js/contact-r122.js?release=R122`
+
+Page-specific proof:
+- `.github/workflows/axiona-contact-r122-visual-contract.yml`
 
 Post-merge live proof:
-- `.github/workflows/axiona-solutions-r121-live-proof.yml`
+- `.github/workflows/axiona-contact-r122-live-proof.yml`
 
-R121 is not accepted until its exact tested PR head passes all required gates and is squash-merged with `expected_head_sha`.
+Release document:
+- `docs/status/R122_CONTACT_PAGE_REDESIGN.md`
+
+R122 is not accepted until the exact tested PR head passes Public Surface Guard, R122 visual/interaction contract, Browser Quality Audit, Lighthouse and axe/WCAG, then squash-merges with `expected_head_sha`.
 
 ## Canonical documentation
 
-Before the next design release, read:
+Read before subsequent visual releases:
 1. `docs/AXIONA_WEB_VISUAL_UX_RULES.md`
 2. `docs/AXIONA_VISUAL_RELEASE_CHECKLIST.md`
 3. `docs/status/R115_VISUAL_REFERENCE.md`
@@ -146,30 +129,25 @@ Before the next design release, read:
 6. `docs/status/R119_PROCESS_PAGE_REDESIGN.md`
 7. `docs/status/R120_SECURITY_PAGE_REDESIGN.md`
 8. `docs/status/R121_SOLUTIONS_PAGE_REDESIGN.md`
-9. `docs/r114-cache-proof-note.md`
+9. `docs/status/R122_CONTACT_PAGE_REDESIGN.md`
+10. `docs/r114-cache-proof-note.md`
 
-These documents supersede older experimental visual directions where they conflict.
+## Next step after R122
 
-## Next likely design target after R121 acceptance
-
-Review the remaining secondary public pages as one inventory first. The likely next coherent family is:
-- `contact.html`
-- `en/contact.html`
-- `de/contact.html`
-
-Do not redesign the accepted homepage again unless new feedback specifically requires it. Start any next release from the then-current exact `main` SHA on a new feature branch.
+Inventory remaining public surfaces before selecting the next coherent release family. Keeper, Support and privacy/legal utility/detail pages must not be redesigned blindly as one visual class because their information/interaction roles differ.
 
 ## Required delivery discipline
 
-For every visual release:
+Every visual release:
 - re-resolve exact `main` SHA;
-- create feature branch before all writes;
-- explicitly target that branch on every write;
-- bind versioned CSS/JS directly from HU/EN/DE HTML;
+- create feature branch before every write;
+- explicitly target that branch for every write;
+- update HU/EN/DE together;
+- direct versioned HTML-level asset binding;
 - preserve persistent utilities and content depth;
-- render desktop/mobile evidence and verify language parity;
-- run Public Surface Guard, page-specific visual contract, Browser Quality Audit, Lighthouse and axe/WCAG;
-- never weaken a gate merely to pass it;
-- re-resolve exact PR head and `main` immediately before merge;
-- squash merge with `expected_head_sha`;
-- prove exact production convergence when the connector exposes sufficient evidence, otherwise record the limitation explicitly.
+- desktop/mobile rendered evidence and language parity;
+- Public Surface Guard + page-specific contract + Browser Quality Audit + Lighthouse + axe/WCAG;
+- no gate weakening;
+- re-resolve exact PR head and main immediately before merge;
+- squash merge using `expected_head_sha`;
+- exact production convergence proof only when actual evidence is available.
