@@ -1,0 +1,85 @@
+name: AXIONA Security.txt R131 Invariants Contract
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - .well-known/security.txt
+      - scripts/verify_security_txt.py
+      - .github/workflows/axiona-repo-guard.yml
+      - .github/workflows/axiona-security-txt-r131-contract.yml
+      - docs/status/R131_SECURITY_TXT_INVARIANTS.md
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  security-txt-contract:
+    name: Prove RFC 9116 security.txt invariants fail closed
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+
+      - name: Baseline must pass
+        shell: bash
+        run: python3 scripts/verify_security_txt.py --now 2026-08-23T16:00:00Z
+
+      - name: Negative security.txt fixtures must fail
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          make_case() {
+            rm -rf /tmp/r131-case
+            mkdir -p /tmp/r131-case/.well-known
+            cp .well-known/security.txt /tmp/r131-case/.well-known/security.txt
+          }
+
+          expect_fail() {
+            local marker="$1"
+            if python3 scripts/verify_security_txt.py --root /tmp/r131-case --now 2026-08-23T16:00:00Z >/tmp/r131-out 2>&1; then
+              echo "STOP_R131_NEGATIVE_CASE_PASSED_UNEXPECTEDLY: $marker"
+              cat /tmp/r131-out
+              exit 1
+            fi
+            grep -Fq "$marker" /tmp/r131-out || {
+              echo "STOP_R131_EXPECTED_MARKER_MISSING: $marker"
+              cat /tmp/r131-out
+              exit 1
+            }
+          }
+
+          make_case
+          sed -i '/^Contact:/d' /tmp/r131-case/.well-known/security.txt
+          expect_fail "security.txt Contact missing"
+
+          make_case
+          printf '%s\n' 'Expires: 2027-08-18T00:00:00Z' >> /tmp/r131-case/.well-known/security.txt
+          expect_fail "security.txt Expires count: 2, expected 1"
+
+          make_case
+          sed -i 's/^Expires:.*/Expires: 2026-08-22T00:00:00Z/' /tmp/r131-case/.well-known/security.txt
+          expect_fail "security.txt expired: 2026-08-22T00:00:00Z"
+
+          make_case
+          sed -i 's/^Expires:.*/Expires: 2028-08-23T00:00:00Z/' /tmp/r131-case/.well-known/security.txt
+          expect_fail "security.txt Expires too far in future: 2028-08-23T00:00:00Z"
+
+          make_case
+          sed -i 's#^Canonical:.*#Canonical: http://axiona.systems/.well-known/security.txt#' /tmp/r131-case/.well-known/security.txt
+          expect_fail "security.txt Canonical mismatch"
+
+          make_case
+          sed -i 's/^Preferred-Languages:.*/Preferred-Languages: en, de/' /tmp/r131-case/.well-known/security.txt
+          expect_fail "security.txt Preferred-Languages mismatch"
+
+          make_case
+          sed -i 's#^Contact:.*#Contact: ftp://axiona.systems/report#' /tmp/r131-case/.well-known/security.txt
+          expect_fail "security.txt invalid Contact URI"
+
+          echo OK_AXIONA_SECURITY_TXT_R131_NEGATIVE_CONTRACT
