@@ -53,7 +53,7 @@ jobs:
           npm install --no-save --ignore-scripts --no-audit --no-fund \
             @lhci/cli@0.15.1 \
             playwright-core@1.62.1 \
-            axe-core@4.12.1
+            axe-core@4.13.0
 
       - name: Run Lighthouse quality budgets
         shell: bash
