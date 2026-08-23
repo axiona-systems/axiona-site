@@ -24,6 +24,19 @@ Only visitor-facing website source, public quality checks and publication-relate
 
 Internal governance, private infrastructure details, credentials, customer data and operational secrets are intentionally kept outside the public repository.
 
+## Design and release documentation
+
+Current public-site design and UX baseline:
+- `docs/AXIONA_WEB_VISUAL_UX_RULES.md`
+
+Required visual release / cache / production-proof checklist:
+- `docs/AXIONA_VISUAL_RELEASE_CHECKLIST.md`
+
+Current next-design handoff:
+- `docs/status/NEXT_DESIGN_HANDOFF.md`
+
+R115 is the accepted visual baseline; R116 contains the current overview UX corrections. When older experimental documentation conflicts with the canonical files above, the canonical files above take precedence.
+
 ## Security
 
 Please do not publish vulnerability reports or sensitive data in GitHub issues.
