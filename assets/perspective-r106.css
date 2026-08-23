@@ -1,9 +1,7 @@
-/* AXIONA R106 — broader problem spectrum
+/* AXIONA R143 — broader problem spectrum, flattened dependency chain.
    Purpose: widen the homepage beyond time/admin/document pain without diluting
-   the core system-design positioning. Text remains fully opaque for accessibility. */
-
-@import url("/assets/motion-r105.css");
-@import url("/assets/motion-r108.css");
+   the core system-design positioning. R109 compatibility is loaded once through
+   visual-r110.css; the retired R105/R108 import shims are intentionally gone. */
 
 .problem-spectrum{
   position:relative;

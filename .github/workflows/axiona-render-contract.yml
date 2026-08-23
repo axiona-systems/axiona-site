@@ -1,0 +1,196 @@
+name: AXIONA Render Contract
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "*.html"
+      - "en/**"
+      - "de/**"
+      - "assets/**"
+      - "scripts/**"
+      - "site.webmanifest"
+      - ".github/workflows/axiona-render-contract.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: axiona-render-contract-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  rendered-contract:
+    name: Verify current canonical render
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+
+      - name: Verify repository policy before browser work
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 scripts/verify_asset_references.py
+          python3 scripts/verify_workflow_hardening.py
+
+      - name: Prepare browser runtime
+        shell: bash
+        run: |
+          set -euo pipefail
+          CHROME_PATH="$(command -v google-chrome-stable || command -v google-chrome || command -v chromium || true)"
+          test -n "$CHROME_PATH" || { echo STOP_AXIONA_RENDER_CHROME_MISSING; exit 1; }
+          echo "CHROME_PATH=$CHROME_PATH" >> "$GITHUB_ENV"
+          npm install --no-save --ignore-scripts --no-audit --no-fund playwright-core@1.62.1
+
+      - name: Start static server
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m http.server 4176 --bind 127.0.0.1 >/tmp/axiona-render-http.log 2>&1 &
+          echo $! >/tmp/axiona-render-http.pid
+          for attempt in {1..20}; do
+            curl --fail --silent http://127.0.0.1:4176/ >/dev/null && exit 0
+            sleep .25
+          done
+          cat /tmp/axiona-render-http.log || true
+          exit 1
+
+      - name: Verify route, navigation, geometry and motion contracts
+        shell: bash
+        env:
+          AXIONA_BASE: http://127.0.0.1:4176
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import { chromium } from 'playwright-core';
+
+          const browser = await chromium.launch({
+            executablePath: process.env.CHROME_PATH,
+            headless: true,
+            args: ['--no-sandbox']
+          });
+
+          const primary = ['/', '/systems.html', '/process.html', '/security.html', '/solutions.html', '/contact.html'];
+          const auxiliary = ['/support.html', '/keeper.html', '/privacy.html', '/legal.html', '/en/', '/de/'];
+          const allRoutes = [...primary, ...auxiliary];
+
+          async function open(route, width, height) {
+            const page = await browser.newPage({ viewport: { width, height } });
+            await page.route('https://**/*', r => r.abort());
+            await page.goto(`${process.env.AXIONA_BASE}${route}`, { waitUntil: 'networkidle' });
+            return page;
+          }
+
+          for (const route of allRoutes) {
+            for (const [label, width, height] of [['desktop', 1440, 900], ['mobile', 390, 844]]) {
+              const page = await open(route, width, height);
+              const result = await page.evaluate(() => {
+                const styles = [...document.styleSheets].map(s => s.href || '');
+                const scripts = [...document.scripts].map(s => s.src || '');
+                const root = getComputedStyle(document.documentElement);
+                return {
+                  main: document.querySelectorAll('main').length,
+                  scrollWidth: document.documentElement.scrollWidth,
+                  clientWidth: document.documentElement.clientWidth,
+                  r137: styles.filter(x => x.includes('/assets/r137-ux-fixes.css?release=R137')).length,
+                  motionCss: styles.filter(x => x.includes('/assets/motion-r138.css?release=R142')).length,
+                  motionJs: scripts.filter(x => x.includes('/assets/js/motion-r138.js?release=R142')).length,
+                  stale: [...styles, ...scripts].filter(x => /r13[56]-ux-fixes/.test(x)).length,
+                  distance: root.getPropertyValue('--ax-r141-reveal-y').trim(),
+                  duration: root.getPropertyValue('--ax-r141-reveal-transform-duration').trim(),
+                  activeNav: document.querySelectorAll('.topbar nav a.active').length,
+                  activeAfter: (() => {
+                    const el = document.querySelector('.topbar nav a.active');
+                    return el ? getComputedStyle(el, '::after').display : null;
+                  })()
+                };
+              });
+
+              if (result.main !== 1) throw new Error(`${route} ${label}: main count ${result.main}`);
+              if (result.scrollWidth > result.clientWidth + 2) throw new Error(`${route} ${label}: horizontal overflow ${result.scrollWidth}/${result.clientWidth}`);
+              if (result.r137 !== 1 || result.motionCss !== 1 || result.motionJs !== 1 || result.stale !== 0) {
+                throw new Error(`${route} ${label}: canonical binding mismatch ${JSON.stringify(result)}`);
+              }
+              if (label === 'desktop' && (result.distance !== '7px' || result.duration !== '900ms')) {
+                throw new Error(`${route}: desktop motion tuning ${result.distance}/${result.duration}`);
+              }
+              if (label === 'mobile' && (result.distance !== '5px' || result.duration !== '760ms')) {
+                throw new Error(`${route}: mobile motion tuning ${result.distance}/${result.duration}`);
+              }
+              if (primary.includes(route) && label === 'desktop') {
+                if (result.activeNav !== 1) throw new Error(`${route}: active desktop nav count ${result.activeNav}`);
+                if (result.activeAfter !== 'none') throw new Error(`${route}: active nav pseudo still renders (${result.activeAfter})`);
+              }
+              console.log(`OK_RENDER route=${route} viewport=${label}`);
+              await page.close();
+            }
+          }
+
+          for (const width of [1280, 1440, 1728, 1920]) {
+            const page = await open('/systems.html', width, 1000);
+            const geometry = await page.evaluate(() => {
+              const a = document.querySelector('.services > .section-intro')?.getBoundingClientRect();
+              const b = document.querySelector('.services > .system-service')?.getBoundingClientRect();
+              if (!a || !b) return null;
+              const overlapX = Math.max(0, Math.min(a.right, b.right) - Math.max(a.left, b.left));
+              const overlapY = Math.max(0, Math.min(a.bottom, b.bottom) - Math.max(a.top, b.top));
+              return { overlap: overlapX * overlapY, clearance: b.top - a.bottom, a: {top:a.top,bottom:a.bottom}, b:{top:b.top,bottom:b.bottom} };
+            });
+            if (!geometry) throw new Error(`systems ${width}: geometry nodes missing`);
+            if (geometry.overlap > .5) throw new Error(`systems ${width}: overlap ${JSON.stringify(geometry)}`);
+            if (width < 1800 && geometry.clearance < 30) throw new Error(`systems ${width}: clearance ${geometry.clearance}`);
+            console.log(`OK_SYSTEMS_GEOMETRY width=${width} clearance=${geometry.clearance}`);
+            await page.close();
+          }
+
+          {
+            const page = await open('/', 1440, 900);
+            const nodes = page.locator('[data-ax112-reveal]');
+            const count = await nodes.count();
+            let target = null;
+            for (let i = 0; i < count; i++) {
+              const box = await nodes.nth(i).boundingBox();
+              if (box && box.y > 1300 && box.y < 2800) { target = nodes.nth(i); break; }
+            }
+            if (!target) throw new Error('overview: no mid-page reveal target');
+
+            const armedBefore = await target.evaluate(el => {
+              const m = new DOMMatrixReadOnly(getComputedStyle(el).transform);
+              return { armed: el.classList.contains('ax-reveal-armed'), active: el.classList.contains('ax-reveal-active'), y: m.m42 };
+            });
+            if (!armedBefore.armed || armedBefore.active || Math.abs(Math.abs(armedBefore.y) - 7) > .6) {
+              throw new Error(`overview: initial armed state ${JSON.stringify(armedBefore)}`);
+            }
+
+            await target.scrollIntoViewIfNeeded();
+            await page.waitForTimeout(1050);
+            if (!(await target.evaluate(el => el.classList.contains('ax-reveal-active')))) throw new Error('overview: first reveal did not activate');
+
+            const absoluteTop = await target.evaluate(el => el.getBoundingClientRect().top + window.scrollY);
+            const far = await page.evaluate(y => Math.min(document.documentElement.scrollHeight - innerHeight, y + 1800), absoluteTop);
+            await page.evaluate(y => window.scrollTo({ top: y, behavior: 'instant' }), far);
+            await page.waitForTimeout(450);
+            const rearmed = await target.evaluate(el => {
+              const m = new DOMMatrixReadOnly(getComputedStyle(el).transform);
+              const r = el.getBoundingClientRect();
+              return { armed: el.classList.contains('ax-reveal-armed'), active: el.classList.contains('ax-reveal-active'), y: m.m42, bottom:r.bottom };
+            });
+            if (!rearmed.armed || rearmed.active || Math.abs(Math.abs(rearmed.y) - 7) > .6) {
+              throw new Error(`overview: return rearm failed ${JSON.stringify(rearmed)}`);
+            }
+
+            await target.scrollIntoViewIfNeeded();
+            await page.waitForTimeout(1050);
+            if (!(await target.evaluate(el => el.classList.contains('ax-reveal-active')))) throw new Error('overview: return reveal did not activate');
+            console.log('OK_AXIONA_BIDIRECTIONAL_MOTION');
+            await page.close();
+          }
+
+          await browser.close();
+          console.log('OK_AXIONA_CURRENT_RENDER_CONTRACT');
+          NODE

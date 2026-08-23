@@ -1,7 +1,6 @@
-/* AXIONA R110 — direct visual release entrypoint.
-   Purpose: bypass stale browser/CDN caches from R105/R106/R108 import chains. */
+/* AXIONA R143 — direct legacy visual compatibility entrypoint.
+   Keep only dependencies that are not already loaded directly by the homepage.
+   This removes duplicate R113/tuning CSS evaluation while preserving cascade. */
 @import url("/assets/visual-r109.css?release=R110");
 @import url("/assets/visual-r109-compat.css?release=R110");
 @import url("/assets/visual-r112-contrast.css?release=R112");
-@import url("/assets/visual-r113.css?release=R113");
-@import url("/assets/visual-r113-tuning.css?release=R113");
