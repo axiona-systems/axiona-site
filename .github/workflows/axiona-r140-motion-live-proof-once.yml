@@ -1,3 +1,4 @@
+# Existing-on-main trigger for R140 bidirectional motion proof.
 name: AXIONA R140 Motion Live Proof Once
 
 on:
@@ -71,8 +72,8 @@ jobs:
             await target.scrollIntoViewIfNeeded();
             await page.waitForTimeout(800);
             if(!(await target.evaluate(el=>el.classList.contains('ax-reveal-active')))) throw new Error(`${route} first entrance missing`);
-            const box=await target.boundingBox();
-            await page.evaluate(y=>window.scrollTo({top:y,behavior:'instant'}), Math.max(0,(box?.y||0)+window.innerHeight*1.8));
+            const absoluteTop=await target.evaluate(el=>el.getBoundingClientRect().top+window.scrollY);
+            await page.evaluate(y=>window.scrollTo({top:y,behavior:'instant'}), absoluteTop+1800);
             await page.waitForTimeout(500);
             if(await target.evaluate(el=>el.classList.contains('ax-reveal-active'))) throw new Error(`${route} did not rearm after far exit`);
             await target.scrollIntoViewIfNeeded();
