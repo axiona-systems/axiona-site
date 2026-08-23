@@ -1,0 +1,40 @@
+name: AXIONA R113 Live Proof
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "assets/visual-r110.css"
+      - "assets/visual-r113.css"
+      - ".github/workflows/axiona-r113-live-proof.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  prove-live:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Verify live R113 visual layer
+        shell: bash
+        run: |
+          set -euo pipefail
+          for attempt in $(seq 1 30); do
+            KEY="${GITHUB_SHA}-r113-${attempt}"
+            ENTRY="$(curl --fail --silent --show-error --location --header 'Cache-Control: no-cache' "https://axiona.systems/assets/visual-r110.css?proof=${KEY}" || true)"
+            R113="$(curl --fail --silent --show-error --location --header 'Cache-Control: no-cache' "https://axiona.systems/assets/visual-r113.css?release=R113&proof=${KEY}" || true)"
+            HOME="$(curl --fail --silent --show-error --location --header 'Cache-Control: no-cache' "https://axiona.systems/?proof=${KEY}" || true)"
+
+            if grep -Fq '/assets/visual-r113.css?release=R113' <<<"$ENTRY" \
+              && grep -Fq 'AXIONA R113 — Keeper-calibrated overview visual language' <<<"$R113" \
+              && grep -Fq 'class="ax112-hero"' <<<"$HOME"; then
+              echo "OK_AXIONA_R113_LIVE"
+              exit 0
+            fi
+            sleep 5
+          done
+          echo "STOP_AXIONA_R113_NOT_LIVE" >&2
+          exit 1
