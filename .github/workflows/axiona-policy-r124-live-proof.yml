@@ -1,0 +1,51 @@
+name: AXIONA Policy R124 Live Proof
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - privacy.html
+      - legal.html
+      - en/privacy.html
+      - en/legal.html
+      - de/privacy.html
+      - de/legal.html
+      - assets/policy-r124.css
+      - assets/js/policy-r124.js
+      - .github/workflows/axiona-policy-r124-live-proof.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  prove-live:
+    name: Verify live R124 policy release
+    runs-on: ubuntu-24.04
+    timeout-minutes: 6
+    steps:
+      - name: Verify exact live R124 bindings and assets
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROUTES=(privacy.html legal.html en/privacy.html en/legal.html de/privacy.html de/legal.html)
+          for attempt in $(seq 1 36); do
+            KEY="${GITHUB_SHA}-policy-r124-${attempt}"
+            ok=true
+            for ROUTE in "${ROUTES[@]}"; do
+              PAGE="$(curl --fail --silent --show-error --location --header 'Cache-Control: no-cache' "https://axiona.systems/${ROUTE}?proof=${KEY}" || true)"
+              grep -Fq '/assets/policy-r124.css?release=R124' <<<"$PAGE" || ok=false
+              grep -Fq '/assets/js/policy-r124.js?release=R124' <<<"$PAGE" || ok=false
+              grep -Eq 'name="axiona-release" content="R124"|content="R124" name="axiona-release"' <<<"$PAGE" || ok=false
+            done
+            CSS="$(curl --fail --silent --show-error --location --header 'Cache-Control: no-cache' "https://axiona.systems/assets/policy-r124.css?release=R124&proof=${KEY}" || true)"
+            JS="$(curl --fail --silent --show-error --location --header 'Cache-Control: no-cache' "https://axiona.systems/assets/js/policy-r124.js?release=R124&proof=${KEY}" || true)"
+            if [ "$ok" = true ] && grep -Fq 'AXIONA R124 — Privacy + Legal controlled document ledger visual contract' <<<"$CSS" && grep -Fq 'AXIONA R124 — repeatable, progressive-enhancement policy reveal motion' <<<"$JS"; then
+              echo "OK_AXIONA_POLICY_R124_LIVE"
+              echo "PROVEN_PAGES_SOURCE_SHA=${GITHUB_SHA}"
+              exit 0
+            fi
+            sleep 5
+          done
+          echo "STOP_AXIONA_POLICY_R124_NOT_LIVE_FOR_SHA=${GITHUB_SHA}" >&2
+          exit 1
