@@ -1,0 +1,74 @@
+/* AXIONA R113 — final homepage calibration after rendered screenshot review. */
+
+/* Keep tiny technical metadata comfortably above WCAG contrast thresholds. */
+body.page-overview .ax112-kicker span:first-child{
+  color:#5f6862;
+}
+
+/* Keep the editorial story strong without returning to R112's poster scale. */
+body.page-overview .ax112-story-head h2{
+  max-width:560px;
+  font-size:clamp(43px,4.25vw,70px);
+  line-height:.94;
+  letter-spacing:-.052em;
+}
+body.page-overview .ax112-story-head>p:last-child{
+  max-width:500px;
+  margin-top:27px;
+  line-height:1.68;
+}
+
+/* The diagrams are supporting evidence, not the visual identity. */
+body.page-overview .ax112-step-visual:before{
+  opacity:.72;
+}
+body.page-overview .ax112-mini-line{
+  opacity:.72;
+}
+body.page-overview .ax112-mini-dot{
+  box-shadow:none;
+}
+
+@media(max-width:760px){
+  /* R112's desktop lifecycle card height was too long when stacked on mobile. */
+  body.page-overview .ax112-cycle{
+    box-shadow:7px 7px 0 #d2c6b8;
+  }
+  body.page-overview .ax112-cycle li{
+    min-height:188px;
+    padding:18px 18px 20px;
+  }
+  body.page-overview .ax112-cycle li:after{
+    content:none!important;
+  }
+  body.page-overview .ax112-cycle li.is-control{
+    transform:none;
+    box-shadow:inset 0 -6px 0 var(--r113-orange);
+  }
+  body.page-overview .ax112-cycle em{
+    padding-top:16px;
+  }
+
+  body.page-overview .ax112-story-head h2{
+    max-width:330px;
+    font-size:clamp(40px,11.4vw,54px);
+    line-height:.95;
+    letter-spacing:-.047em;
+  }
+  body.page-overview .ax112-story-head>p:last-child{
+    margin-top:22px;
+    font-size:15px;
+  }
+  body.page-overview .ax112-step{
+    min-height:0;
+  }
+  body.page-overview .ax112-step-copy{
+    padding:27px 24px 29px;
+  }
+  body.page-overview .ax112-step-copy h3{
+    font-size:clamp(30px,8.8vw,40px);
+  }
+  body.page-overview .ax112-step-visual{
+    min-height:270px;
+  }
+}
