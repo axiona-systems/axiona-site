@@ -1,0 +1,47 @@
+name: AXIONA Not Found R126 Live Proof
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 404.html
+      - assets/not-found-r126.css
+      - assets/js/not-found-r126.js
+      - .github/workflows/axiona-not-found-r126-live-proof.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  prove-live:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Wait for exact R126 404 surface
+        shell: bash
+        run: |
+          set -euo pipefail
+          for i in {1..36}; do
+            ok=1
+            for route in "/__r126-${GITHUB_SHA}" "/en/__r126-${GITHUB_SHA}" "/de/__r126-${GITHUB_SHA}"; do
+              file="/tmp/r126-$(echo "$route" | tr '/:' '__').html"
+              code="$(curl -sS -L -o "$file" -w '%{http_code}' "https://axiona.systems${route}?proof=${GITHUB_SHA}" || true)"
+              [ "$code" = 404 ] || ok=0
+              grep -Fq '/assets/not-found-r126.css?release=R126' "$file" || ok=0
+              grep -Fq '/assets/js/not-found-r126.js?release=R126' "$file" || ok=0
+              grep -Fq 'name="axiona-release" content="R126"' "$file" || ok=0
+            done
+            css="$(curl -sS -L "https://axiona.systems/assets/not-found-r126.css?proof=${GITHUB_SHA}" || true)"
+            js="$(curl -sS -L "https://axiona.systems/assets/js/not-found-r126.js?proof=${GITHUB_SHA}" || true)"
+            [[ "$css" == *'AXIONA R126 — localized 404 recovery sheet'* ]] || ok=0
+            [[ "$js" == *'AXIONA R126 — localized 404 recovery + transform-only motion'* ]] || ok=0
+            if [ "$ok" = 1 ]; then
+              echo "OK_AXIONA_NOT_FOUND_R126_LIVE"
+              echo "PROVEN_PAGES_SOURCE_SHA=${GITHUB_SHA}"
+              exit 0
+            fi
+            sleep 5
+          done
+          echo "STOP_AXIONA_NOT_FOUND_R126_NOT_LIVE_FOR_SHA=${GITHUB_SHA}"
+          exit 1
