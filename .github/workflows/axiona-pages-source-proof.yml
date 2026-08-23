@@ -126,6 +126,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          echo "OK_AXIONA_R111_RENDER_INSPECTOR_ESM_V2"
           node --input-type=module <<'NODE'
           import { chromium } from 'playwright-core';
 
