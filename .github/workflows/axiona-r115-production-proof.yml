@@ -1,0 +1,90 @@
+name: AXIONA R115 Production Proof
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/axiona-r115-production-proof.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: read
+
+jobs:
+  prove-production:
+    name: Prove R115 production convergence
+    runs-on: ubuntu-24.04
+    timeout-minutes: 6
+    steps:
+      - name: Verify exact Pages build and live R115 bindings
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPOSITORY: ${{ github.repository }}
+          EXPECTED_MAIN: ec0b9fd2b43bd176a5145776f639e2168e0af9d3
+        run: |
+          set -euo pipefail
+
+          latest_pages() {
+            curl --fail-with-body --silent --show-error \
+              --header "Accept: application/vnd.github+json" \
+              --header "Authorization: Bearer ${GH_TOKEN}" \
+              --header "X-GitHub-Api-Version: 2026-03-10" \
+              "https://api.github.com/repos/${REPOSITORY}/pages/builds/latest"
+          }
+
+          for attempt in $(seq 1 36); do
+            PAYLOAD="$(latest_pages)"
+            read -r STATUS COMMIT < <(printf '%s' "$PAYLOAD" | python3 -c 'import json,sys; d=json.load(sys.stdin); print(d.get("status","unknown"), d.get("commit","missing"))')
+            echo "PAGES_ATTEMPT=${attempt} STATUS=${STATUS} COMMIT=${COMMIT} EXPECTED=${EXPECTED_MAIN}"
+            if [ "$COMMIT" = "$EXPECTED_MAIN" ] && [ "$STATUS" = "built" ]; then
+              break
+            fi
+            if [ "$attempt" = 36 ]; then
+              echo "STOP_AXIONA_R115_EXACT_PAGES_BUILD_NOT_READY" >&2
+              exit 1
+            fi
+            sleep 5
+          done
+
+          overview_ok() {
+            local html="$1"
+            grep -Fq 'content="R115" name="axiona-release"' <<<"$html" \
+              && grep -Fq '/assets/visual-r110.css?release=R115' <<<"$html" \
+              && grep -Fq '/assets/visual-r112.css?release=R115' <<<"$html" \
+              && grep -Fq '/assets/visual-r113.css?release=R115' <<<"$html" \
+              && grep -Fq '/assets/visual-r113-tuning.css?release=R115' <<<"$html" \
+              && grep -Fq '/assets/visual-r115.css?release=R115' <<<"$html" \
+              && grep -Fq '/assets/js/visual-r112.js?release=R115' <<<"$html" \
+              && grep -Fq 'class="ax112-hero"' <<<"$html" \
+              && grep -Fq 'class="ax112-story"' <<<"$html"
+          }
+
+          for attempt in $(seq 1 30); do
+            KEY="${EXPECTED_MAIN}-r115-production-${attempt}"
+            HU="$(curl --fail --silent --show-error --location --header 'Cache-Control: no-cache' "https://axiona.systems/?proof=${KEY}" || true)"
+            EN="$(curl --fail --silent --show-error --location --header 'Cache-Control: no-cache' "https://axiona.systems/en/?proof=${KEY}" || true)"
+            DE="$(curl --fail --silent --show-error --location --header 'Cache-Control: no-cache' "https://axiona.systems/de/?proof=${KEY}" || true)"
+            R115="$(curl --fail --silent --show-error --location --header 'Cache-Control: no-cache' "https://axiona.systems/assets/visual-r115.css?release=R115&proof=${KEY}" || true)"
+            TUNING="$(curl --fail --silent --show-error --location --header 'Cache-Control: no-cache' "https://axiona.systems/assets/visual-r113-tuning.css?release=R115&proof=${KEY}" || true)"
+            VISUAL_JS="$(curl --fail --silent --show-error --location --header 'Cache-Control: no-cache' "https://axiona.systems/assets/js/visual-r112.js?release=R115&proof=${KEY}" || true)"
+
+            if overview_ok "$HU" && overview_ok "$EN" && overview_ok "$DE" \
+              && grep -Fq 'AXIONA R115 — Keeper-derived hero + system story visual language' <<<"$R115" \
+              && grep -Fq '.ax112-stage svg' <<<"$R115" \
+              && grep -Fq 'display:none!important' <<<"$R115" \
+              && grep -Fq '.ax112-step.is-current' <<<"$R115" \
+              && grep -Fq 'background:var(--r115-white)' <<<"$R115" \
+              && grep -Fq 'R115 no longer renders a relation-map' <<<"$TUNING" \
+              && grep -Fq 'AXIONA R115 — repeatable structural interaction layer' <<<"$VISUAL_JS" \
+              && grep -Fq "classList.toggle('is-visible', entry.isIntersecting)" <<<"$VISUAL_JS"; then
+              echo "OK_AXIONA_R115_PRODUCTION_CONVERGED=${EXPECTED_MAIN}"
+              exit 0
+            fi
+            sleep 5
+          done
+
+          echo "STOP_AXIONA_R115_PRODUCTION_NOT_CONVERGED" >&2
+          exit 1
