@@ -22,7 +22,7 @@ jobs:
   rendered-contract:
     name: Verify rendered overview structure
     runs-on: ubuntu-24.04
-    timeout-minutes: 5
+    timeout-minutes: 6
     steps:
       - name: Checkout repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
@@ -66,6 +66,7 @@ jobs:
           AXIONA_BASE: http://127.0.0.1:4174
         run: |
           set -euo pipefail
+          mkdir -p /tmp/r113-shots
           node --input-type=module <<'NODE'
           import { chromium } from 'playwright-core';
 
@@ -124,7 +125,6 @@ jobs:
                 h1: rect('.ax112-hero h1'),
                 model: rect('.ax112-model'),
                 story: rect('.ax112-story'),
-                firstStep: rect('.ax112-step'),
                 currentStep: rect('.ax112-step.is-current'),
                 field: rect('.ax112-field'),
                 cycle: rect('.ax112-cycle'),
@@ -142,8 +142,6 @@ jobs:
             if (result.counts.legacy !== 0) throw new Error(`${route} still contains legacy overview components`);
             if (result.scrollWidth > result.clientWidth + 2) throw new Error(`${route} ${label} horizontal overflow ${result.scrollWidth}/${result.clientWidth}`);
 
-            // Brand-character assertions: warm paper around a contained petrol model,
-            // one deliberate dark trust chapter, light story field with one dark active step.
             if (!result.visual || !result.visual.background.includes('229, 223, 211')) throw new Error(`${route} Keeper-like warm visual field missing: ${result.visual?.background}`);
             if (!result.model || !result.model.background.includes('11, 30, 37')) throw new Error(`${route} contained petrol model missing: ${result.model?.background}`);
             if (!result.story || !result.story.background.includes('229, 223, 211')) throw new Error(`${route} story is not warm editorial field: ${result.story?.background}`);
@@ -163,6 +161,12 @@ jobs:
               if (!result.model || result.model.width > result.clientWidth) throw new Error(`${route} mobile model exceeds viewport`);
             }
 
+            if (route === '/') {
+              await page.screenshot({ path: `/tmp/r113-shots/axiona-r113-${label}-full.png`, fullPage: true });
+              const hero = page.locator('.ax112-hero');
+              await hero.screenshot({ path: `/tmp/r113-shots/axiona-r113-${label}-hero.png` });
+            }
+
             await page.close();
           }
 
@@ -174,3 +178,12 @@ jobs:
           await browser.close();
           console.log('OK_AXIONA_R113_KEEPER_CALIBRATED_VISUAL_CONTRACT');
           NODE
+
+      - name: Upload rendered R113 evidence
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: axiona-r113-render-evidence
+          path: /tmp/r113-shots/*.png
+          if-no-files-found: error
+          retention-days: 3
+          compression-level: 6
