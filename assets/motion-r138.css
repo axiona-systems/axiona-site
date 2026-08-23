@@ -7,6 +7,10 @@
   --ax-r141-reveal-ease:cubic-bezier(.20,.62,.22,1);
 }
 
+/* The overview R115 layer contains a historical !important transform on story
+   steps. Keep the current R142 coordinator authoritative without changing the
+   rest of the accepted R115 composition. */
+html.ax-motion-r141-ready body.page-overview .ax112-step[data-ax112-reveal].ax-reveal-armed,
 html.ax-motion-r141-ready body :is(
   [data-ax112-reveal],
   [data-system-reveal],
@@ -28,6 +32,7 @@ html.ax-motion-r141-ready body :is(
   backface-visibility:hidden;
 }
 
+html.ax-motion-r141-ready body.page-overview .ax112-step[data-ax112-reveal].ax-reveal-active,
 html.ax-motion-r141-ready body :is(
   [data-ax112-reveal],
   [data-system-reveal],
@@ -99,6 +104,7 @@ html.ax-motion-r141-ready body :is(
 }
 
 @media(prefers-reduced-motion:reduce){
+  html body.page-overview .ax112-step.is-current[data-ax112-reveal],
   html :is(
     [data-ax112-reveal],
     [data-system-reveal],
