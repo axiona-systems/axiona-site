@@ -54,6 +54,9 @@ body.page-process-r119 .stage-list article.active{box-shadow:inset 5px 0 0 var(-
 body.page-process-r119 .stage-list article>span{padding-top:6px;color:#81432f!important;font:900 9px/1 ui-monospace,SFMono-Regular,Menlo,monospace}
 body.page-process-r119 .stage-list h3{margin:0 0 9px!important;color:var(--pro-ink)!important;font-size:clamp(23px,2vw,31px)!important;line-height:1.04;letter-spacing:-.035em}
 body.page-process-r119 .stage-list p{max-width:670px;margin:0!important;color:#59615c!important;font-size:13px!important;line-height:1.58!important}
+/* Legacy multipage styles target the active stage with higher specificity. */
+body.page-process-r119 .stage-list article.active h3{color:var(--pro-ink)!important}
+body.page-process-r119 .stage-list article.active p{color:#59615c!important}
 body.page-process-r119 .status-sheet{
   margin:0!important;padding:0!important;background:var(--pro-white-2)!important;color:var(--pro-ink)!important;border:0!important;box-shadow:none!important;transform:none!important
 }
