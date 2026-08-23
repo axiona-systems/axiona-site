@@ -1,0 +1,153 @@
+# Existing-on-main trigger for the one-shot R143 repository audit.
+name: AXIONA R143 Repository Audit Once
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/axiona-r143-repo-audit-once.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: axiona-r143-repo-audit
+  cancel-in-progress: true
+
+jobs:
+  audit:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    steps:
+      - name: Checkout canonical repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          fetch-depth: 2
+
+      - name: Run canonical repository guards
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 scripts/verify_site.py
+          python3 scripts/verify_sitemap_hreflang.py
+          python3 scripts/verify_security_txt.py
+          python3 scripts/verify_social_metadata.py
+          python3 scripts/verify_retired_routes.py
+          python3 scripts/verify_browser_identity.py
+          git diff --check HEAD~1 HEAD || true
+
+      - name: Build repository inventory
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p docs/status
+          python3 <<'PY'
+          from pathlib import Path
+          import re, subprocess, urllib.request
+
+          root = Path('.')
+          tracked = [Path(p) for p in subprocess.check_output(['git','ls-files'], text=True).splitlines()]
+          total_bytes = sum(p.stat().st_size for p in tracked if p.is_file())
+          assets = [p for p in tracked if len(p.parts) >= 2 and p.parts[0] == 'assets' and p.is_file()]
+          workflows = [p for p in tracked if len(p.parts) >= 3 and p.parts[:2] == ('.github','workflows') and p.suffix in {'.yml','.yaml'}]
+          htmls = [p for p in tracked if p.suffix == '.html' and p.is_file()]
+
+          referenced = set()
+          external_hosts = set()
+          text_runtime = [p for p in tracked if p.suffix.lower() in {'.html','.css','.js','.mjs'} and p.is_file()]
+          asset_abs = re.compile(r'(?:https://axiona\.systems)?(/assets/[A-Za-z0-9_./-]+)')
+          url_re = re.compile(r'url\(\s*[\"\']?([^\)\"\']+)')
+          https_re = re.compile(r'https://([A-Za-z0-9.-]+)')
+          for p in text_runtime:
+              try: text = p.read_text(encoding='utf-8')
+              except UnicodeDecodeError: continue
+              for m in asset_abs.finditer(text):
+                  referenced.add(m.group(1).lstrip('/'))
+              if p.suffix == '.css':
+                  for m in url_re.finditer(text):
+                      raw = m.group(1).strip()
+                      if raw.startswith(('data:','http://','https://','#')): continue
+                      resolved = (p.parent / raw.split('?',1)[0].split('#',1)[0]).resolve()
+                      try: rel = resolved.relative_to(root.resolve()).as_posix()
+                      except ValueError: continue
+                      if rel.startswith('assets/'):
+                          referenced.add(rel)
+              for host in https_re.findall(text):
+                  if host not in {'axiona.systems','www.axiona.systems','schema.org'}:
+                      external_hosts.add(host)
+
+          orphan_assets = sorted(p.as_posix() for p in assets if p.as_posix() not in referenced)
+          release_workflows = sorted(p.as_posix() for p in workflows if re.search(r'(?:^|[-_])r\d+', p.name, re.I))
+
+          unpinned = []
+          missing_permissions = []
+          for p in workflows:
+              text = p.read_text(encoding='utf-8')
+              if not re.search(r'^permissions\s*:', text, re.M) and not re.search(r'^\s{2,}permissions\s*:', text, re.M):
+                  missing_permissions.append(p.as_posix())
+              for owner, ref in re.findall(r'uses:\s*([^@\s]+)@([^\s#]+)', text):
+                  if not re.fullmatch(r'[0-9a-f]{40}', ref):
+                      unpinned.append((p.as_posix(), owner, ref))
+
+          largest = sorted(((p.stat().st_size,p.as_posix()) for p in tracked if p.is_file()), reverse=True)[:20]
+          route_rows = []
+          for p in htmls:
+              text = p.read_text(encoding='utf-8')
+              styles = len(re.findall(r'<link\b[^>]*rel=[\"\']stylesheet[\"\']', text, re.I))
+              scripts = len(re.findall(r'<script\b[^>]*src=', text, re.I))
+              route_rows.append((styles,scripts,p.as_posix(),p.stat().st_size))
+          route_rows.sort(reverse=True)
+
+          headers = ''
+          try:
+              req = urllib.request.Request('https://axiona.systems/', method='HEAD', headers={'User-Agent':'AXIONA-R143-audit'})
+              with urllib.request.urlopen(req, timeout=15) as resp:
+                  headers = '\n'.join(f'{k}: {v}' for k,v in resp.headers.items())
+          except Exception as exc:
+              headers = f'HEADER_AUDIT_FAILED: {exc}'
+
+          def mib(n): return f'{n/1024/1024:.2f} MiB'
+          lines = [
+              '# AXIONA R143 repository audit', '',
+              f'- tracked files: **{len(tracked)}**',
+              f'- tracked size: **{mib(total_bytes)}**',
+              f'- public HTML files: **{len(htmls)}**',
+              f'- asset files: **{len(assets)}**',
+              f'- workflow files: **{len(workflows)}**',
+              f'- release-numbered workflows: **{len(release_workflows)}**',
+              f'- runtime-unreferenced asset candidates: **{len(orphan_assets)}**',
+              f'- unpinned external action refs: **{len(unpinned)}**',
+              f'- workflows without explicit permissions block: **{len(missing_permissions)}**',
+              '', '## External runtime hosts',
+          ]
+          lines += [f'- `{x}`' for x in sorted(external_hosts)] or ['- none']
+          lines += ['', '## Runtime-unreferenced asset candidates']
+          lines += [f'- `{x}`' for x in orphan_assets] or ['- none']
+          lines += ['', '## Release-numbered workflows']
+          lines += [f'- `{x}`' for x in release_workflows] or ['- none']
+          lines += ['', '## Unpinned external actions']
+          lines += [f'- `{p}` → `{a}@{r}`' for p,a,r in unpinned] or ['- none']
+          lines += ['', '## Workflows without explicit permissions']
+          lines += [f'- `{x}`' for x in missing_permissions] or ['- none']
+          lines += ['', '## Heaviest public pages by stylesheet/script count']
+          for styles,scripts,name,size in route_rows[:20]:
+              lines.append(f'- `{name}` — {styles} stylesheets, {scripts} external scripts, {size/1024:.1f} KiB HTML')
+          lines += ['', '## Largest tracked files']
+          for size,name in largest:
+              lines.append(f'- `{name}` — {size/1024:.1f} KiB')
+          lines += ['', '## Live response headers', '```text', headers, '```', '', '## Guard result', 'Local canonical guards: **PASS**', '']
+          Path('docs/status/R143_REPO_AUDIT.md').write_text('\n'.join(lines), encoding='utf-8')
+          print('\n'.join(lines[:20]))
+          PY
+
+      - name: Commit audit evidence and remove one-shot workflow
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -f .github/workflows/axiona-r143-repo-audit-once.yml
+          git config user.name 'AXIONA Release Automation'
+          git config user.email 'actions@users.noreply.github.com'
+          git add -A
+          git commit -m 'R143: record repository hygiene and hardening audit'
+          git push origin HEAD:main
