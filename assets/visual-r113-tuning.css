@@ -5,6 +5,11 @@ body.page-overview .ax112-kicker span:first-child{
   color:#5f6862;
 }
 
+/* R115 no longer renders a relation-map. Remove the obsolete secondary label. */
+body.page-overview .ax112-model-head span:nth-child(2){
+  display:none;
+}
+
 /* Keep the editorial story strong without returning to R112's poster scale. */
 body.page-overview .ax112-story-head h2{
   max-width:560px;
