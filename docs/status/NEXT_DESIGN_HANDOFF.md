@@ -82,22 +82,23 @@ Final exact-head checks passed:
 
 The connector returned `statuses=[]` for the R127 merge SHA, so production Pages convergence is not independently proven through this interface.
 
-## R128 — Public Surface Invariants in progress
+### R128 — Public Surface Invariants
+R128 converted the repository-level verifier from a remembered-page list check into a whole published-surface invariant layer.
 
 Starting exact main SHA:
 `7f0ead903aefd203a5fefb1b51c7f674ebb12c5d`
 
-Feature branch:
-`feature/public-surface-invariants-r128`
+Exact tested PR #79 head:
+`0515993c441547cfe3f9a2c615fc618792d3f1a5`
 
-Reason:
-R127 exposed that the existing Public Surface Guard only inspected the explicitly declared 30 active HU/EN/DE pages. Extra physical HTML could still be published outside that list and escape structural validation.
+Exact squash-merge main SHA:
+`ad55f09f97ab27d85623d8fda1c7b59af3b4dd64`
 
-R128 strengthens `scripts/verify_site.py` to verify the complete published model:
+R128 now enforces:
 - exact physical HTML inventory: 30 active localized pages + one root `404.html`;
-- no extra public HTML anywhere in the repository publishing tree;
+- no extra public HTML anywhere in the publishing tree;
 - matching `<html lang>` for every active localized page;
-- exact single canonical URL per active page;
+- exact canonical URL per active page;
 - exact `hu` / `en` / `de` / `x-default` hreflang family;
 - one non-empty page release marker;
 - HU/EN/DE release-marker parity per route family;
@@ -107,24 +108,51 @@ R128 strengthens `scripts/verify_site.py` to verify the complete published model
 - root R126 404 invariants remain explicit;
 - existing sitemap, robots, security.txt, secret-pattern and public-email checks remain active.
 
-Verifier testability:
-- default Guard usage remains `python3 scripts/verify_site.py`;
-- optional `--root` permits isolated mutated repository fixtures.
+The strengthened Guard exposed a real pre-existing metadata defect: Systems, Process, Security and Solutions lacked canonical + hreflang blocks in HU/EN/DE, affecting 12 public pages. The invariant was not weakened; all 12 pages were remediated before acceptance.
 
-Dedicated fail-closed proof:
-- `.github/workflows/axiona-public-invariants-r128-contract.yml`
+Final exact-head checks passed:
+- AXIONA Public Surface Guard;
+- AXIONA Public Invariants R128 Contract;
+- AXIONA Systems R118 Visual Contract;
+- AXIONA Process R119 Visual Contract;
+- AXIONA Security R120 Visual Contract;
+- AXIONA Solutions R121 Visual Contract;
+- AXIONA Browser Quality Audit;
+- Lighthouse;
+- axe/WCAG.
 
-The contract requires the current baseline to pass, then proves five independent injected defects fail:
-1. extra public HTML;
-2. canonical drift;
-3. hreflang drift;
-4. language release mismatch;
-5. dead absolute same-host AXIONA link.
+The connector returned `statuses=[]` for the R128 merge SHA, so production Pages convergence is not independently proven through this interface.
 
-Release document:
-- `docs/status/R128_PUBLIC_SURFACE_INVARIANTS.md`
+## R129 — Browser Audit Coverage Matrix in progress
 
-R128 is not accepted until its exact PR head passes Public Surface Guard, R128 Public Invariants Contract, Browser Quality Audit, Lighthouse and axe/WCAG and is squash-merged with `expected_head_sha`.
+Starting exact main SHA:
+`ad55f09f97ab27d85623d8fda1c7b59af3b4dd64`
+
+Feature branch:
+`feature/browser-audit-matrix-r129`
+
+Whole-site audit finding:
+- axe/WCAG already covers all 30 active HU/EN/DE pages;
+- Lighthouse covered only 7 Hungarian routes;
+- HU Support, Privacy and Legal were absent from Lighthouse;
+- no EN or DE route was represented in Lighthouse.
+
+R129 keeps cost controlled while closing the family/language coverage gap:
+- Lighthouse expands to 12 representative routes: all 10 HU page families + EN home + DE home;
+- `numberOfRuns` remains `1`;
+- axe remains exhaustive over all 30 active routes;
+- new `scripts/verify_browser_audit_matrix.py` checks both matrices before expensive browser setup;
+- the normal Browser Quality Audit runs the verifier before npm/Chrome work;
+- `.github/workflows/axiona-browser-r129-coverage-contract.yml` proves missing Lighthouse or axe coverage fails closed.
+
+Files:
+- `lighthouserc.json`
+- `scripts/verify_browser_audit_matrix.py`
+- `.github/workflows/axiona-browser-audit.yml`
+- `.github/workflows/axiona-browser-r129-coverage-contract.yml`
+- `docs/status/R129_BROWSER_AUDIT_MATRIX.md`
+
+R129 is not accepted until its exact PR head passes Public Surface Guard, R129 Coverage Contract and the full Browser Quality Audit with Lighthouse + axe/WCAG.
 
 ## Canonical documentation
 
@@ -144,13 +172,15 @@ Read before subsequent public-surface changes:
 13. `docs/status/R126_NOT_FOUND_RECOVERY.md`
 14. `docs/status/R127_UTILITY_404_SOURCE_CONSOLIDATION.md`
 15. `docs/status/R128_PUBLIC_SURFACE_INVARIANTS.md`
-16. `docs/r114-cache-proof-note.md`
+16. `docs/status/R129_BROWSER_AUDIT_MATRIX.md`
+17. `docs/r114-cache-proof-note.md`
 
-## Next step after R128 acceptance
+## Next step after R129 acceptance
 
-Continue whole-site consistency/regression audit, not automatic redesign releases. Remaining audit areas:
+Continue whole-site consistency/regression audit, not automatic redesign releases. Highest-value remaining audit areas:
 - sitemap hreflang structure beyond URL membership;
 - navigation/footer semantic parity;
+- social/Open Graph/Twitter metadata consistency;
 - static utility files and metadata consistency;
 - stale unused assets/workflows only when removal can be proven safe;
 - deployment/live-proof observability.
@@ -159,13 +189,13 @@ Create another release only for a concrete finding. If no meaningful public inco
 
 ## Required delivery discipline
 
-For every public-surface change:
+For every public-surface or public-quality change:
 - re-resolve exact `main` SHA;
 - create feature branch before every write;
 - explicitly target that branch for every write;
 - preserve accepted content and UX unless the task requires otherwise;
 - update languages together where applicable;
-- Public Surface Guard + relevant page/route/invariant contract + Browser Quality Audit + Lighthouse + axe/WCAG;
+- Public Surface Guard + relevant page/route/invariant contract + Browser Quality Audit + Lighthouse + axe/WCAG where applicable;
 - no gate weakening;
 - re-resolve exact PR head and main immediately before merge;
 - squash merge using `expected_head_sha`;
