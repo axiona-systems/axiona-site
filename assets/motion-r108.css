@@ -1,3 +1,4 @@
 /* AXIONA R108 compatibility shim.
    R109 replaces scanner/status-pulse decoration with engineered composition. */
 @import url("/assets/visual-r109.css");
+@import url("/assets/visual-r109-compat.css");
