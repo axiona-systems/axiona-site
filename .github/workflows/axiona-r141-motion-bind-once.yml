@@ -1,0 +1,62 @@
+# Existing-on-main trigger for R141 motion binding.
+name: AXIONA R141 Motion Bind Once
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/axiona-r141-motion-bind-once.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  bind:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          fetch-depth: 0
+      - name: Bind R141 assets
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 <<'PY'
+          from pathlib import Path
+          import subprocess
+          files = subprocess.check_output(['git','ls-files','*.html'], text=True).splitlines()
+          checked=0
+          for name in files:
+              p=Path(name)
+              text=p.read_text(encoding='utf-8')
+              if '</head>' not in text or '</body>' not in text: continue
+              text=text.replace('/assets/motion-r138.css?release=R140','/assets/motion-r138.css?release=R141')
+              text=text.replace('/assets/js/motion-r138.js?release=R140','/assets/js/motion-r138.js?release=R141')
+              if text.count('/assets/motion-r138.css?release=R141')!=1: raise SystemExit(f'STOP_CSS {name}')
+              if text.count('/assets/js/motion-r138.js?release=R141')!=1: raise SystemExit(f'STOP_JS {name}')
+              p.write_text(text,encoding='utf-8')
+              checked+=1
+          print(f'OK_R141_BINDINGS={checked}')
+          if checked<10: raise SystemExit('STOP_TOO_FEW')
+          PY
+      - name: Commit
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p docs/status
+          cat > docs/status/R141_MOTION_TUNING.md <<'EOF'
+          # AXIONA R141 motion tuning
+          - transform only; no opacity fade
+          - 7 px desktop, 5 px mobile
+          - 520 ms desktop, 420 ms mobile
+          - 14% reset hysteresis
+          - armed/active classes override legacy page motion consistently
+          - bidirectional return reveal retained
+          EOF
+          rm -f .github/workflows/axiona-r141-motion-bind-once.yml
+          git config user.name 'AXIONA Release Automation'
+          git config user.email 'actions@users.noreply.github.com'
+          git add -A
+          git commit -m 'R141: bind minimal bidirectional motion'
+          git push origin HEAD:main
