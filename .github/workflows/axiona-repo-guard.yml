@@ -43,6 +43,10 @@ jobs:
         shell: bash
         run: python3 scripts/verify_social_metadata.py
 
+      - name: Verify retired public routes
+        shell: bash
+        run: python3 scripts/verify_retired_routes.py
+
       - name: Verify diff whitespace
         shell: bash
         run: |

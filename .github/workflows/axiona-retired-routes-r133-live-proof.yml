@@ -1,0 +1,58 @@
+name: AXIONA Retired Routes R133 Live Proof
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '*.html'
+      - 'en/*.html'
+      - 'de/*.html'
+      - sitemap.xml
+      - 404.html
+      - assets/not-found-r126.css
+      - assets/js/not-found-r126.js
+      - scripts/verify_retired_routes.py
+      - .github/workflows/axiona-retired-routes-r133-live-proof.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  live-proof:
+    name: Prove named retired routes stay 404
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+
+      - name: Prove retired production routes
+        shell: bash
+        run: |
+          set -euo pipefail
+          mapfile -t routes < <(python3 scripts/verify_retired_routes.py --print-routes)
+          [ "${#routes[@]}" -eq 20 ]
+
+          for attempt in {1..18}; do
+            ok=1
+            for route in "${routes[@]}"; do
+              file="/tmp/r133-$(echo "$route" | tr '/:' '__').html"
+              code="$(curl -sS -L -o "$file" -w '%{http_code}' "https://axiona.systems${route}?proof=${GITHUB_SHA}" || true)"
+              [ "$code" = 404 ] || { echo "R133_NOT_404 $route $code"; ok=0; continue; }
+              grep -Fq '/assets/not-found-r126.css?release=R126' "$file" || ok=0
+              grep -Fq '/assets/js/not-found-r126.js?release=R126' "$file" || ok=0
+              grep -Fq 'name="axiona-release" content="R126"' "$file" || ok=0
+            done
+            if [ "$ok" = 1 ]; then
+              echo "OK_AXIONA_RETIRED_ROUTES_R133_LIVE=${#routes[@]}"
+              echo "PROVEN_PAGES_SOURCE_SHA=${GITHUB_SHA}"
+              exit 0
+            fi
+            sleep 5
+          done
+
+          echo "STOP_AXIONA_RETIRED_ROUTES_R133_NOT_LIVE_FOR_SHA=${GITHUB_SHA}"
+          exit 1
