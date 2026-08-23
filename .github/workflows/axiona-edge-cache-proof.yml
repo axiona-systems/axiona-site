@@ -1,0 +1,120 @@
+name: AXIONA Edge Cache Proof
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/axiona-edge-cache-proof.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  prove-edge:
+    name: Compare public edge variants
+    runs-on: ubuntu-24.04
+    timeout-minutes: 3
+    steps:
+      - name: Fetch apex and www variants
+        shell: bash
+        run: |
+          set -euo pipefail
+          STAMP="$(date +%s)-${GITHUB_SHA}"
+
+          curl --fail --silent --show-error --location \
+            -D /tmp/apex.headers \
+            -o /tmp/apex.html \
+            -w '%{url_effective}' \
+            'https://axiona.systems/' > /tmp/apex.url
+
+          curl --fail --silent --show-error --location \
+            --header 'Cache-Control: no-cache' \
+            -D /tmp/apex-bust.headers \
+            -o /tmp/apex-bust.html \
+            -w '%{url_effective}' \
+            "https://axiona.systems/?axiona_edge=${STAMP}" > /tmp/apex-bust.url
+
+          set +e
+          curl --silent --show-error --location \
+            -D /tmp/www.headers \
+            -o /tmp/www.html \
+            -w '%{http_code}\n%{url_effective}' \
+            'https://www.axiona.systems/' > /tmp/www.meta
+          WWW_RC=$?
+
+          curl --silent --show-error --location \
+            --header 'Cache-Control: no-cache' \
+            -D /tmp/www-bust.headers \
+            -o /tmp/www-bust.html \
+            -w '%{http_code}\n%{url_effective}' \
+            "https://www.axiona.systems/?axiona_edge=${STAMP}" > /tmp/www-bust.meta
+          WWW_BUST_RC=$?
+          set -e
+
+          echo "AXIONA_WWW_CURL_RC=${WWW_RC}"
+          echo "AXIONA_WWW_BUST_CURL_RC=${WWW_BUST_RC}"
+
+      - name: Compare releases, hashes and cache headers
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import hashlib
+          import re
+          from pathlib import Path
+
+          def read(path):
+              p = Path(path)
+              return p.read_text(errors='replace') if p.exists() else ''
+
+          def release(text):
+              m = re.search(r'<meta content="([^"]+)" name="axiona-release"\s*/?>', text)
+              return m.group(1) if m else 'MISSING'
+
+          def sha(text):
+              return hashlib.sha256(text.encode()).hexdigest() if text else 'MISSING'
+
+          def has_r110(text):
+              return '/assets/visual-r110.css' in text
+
+          variants = {
+              'APEX': read('/tmp/apex.html'),
+              'APEX_BUST': read('/tmp/apex-bust.html'),
+              'WWW': read('/tmp/www.html'),
+              'WWW_BUST': read('/tmp/www-bust.html'),
+          }
+
+          for name, text in variants.items():
+              print(f'AXIONA_{name}_RELEASE={release(text)}')
+              print(f'AXIONA_{name}_DIRECT_R110={str(has_r110(text)).lower()}')
+              print(f'AXIONA_{name}_SHA256={sha(text)}')
+              print(f'AXIONA_{name}_BYTES={len(text.encode())}')
+
+          print(f"AXIONA_APEX_URL={read('/tmp/apex.url').strip()}")
+          print(f"AXIONA_APEX_BUST_URL={read('/tmp/apex-bust.url').strip()}")
+          print(f"AXIONA_WWW_META={read('/tmp/www.meta').strip().replace(chr(10), ' | ')}")
+          print(f"AXIONA_WWW_BUST_META={read('/tmp/www-bust.meta').strip().replace(chr(10), ' | ')}")
+
+          for label, path in [
+              ('APEX', '/tmp/apex.headers'),
+              ('APEX_BUST', '/tmp/apex-bust.headers'),
+              ('WWW', '/tmp/www.headers'),
+              ('WWW_BUST', '/tmp/www-bust.headers'),
+          ]:
+              headers = read(path)
+              selected = []
+              for line in headers.splitlines():
+                  low = line.lower()
+                  if low.startswith(('cache-control:', 'age:', 'etag:', 'last-modified:', 'server:', 'location:', 'x-cache:', 'via:')):
+                      selected.append(line.strip())
+              print(f"AXIONA_{label}_CACHE_HEADERS={' || '.join(selected)}")
+
+          apex = variants['APEX']
+          apex_bust = variants['APEX_BUST']
+          if release(apex) != 'R110' or not has_r110(apex):
+              raise SystemExit('STOP_AXIONA_NORMAL_APEX_NOT_R110')
+          if sha(apex) != sha(apex_bust):
+              raise SystemExit('STOP_AXIONA_APEX_CACHE_VARIANTS_DIFFER')
+          PY
