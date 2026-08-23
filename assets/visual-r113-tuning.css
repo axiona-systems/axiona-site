@@ -34,23 +34,11 @@ body.page-overview .ax112-mini-dot{
     padding:18px 18px 20px;
   }
   body.page-overview .ax112-cycle li:after{
-    right:auto;
-    left:18px;
-    top:auto;
-    bottom:-12px;
-    width:24px;
-    height:24px;
-    transform:rotate(90deg);
-    border:1px solid #aeb8b4;
+    content:none;
   }
   body.page-overview .ax112-cycle li.is-control{
     transform:none;
     box-shadow:inset 0 -6px 0 var(--r113-orange);
-  }
-  body.page-overview .ax112-cycle li.is-control:after{
-    background:var(--r113-navy);
-    color:var(--r113-white);
-    border-color:#476368;
   }
   body.page-overview .ax112-cycle em{
     padding-top:16px;
