@@ -1,0 +1,137 @@
+name: AXIONA R137 Live Proof
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/axiona-r137-live-proof.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: axiona-r137-live-proof
+  cancel-in-progress: false
+
+jobs:
+  live-proof:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: true
+          fetch-depth: 0
+
+      - name: Browser runtime
+        shell: bash
+        run: |
+          set -euo pipefail
+          CHROME_PATH="$(command -v google-chrome-stable || command -v google-chrome || command -v chromium || true)"
+          test -n "$CHROME_PATH"
+          echo "CHROME_PATH=$CHROME_PATH" >> "$GITHUB_ENV"
+          npm install --no-save --ignore-scripts --no-audit --no-fund playwright-core@1.62.1
+
+      - name: Verify live R137 render
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import { chromium } from 'playwright-core';
+          const browser = await chromium.launch({ executablePath: process.env.CHROME_PATH, headless: true, args: ['--no-sandbox'] });
+          const token = `r137-${Date.now()}`;
+
+          async function openWhenR137(route, width=1440) {
+            for (let attempt=1; attempt<=30; attempt++) {
+              const page = await browser.newPage({ viewport: { width, height: 1000 } });
+              await page.goto(`https://axiona.systems${route}${route.includes('?')?'&':'?'}axiona_live_proof=${token}-${attempt}`, { waitUntil:'networkidle', timeout:30000 });
+              const state = await page.evaluate(() => ({
+                hrefs:[...document.styleSheets].map(s=>s.href||''),
+                html:document.documentElement.outerHTML.includes('/assets/r137-ux-fixes.css?release=R137')
+              }));
+              if (state.html && state.hrefs.some(h=>h.includes('/assets/r137-ux-fixes.css?release=R137'))) return page;
+              await page.close();
+              await new Promise(r=>setTimeout(r, 4000));
+            }
+            throw new Error(`${route}: live R137 binding did not converge`);
+          }
+
+          const navRoutes=['/','/systems.html','/process.html','/security.html','/solutions.html','/contact.html'];
+          for (const route of navRoutes) {
+            const page=await openWhenR137(route,1440);
+            const result=await page.evaluate(()=>{
+              const nav=document.querySelector('.topbar > nav');
+              const active=[...(nav?.querySelectorAll('a.active')||[])];
+              const el=active[0];
+              const s=el?getComputedStyle(el):null;
+              const a=el?getComputedStyle(el,'::after'):null;
+              return {
+                count:active.length,
+                shadow:s?.boxShadow||'',
+                afterDisplay:a?.display||'',
+                afterContent:a?.content||'',
+                r137:[...document.styleSheets].filter(x=>(x.href||'').includes('/assets/r137-ux-fixes.css?release=R137')).length,
+                stale:[...document.styleSheets].filter(x=>(x.href||'').includes('/assets/r135-ux-fixes.css')||(x.href||'').includes('/assets/r136-ux-fixes.css')).length
+              };
+            });
+            console.log('LIVE_NAV',route,JSON.stringify(result));
+            if(result.count!==1) throw new Error(`${route}: active count ${result.count}`);
+            if(result.r137!==1||result.stale!==0) throw new Error(`${route}: hotfix binding not canonical`);
+            if(!result.shadow.includes('inset')) throw new Error(`${route}: single persistent marker missing`);
+            if(result.afterDisplay!=='none') throw new Error(`${route}: duplicate pseudo marker visible (${result.afterDisplay})`);
+            await page.close();
+          }
+
+          for (const width of [1280,1440,1512,1728,1920]) {
+            const page=await openWhenR137('/systems.html',width);
+            const result=await page.evaluate(()=>{
+              const x=document.querySelector('.services > .section-intro').getBoundingClientRect();
+              const y=document.querySelector('.services > .system-service').getBoundingClientRect();
+              const ox=Math.max(0,Math.min(x.right,y.right)-Math.max(x.left,y.left));
+              const oy=Math.max(0,Math.min(x.bottom,y.bottom)-Math.max(x.top,y.top));
+              return {overlap:ox*oy,clearance:y.top-x.bottom,intro:[x.left,x.top,x.right,x.bottom],visual:[y.left,y.top,y.right,y.bottom]};
+            });
+            console.log('LIVE_SYSTEMS',width,JSON.stringify(result));
+            if(result.overlap>0.5) throw new Error(`systems ${width}: live overlap ${result.overlap}`);
+            if(width<1800 && result.clearance<30) throw new Error(`systems ${width}: clearance ${result.clearance}`);
+            await page.close();
+          }
+
+          await browser.close();
+          console.log('OK_AXIONA_R137_LIVE_RENDER_PROOF');
+          NODE
+
+      - name: Record live proof and retire workflow
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat > docs/status/R137_UX_FIX_RENDER_PROOF.md <<'EOF'
+          # AXIONA R137 UX render proof
+
+          R137 is the single canonical UX correction layer for the reported navigation and Systems section-01 defects.
+
+          ## Canonical source render
+          PASS.
+
+          ## Live axiona.systems Chromium render
+          PASS.
+
+          Verified on the public site:
+          - exactly one R137 stylesheet is loaded and R135/R136 hotfix stylesheet bindings are absent;
+          - exactly one desktop active navigation item exists on Overview, Systems, Process, Security, Solutions and Contact;
+          - the active link pseudo-element is disabled, so no doubled underline can render;
+          - the only persistent current-page marker is one inset lower edge;
+          - Systems section 01 intro and the complete visual workbench have zero geometric overlap at 1280, 1440, 1512, 1728 and 1920 px viewport widths;
+          - at normal desktop widths below 1800 px they render on separate rows with at least 30 px measured clearance.
+
+          Result: LIVE PASS
+          EOF
+          git rm --ignore-unmatch .github/workflows/axiona-r137-live-proof.yml
+          git config user.name "AXIONA Release Automation"
+          git config user.email "actions@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m "R137: record live Chromium UX proof"
+          git push origin HEAD:main
