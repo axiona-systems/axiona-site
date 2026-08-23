@@ -31,17 +31,15 @@ jobs:
             --header "X-GitHub-Api-Version: 2026-03-10" \
             "https://api.github.com/repos/${REPOSITORY}/pages")"
 
-          python3 - <<'PY' <<<"$RESPONSE"
-          import json
-          import sys
-
+          printf '%s' "$RESPONSE" | python3 -c '
+          import json, sys
           data = json.load(sys.stdin)
           source = data.get("source") or {}
-          print(f"AXIONA_PAGES_BUILD_TYPE={data.get('build_type')}")
-          print(f"AXIONA_PAGES_SOURCE_BRANCH={source.get('branch')}")
-          print(f"AXIONA_PAGES_SOURCE_PATH={source.get('path')}")
-          print(f"AXIONA_PAGES_CNAME={data.get('cname')}")
-          print(f"AXIONA_PAGES_STATUS={data.get('status')}")
+          print(f"AXIONA_PAGES_BUILD_TYPE={data.get(chr(98)+chr(117)+chr(105)+chr(108)+chr(100)+chr(95)+chr(116)+chr(121)+chr(112)+chr(101))}")
+          print(f"AXIONA_PAGES_SOURCE_BRANCH={source.get(chr(98)+chr(114)+chr(97)+chr(110)+chr(99)+chr(104))}")
+          print(f"AXIONA_PAGES_SOURCE_PATH={source.get(chr(112)+chr(97)+chr(116)+chr(104))}")
+          print(f"AXIONA_PAGES_CNAME={data.get(chr(99)+chr(110)+chr(97)+chr(109)+chr(101))}")
+          print(f"AXIONA_PAGES_STATUS={data.get(chr(115)+chr(116)+chr(97)+chr(116)+chr(117)+chr(115))}")
           if not source.get("branch"):
               raise SystemExit("STOP_AXIONA_PAGES_SOURCE_BRANCH_MISSING")
-          PY
+          '
