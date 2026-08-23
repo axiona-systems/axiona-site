@@ -1,0 +1,137 @@
+name: AXIONA R116 Production Proof
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/axiona-r116-production-proof.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: read
+
+jobs:
+  prove-production:
+    name: Prove R116 production convergence
+    runs-on: ubuntu-24.04
+    timeout-minutes: 7
+    steps:
+      - name: Verify exact Pages build and live R116 bindings
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPOSITORY: ${{ github.repository }}
+          EXPECTED_MAIN: bcb55ae1235e94a888b840b4704c1c84b67e29ff
+        run: |
+          set -euo pipefail
+
+          latest_pages() {
+            curl --fail-with-body --silent --show-error \
+              --header "Accept: application/vnd.github+json" \
+              --header "Authorization: Bearer ${GH_TOKEN}" \
+              --header "X-GitHub-Api-Version: 2026-03-10" \
+              "https://api.github.com/repos/${REPOSITORY}/pages/builds/latest"
+          }
+
+          for attempt in $(seq 1 36); do
+            PAYLOAD="$(latest_pages)"
+            read -r STATUS COMMIT < <(printf '%s' "$PAYLOAD" | python3 -c 'import json,sys; d=json.load(sys.stdin); print(d.get("status","unknown"), d.get("commit","missing"))')
+            echo "PAGES_ATTEMPT=${attempt} STATUS=${STATUS} COMMIT=${COMMIT} EXPECTED=${EXPECTED_MAIN}"
+            if [ "$COMMIT" = "$EXPECTED_MAIN" ] && [ "$STATUS" = "built" ]; then
+              break
+            fi
+            if [ "$attempt" = 36 ]; then
+              echo "STOP_AXIONA_R116_EXACT_PAGES_BUILD_NOT_READY" >&2
+              exit 1
+            fi
+            sleep 5
+          done
+
+          overview_ok() {
+            local html="$1"
+            grep -Fq '/assets/visual-r116.css?release=R116' <<<"$html" \
+              && grep -Fq '/assets/js/overview-r116.js?release=R116' <<<"$html" \
+              && grep -Fq '/assets/visual-r115.css?release=R115' <<<"$html" \
+              && grep -Fq 'class="ax112-field"' <<<"$html"
+          }
+
+          for attempt in $(seq 1 30); do
+            KEY="${EXPECTED_MAIN}-r116-production-${attempt}"
+            HU="$(curl --fail --silent --show-error --location --header 'Cache-Control: no-cache' "https://axiona.systems/?proof=${KEY}" || true)"
+            EN="$(curl --fail --silent --show-error --location --header 'Cache-Control: no-cache' "https://axiona.systems/en/?proof=${KEY}" || true)"
+            DE="$(curl --fail --silent --show-error --location --header 'Cache-Control: no-cache' "https://axiona.systems/de/?proof=${KEY}" || true)"
+            CSS="$(curl --fail --silent --show-error --location --header 'Cache-Control: no-cache' "https://axiona.systems/assets/visual-r116.css?release=R116&proof=${KEY}" || true)"
+            JS="$(curl --fail --silent --show-error --location --header 'Cache-Control: no-cache' "https://axiona.systems/assets/js/overview-r116.js?release=R116&proof=${KEY}" || true)"
+
+            if overview_ok "$HU" && overview_ok "$EN" && overview_ok "$DE" \
+              && grep -Fq 'AXIONA R116 — interaction affordance cleanup + share strip integration' <<<"$CSS" \
+              && grep -Fq '.ax112-field-row>b' <<<"$CSS" \
+              && grep -Fq 'display:none!important' <<<"$CSS" \
+              && grep -Fq 'AXIONA R116 — restore the overview share utility before share-r86 boots' <<<"$JS" \
+              && grep -Fq "className = 'ax-share ax116-share section-pad'" <<<"$JS" \
+              && grep -Fq "main.appendChild(section)" <<<"$JS"; then
+              echo "OK_AXIONA_R116_STATIC_PRODUCTION_CONVERGED=${EXPECTED_MAIN}"
+              exit 0
+            fi
+            sleep 5
+          done
+
+          echo "STOP_AXIONA_R116_PRODUCTION_NOT_CONVERGED" >&2
+          exit 1
+
+      - name: Verify live rendered R116 interaction
+        shell: bash
+        run: |
+          set -euo pipefail
+          CHROME_PATH="$(command -v google-chrome-stable || command -v google-chrome || command -v chromium || true)"
+          if [ -z "$CHROME_PATH" ]; then
+            echo "STOP_AXIONA_R116_LIVE_CHROME_MISSING"
+            exit 1
+          fi
+          npm install --no-save --ignore-scripts --no-audit --no-fund playwright-core@1.62.1
+          CHROME_PATH="$CHROME_PATH" node --input-type=module <<'NODE'
+          import { chromium } from 'playwright-core';
+
+          const browser = await chromium.launch({
+            executablePath: process.env.CHROME_PATH,
+            headless: true,
+            args: ['--no-sandbox']
+          });
+          const cases = [
+            { url: 'https://axiona.systems/', share: 'Megosztás', copy: 'Link másolása' },
+            { url: 'https://axiona.systems/en/', share: 'Share', copy: 'Copy link' },
+            { url: 'https://axiona.systems/de/', share: 'Teilen', copy: 'Link kopieren' }
+          ];
+          for (const test of cases) {
+            const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
+            await page.goto(`${test.url}?proof=bcb55ae1235e94a888b840b4704c1c84b67e29ff`, { waitUntil: 'networkidle' });
+            await page.waitForSelector('.ax-share');
+            const state = await page.evaluate(() => {
+              const row = document.querySelector('.ax112-field-row');
+              const arrow = row?.querySelector(':scope > b');
+              return {
+                shareCount: document.querySelectorAll('.ax-share').length,
+                share: document.querySelector('[data-share-native]')?.textContent?.replace('↗','').trim() || '',
+                copy: document.querySelector('[data-share-copy]')?.textContent?.trim() || '',
+                arrowDisplay: arrow ? getComputedStyle(arrow).display : null,
+                cursor: row ? getComputedStyle(row).cursor : null
+              };
+            });
+            if (state.shareCount !== 1 || state.share !== test.share || state.copy !== test.copy) {
+              throw new Error(`${test.url} live share mismatch ${JSON.stringify(state)}`);
+            }
+            if (state.arrowDisplay !== 'none' || state.cursor !== 'default') {
+              throw new Error(`${test.url} live false affordance remains ${JSON.stringify(state)}`);
+            }
+            await page.locator('[data-share-native]').click();
+            await page.waitForTimeout(100);
+            if (!(await page.locator('[data-share-fallback]').isVisible())) {
+              throw new Error(`${test.url} live share fallback not wired`);
+            }
+            await page.close();
+          }
+          await browser.close();
+          console.log('OK_AXIONA_R116_LIVE_RENDERED_PRODUCTION_CONVERGED');
+          NODE
