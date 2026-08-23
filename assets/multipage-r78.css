@@ -9,6 +9,9 @@ html,body,.site-shell{background:var(--paper);color:var(--ink)}
 .page-r75 .standalone-contact{min-height:calc(100vh - 82px);align-items:center}
 .topbar{background:rgba(246,239,227,.97);border-color:var(--line)}
 .topbar nav a:after{background:var(--orange)}
+/* R135: retain the existing sweep animation, but keep the current page visibly selected. */
+.topbar nav a.active:not(.nav-contact):after{right:0!important}
+.topbar nav a.active:not(.nav-contact){font-weight:850}
 .topbar nav .nav-contact{background:var(--navy);border-color:var(--navy);color:var(--white)}
 .topbar nav .nav-contact.active,.topbar nav .nav-contact:hover,.topbar nav .nav-contact:focus-visible{background:var(--orange);border-color:var(--orange);color:var(--white);box-shadow:none}
 .language-switch a.active{border-color:var(--orange);color:var(--ink)}
