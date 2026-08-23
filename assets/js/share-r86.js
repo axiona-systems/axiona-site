@@ -39,9 +39,7 @@
       '.security-layer',
       '.solution-fit-card',
       '.solution-form',
-      '.product-chain article',
-      '.ax-share-copy',
-      '.ax-share-controls'
+      '.product-chain article'
     ].join(',');
 
     const boardSelectors = [
@@ -72,7 +70,7 @@
       element.style.setProperty('--ax-order', String(Math.min(siblingIndex, 6)));
       if (element.matches('.system-board,.status-sheet,.lifecycle-board,.problem-spectrum-board,.keeper96-preview-panel,.security-baseline')) {
         element.classList.add('ax-from-left');
-      } else if (element.matches('.service-copy,.lifecycle-principle,.credit-card,.ax-share-controls')) {
+      } else if (element.matches('.service-copy,.lifecycle-principle,.credit-card')) {
         element.classList.add('ax-from-right');
       }
       observer.observe(element);
