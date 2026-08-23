@@ -1,0 +1,105 @@
+/* AXIONA R137 — canonical navigation state and Systems hero separation.
+   This layer intentionally neutralizes the accumulated R135/R136 navigation
+   overrides and uses one visible current-page marker only. */
+
+/* NAVIGATION ------------------------------------------------------------- */
+@media (min-width:921px){
+  /* Exactly one persistent current-page marker: an inset lower edge. */
+  .topbar nav a.active{
+    font-weight:850!important;
+    box-shadow:inset 0 -3px 0 var(--orange,#e66a3c)!important;
+  }
+
+  /* The base hover sweep remains for inactive links only. Active links must
+     not draw the pseudo-element as well, otherwise the marker doubles. */
+  .topbar nav a.active::after{
+    display:none!important;
+    content:none!important;
+    left:auto!important;
+    right:auto!important;
+  }
+
+  /* Keep Contact visually consistent with the other current-page states:
+     dark button + one orange lower edge. This also neutralizes the legacy
+     active rule that turned the whole button orange. */
+  .topbar nav .nav-contact.active{
+    background:var(--navy,#142d31)!important;
+    border-color:var(--navy,#142d31)!important;
+    color:var(--white,#fffaf3)!important;
+    box-shadow:inset 0 -3px 0 var(--orange,#e66a3c)!important;
+  }
+}
+
+/* SYSTEMS / SECTION 01 --------------------------------------------------- */
+body.page-systems-r118 .services,
+body.page-systems-r118 .services>.section-intro,
+body.page-systems-r118 .services>.system-service{
+  min-width:0!important;
+}
+
+/* Normal desktop/tablet layout: put the introductory text and the complete
+   visual workbench on separate rows. This removes the possibility that the
+   large heading and the right-hand visual can occupy the same horizontal
+   space at common browser widths. */
+body.page-systems-r118 .services{
+  grid-template-columns:minmax(0,1fr)!important;
+  gap:clamp(48px,5vw,76px)!important;
+}
+body.page-systems-r118 .services>.section-intro{
+  width:min(100%,980px)!important;
+  max-width:980px!important;
+}
+body.page-systems-r118 .services>.system-service{
+  width:100%!important;
+  max-width:none!important;
+  margin:0!important;
+}
+
+/* Keep the two internal workbench surfaces visibly separated. */
+body.page-systems-r118 .system-service{
+  gap:18px!important;
+}
+body.page-systems-r118 .system-service .system-board,
+body.page-systems-r118 .system-service .service-copy{
+  min-width:0!important;
+  max-width:100%!important;
+}
+
+/* Only genuinely wide viewports use the editorial side-by-side hero. */
+@media (min-width:1800px){
+  body.page-systems-r118 .services{
+    grid-template-columns:minmax(0,.94fr) minmax(0,1.06fr)!important;
+    gap:clamp(72px,5vw,96px)!important;
+  }
+  body.page-systems-r118 .services>.section-intro{
+    width:auto!important;
+    max-width:720px!important;
+  }
+}
+
+@media (max-width:680px){
+  body.page-systems-r118 .services{gap:42px!important}
+  body.page-systems-r118 .system-service{gap:12px!important}
+}
+
+/* Preserve the contrast fixes introduced for Process and Support. -------- */
+body.page-process-r119 .stage-list article>span,
+body.page-process-r119 .stage-list article.active>span{
+  display:inline-flex!important;align-items:center!important;justify-content:center!important;
+  width:34px!important;min-width:34px!important;min-height:25px!important;height:max-content!important;
+  padding:6px 7px!important;position:static!important;
+  background:#0b1e25!important;color:#d7ef55!important;border:1px solid #355159!important;
+  box-shadow:none!important;font:900 9px/1 ui-monospace,SFMono-Regular,Menlo,monospace!important;
+  letter-spacing:.08em!important
+}
+body.page-support-r123 .stage-list article>span,
+body.page-support-r123 .stage-list article.active>span,
+body.page-support-r123 .method-list article>span{
+  display:inline-flex!important;align-items:center!important;justify-content:center!important;
+  width:34px!important;min-width:34px!important;min-height:25px!important;height:max-content!important;
+  padding:6px 7px!important;position:static!important;grid-row:auto!important;
+  background:#0b1e25!important;color:#d7ef55!important;border:1px solid #355159!important;
+  box-shadow:none!important;font:900 9px/1 ui-monospace,SFMono-Regular,Menlo,monospace!important;
+  letter-spacing:.08em!important
+}
+body.page-support-r123 .method-list p{grid-column:2!important}
