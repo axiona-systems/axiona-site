@@ -1,9 +1,9 @@
-# Re-triggered after workflow installation so the branch-local migration can execute deterministically.
+# Branch-local, self-removing migration. Must not survive into main.
 name: AXIONA R134 Browser Identity Remediation
 
 on:
-  push:
-    branches: [feature/browser-identity-r134]
+  pull_request:
+    branches: [main]
     paths:
       - .github/workflows/axiona-r134-browser-identity-remediation.yml
 
@@ -12,6 +12,7 @@ permissions:
 
 jobs:
   remediate:
+    if: github.event.pull_request.head.ref == 'feature/browser-identity-r134'
     runs-on: ubuntu-24.04
     timeout-minutes: 8
     steps:
