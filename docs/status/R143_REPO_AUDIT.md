@@ -1,7 +1,7 @@
 # AXIONA R143 repository audit
 
-- tracked files: **198**
-- tracked size: **2.47 MiB**
+- tracked files: **199**
+- tracked size: **2.48 MiB**
 - public HTML files: **31**
 - asset files: **62**
 - workflow files: **40**
@@ -111,31 +111,31 @@
 
 ## Live response headers
 ```text
-Date: Sun, 23 Aug 2026 19:39:03 GMT
+Date: Sun, 23 Aug 2026 19:39:27 GMT
 Content-Type: text/html; charset=utf-8
 Connection: close
 Server: cloudflare
 last-modified: Sun, 23 Aug 2026 19:28:17 GMT
 access-control-allow-origin: *
-expires: Sun, 23 Aug 2026 19:49:03 GMT
+expires: Sun, 23 Aug 2026 19:49:27 GMT
 Cache-Control: max-age=600
 Nel: {"report_to":"cf-nel","success_fraction":0.0,"max_age":604800}
 x-proxy-cache: MISS
-x-github-request-id: 94DA:272F3F:4995DD5:4DD3468:6A8B4C57
-x-github-edge-region: iad
+x-github-request-id: EDA8:13E451:10921EA:1150008:6A8B4C6E
+x-github-edge-region: sea
 Server-Timing: cfCacheStatus;desc="DYNAMIC"
-Server-Timing: cfEdge;dur=14,cfOrigin;dur=44
+Server-Timing: cfEdge;dur=30,cfOrigin;dur=87
 Age: 0
 via: 1.1 varnish
-x-served-by: cache-chi-klot8100051-CHI
+x-served-by: cache-bfi-krnt7300035-BFI
 x-cache: MISS
 x-cache-hits: 0
-x-timer: S1787513943.270175,VS0,VE38
+x-timer: S1787513968.549322,VS0,VE79
 vary: Accept-Encoding
-x-fastly-request-id: 71edbfccf518cd9e8a54c1e491ff33ca7d1cba3f
-Report-To: {"group":"cf-nel","max_age":604800,"endpoints":[{"url":"https://a.nel.cloudflare.com/report/v4?s=cQf2BtclMILtvJ9AKP75RI6gVt7NICQfyQXluq%2FKKE0%2FPcb2uLKyQH2k1EeVWZHxyyyOCl4KFwrbGjDsn%2FMvNeb3CMz90S1YWuhjLnARjb%2B%2Fbdihz3%2BmSEDPPKxoA5fTlA%3D%3D"}]}
+x-fastly-request-id: 11d35208eb5704859b71987b72116243d20c378f
+Report-To: {"group":"cf-nel","max_age":604800,"endpoints":[{"url":"https://a.nel.cloudflare.com/report/v4?s=S%2BxJBz3NUftMRwZm4hycHc5kiMvgCn9fWnmaZohvRlllqbgVS9R1VFGMqglZ%2FdzF0OEtpEXxvRqSMUkHUl1iQcpPdwLYjndJUyLNcS%2BeJj1Uf400aUxjaxmx3d0N%2FEcizA%3D%3D"}]}
 cf-cache-status: DYNAMIC
-CF-RAY: a2fc94c14bbc022a-ORD
+CF-RAY: a2fc9558fd54b9a6-SEA
 alt-svc: h3=":443"; ma=86400
 ```
 
