@@ -40,74 +40,75 @@ Exact squash-merge SHA: `4600eaabaa1e174cdcc199830c1b97672b913bed`
 
 ### R122 — Contact
 Targets: `contact.html`, `en/contact.html`, `de/contact.html`
+Exact tested PR #73 head: `135b003722170f317f4af44a6d0e8de7752e6008`
+Exact squash-merge SHA: `fdefa75eb21c7ce277e04db6ce98ff9385f91f6d`
 
-R122 is a first-conversation brief + privacy-minimal mail-preparation sheet. It preserves the local `mailto:` flow rather than introducing a form database.
+### R123 — Support
+Targets: `support.html`, `en/support.html`, `de/support.html`
 
-Direct bindings:
-- `/assets/contact-r122.css?release=R122`
-- `/assets/js/contact-r122.js?release=R122`
-
-Exact tested PR #73 head:
-`135b003722170f317f4af44a6d0e8de7752e6008`
-
-Final exact-head checks passed:
-- AXIONA Public Surface Guard;
-- AXIONA Contact R122 Visual Contract;
-- AXIONA Browser Quality Audit;
-- Lighthouse;
-- axe/WCAG.
-
-Exact squash-merge main SHA:
-`fdefa75eb21c7ce277e04db6ce98ff9385f91f6d`
-
-The GitHub connector returned `statuses=[]` for the R122 merge SHA, so production Pages convergence is not independently proven through this interface.
-
-## R123 — Support in progress
-
-Targets:
-- `support.html`
-- `en/support.html`
-- `de/support.html`
-
-Starting exact main SHA:
-`fdefa75eb21c7ce277e04db6ce98ff9385f91f6d`
-
-Feature branch:
-`feature/support-page-r123`
-
-R123 preserves:
-- four support categories;
-- direct `hello@axiona.systems` support path;
-- minimum-necessary-data guidance;
-- explicit no-password/no-code/no-API-key warning;
-- four-item useful-first-message guidance;
-- screenshot privacy guidance;
-- support/new-project routing distinction;
-- footer/legal/privacy/security and visit counter.
-
-Visual model:
-- human support dossier;
-- warm paper opening;
-- stable off-white support rows;
-- contained petrol support contact panel;
-- soft first-message chapter;
-- warm direct-support CTA section;
-- no fake ticketing dashboard or telemetry.
+R123 preserves the four support categories, direct support email, minimum-necessary-data guidance, sensitive-data warning, useful-first-message guidance and support/new-project routing distinction.
 
 Direct bindings:
 - `/assets/support-r123.css?release=R123`
 - `/assets/js/support-r123.js?release=R123`
 
+Exact tested PR #74 head:
+`dfa3e9f1dd88fcac6948b613b5452eef9de6f558`
+
+Final exact-head checks passed:
+- AXIONA Public Surface Guard;
+- AXIONA Support R123 Visual Contract;
+- AXIONA Browser Quality Audit;
+- Lighthouse;
+- axe/WCAG.
+
+Exact squash-merge main SHA:
+`4f969b640f21fdc3b0d3f923d2c88e42d4442597`
+
+The GitHub connector returned `statuses=[]` for the R123 merge SHA, so production Pages convergence is not independently proven through this interface.
+
+## R124 — Privacy + Legal in progress
+
+Targets:
+- `privacy.html`
+- `legal.html`
+- `en/privacy.html`
+- `en/legal.html`
+- `de/privacy.html`
+- `de/legal.html`
+
+Starting exact main SHA:
+`4f969b640f21fdc3b0d3f923d2c88e42d4442597`
+
+Feature branch:
+`feature/privacy-legal-r124`
+
+R124 is visual/interaction work only. Existing privacy/legal statements, ordering, dates, named services, qualifications and legal claims are preserved.
+
+Visual model:
+- controlled document ledger;
+- warm paper opening;
+- contained petrol summary sheet;
+- soft neutral long-form reading field;
+- eight stable off-white policy rows;
+- Privacy uses restrained cyan document/data marking;
+- Legal uses restrained orange document/legal marking;
+- no fake legal-tech dashboard, telemetry or pseudo-controls.
+
+Direct bindings on all six pages:
+- `/assets/policy-r124.css?release=R124`
+- `/assets/js/policy-r124.js?release=R124`
+
 Page-specific proof:
-- `.github/workflows/axiona-support-r123-visual-contract.yml`
+- `.github/workflows/axiona-policy-r124-visual-contract.yml`
 
 Post-merge live proof:
-- `.github/workflows/axiona-support-r123-live-proof.yml`
+- `.github/workflows/axiona-policy-r124-live-proof.yml`
 
 Release document:
-- `docs/status/R123_SUPPORT_PAGE_REDESIGN.md`
+- `docs/status/R124_PRIVACY_LEGAL_REDESIGN.md`
 
-R123 is not accepted until its exact tested PR head passes Public Surface Guard, R123 Visual Contract, Browser Quality Audit, Lighthouse and axe/WCAG and is squash-merged with `expected_head_sha`.
+R124 is not accepted until its exact tested PR head passes Public Surface Guard, R124 Visual Contract, Browser Quality Audit, Lighthouse and axe/WCAG and is squash-merged with `expected_head_sha`.
 
 ## Canonical documentation
 
@@ -122,15 +123,17 @@ Read before subsequent visual releases:
 8. `docs/status/R121_SOLUTIONS_PAGE_REDESIGN.md`
 9. `docs/status/R122_CONTACT_PAGE_REDESIGN.md`
 10. `docs/status/R123_SUPPORT_PAGE_REDESIGN.md`
-11. `docs/r114-cache-proof-note.md`
+11. `docs/status/R124_PRIVACY_LEGAL_REDESIGN.md`
+12. `docs/r114-cache-proof-note.md`
 
-## Next likely family after R123 acceptance
+## Next likely surface after R124 acceptance
 
-Inventory the privacy/legal utility pages together before R124:
-- `privacy.html`, `en/privacy.html`, `de/privacy.html`
-- `legal.html`, `en/legal.html`, `de/legal.html`
+Inventory the public Keeper product page separately:
+- `keeper.html`
+- `en/keeper.html`
+- `de/keeper.html`
 
-They may share one restrained document/legal visual family, but their legal content must be preserved exactly unless a separate legal-content task explicitly authorizes changes.
+Keeper is an own-product surface and already informs the accepted AXIONA visual language, so it must not be blindly redesigned. First compare its current implementation against the R115–R124 rules and change only genuine inconsistencies or regressions.
 
 ## Required delivery discipline
 
