@@ -1,0 +1,17 @@
+/* R109 cache-compatibility overrides for stale R105/R108 CSS. */
+.page-overview .problem-spectrum-board::before{
+  content:""!important;
+  animation:none!important;
+}
+.page-overview .keeper96-preview-panel::before{
+  content:""!important;
+  animation:none!important;
+}
+.page-security .security-baseline::before,.page-solutions .product-chain::before{
+  content:""!important;
+  animation:none!important;
+}
+.page-overview .project-sheet,.page-overview .keeper96-preview-panel{
+  animation-name:ax109-sheet-float!important;
+}
+.page-overview .keeper96-preview-panel{animation-name:ax109-panel-float!important}
