@@ -1,0 +1,48 @@
+/* R109 cache-compatibility and inherited-color corrections. */
+.page-overview .problem-spectrum-board::before{
+  content:""!important;
+  animation:none!important;
+}
+.page-overview .keeper96-preview-panel::before{
+  content:""!important;
+  animation:none!important;
+}
+.page-security .security-baseline::before,.page-solutions .product-chain::before{
+  content:""!important;
+  animation:none!important;
+}
+.page-overview .project-sheet,.page-overview .keeper96-preview-panel{
+  animation-name:ax109-sheet-float!important;
+}
+.page-overview .keeper96-preview-panel{animation-name:ax109-panel-float!important}
+
+/* Lifecycle moved from dark to paper: explicitly reset legacy light text. */
+.page-overview .lifecycle-story-intro{color:#132a2e!important}
+.page-overview .lifecycle-story-intro .eyebrow{color:#2d625d!important}
+.page-overview .lifecycle-story-intro h2{color:#132a2e!important}
+.page-overview .lifecycle-story-intro h2 span{color:#355f5b!important}
+.page-overview .lifecycle-principle{color:#132a2e!important}
+.page-overview .lifecycle-principle .micro{color:#4a5b24!important}
+.page-overview .lifecycle-principle blockquote{color:#132a2e!important}
+.page-overview .lifecycle-principle>p{color:#42504d!important}
+.page-overview .lifecycle-principle .text-link{color:#174d49!important}
+.page-overview .lifecycle-board li.is-control strong{color:#f5f0e8!important}
+
+/* Process active state moved onto dark instrumentation. */
+.page-process .stage-list article.active{color:#f5f0e8!important}
+.page-process .stage-list article.active>span{color:#d7ef55!important;background:#10272b!important}
+.page-process .stage-list article.active h3{color:#f5f0e8!important}
+.page-process .stage-list article.active p{color:#c7d3d0!important}
+
+/* Security pledge remains a warm light card inside a dark chapter. */
+.page-security .security-pledge>div:first-child>span{color:#493026!important}
+
+/* Solutions contains legacy inverted copy inside light implementation/result cards. */
+.page-solutions .website-service .service-copy,
+.page-solutions .website-service .service-copy h3,
+.page-solutions .website-service .service-copy p,
+.page-solutions .website-service .service-copy li{color:#132a2e!important}
+.page-solutions .website-service .check-list li:before{color:#b84625!important}
+.page-solutions .result-note,
+.page-solutions .result-note>span,
+.page-solutions .result-note>p{color:#132a2e!important}
