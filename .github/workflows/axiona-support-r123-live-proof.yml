@@ -1,0 +1,50 @@
+name: AXIONA Support R123 Live Proof
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - support.html
+      - en/support.html
+      - de/support.html
+      - assets/support-r123.css
+      - assets/js/support-r123.js
+      - .github/workflows/axiona-support-r123-live-proof.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  prove-live:
+    name: Verify live R123 support release
+    runs-on: ubuntu-24.04
+    timeout-minutes: 6
+    steps:
+      - name: Verify exact live R123 bindings and assets
+        shell: bash
+        run: |
+          set -euo pipefail
+          for attempt in $(seq 1 36); do
+            KEY="${GITHUB_SHA}-support-r123-${attempt}"
+            HU="$(curl --fail --silent --show-error --location --header 'Cache-Control: no-cache' "https://axiona.systems/support.html?proof=${KEY}" || true)"
+            EN="$(curl --fail --silent --show-error --location --header 'Cache-Control: no-cache' "https://axiona.systems/en/support.html?proof=${KEY}" || true)"
+            DE="$(curl --fail --silent --show-error --location --header 'Cache-Control: no-cache' "https://axiona.systems/de/support.html?proof=${KEY}" || true)"
+            CSS="$(curl --fail --silent --show-error --location --header 'Cache-Control: no-cache' "https://axiona.systems/assets/support-r123.css?release=R123&proof=${KEY}" || true)"
+            JS="$(curl --fail --silent --show-error --location --header 'Cache-Control: no-cache' "https://axiona.systems/assets/js/support-r123.js?release=R123&proof=${KEY}" || true)"
+            ok=true
+            for PAGE in "$HU" "$EN" "$DE"; do
+              grep -Fq '/assets/support-r123.css?release=R123' <<<"$PAGE" || ok=false
+              grep -Fq '/assets/js/support-r123.js?release=R123' <<<"$PAGE" || ok=false
+              grep -Fq 'content="R123" name="axiona-release"' <<<"$PAGE" || ok=false
+              grep -Fq 'mailto:hello@axiona.systems' <<<"$PAGE" || ok=false
+            done
+            if [ "$ok" = true ] && grep -Fq 'AXIONA R123 — Support page visual contract' <<<"$CSS" && grep -Fq 'AXIONA R123 — repeatable, progressive-enhancement support reveal motion' <<<"$JS"; then
+              echo "OK_AXIONA_SUPPORT_R123_LIVE"
+              echo "PROVEN_PAGES_SOURCE_SHA=${GITHUB_SHA}"
+              exit 0
+            fi
+            sleep 5
+          done
+          echo "STOP_AXIONA_SUPPORT_R123_NOT_LIVE_FOR_SHA=${GITHUB_SHA}" >&2
+          exit 1
