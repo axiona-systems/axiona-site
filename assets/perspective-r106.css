@@ -72,7 +72,7 @@
 .problem-card>span{
   display:block;
   margin-bottom:26px;
-  color:#6b726d;
+  color:var(--muted);
   font:800 10px/1 monospace;
 }
 .problem-card h3{margin:0 0 9px;font-size:21px;letter-spacing:-.025em}
