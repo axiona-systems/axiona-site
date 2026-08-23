@@ -1,0 +1,115 @@
+# Existing-on-main trigger for exact R143 candidate validation.
+name: AXIONA R143 Candidate Validation Once
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/axiona-r143-candidate-validation-once.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: axiona-r143-candidate-validation
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 18
+    steps:
+      - name: Checkout main control worktree
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          fetch-depth: 2
+
+      - name: Checkout exact candidate branch
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: agent/r143-repo-cleanup-hardening
+          path: candidate
+          persist-credentials: false
+
+      - name: Verify exact candidate head
+        shell: bash
+        run: |
+          set -euo pipefail
+          ACTUAL="$(git -C candidate rev-parse HEAD)"
+          EXPECTED="58cc64a90c6eb4f6b291f5996e45ae69f198dc63"
+          echo "CANDIDATE_HEAD=${ACTUAL}"
+          test "$ACTUAL" = "$EXPECTED" || { echo "STOP_R143_CANDIDATE_HEAD expected=${EXPECTED} actual=${ACTUAL}"; exit 1; }
+
+      - name: Run complete static guard set
+        shell: bash
+        working-directory: candidate
+        run: |
+          set -euo pipefail
+          python3 scripts/verify_site.py
+          python3 scripts/verify_sitemap_hreflang.py
+          python3 scripts/verify_security_txt.py
+          python3 scripts/verify_social_metadata.py
+          python3 scripts/verify_retired_routes.py
+          python3 scripts/verify_browser_identity.py
+          python3 scripts/verify_asset_references.py
+          python3 scripts/verify_workflow_hardening.py
+          git diff --check HEAD~1 HEAD
+
+      - name: Prepare pinned browser audit runtime
+        shell: bash
+        working-directory: candidate
+        run: |
+          set -euo pipefail
+          CHROME_PATH="$(command -v google-chrome-stable || command -v google-chrome || command -v chromium || true)"
+          test -n "$CHROME_PATH" || { echo STOP_R143_CHROME_MISSING; exit 1; }
+          echo "CHROME_PATH=$CHROME_PATH" >> "$GITHUB_ENV"
+          npm install --no-save --ignore-scripts --no-audit --no-fund \
+            @lhci/cli@0.15.1 \
+            playwright-core@1.62.1 \
+            axe-core@4.12.1
+
+      - name: Run Lighthouse budgets
+        shell: bash
+        working-directory: candidate
+        run: npx --no-install lhci autorun --config=./lighthouserc.json
+
+      - name: Start candidate static server
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m http.server 4176 --bind 127.0.0.1 --directory candidate >/tmp/r143-candidate-http.log 2>&1 &
+          echo $! >/tmp/r143-candidate-http.pid
+          for attempt in {1..20}; do
+            curl --fail --silent http://127.0.0.1:4176/ >/dev/null && exit 0
+            sleep .25
+          done
+          cat /tmp/r143-candidate-http.log || true
+          exit 1
+
+      - name: Run current render contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          AXIONA_BASE=http://127.0.0.1:4176 node candidate/scripts/verify_render_contract.mjs
+
+      - name: Run axe WCAG audit
+        shell: bash
+        run: |
+          set -euo pipefail
+          AXIONA_AUDIT_BASE=http://127.0.0.1:4176 node candidate/scripts/axe-audit.mjs
+
+      - name: Remove one-shot validator from main
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -f .github/workflows/axiona-r143-candidate-validation-once.yml
+          git config user.name 'AXIONA Release Automation'
+          git config user.email 'actions@users.noreply.github.com'
+          git add -A
+          if git diff --cached --quiet; then
+            exit 0
+          fi
+          git commit -m 'R143: remove completed candidate validator'
+          git push origin HEAD:main
