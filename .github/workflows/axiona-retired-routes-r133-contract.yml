@@ -1,0 +1,86 @@
+name: AXIONA Retired Routes R133 Contract
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '*.html'
+      - 'en/*.html'
+      - 'de/*.html'
+      - sitemap.xml
+      - scripts/verify_retired_routes.py
+      - .github/workflows/axiona-repo-guard.yml
+      - .github/workflows/axiona-retired-routes-r133-contract.yml
+      - docs/status/R133_RETIRED_ROUTE_PROOF.md
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  retired-contract:
+    name: Prove retired routes fail closed
+    runs-on: ubuntu-24.04
+    timeout-minutes: 6
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+
+      - name: Baseline must pass
+        shell: bash
+        run: python3 scripts/verify_retired_routes.py
+
+      - name: Negative retired-route fixtures must fail
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          make_case() {
+            rm -rf /tmp/r133-case
+            mkdir -p /tmp/r133-case
+            tar --exclude=.git -cf - . | tar -xf - -C /tmp/r133-case
+          }
+
+          expect_fail() {
+            local marker="$1"
+            if python3 scripts/verify_retired_routes.py --root /tmp/r133-case >/tmp/r133-out 2>&1; then
+              echo "STOP_R133_NEGATIVE_CASE_PASSED_UNEXPECTEDLY: $marker"
+              cat /tmp/r133-out
+              exit 1
+            fi
+            grep -Fq "$marker" /tmp/r133-out || {
+              echo "STOP_R133_EXPECTED_MARKER_MISSING: $marker"
+              cat /tmp/r133-out
+              exit 1
+            }
+          }
+
+          make_case
+          cp /tmp/r133-case/index.html /tmp/r133-case/impact.html
+          expect_fail "retired route source exists: /impact.html"
+
+          make_case
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('/tmp/r133-case/index.html')
+          t=p.read_text(encoding='utf-8')
+          assert '</body>' in t
+          p.write_text(t.replace('</body>','<a href="/en/automation.html">legacy</a></body>',1),encoding='utf-8')
+          PY
+          expect_fail "retired route linked from active html: index.html -> /en/automation.html"
+
+          make_case
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('/tmp/r133-case/sitemap.xml')
+          t=p.read_text(encoding='utf-8')
+          marker='</urlset>'
+          assert marker in t
+          entry='  <url><loc>https://axiona.systems/de/company.html</loc></url>\n'
+          p.write_text(t.replace(marker,entry+marker,1),encoding='utf-8')
+          PY
+          expect_fail "retired route present in sitemap: /de/company.html"
+
+          echo OK_AXIONA_RETIRED_ROUTES_R133_NEGATIVE_CONTRACT
