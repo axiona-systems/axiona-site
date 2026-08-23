@@ -26,7 +26,7 @@ jobs:
   verify:
     name: Publish and verify
     runs-on: ubuntu-24.04
-    timeout-minutes: 6
+    timeout-minutes: 7
     steps:
       - name: Checkout canonical source
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
@@ -48,30 +48,35 @@ jobs:
             "https://api.github.com/repos/${REPOSITORY}/pages/builds" \
             >/dev/null
 
-      - name: Wait for Pages build
+      - name: Wait for exact Pages build
         shell: bash
         env:
           GH_TOKEN: ${{ github.token }}
           REPOSITORY: ${{ github.repository }}
         run: |
           set -euo pipefail
-          for attempt in $(seq 1 36); do
-            STATUS="$(curl --fail-with-body --silent --show-error \
+          for attempt in $(seq 1 48); do
+            PAYLOAD="$(curl --fail-with-body --silent --show-error \
               --header "Accept: application/vnd.github+json" \
               --header "Authorization: Bearer ${GH_TOKEN}" \
               --header "X-GitHub-Api-Version: 2026-03-10" \
-              "https://api.github.com/repos/${REPOSITORY}/pages/builds/latest" \
-              | python3 -c 'import json,sys; print(json.load(sys.stdin).get("status", "unknown"))')"
-            case "$STATUS" in
-              built) exit 0 ;;
-              errored) echo "Pages build failed" >&2; exit 1 ;;
-            esac
+              "https://api.github.com/repos/${REPOSITORY}/pages/builds/latest")"
+
+            read -r STATUS COMMIT < <(printf '%s' "$PAYLOAD" | python3 -c 'import json,sys; d=json.load(sys.stdin); print(d.get("status","unknown"), d.get("commit","missing"))')
+            echo "PAGES_ATTEMPT=${attempt} STATUS=${STATUS} COMMIT=${COMMIT} EXPECTED=${GITHUB_SHA}"
+
+            if [ "$COMMIT" = "$GITHUB_SHA" ]; then
+              case "$STATUS" in
+                built) echo "OK_AXIONA_PAGES_EXACT_BUILD=${GITHUB_SHA}"; exit 0 ;;
+                errored) echo "STOP_AXIONA_PAGES_EXACT_BUILD_ERRORED" >&2; exit 1 ;;
+              esac
+            fi
             sleep 5
           done
-          echo "Pages build timed out" >&2
+          echo "STOP_AXIONA_PAGES_EXACT_BUILD_TIMEOUT expected=${GITHUB_SHA}" >&2
           exit 1
 
-      - name: Verify live overview release and public surface
+      - name: Verify live R112 overview structure
         shell: bash
         run: |
           set -euo pipefail
@@ -81,7 +86,6 @@ jobs:
           import re
           import sys
           from pathlib import Path
-
           text = Path(sys.argv[1]).read_text(encoding="utf-8")
           match = re.search(r'<meta content="([^"]+)" name="axiona-release"\s*/?>', text)
           if not match:
@@ -94,31 +98,42 @@ jobs:
           EXPECTED_EN="$(release_from_file en/index.html)"
           EXPECTED_DE="$(release_from_file de/index.html)"
 
-          for attempt in $(seq 1 24); do
-            CACHE_BUST="${GITHUB_SHA}-overview-${attempt}"
-            HOME_HU="$(curl --fail --silent --show-error --location --header 'Cache-Control: no-cache' "https://axiona.systems/?axiona_verify=${CACHE_BUST}" || true)"
-            HOME_EN="$(curl --fail --silent --show-error --location --header 'Cache-Control: no-cache' "https://axiona.systems/en/?axiona_verify=${CACHE_BUST}" || true)"
-            HOME_DE="$(curl --fail --silent --show-error --location --header 'Cache-Control: no-cache' "https://axiona.systems/de/?axiona_verify=${CACHE_BUST}" || true)"
-            KEEPER_HU="$(curl --fail --silent --show-error --location --header 'Cache-Control: no-cache' "https://axiona.systems/keeper.html?axiona_verify=${CACHE_BUST}" || true)"
+          for attempt in $(seq 1 30); do
+            KEY="${GITHUB_SHA}-r112-overview-${attempt}"
+            HOME_HU="$(curl --fail --silent --show-error --location --header 'Cache-Control: no-cache' "https://axiona.systems/?axiona_verify=${KEY}" || true)"
+            HOME_EN="$(curl --fail --silent --show-error --location --header 'Cache-Control: no-cache' "https://axiona.systems/en/?axiona_verify=${KEY}" || true)"
+            HOME_DE="$(curl --fail --silent --show-error --location --header 'Cache-Control: no-cache' "https://axiona.systems/de/?axiona_verify=${KEY}" || true)"
+            VISUAL="$(curl --fail --silent --show-error --location --header 'Cache-Control: no-cache' "https://axiona.systems/assets/visual-r112.css?axiona_verify=${KEY}" || true)"
+            SCRIPT="$(curl --fail --silent --show-error --location --header 'Cache-Control: no-cache' "https://axiona.systems/assets/js/visual-r112.js?release=R112&axiona_verify=${KEY}" || true)"
 
-            if grep -Fq "content=\"${EXPECTED_HU}\" name=\"axiona-release\"" <<<"$HOME_HU" \
-              && grep -Fq 'problem-spectrum section-pad' <<<"$HOME_HU" \
-              && grep -Fq "content=\"${EXPECTED_EN}\" name=\"axiona-release\"" <<<"$HOME_EN" \
-              && grep -Fq 'problem-spectrum section-pad' <<<"$HOME_EN" \
-              && grep -Fq "content=\"${EXPECTED_DE}\" name=\"axiona-release\"" <<<"$HOME_DE" \
-              && grep -Fq 'problem-spectrum section-pad' <<<"$HOME_DE" \
-              && grep -Fq 'AXIONA KEEPER' <<<"$KEEPER_HU"; then
-              echo "OK_AXIONA_LIVE_OVERVIEW_RELEASE HU=${EXPECTED_HU} EN=${EXPECTED_EN} DE=${EXPECTED_DE}"
+            overview_ok() {
+              local html="$1" expected="$2"
+              grep -Fq "content=\"${expected}\" name=\"axiona-release\"" <<<"$html" \
+                && grep -Fq '/assets/visual-r112.css' <<<"$html" \
+                && grep -Fq 'class="ax112-hero"' <<<"$html" \
+                && grep -Fq 'class="ax112-model"' <<<"$html" \
+                && grep -Fq 'class="ax112-story"' <<<"$html" \
+                && grep -Fq 'class="ax112-cycle"' <<<"$html" \
+                && ! grep -Fq 'class="project-sheet"' <<<"$html" \
+                && ! grep -Fq 'class="problem-spectrum ' <<<"$html"
+            }
+
+            if overview_ok "$HOME_HU" "$EXPECTED_HU" \
+              && overview_ok "$HOME_EN" "$EXPECTED_EN" \
+              && overview_ok "$HOME_DE" "$EXPECTED_DE" \
+              && grep -Fq 'AXIONA R112 — structural visual redesign' <<<"$VISUAL" \
+              && grep -Fq 'AXIONA R112 — structural interaction layer' <<<"$SCRIPT"; then
+              echo "OK_AXIONA_LIVE_R112_OVERVIEW HU=${EXPECTED_HU} EN=${EXPECTED_EN} DE=${EXPECTED_DE}"
               exit 0
             fi
             sleep 5
           done
 
-          echo "Live overview pages do not match canonical release" >&2
+          echo "STOP_AXIONA_LIVE_R112_OVERVIEW_NOT_CONVERGED" >&2
           echo "EXPECTED HU=${EXPECTED_HU} EN=${EXPECTED_EN} DE=${EXPECTED_DE}" >&2
           exit 1
 
-      - name: Verify live process pages match canonical release
+      - name: Verify unchanged public routes match canonical releases
         shell: bash
         run: |
           set -euo pipefail
@@ -128,7 +143,6 @@ jobs:
           import re
           import sys
           from pathlib import Path
-
           text = Path(sys.argv[1]).read_text(encoding="utf-8")
           match = re.search(r'<meta content="([^"]+)" name="axiona-release"\s*/?>', text)
           if not match:
@@ -137,115 +151,36 @@ jobs:
           PY
           }
 
-          EXPECTED_HU="$(release_from_file process.html)"
-          EXPECTED_EN="$(release_from_file en/process.html)"
-          EXPECTED_DE="$(release_from_file de/process.html)"
+          verify_triplet() {
+            local route="$1" marker="$2"
+            local expected_hu expected_en expected_de key hu en de
+            expected_hu="$(release_from_file "${route}.html")"
+            expected_en="$(release_from_file "en/${route}.html")"
+            expected_de="$(release_from_file "de/${route}.html")"
 
-          for attempt in $(seq 1 24); do
-            CACHE_BUST="${GITHUB_SHA}-process-${attempt}"
-            PROCESS_HU="$(curl --fail --silent --show-error --location --header 'Cache-Control: no-cache' "https://axiona.systems/process.html?axiona_verify=${CACHE_BUST}" || true)"
-            PROCESS_EN="$(curl --fail --silent --show-error --location --header 'Cache-Control: no-cache' "https://axiona.systems/en/process.html?axiona_verify=${CACHE_BUST}" || true)"
-            PROCESS_DE="$(curl --fail --silent --show-error --location --header 'Cache-Control: no-cache' "https://axiona.systems/de/process.html?axiona_verify=${CACHE_BUST}" || true)"
+            for attempt in $(seq 1 24); do
+              key="${GITHUB_SHA}-${route}-${attempt}"
+              hu="$(curl --fail --silent --show-error --location --header 'Cache-Control: no-cache' "https://axiona.systems/${route}.html?axiona_verify=${key}" || true)"
+              en="$(curl --fail --silent --show-error --location --header 'Cache-Control: no-cache' "https://axiona.systems/en/${route}.html?axiona_verify=${key}" || true)"
+              de="$(curl --fail --silent --show-error --location --header 'Cache-Control: no-cache' "https://axiona.systems/de/${route}.html?axiona_verify=${key}" || true)"
 
-            if grep -Fq "content=\"${EXPECTED_HU}\" name=\"axiona-release\"" <<<"$PROCESS_HU" \
-              && grep -Fq "content=\"${EXPECTED_EN}\" name=\"axiona-release\"" <<<"$PROCESS_EN" \
-              && grep -Fq "content=\"${EXPECTED_DE}\" name=\"axiona-release\"" <<<"$PROCESS_DE"; then
-              echo "OK_AXIONA_LIVE_PROCESS_RELEASE HU=${EXPECTED_HU} EN=${EXPECTED_EN} DE=${EXPECTED_DE}"
-              exit 0
-            fi
-            sleep 5
-          done
-
-          echo "Live process pages do not match canonical release" >&2
-          echo "EXPECTED HU=${EXPECTED_HU} EN=${EXPECTED_EN} DE=${EXPECTED_DE}" >&2
-          exit 1
-
-      - name: Verify live security pages match canonical release
-        shell: bash
-        run: |
-          set -euo pipefail
-
-          release_from_file() {
-            python3 - "$1" <<'PY'
-          import re
-          import sys
-          from pathlib import Path
-
-          text = Path(sys.argv[1]).read_text(encoding="utf-8")
-          match = re.search(r'<meta content="([^"]+)" name="axiona-release"\s*/?>', text)
-          if not match:
-              raise SystemExit(f"missing axiona-release in {sys.argv[1]}")
-          print(match.group(1))
-          PY
+              if grep -Fq "content=\"${expected_hu}\" name=\"axiona-release\"" <<<"$hu" \
+                && grep -Fq "content=\"${expected_en}\" name=\"axiona-release\"" <<<"$en" \
+                && grep -Fq "content=\"${expected_de}\" name=\"axiona-release\"" <<<"$de" \
+                && { [ -z "$marker" ] || { grep -Fq "$marker" <<<"$hu" && grep -Fq "$marker" <<<"$en" && grep -Fq "$marker" <<<"$de"; }; }; then
+                echo "OK_AXIONA_LIVE_ROUTE=${route} HU=${expected_hu} EN=${expected_en} DE=${expected_de}"
+                return 0
+              fi
+              sleep 5
+            done
+            echo "STOP_AXIONA_LIVE_ROUTE_NOT_CONVERGED=${route}" >&2
+            return 1
           }
 
-          EXPECTED_HU="$(release_from_file security.html)"
-          EXPECTED_EN="$(release_from_file en/security.html)"
-          EXPECTED_DE="$(release_from_file de/security.html)"
+          verify_triplet process ""
+          verify_triplet security "security-trust section-pad"
+          verify_triplet solutions "solution-fit section-pad"
 
-          for attempt in $(seq 1 24); do
-            CACHE_BUST="${GITHUB_SHA}-security-${attempt}"
-            SECURITY_HU="$(curl --fail --silent --show-error --location --header 'Cache-Control: no-cache' "https://axiona.systems/security.html?axiona_verify=${CACHE_BUST}" || true)"
-            SECURITY_EN="$(curl --fail --silent --show-error --location --header 'Cache-Control: no-cache' "https://axiona.systems/en/security.html?axiona_verify=${CACHE_BUST}" || true)"
-            SECURITY_DE="$(curl --fail --silent --show-error --location --header 'Cache-Control: no-cache' "https://axiona.systems/de/security.html?axiona_verify=${CACHE_BUST}" || true)"
-
-            if grep -Fq "content=\"${EXPECTED_HU}\" name=\"axiona-release\"" <<<"$SECURITY_HU" \
-              && grep -Fq 'security-trust section-pad' <<<"$SECURITY_HU" \
-              && grep -Fq "content=\"${EXPECTED_EN}\" name=\"axiona-release\"" <<<"$SECURITY_EN" \
-              && grep -Fq 'security-trust section-pad' <<<"$SECURITY_EN" \
-              && grep -Fq "content=\"${EXPECTED_DE}\" name=\"axiona-release\"" <<<"$SECURITY_DE" \
-              && grep -Fq 'security-trust section-pad' <<<"$SECURITY_DE"; then
-              echo "OK_AXIONA_LIVE_SECURITY_RELEASE HU=${EXPECTED_HU} EN=${EXPECTED_EN} DE=${EXPECTED_DE}"
-              exit 0
-            fi
-            sleep 5
-          done
-
-          echo "Live security pages do not match canonical release" >&2
-          echo "EXPECTED HU=${EXPECTED_HU} EN=${EXPECTED_EN} DE=${EXPECTED_DE}" >&2
-          exit 1
-
-      - name: Verify live solutions pages match canonical release
-        shell: bash
-        run: |
-          set -euo pipefail
-
-          release_from_file() {
-            python3 - "$1" <<'PY'
-          import re
-          import sys
-          from pathlib import Path
-
-          text = Path(sys.argv[1]).read_text(encoding="utf-8")
-          match = re.search(r'<meta content="([^"]+)" name="axiona-release"\s*/?>', text)
-          if not match:
-              raise SystemExit(f"missing axiona-release in {sys.argv[1]}")
-          print(match.group(1))
-          PY
-          }
-
-          EXPECTED_HU="$(release_from_file solutions.html)"
-          EXPECTED_EN="$(release_from_file en/solutions.html)"
-          EXPECTED_DE="$(release_from_file de/solutions.html)"
-
-          for attempt in $(seq 1 24); do
-            CACHE_BUST="${GITHUB_SHA}-solutions-${attempt}"
-            SOLUTIONS_HU="$(curl --fail --silent --show-error --location --header 'Cache-Control: no-cache' "https://axiona.systems/solutions.html?axiona_verify=${CACHE_BUST}" || true)"
-            SOLUTIONS_EN="$(curl --fail --silent --show-error --location --header 'Cache-Control: no-cache' "https://axiona.systems/en/solutions.html?axiona_verify=${CACHE_BUST}" || true)"
-            SOLUTIONS_DE="$(curl --fail --silent --show-error --location --header 'Cache-Control: no-cache' "https://axiona.systems/de/solutions.html?axiona_verify=${CACHE_BUST}" || true)"
-
-            if grep -Fq "content=\"${EXPECTED_HU}\" name=\"axiona-release\"" <<<"$SOLUTIONS_HU" \
-              && grep -Fq 'solution-fit section-pad' <<<"$SOLUTIONS_HU" \
-              && grep -Fq "content=\"${EXPECTED_EN}\" name=\"axiona-release\"" <<<"$SOLUTIONS_EN" \
-              && grep -Fq 'solution-fit section-pad' <<<"$SOLUTIONS_EN" \
-              && grep -Fq "content=\"${EXPECTED_DE}\" name=\"axiona-release\"" <<<"$SOLUTIONS_DE" \
-              && grep -Fq 'solution-fit section-pad' <<<"$SOLUTIONS_DE"; then
-              echo "OK_AXIONA_LIVE_SOLUTIONS_RELEASE HU=${EXPECTED_HU} EN=${EXPECTED_EN} DE=${EXPECTED_DE}"
-              exit 0
-            fi
-            sleep 5
-          done
-
-          echo "Live solutions pages do not match canonical release" >&2
-          echo "EXPECTED HU=${EXPECTED_HU} EN=${EXPECTED_EN} DE=${EXPECTED_DE}" >&2
-          exit 1
+          KEEPER="$(curl --fail --silent --show-error --location --header 'Cache-Control: no-cache' "https://axiona.systems/keeper.html?axiona_verify=${GITHUB_SHA}-keeper" || true)"
+          grep -Fq 'AXIONA KEEPER' <<<"$KEEPER" || { echo "STOP_AXIONA_KEEPER_PUBLIC_SURFACE_MISSING" >&2; exit 1; }
+          echo "OK_AXIONA_KEEPER_PUBLIC_SURFACE"
