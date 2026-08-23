@@ -1,0 +1,47 @@
+name: AXIONA Pages Source Proof
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/axiona-pages-source-proof.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: read
+
+jobs:
+  prove-source:
+    name: Prove actual Pages source
+    runs-on: ubuntu-24.04
+    timeout-minutes: 3
+    steps:
+      - name: Read GitHub Pages configuration
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPOSITORY: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          RESPONSE="$(curl --fail-with-body --silent --show-error \
+            --header "Accept: application/vnd.github+json" \
+            --header "Authorization: Bearer ${GH_TOKEN}" \
+            --header "X-GitHub-Api-Version: 2026-03-10" \
+            "https://api.github.com/repos/${REPOSITORY}/pages")"
+
+          python3 - <<'PY' <<<"$RESPONSE"
+          import json
+          import sys
+
+          data = json.load(sys.stdin)
+          source = data.get("source") or {}
+          print(f"AXIONA_PAGES_BUILD_TYPE={data.get('build_type')}")
+          print(f"AXIONA_PAGES_SOURCE_BRANCH={source.get('branch')}")
+          print(f"AXIONA_PAGES_SOURCE_PATH={source.get('path')}")
+          print(f"AXIONA_PAGES_CNAME={data.get('cname')}")
+          print(f"AXIONA_PAGES_STATUS={data.get('status')}")
+          if not source.get("branch"):
+              raise SystemExit("STOP_AXIONA_PAGES_SOURCE_BRANCH_MISSING")
+          PY
