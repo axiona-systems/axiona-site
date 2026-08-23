@@ -1,0 +1,89 @@
+name: AXIONA Browser Identity R134 Contract
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '*.html'
+      - 'en/*.html'
+      - 'de/*.html'
+      - 'favicon.svg'
+      - 'favicon-16x16.png'
+      - 'favicon-32x32.png'
+      - 'apple-touch-icon.png'
+      - 'site.webmanifest'
+      - 'assets/brand/axiona-icon-192.png'
+      - 'assets/brand/axiona-icon-512.png'
+      - 'scripts/verify_browser_identity.py'
+      - '.github/workflows/axiona-browser-identity-r134-contract.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  contract:
+    name: Prove browser identity invariants fail closed
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+
+      - name: Baseline must pass
+        shell: bash
+        run: python3 scripts/verify_browser_identity.py
+
+      - name: Negative browser identity fixtures must fail
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT="$RUNNER_TEMP/r134-case"
+
+          run_case() {
+            name="$1"
+            marker="$2"
+            mutation="$3"
+            rm -rf "$ROOT"
+            cp -a "$GITHUB_WORKSPACE" "$ROOT"
+            eval "$mutation"
+            set +e
+            output="$(python3 "$ROOT/scripts/verify_browser_identity.py" --root "$ROOT" 2>&1)"
+            status=$?
+            set -e
+            if [ "$status" -eq 0 ]; then
+              echo "STOP_R134_NEGATIVE_CASE_PASSED=$name"
+              exit 1
+            fi
+            printf '%s\n' "$output" | grep -F "$marker"
+            echo "OK_R134_NEGATIVE=$name"
+          }
+
+          run_case \
+            missing-manifest-link \
+            'browser identity link mismatch: index.html' \
+            "python3 -c \"from pathlib import Path; p=Path('$ROOT/index.html'); s=p.read_text(); s=s.replace('<link rel=\\\"manifest\\\" href=\\\"/site.webmanifest\\\"/>','',1); p.write_text(s)\""
+
+          run_case \
+            legacy-shortcut-icon \
+            'browser identity nonconforming shortcut icon: index.html' \
+            "python3 -c \"from pathlib import Path; p=Path('$ROOT/index.html'); s=p.read_text(); s=s.replace('rel=\\\"icon\\\" href=\\\"/favicon-32x32.png\\\"','rel=\\\"shortcut icon\\\" href=\\\"/favicon-32x32.png\\\"',1); p.write_text(s)\""
+
+          run_case \
+            duplicate-manifest-link \
+            'browser identity duplicate/missing link count: index.html' \
+            "python3 -c \"from pathlib import Path; p=Path('$ROOT/index.html'); s=p.read_text(); needle='<link rel=\\\"manifest\\\" href=\\\"/site.webmanifest\\\"/>'; s=s.replace(needle,needle+needle,1); p.write_text(s)\""
+
+          run_case \
+            manifest-icon-contract \
+            'browser identity manifest icon contract mismatch' \
+            "python3 -c \"import json; from pathlib import Path; p=Path('$ROOT/site.webmanifest'); d=json.loads(p.read_text()); d['icons'][1]['sizes']='511x511'; p.write_text(json.dumps(d))\""
+
+          run_case \
+            png-dimension \
+            'browser identity PNG mismatch: assets/brand/axiona-icon-512.png' \
+            "python3 -c \"from pathlib import Path; import struct; p=Path('$ROOT/assets/brand/axiona-icon-512.png'); b=bytearray(p.read_bytes()); b[16:20]=struct.pack('>I',511); p.write_bytes(b)\""
+
+          echo 'OK_AXIONA_BROWSER_IDENTITY_R134_NEGATIVE_CONTRACT'
