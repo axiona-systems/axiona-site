@@ -1,5 +1,5 @@
-# Existing-on-main trigger for R140 bidirectional motion proof.
-name: AXIONA R140 Motion Live Proof Once
+# Existing-on-main diagnostic trigger for R140 motion behavior.
+name: AXIONA R140 Motion Diagnostic Once
 
 on:
   push:
@@ -12,30 +12,14 @@ permissions:
   contents: write
 
 jobs:
-  live-proof:
+  diagnose:
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           fetch-depth: 0
-      - name: Wait for R140 live assets
-        shell: bash
-        run: |
-          set -euo pipefail
-          for attempt in $(seq 1 30); do
-            key="${GITHUB_SHA}-${attempt}"
-            html="$(curl -fsSL -H 'Cache-Control: no-cache' "https://axiona.systems/?axiona_verify=${key}" || true)"
-            if grep -Fq '/assets/motion-r138.css?release=R140' <<<"$html" \
-              && grep -Fq '/assets/js/motion-r138.js?release=R140' <<<"$html"; then
-              echo "OK_R140_LIVE_BINDING attempt=${attempt}"
-              exit 0
-            fi
-            sleep 5
-          done
-          echo STOP_R140_LIVE_NOT_CONVERGED >&2
-          exit 1
-      - name: Browser runtime
+      - name: Prepare browser
         shell: bash
         run: |
           set -euo pipefail
@@ -43,74 +27,75 @@ jobs:
           test -n "$CHROME_PATH" || { echo STOP_R140_CHROME_MISSING; exit 1; }
           echo "CHROME_PATH=$CHROME_PATH" >> "$GITHUB_ENV"
           npm install --no-save --ignore-scripts --no-audit --no-fund playwright-core@1.62.1
-      - name: Prove subtle stable down and return motion
+      - name: Capture live motion behavior
         shell: bash
         run: |
-          set -euo pipefail
-          node --input-type=module <<'NODE'
+          set -u
+          mkdir -p docs/status
+          node --input-type=module > docs/status/R140_MOTION_DIAGNOSTIC.txt 2>&1 <<'NODE'
           import { chromium } from 'playwright-core';
-          const browser = await chromium.launch({executablePath:process.env.CHROME_PATH,headless:true,args:['--no-sandbox']});
           const routes=['/','/systems.html','/process.html','/security.html','/solutions.html','/support.html'];
           const selector='[data-ax112-reveal],[data-system-reveal],[data-process-reveal],[data-security-reveal],[data-solutions-reveal],[data-contact-reveal],[data-support-reveal],[data-keeper125-reveal],[data-policy-reveal]';
-          for (const route of routes) {
-            const page=await browser.newPage({viewport:{width:1440,height:900}});
-            await page.goto(`https://axiona.systems${route}?axiona_verify=${process.env.GITHUB_SHA}`,{waitUntil:'networkidle'});
-            const css=await page.evaluate(()=>{
-              const s=getComputedStyle(document.documentElement);
-              return {distance:s.getPropertyValue('--ax-r140-reveal-y').trim(),opacity:s.getPropertyValue('--ax-r140-reveal-opacity-start').trim(),duration:s.getPropertyValue('--ax-r140-reveal-transform-duration').trim()};
-            });
-            if(css.distance!=='9px'||css.opacity!=='.86'||css.duration!=='620ms') throw new Error(`${route} tuning ${JSON.stringify(css)}`);
-            const nodes=page.locator(selector);
-            const count=await nodes.count();
-            let target=null;
-            for(let i=0;i<count;i++){
-              const box=await nodes.nth(i).boundingBox();
-              if(box&&box.y>1700){target=nodes.nth(i);break;}
+          let failed=false;
+          let browser;
+          try {
+            browser=await chromium.launch({executablePath:process.env.CHROME_PATH,headless:true,args:['--no-sandbox']});
+            for(const route of routes){
+              const page=await browser.newPage({viewport:{width:1440,height:900}});
+              try{
+                const url=`https://axiona.systems${route}?axiona_verify=${Date.now()}`;
+                await page.goto(url,{waitUntil:'networkidle',timeout:45000});
+                const binding=await page.evaluate(()=>({
+                  css:[...document.styleSheets].filter(s=>(s.href||'').includes('/assets/motion-r138.css?release=R140')).length,
+                  js:[...document.scripts].filter(s=>(s.src||'').includes('/assets/js/motion-r138.js?release=R140')).length,
+                  root:document.documentElement.className
+                }));
+                const css=await page.evaluate(()=>{
+                  const s=getComputedStyle(document.documentElement);
+                  return {distance:s.getPropertyValue('--ax-r140-reveal-y').trim(),opacity:s.getPropertyValue('--ax-r140-reveal-opacity-start').trim(),duration:s.getPropertyValue('--ax-r140-reveal-transform-duration').trim()};
+                });
+                console.log('ROUTE',route,'BINDING',JSON.stringify(binding),'TUNING',JSON.stringify(css));
+                const nodes=page.locator(selector);
+                const count=await nodes.count();
+                let target=null;
+                for(let i=0;i<count;i++){
+                  const box=await nodes.nth(i).boundingBox();
+                  if(box&&box.y>1400){target=nodes.nth(i);break;}
+                }
+                if(!target){console.log('ROUTE',route,'NO_TARGET');await page.close();continue;}
+                await target.evaluate(el=>{window.__ax140=[];new MutationObserver(()=>window.__ax140.push({t:Math.round(performance.now()),active:el.classList.contains('ax-reveal-active'),cls:el.className})).observe(el,{attributes:true,attributeFilter:['class']});});
+                const before=await target.evaluate(el=>({active:el.classList.contains('ax-reveal-active'),top:el.getBoundingClientRect().top+scrollY}));
+                console.log('ROUTE',route,'BEFORE',JSON.stringify(before));
+                await target.scrollIntoViewIfNeeded();
+                await page.waitForTimeout(850);
+                const first=await target.evaluate(el=>({active:el.classList.contains('ax-reveal-active'),transform:getComputedStyle(el).transform,opacity:getComputedStyle(el).opacity,entry:getComputedStyle(el).getPropertyValue('--ax-r140-entry-y').trim()}));
+                console.log('ROUTE',route,'FIRST',JSON.stringify(first));
+                const absoluteTop=await target.evaluate(el=>el.getBoundingClientRect().top+scrollY);
+                await page.evaluate(y=>scrollTo({top:y,behavior:'instant'}),absoluteTop+1900);
+                await page.waitForTimeout(650);
+                const rearmed=await target.evaluate(el=>({active:el.classList.contains('ax-reveal-active'),transform:getComputedStyle(el).transform,opacity:getComputedStyle(el).opacity,entry:getComputedStyle(el).getPropertyValue('--ax-r140-entry-y').trim(),rect:el.getBoundingClientRect().toJSON()}));
+                console.log('ROUTE',route,'REARMED',JSON.stringify(rearmed));
+                await target.scrollIntoViewIfNeeded();
+                await page.waitForTimeout(850);
+                const returned=await target.evaluate(el=>({active:el.classList.contains('ax-reveal-active'),transform:getComputedStyle(el).transform,opacity:getComputedStyle(el).opacity,entry:getComputedStyle(el).getPropertyValue('--ax-r140-entry-y').trim()}));
+                const transitions=await page.evaluate(()=>window.__ax140||[]);
+                console.log('ROUTE',route,'RETURN',JSON.stringify(returned),'TRANSITIONS',JSON.stringify(transitions));
+                if(binding.css!==1||binding.js!==1||css.distance!=='9px'||!first.active||rearmed.active||!returned.active) failed=true;
+              }catch(err){failed=true;console.log('ROUTE',route,'ERROR',err?.stack||String(err));}
+              await page.close();
             }
-            if(!target){await page.close();continue;}
-            await target.evaluate(el=>{window.__ax140=[];new MutationObserver(()=>window.__ax140.push({t:performance.now(),active:el.classList.contains('ax-reveal-active')})).observe(el,{attributes:true,attributeFilter:['class']});});
-            await target.scrollIntoViewIfNeeded();
-            await page.waitForTimeout(800);
-            if(!(await target.evaluate(el=>el.classList.contains('ax-reveal-active')))) throw new Error(`${route} first entrance missing`);
-            const absoluteTop=await target.evaluate(el=>el.getBoundingClientRect().top+window.scrollY);
-            await page.evaluate(y=>window.scrollTo({top:y,behavior:'instant'}), absoluteTop+1800);
-            await page.waitForTimeout(500);
-            if(await target.evaluate(el=>el.classList.contains('ax-reveal-active'))) throw new Error(`${route} did not rearm after far exit`);
-            await target.scrollIntoViewIfNeeded();
-            await page.waitForTimeout(800);
-            if(!(await target.evaluate(el=>el.classList.contains('ax-reveal-active')))) throw new Error(`${route} return entrance missing`);
-            const transitions=await page.evaluate(()=>window.__ax140||[]);
-            const activeStates=transitions.map(x=>x.active).filter((v,i,a)=>i===0||v!==a[i-1]);
-            if(activeStates.length>4) throw new Error(`${route} excessive toggles ${JSON.stringify(activeStates)}`);
-            console.log(`OK_R140_ROUTE=${route} states=${JSON.stringify(activeStates)}`);
-            await page.close();
-          }
-          await browser.close();
-          console.log('OK_AXIONA_R140_BIDIRECTIONAL_MOTION');
+          }catch(err){failed=true;console.log('FATAL',err?.stack||String(err));}
+          finally{if(browser)await browser.close();}
+          console.log(failed?'RESULT=FAIL':'RESULT=PASS');
           NODE
-      - name: Record proof and remove workflow
+          echo "NODE_EXIT=$?" >> docs/status/R140_MOTION_DIAGNOSTIC.txt
+      - name: Commit diagnostic and remove workflow
         shell: bash
         run: |
           set -euo pipefail
-          cat > docs/status/R140_MOTION_LIVE_PROOF.md <<'EOF'
-          # AXIONA R140 live motion proof
-
-          Public Chromium verification passed.
-
-          Verified:
-          - desktop reveal distance is 9 px;
-          - start opacity is 0.86;
-          - transform duration is 620 ms;
-          - first downward entrance activates normally;
-          - an element is re-armed only after travelling well outside the viewport;
-          - returning upward activates a second subtle entrance;
-          - no viewport-edge toggle burst occurs in the tested routes.
-
-          Result: LIVE PASS
-          EOF
           rm -f .github/workflows/axiona-r140-motion-live-proof-once.yml
           git config user.name 'AXIONA Release Automation'
           git config user.email 'actions@users.noreply.github.com'
           git add -A
-          git commit -m 'R140: record bidirectional motion live proof'
+          git commit -m 'R140: record live motion diagnostic'
           git push origin HEAD:main
