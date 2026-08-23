@@ -1,11 +1,24 @@
 /* AXIONA R120 — repeatable, progressive-enhancement security reveal motion. */
 (() => {
   const root = document.documentElement;
-  const nodes = [...document.querySelectorAll('[data-security-reveal]')];
+  const selector = [
+    '.security > .section-intro',
+    '.security-layout',
+    '.security-principles article',
+    '.security-pledge',
+    '.security-trust > .section-intro',
+    '.security-trust-card',
+    '.security-threats > .section-intro',
+    '.security-threat',
+    '.security-trust-proof-copy',
+    '.security-proof-list article'
+  ].join(',');
+  const nodes = [...document.querySelectorAll(selector)];
   if (!nodes.length) return;
 
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   root.classList.add('security-motion-ready');
+  nodes.forEach((node) => node.setAttribute('data-security-reveal', ''));
 
   if (reduced || !('IntersectionObserver' in window)) {
     nodes.forEach((node) => node.classList.add('is-visible'));
