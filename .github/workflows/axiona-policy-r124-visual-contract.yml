@@ -1,0 +1,93 @@
+name: AXIONA Policy R124 Visual Contract
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - privacy.html
+      - legal.html
+      - en/privacy.html
+      - en/legal.html
+      - de/privacy.html
+      - de/legal.html
+      - assets/policy-r124.css
+      - assets/js/policy-r124.js
+      - .github/workflows/axiona-policy-r124-visual-contract.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  rendered-contract:
+    name: Verify rendered privacy and legal contract
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - name: Prepare browser inspector
+        shell: bash
+        run: |
+          set -euo pipefail
+          CHROME_PATH="$(command -v google-chrome-stable || command -v google-chrome || command -v chromium || true)"
+          test -n "$CHROME_PATH" || exit 1
+          echo "CHROME_PATH=$CHROME_PATH" >> "$GITHUB_ENV"
+          npm install --no-save --ignore-scripts --no-audit --no-fund playwright-core@1.62.1
+          python3 -m http.server 4181 --bind 127.0.0.1 >/tmp/r124-http.log 2>&1 &
+          for i in {1..20}; do curl -fsS http://127.0.0.1:4181/privacy.html >/dev/null && exit 0; sleep .25; done
+          exit 1
+      - name: Verify all policy routes desktop and mobile
+        shell: bash
+        env:
+          BASE: http://127.0.0.1:4181
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/r124-shots
+          node --input-type=module <<'NODE'
+          import { chromium } from 'playwright-core';
+          const browser=await chromium.launch({executablePath:process.env.CHROME_PATH,headless:true,args:['--no-sandbox']});
+          const routes=[
+            ['/privacy.html','hu','privacy'],['/legal.html','hu','legal'],
+            ['/en/privacy.html','en','privacy'],['/en/legal.html','en','legal'],
+            ['/de/privacy.html','de','privacy'],['/de/legal.html','de','legal']
+          ];
+          const has=(v,x)=>v?.includes(x);
+          for(const [route,lang,type] of routes) for(const [label,w,h] of [['desktop',1440,1000],['mobile',390,844]]){
+            const page=await browser.newPage({viewport:{width:w,height:h}});
+            await page.goto(process.env.BASE+route,{waitUntil:'networkidle'});
+            const markers=await page.evaluate(async()=>({css:await(await fetch('/assets/policy-r124.css')).text(),js:await(await fetch('/assets/js/policy-r124.js')).text()}));
+            if(!markers.css.includes('AXIONA R124 — Privacy + Legal controlled document ledger visual contract')||!markers.js.includes('AXIONA R124 — repeatable, progressive-enhancement policy reveal motion')) throw Error(route+' asset marker');
+            const r=await page.evaluate(()=>{const st=q=>{const e=document.querySelector(q),s=e&&getComputedStyle(e);return s&&{bg:s.backgroundColor,bgi:s.backgroundImage,cursor:s.cursor,opacity:s.opacity}};return{
+              release:document.querySelector('meta[name="axiona-release"]')?.content,lang:document.documentElement.lang,
+              css:[...document.styleSheets].some(x=>(x.href||'').includes('/assets/policy-r124.css?release=R124')),js:[...document.scripts].some(x=>(x.src||'').includes('/assets/js/policy-r124.js?release=R124')),
+              sw:document.documentElement.scrollWidth,cw:document.documentElement.clientWidth,
+              c:[document.querySelectorAll('main h1').length,document.querySelectorAll('.policy-summary').length,document.querySelectorAll('.policy-summary-row').length,document.querySelectorAll('.policy-intro').length,document.querySelectorAll('.policy-card').length,document.querySelectorAll('.policy-wide').length,document.querySelectorAll('.policy-meta').length,document.querySelectorAll('footer').length],
+              body:st('body'),hero:st('.policy-hero'),summary:st('.policy-summary'),summaryRow:st('.policy-summary-row'),content:st('.policy-content'),card:st('.policy-card'),wide:st('.policy-wide')};});
+            if(r.release!=='R124'||r.lang!==lang||!r.css||!r.js||r.sw>r.cw+2) throw Error(route+' binding/overflow');
+            if(JSON.stringify(r.c)!==JSON.stringify([1,1,3,1,8,1,1,1])) throw Error(route+' structure '+JSON.stringify(r.c));
+            if(!has(r.body.bg,'241, 238, 230')||!has(r.hero.bg,'241, 238, 230')||r.hero.bgi!=='none') throw Error(route+' paper hero');
+            if(!has(r.summary.bg,'11, 30, 37')||!has(r.summaryRow.bg,'255, 253, 248')||!has(r.content.bg,'232, 235, 229')||!has(r.card.bg,'251, 250, 246')) throw Error(route+' ledger surfaces');
+            if(type==='privacy'&&!has(r.wide.bg,'255, 253, 248')) throw Error(route+' privacy wide');
+            if(type==='legal'&&!has(r.wide.bg,'240, 213, 200')) throw Error(route+' legal wide');
+            for(const item of [r.summaryRow,r.card]) if(item.cursor!=='default'||item.opacity!=='1') throw Error(route+' informational affordance/opacity');
+            if(route==='/privacy.html'&&label==='desktop'){
+              const probe=page.locator('.policy-card').last();await probe.scrollIntoViewIfNeeded();await page.waitForTimeout(220);if(!await probe.evaluate(e=>e.classList.contains('is-visible')))throw Error('reveal-on');await page.evaluate(()=>scrollTo(0,0));await page.waitForTimeout(260);if(await probe.evaluate(e=>e.classList.contains('is-visible')))throw Error('reveal-latched');await probe.scrollIntoViewIfNeeded();await page.waitForTimeout(220);if(!await probe.evaluate(e=>e.classList.contains('is-visible')))throw Error('reveal-return');
+            }
+            await page.evaluate(()=>document.querySelectorAll('[data-policy-reveal]').forEach(e=>e.classList.add('is-visible')));
+            await page.screenshot({path:`/tmp/r124-shots/${lang}-${type}-${label}.png`,fullPage:true});
+            if(lang==='hu'&&label==='desktop'){
+              await page.locator('.policy-hero').screenshot({path:`/tmp/r124-shots/hu-${type}-hero.png`});
+              await page.locator('.policy-grid').screenshot({path:`/tmp/r124-shots/hu-${type}-grid.png`});
+            }
+            await page.close();
+          }
+          await browser.close();console.log('OK_AXIONA_POLICY_R124_VISUAL_CONTRACT');
+          NODE
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: axiona-policy-r124-render-evidence
+          path: /tmp/r124-shots/*.png
+          if-no-files-found: error
+          retention-days: 3
