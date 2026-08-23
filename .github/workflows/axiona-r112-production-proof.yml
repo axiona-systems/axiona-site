@@ -1,0 +1,69 @@
+name: AXIONA R112 Production Proof
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/axiona-r112-production-proof.yml"
+
+permissions:
+  contents: read
+  pages: read
+
+jobs:
+  prove-production:
+    name: Prove R112 production convergence
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Verify Pages build and live R112
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPOSITORY: ${{ github.repository }}
+          EXPECTED_SHA: 174f96b4c855b274fe25dd49e8a068c15f7f069d
+        run: |
+          set -euo pipefail
+
+          for attempt in $(seq 1 40); do
+            latest="$(curl --fail-with-body --silent --show-error \
+              --header "Accept: application/vnd.github+json" \
+              --header "Authorization: Bearer ${GH_TOKEN}" \
+              --header "X-GitHub-Api-Version: 2026-03-10" \
+              "https://api.github.com/repos/${REPOSITORY}/pages/builds/latest")"
+            read -r status commit < <(printf '%s' "$latest" | python3 -c 'import json,sys; d=json.load(sys.stdin); print(d.get("status","unknown"),d.get("commit","missing"))')
+
+            key="${EXPECTED_SHA}-${attempt}-production"
+            hu="$(curl --fail --silent --show-error --location --header 'Cache-Control: no-cache' "https://axiona.systems/?axiona_r112=${key}" || true)"
+            en="$(curl --fail --silent --show-error --location --header 'Cache-Control: no-cache' "https://axiona.systems/en/?axiona_r112=${key}" || true)"
+            de="$(curl --fail --silent --show-error --location --header 'Cache-Control: no-cache' "https://axiona.systems/de/?axiona_r112=${key}" || true)"
+            css="$(curl --fail --silent --show-error --location --header 'Cache-Control: no-cache' "https://axiona.systems/assets/visual-r112.css?axiona_r112=${key}" || true)"
+            js="$(curl --fail --silent --show-error --location --header 'Cache-Control: no-cache' "https://axiona.systems/assets/js/visual-r112.js?release=R112&axiona_r112=${key}" || true)"
+
+            page_ok() {
+              local html="$1"
+              grep -Fq '<meta content="R112" name="axiona-release"/>' <<<"$html" \
+                && grep -Fq '/assets/visual-r112.css' <<<"$html" \
+                && grep -Fq 'class="ax112-hero"' <<<"$html" \
+                && grep -Fq 'class="ax112-model"' <<<"$html" \
+                && grep -Fq 'class="ax112-story"' <<<"$html" \
+                && grep -Fq 'class="ax112-cycle"' <<<"$html" \
+                && grep -Fq '/assets/js/visual-r112.js?release=R112' <<<"$html" \
+                && ! grep -Fq 'class="project-sheet"' <<<"$html" \
+                && ! grep -Fq 'class="problem-spectrum ' <<<"$html"
+            }
+
+            echo "R112_PROOF_ATTEMPT=${attempt} PAGES_STATUS=${status} PAGES_COMMIT=${commit} EXPECTED=${EXPECTED_SHA}"
+            if [ "$status" = "built" ] && [ "$commit" = "$EXPECTED_SHA" ] \
+              && page_ok "$hu" && page_ok "$en" && page_ok "$de" \
+              && grep -Fq 'AXIONA R112 — structural visual redesign' <<<"$css" \
+              && grep -Fq 'AXIONA R112 — structural interaction layer' <<<"$js"; then
+              echo "OK_AXIONA_R112_PRODUCTION_CONVERGED=${EXPECTED_SHA}"
+              exit 0
+            fi
+            sleep 5
+          done
+
+          echo "STOP_AXIONA_R112_PRODUCTION_NOT_CONVERGED expected=${EXPECTED_SHA}" >&2
+          exit 1
