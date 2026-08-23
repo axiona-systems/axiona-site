@@ -2,12 +2,11 @@ name: AXIONA Browser Quality Audit
 
 on:
   pull_request:
-    branches:
-      - main
+    branches: [main]
     paths:
       - "*.html"
-      - "en/*.html"
-      - "de/*.html"
+      - "en/**"
+      - "de/**"
       - "assets/**"
       - "scripts/axe-audit.mjs"
       - "scripts/verify_browser_audit_matrix.py"
@@ -15,16 +14,21 @@ on:
       - ".github/workflows/axiona-browser-audit.yml"
   workflow_dispatch:
 
+permissions:
+  contents: read
+
+concurrency:
+  group: axiona-browser-audit-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   browser-audit:
     name: Lighthouse + axe
     runs-on: ubuntu-24.04
     timeout-minutes: 12
-    permissions:
-      contents: read
     steps:
       - name: Checkout repository
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           persist-credentials: false
 
@@ -39,10 +43,7 @@ jobs:
           node --version
           npm --version
           CHROME_PATH="$(command -v google-chrome-stable || command -v google-chrome || command -v chromium || true)"
-          if [ -z "$CHROME_PATH" ]; then
-            echo "STOP_AXIONA_BROWSER_AUDIT_CHROME_MISSING"
-            exit 1
-          fi
+          test -n "$CHROME_PATH" || { echo STOP_AXIONA_BROWSER_AUDIT_CHROME_MISSING; exit 1; }
           echo "CHROME_PATH=$CHROME_PATH" >> "$GITHUB_ENV"
           echo "OK_AXIONA_BROWSER_AUDIT_CHROME=$CHROME_PATH"
 
@@ -52,7 +53,7 @@ jobs:
           npm install --no-save --ignore-scripts --no-audit --no-fund \
             @lhci/cli@0.15.1 \
             playwright-core@1.62.1 \
-            axe-core@4.12.1
+            axe-core@4.13.0
 
       - name: Run Lighthouse quality budgets
         shell: bash

@@ -2,12 +2,13 @@ name: AXIONA Public Surface Guard
 
 on:
   pull_request:
-    branches:
-      - main
+    branches: [main]
   push:
-    branches:
-      - main
+    branches: [main]
   workflow_dispatch:
+
+permissions:
+  contents: read
 
 concurrency:
   group: axiona-public-surface-${{ github.repository }}-${{ github.ref }}
@@ -15,14 +16,12 @@ concurrency:
 
 jobs:
   verify:
-    name: Verify public website
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    permissions:
-      contents: read
+    name: Verify public source and repository policy
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
     steps:
       - name: Checkout repository
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           fetch-depth: 2
           persist-credentials: false
@@ -50,6 +49,14 @@ jobs:
       - name: Verify browser identity metadata
         shell: bash
         run: python3 scripts/verify_browser_identity.py
+
+      - name: Verify runtime asset graph
+        shell: bash
+        run: python3 scripts/verify_asset_references.py
+
+      - name: Verify Actions hardening
+        shell: bash
+        run: python3 scripts/verify_workflow_hardening.py
 
       - name: Verify diff whitespace
         shell: bash

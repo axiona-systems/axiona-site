@@ -1,14 +1,5 @@
-/* AXIONA R108 — native share + cross-browser motion bootstrap. */
+/* AXIONA share helpers + legacy reveal class coordination. R143 retires the old dynamic motion stylesheet injection. */
 (() => {
-  const motionStyleId = 'axiona-motion-r108';
-  if (!document.getElementById(motionStyleId)) {
-    const link = document.createElement('link');
-    link.id = motionStyleId;
-    link.rel = 'stylesheet';
-    link.href = '/assets/motion-r108.css';
-    document.head.appendChild(link);
-  }
-
   const reduceMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
   if (!reduceMotion && 'IntersectionObserver' in window) {
     const revealSelectors = [
