@@ -1,0 +1,63 @@
+name: AXIONA Social Metadata R132 Live Proof
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - support.html
+      - en/support.html
+      - de/support.html
+      - privacy.html
+      - en/privacy.html
+      - de/privacy.html
+      - legal.html
+      - en/legal.html
+      - de/legal.html
+      - assets/social/**
+      - scripts/verify_social_metadata.py
+      - .github/workflows/axiona-social-r132-live-proof.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  live-proof:
+    name: Prove live social metadata parity
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    steps:
+      - name: Prove remediated live pages
+        shell: bash
+        run: |
+          set -euo pipefail
+          routes=(
+            /support.html /en/support.html /de/support.html
+            /privacy.html /en/privacy.html /de/privacy.html
+            /legal.html /en/legal.html /de/legal.html
+          )
+          for attempt in {1..36}; do
+            ok=1
+            for route in "${routes[@]}"; do
+              file="/tmp/r132-$(echo "$route" | tr '/:' '__').html"
+              curl --fail --silent --show-error --location \
+                --output "$file" "https://axiona.systems${route}?proof=${GITHUB_SHA}" || { ok=0; continue; }
+              grep -Fq 'property="og:site_name"' "$file" || ok=0
+              grep -Fq 'property="og:title"' "$file" || ok=0
+              grep -Fq 'property="og:description"' "$file" || ok=0
+              grep -Fq 'property="og:type"' "$file" || ok=0
+              grep -Fq 'property="og:url"' "$file" || ok=0
+              grep -Fq 'name="twitter:card"' "$file" || ok=0
+              grep -Fq 'name="twitter:title"' "$file" || ok=0
+              grep -Fq 'name="twitter:description"' "$file" || ok=0
+              grep -Fq 'name="twitter:image"' "$file" || ok=0
+            done
+            if [ "$ok" = 1 ]; then
+              echo OK_AXIONA_SOCIAL_METADATA_R132_LIVE
+              echo "PROVEN_PAGES_SOURCE_SHA=${GITHUB_SHA}"
+              exit 0
+            fi
+            sleep 5
+          done
+          echo "STOP_AXIONA_SOCIAL_METADATA_R132_NOT_LIVE_FOR_SHA=${GITHUB_SHA}"
+          exit 1
