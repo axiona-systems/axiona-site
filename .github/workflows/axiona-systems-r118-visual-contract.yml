@@ -1,0 +1,218 @@
+name: AXIONA Systems R118 Visual Contract
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "systems.html"
+      - "en/systems.html"
+      - "de/systems.html"
+      - "assets/systems-r118.css"
+      - "assets/js/systems-r118.js"
+      - ".github/workflows/axiona-systems-r118-visual-contract.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  rendered-contract:
+    name: Verify rendered systems page contract
+    runs-on: ubuntu-24.04
+    timeout-minutes: 7
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+
+      - name: Verify browser runtime
+        shell: bash
+        run: |
+          set -euo pipefail
+          CHROME_PATH="$(command -v google-chrome-stable || command -v google-chrome || command -v chromium || true)"
+          if [ -z "$CHROME_PATH" ]; then
+            echo "STOP_AXIONA_SYSTEMS_R118_CHROME_MISSING"
+            exit 1
+          fi
+          echo "CHROME_PATH=$CHROME_PATH" >> "$GITHUB_ENV"
+
+      - name: Install pinned render inspector
+        shell: bash
+        run: npm install --no-save --ignore-scripts --no-audit --no-fund playwright-core@1.62.1
+
+      - name: Start static server
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m http.server 4175 --bind 127.0.0.1 > /tmp/axiona-r118-http.log 2>&1 &
+          echo $! > /tmp/axiona-r118-http.pid
+          for attempt in {1..20}; do
+            if curl --fail --silent http://127.0.0.1:4175/systems.html >/dev/null; then
+              echo "OK_AXIONA_SYSTEMS_R118_SERVER_READY"
+              exit 0
+            fi
+            sleep 0.25
+          done
+          cat /tmp/axiona-r118-http.log || true
+          exit 1
+
+      - name: Verify R118 systems composition, parity and motion
+        shell: bash
+        env:
+          AXIONA_BASE: http://127.0.0.1:4175
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/r118-shots
+          node --input-type=module <<'NODE'
+          import { chromium } from 'playwright-core';
+
+          const browser = await chromium.launch({
+            executablePath: process.env.CHROME_PATH,
+            headless: true,
+            args: ['--no-sandbox']
+          });
+
+          const routes = [
+            ['/systems.html', 'hu'],
+            ['/en/systems.html', 'en'],
+            ['/de/systems.html', 'de']
+          ];
+
+          const rgb = (value, triplet) => value?.includes(triplet);
+
+          async function inspect(route, lang, label, width, height) {
+            const page = await browser.newPage({ viewport: { width, height } });
+            await page.goto(`${process.env.AXIONA_BASE}${route}`, { waitUntil: 'networkidle' });
+
+            const cssText = await page.evaluate(async () => (await fetch('/assets/systems-r118.css?contract=R118')).text());
+            const jsText = await page.evaluate(async () => (await fetch('/assets/js/systems-r118.js?contract=R118')).text());
+            if (!cssText.includes('AXIONA R118 — Systems page visual contract')) throw new Error(`${route} R118 CSS marker missing`);
+            if (!jsText.includes('AXIONA R118 — repeatable, progressive-enhancement reveal motion')) throw new Error(`${route} R118 JS marker missing`);
+
+            const result = await page.evaluate(() => {
+              const style = (selector) => {
+                const el = document.querySelector(selector);
+                if (!el) return null;
+                const r = el.getBoundingClientRect();
+                const s = getComputedStyle(el);
+                return {
+                  width: Math.round(r.width),
+                  height: Math.round(r.height),
+                  display: s.display,
+                  grid: s.gridTemplateColumns,
+                  background: s.backgroundColor,
+                  backgroundImage: s.backgroundImage,
+                  color: s.color,
+                  boxShadow: s.boxShadow,
+                  cursor: s.cursor,
+                  transform: s.transform
+                };
+              };
+              const styleHrefs = [...document.styleSheets].map((sheet) => sheet.href || '');
+              const scripts = [...document.scripts].map((script) => script.src || '');
+              const pageText = document.body.innerText;
+              return {
+                release: document.querySelector('meta[name="axiona-release"]')?.content || null,
+                lang: document.documentElement.lang,
+                directCss: styleHrefs.some((href) => href.includes('/assets/systems-r118.css?release=R118')),
+                directJs: scripts.some((src) => src.includes('/assets/js/systems-r118.js?release=R118')),
+                scrollWidth: document.documentElement.scrollWidth,
+                clientWidth: document.documentElement.clientWidth,
+                counts: {
+                  h1: document.querySelectorAll('main h1').length,
+                  service: document.querySelectorAll('.system-service').length,
+                  boardRows: document.querySelectorAll('.system-board .board-row').length,
+                  layers: document.querySelectorAll('.system-layer').length,
+                  controls: document.querySelectorAll('.control-depth-card').length,
+                  outcomes: document.querySelectorAll('.system-outcome-card').length,
+                  next: document.querySelectorAll('.system-next').length,
+                  share: document.querySelectorAll('.ax-share').length,
+                  footer: document.querySelectorAll('footer').length
+                },
+                forbiddenTelemetry: pageText.includes('LIVE STATE') || pageText.includes('OPERATIONS / 024'),
+                body: style('body'),
+                service: style('.system-service'),
+                board: style('.system-board'),
+                copy: style('.system-service .service-copy'),
+                layerFrame: style('.system-layer-grid'),
+                layer: style('.system-layer'),
+                controlFrame: style('.system-control-depth'),
+                control: style('.control-depth-card'),
+                outcome: style('.system-outcome-card')
+              };
+            });
+
+            console.log(`AXIONA_SYSTEMS_R118_${lang.toUpperCase()}_${label.toUpperCase()}=${JSON.stringify(result)}`);
+
+            if (result.release !== 'R118') throw new Error(`${route} release ${result.release}, expected R118`);
+            if (result.lang !== lang) throw new Error(`${route} html lang ${result.lang}, expected ${lang}`);
+            if (!result.directCss || !result.directJs) throw new Error(`${route} direct R118 binding incomplete`);
+            if (result.scrollWidth > result.clientWidth + 2) throw new Error(`${route} ${label} horizontal overflow ${result.scrollWidth}/${result.clientWidth}`);
+            if (result.forbiddenTelemetry) throw new Error(`${route} decorative/fake telemetry returned`);
+
+            const c = result.counts;
+            if (c.h1 !== 1 || c.service !== 1 || c.boardRows !== 4 || c.layers !== 6 || c.controls !== 3 || c.outcomes !== 4 || c.next !== 1 || c.share !== 1 || c.footer !== 1) {
+              throw new Error(`${route} structural contract mismatch: ${JSON.stringify(c)}`);
+            }
+
+            if (!rgb(result.body?.background, '241, 238, 230')) throw new Error(`${route} warm paper body field missing: ${result.body?.background}`);
+            if (!rgb(result.service?.background, '229, 223, 211')) throw new Error(`${route} hero workbench outer field changed: ${result.service?.background}`);
+            if (!rgb(result.board?.background, '251, 250, 246')) throw new Error(`${route} example workflow is not an off-white work surface`);
+            if (!rgb(result.copy?.background, '255, 253, 248')) throw new Error(`${route} hero copy surface changed unexpectedly`);
+            if (!rgb(result.layerFrame?.background, '11, 30, 37')) throw new Error(`${route} layer list lost its contained petrol frame`);
+            if (!rgb(result.layer?.background, '251, 250, 246')) throw new Error(`${route} layer rows are not stable document surfaces`);
+            if (result.layer?.cursor !== 'default') throw new Error(`${route} informational layer row advertises clickability: ${result.layer?.cursor}`);
+            if (!rgb(result.controlFrame?.background, '11, 30, 37')) throw new Error(`${route} control chapter lost petrol containment`);
+            if (!rgb(result.control?.background, '251, 250, 246')) throw new Error(`${route} control cards are not stable Keeper-like surfaces`);
+            if (!rgb(result.outcome?.background, '251, 250, 246')) throw new Error(`${route} outcome surface changed unexpectedly`);
+            if (result.service?.backgroundImage !== 'none') throw new Error(`${route} hero workbench regained decorative background graphics`);
+
+            if (route === '/systems.html' && label === 'desktop') {
+              const probe = page.locator('.system-layer').first();
+              await probe.scrollIntoViewIfNeeded();
+              await page.waitForTimeout(220);
+              if (!(await probe.evaluate((el) => el.classList.contains('is-visible')))) throw new Error('R118 reveal did not activate');
+              await page.evaluate(() => window.scrollTo({ top: 0, behavior: 'instant' }));
+              await page.waitForTimeout(260);
+              if (await probe.evaluate((el) => el.classList.contains('is-visible'))) throw new Error('R118 reveal remained permanently latched');
+              await probe.scrollIntoViewIfNeeded();
+              await page.waitForTimeout(220);
+              if (!(await probe.evaluate((el) => el.classList.contains('is-visible')))) throw new Error('R118 reveal did not reactivate on return scroll');
+            }
+
+            await page.evaluate(() => {
+              document.querySelectorAll('[data-system-reveal]').forEach((el) => el.classList.add('is-visible'));
+              window.scrollTo({ top: 0, behavior: 'instant' });
+            });
+            await page.waitForTimeout(80);
+            await page.screenshot({ path: `/tmp/r118-shots/axiona-systems-r118-${lang}-${label}-full.png`, fullPage: true });
+
+            if (lang === 'hu' && label === 'desktop') {
+              await page.locator('.services').screenshot({ path: '/tmp/r118-shots/axiona-systems-r118-hu-hero.png' });
+              await page.locator('.system-depth').screenshot({ path: '/tmp/r118-shots/axiona-systems-r118-hu-layers.png' });
+              await page.locator('.system-control-depth').screenshot({ path: '/tmp/r118-shots/axiona-systems-r118-hu-control.png' });
+              await page.locator('.system-outcome').screenshot({ path: '/tmp/r118-shots/axiona-systems-r118-hu-outcomes.png' });
+            }
+
+            await page.close();
+          }
+
+          for (const [route, lang] of routes) {
+            await inspect(route, lang, 'desktop', 1440, 1000);
+            await inspect(route, lang, 'mobile', 390, 844);
+          }
+
+          await browser.close();
+          console.log('OK_AXIONA_SYSTEMS_R118_VISUAL_CONTRACT');
+          NODE
+
+      - name: Upload R118 rendered evidence
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: axiona-systems-r118-render-evidence
+          path: /tmp/r118-shots/*.png
+          if-no-files-found: error
+          retention-days: 3
+          compression-level: 6
