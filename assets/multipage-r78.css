@@ -1,5 +1,5 @@
-@import url("/assets/multipage-r74.css");
-@import url("/assets/motion-r105.css");
+@import url("/assets/visual-r109.css");
+@import url("/assets/visual-r109-compat.css");
 /* AXIONA multipage visual layer. */
 :root{--paper:#f6efe3;--paper-2:#eadfce;--ink:#1d211f;--muted:#6a625b;--line:#cabdac;--navy:#142d31;--navy-2:#1b3a3e;--cyan:#35b9ae;--acid:#d7e866;--orange:#e66a3c;--white:#fffaf3}
 html,body,.site-shell{background:var(--paper);color:var(--ink)}
