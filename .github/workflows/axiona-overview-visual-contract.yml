@@ -11,6 +11,7 @@ on:
       - "assets/visual-r110.css"
       - "assets/visual-r112.css"
       - "assets/visual-r113.css"
+      - "assets/visual-r113-tuning.css"
       - "assets/js/visual-r112.js"
       - ".github/workflows/axiona-overview-visual-contract.yml"
   workflow_dispatch:
@@ -48,16 +49,16 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          python3 -m http.server 4174 --bind 127.0.0.1 > /tmp/axiona-r113-http.log 2>&1 &
-          echo $! > /tmp/axiona-r113-http.pid
+          python3 -m http.server 4174 --bind 127.0.0.1 > /tmp/axiona-r114-http.log 2>&1 &
+          echo $! > /tmp/axiona-r114-http.pid
           for attempt in {1..20}; do
             if curl --fail --silent http://127.0.0.1:4174/ >/dev/null; then
-              echo "OK_AXIONA_R113_SERVER_READY"
+              echo "OK_AXIONA_R114_SERVER_READY"
               exit 0
             fi
             sleep 0.25
           done
-          cat /tmp/axiona-r113-http.log || true
+          cat /tmp/axiona-r114-http.log || true
           exit 1
 
       - name: Verify desktop and mobile composition
@@ -66,7 +67,7 @@ jobs:
           AXIONA_BASE: http://127.0.0.1:4174
         run: |
           set -euo pipefail
-          mkdir -p /tmp/r113-shots
+          mkdir -p /tmp/r114-shots
           node --input-type=module <<'NODE'
           import { chromium } from 'playwright-core';
 
@@ -83,9 +84,13 @@ jobs:
             const page = await browser.newPage({ viewport: { width, height } });
             await page.goto(`${process.env.AXIONA_BASE}${route}`, { waitUntil: 'networkidle' });
 
-            const r113Text = await page.evaluate(async () => (await fetch('/assets/visual-r113.css?contract=R113')).text());
+            const r113Text = await page.evaluate(async () => (await fetch('/assets/visual-r113.css?contract=R114')).text());
             if (!r113Text.includes('AXIONA R113 — Keeper-calibrated overview visual language')) {
               throw new Error(`${route} R113 stylesheet marker missing`);
+            }
+            const tuningText = await page.evaluate(async () => (await fetch('/assets/visual-r113-tuning.css?contract=R114')).text());
+            if (!tuningText.includes('AXIONA R113 — final homepage calibration')) {
+              throw new Error(`${route} R113 tuning stylesheet marker missing`);
             }
 
             const result = await page.evaluate(({ legacySelectors }) => {
@@ -103,9 +108,14 @@ jobs:
                   boxShadow: s.boxShadow, transform: s.transform
                 };
               };
+              const hrefs = [...document.styleSheets].map(sheet => sheet.href || '');
 
               return {
                 release: document.querySelector('meta[name="axiona-release"]')?.content || null,
+                directR110: hrefs.some(href => href.includes('/assets/visual-r110.css?release=R114')),
+                directR112: hrefs.some(href => href.includes('/assets/visual-r112.css?release=R114')),
+                directR113: hrefs.some(href => href.includes('/assets/visual-r113.css?release=R114')),
+                directR113Tuning: hrefs.some(href => href.includes('/assets/visual-r113-tuning.css?release=R114')),
                 scrollWidth: document.documentElement.scrollWidth,
                 clientWidth: document.documentElement.clientWidth,
                 counts: {
@@ -134,10 +144,11 @@ jobs:
               };
             }, { legacySelectors });
 
-            console.log(`AXIONA_R113_${route.replaceAll('/', '_') || 'root'}_${label}=${JSON.stringify(result)}`);
+            console.log(`AXIONA_R114_${route.replaceAll('/', '_') || 'root'}_${label}=${JSON.stringify(result)}`);
 
             const expected = result.counts.hero === 1 && result.counts.model === 1 && result.counts.steps === 3 && result.counts.fields === 6 && result.counts.cycle === 6 && result.counts.trust === 1 && result.counts.caseStudy === 1 && result.counts.cta === 1;
-            if (result.release !== 'R112') throw new Error(`${route} structural release unexpectedly changed to ${result.release}`);
+            if (result.release !== 'R114') throw new Error(`${route} release is ${result.release}, expected R114`);
+            if (!result.directR110 || !result.directR112 || !result.directR113 || !result.directR113Tuning) throw new Error(`${route} cache-proof direct visual binding incomplete: ${JSON.stringify({r110:result.directR110,r112:result.directR112,r113:result.directR113,tuning:result.directR113Tuning})}`);
             if (!expected) throw new Error(`${route} structural counts mismatch: ${JSON.stringify(result.counts)}`);
             if (result.counts.legacy !== 0) throw new Error(`${route} still contains legacy overview components`);
             if (result.scrollWidth > result.clientWidth + 2) throw new Error(`${route} ${label} horizontal overflow ${result.scrollWidth}/${result.clientWidth}`);
@@ -162,9 +173,9 @@ jobs:
             }
 
             if (route === '/') {
-              await page.screenshot({ path: `/tmp/r113-shots/axiona-r113-${label}-full.png`, fullPage: true });
+              await page.screenshot({ path: `/tmp/r114-shots/axiona-r114-${label}-full.png`, fullPage: true });
               const hero = page.locator('.ax112-hero');
-              await hero.screenshot({ path: `/tmp/r113-shots/axiona-r113-${label}-hero.png` });
+              await hero.screenshot({ path: `/tmp/r114-shots/axiona-r114-${label}-hero.png` });
             }
 
             await page.close();
@@ -176,14 +187,14 @@ jobs:
           }
 
           await browser.close();
-          console.log('OK_AXIONA_R113_KEEPER_CALIBRATED_VISUAL_CONTRACT');
+          console.log('OK_AXIONA_R114_CACHE_PROOF_VISUAL_CONTRACT');
           NODE
 
-      - name: Upload rendered R113 evidence
+      - name: Upload rendered R114 evidence
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
-          name: axiona-r113-render-evidence
-          path: /tmp/r113-shots/*.png
+          name: axiona-r114-render-evidence
+          path: /tmp/r114-shots/*.png
           if-no-files-found: error
           retention-days: 3
           compression-level: 6
