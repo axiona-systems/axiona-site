@@ -1,0 +1,56 @@
+name: AXIONA Security R120 Live Proof
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "security.html"
+      - "en/security.html"
+      - "de/security.html"
+      - "assets/security-r120.css"
+      - "assets/js/security-r120.js"
+      - ".github/workflows/axiona-security-r120-live-proof.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  prove-live:
+    name: Verify live R120 security release
+    runs-on: ubuntu-24.04
+    timeout-minutes: 6
+    steps:
+      - name: Verify exact live R120 bindings and assets
+        shell: bash
+        run: |
+          set -euo pipefail
+          for attempt in $(seq 1 36); do
+            KEY="${GITHUB_SHA}-security-r120-${attempt}"
+            HU="$(curl --fail --silent --show-error --location --header 'Cache-Control: no-cache' "https://axiona.systems/security.html?proof=${KEY}" || true)"
+            EN="$(curl --fail --silent --show-error --location --header 'Cache-Control: no-cache' "https://axiona.systems/en/security.html?proof=${KEY}" || true)"
+            DE="$(curl --fail --silent --show-error --location --header 'Cache-Control: no-cache' "https://axiona.systems/de/security.html?proof=${KEY}" || true)"
+            CSS="$(curl --fail --silent --show-error --location --header 'Cache-Control: no-cache' "https://axiona.systems/assets/security-r120.css?release=R120&proof=${KEY}" || true)"
+            JS="$(curl --fail --silent --show-error --location --header 'Cache-Control: no-cache' "https://axiona.systems/assets/js/security-r120.js?release=R120&proof=${KEY}" || true)"
+
+            bindings_ok=true
+            for PAGE in "$HU" "$EN" "$DE"; do
+              grep -Fq '/assets/security-r120.css?release=R120' <<<"$PAGE" || bindings_ok=false
+              grep -Fq '/assets/js/security-r120.js?release=R120' <<<"$PAGE" || bindings_ok=false
+              grep -Fq 'content="R120" name="axiona-release"' <<<"$PAGE" || bindings_ok=false
+              grep -Fq 'class="ax-share section-pad"' <<<"$PAGE" || bindings_ok=false
+            done
+
+            if [ "$bindings_ok" = true ] \
+              && grep -Fq 'AXIONA R120 — Security page visual contract' <<<"$CSS" \
+              && grep -Fq 'AXIONA R120 — repeatable, progressive-enhancement security reveal motion' <<<"$JS"; then
+              echo "OK_AXIONA_SECURITY_R120_LIVE"
+              echo "PROVEN_PAGES_SOURCE_SHA=${GITHUB_SHA}"
+              exit 0
+            fi
+            sleep 5
+          done
+
+          echo "STOP_AXIONA_SECURITY_R120_NOT_LIVE_FOR_SHA=${GITHUB_SHA}" >&2
+          exit 1

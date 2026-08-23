@@ -1,0 +1,236 @@
+/* AXIONA R120 — Security page visual contract.
+   Security dossier / control-sheet language: warm paper reading field, stable
+   off-white evidence rows, contained petrol chapters, restrained status accents.
+   No fake telemetry, glow, scanner effects, network maps or pseudo-controls. */
+
+body.page-security-r120{
+  --sec-paper:#f1eee6;
+  --sec-paper-2:#e5dfd3;
+  --sec-white:#fbfaf6;
+  --sec-white-2:#fffdf8;
+  --sec-soft:#e8ebe5;
+  --sec-ink:#111917;
+  --sec-muted:#59615c;
+  --sec-line:#c7c0b4;
+  --sec-line-strong:#9ca49f;
+  --sec-petrol:#0b1e25;
+  --sec-petrol-2:#102a31;
+  --sec-orange:#ef6b43;
+  --sec-acid:#d7ef55;
+  --sec-cyan:#54d4ca;
+  --sec-max:1500px;
+  background:var(--sec-paper);
+  color:var(--sec-ink);
+}
+body.page-security-r120 main{overflow:clip;background:var(--sec-paper)}
+body.page-security-r120 .topbar{background:rgba(241,238,230,.97);border-color:var(--sec-line)}
+body.page-security-r120 .topbar nav a:after{background:var(--sec-orange)}
+body.page-security-r120 .topbar nav .nav-contact{background:var(--sec-petrol);border-color:var(--sec-petrol);color:var(--sec-white)}
+body.page-security-r120 .language-switch a.active{border-color:var(--sec-orange);color:var(--sec-ink)}
+body.page-security-r120 .eyebrow,body.page-security-r120 .micro{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.15em}
+
+/* OPENING / CONTROL DOSSIER --------------------------------------------- */
+body.page-security-r120 .security{
+  width:min(100%,var(--sec-max));
+  margin:0 auto;
+  padding:clamp(76px,8vw,128px) clamp(28px,5vw,82px) clamp(94px,9vw,148px)!important;
+  background:var(--sec-paper)!important;
+  color:var(--sec-ink)!important;
+}
+body.page-security-r120 .security>.section-intro{max-width:980px;margin:0 0 clamp(50px,6vw,80px)!important}
+body.page-security-r120 .security>.section-intro .eyebrow{color:#82422e!important}
+body.page-security-r120 .security>.section-intro h1{
+  max-width:980px;margin:20px 0 0;color:var(--sec-ink)!important;
+  font-size:clamp(54px,5.7vw,90px)!important;line-height:.91!important;
+  letter-spacing:-.066em!important;font-weight:780!important;text-wrap:balance
+}
+body.page-security-r120 .security>.section-intro>p:last-child{max-width:780px;margin:30px 0 0;color:#46504b!important;font-size:clamp(16px,1.25vw,19px)!important;line-height:1.72!important}
+body.page-security-r120 .security-layout{
+  display:grid!important;grid-template-columns:minmax(350px,.7fr) minmax(0,1.3fr)!important;
+  gap:1px!important;padding:12px!important;background:var(--sec-petrol)!important;
+  border:1px solid #456168!important;box-shadow:16px 16px 0 #d0c5b6!important
+}
+body.page-security-r120 .security-baseline{
+  margin:0!important;padding:0!important;background:var(--sec-white-2)!important;
+  color:var(--sec-ink)!important;border:0!important;box-shadow:none!important;transform:none!important
+}
+body.page-security-r120 .security-screen-head{
+  min-height:64px;padding:0 18px!important;display:flex!important;align-items:center!important;
+  justify-content:space-between!important;gap:14px!important;background:var(--sec-paper-2)!important;
+  color:#535d58!important;border-bottom:1px solid var(--sec-line)!important;
+  font:850 8px/1.2 ui-monospace,SFMono-Regular,Menlo,monospace!important;letter-spacing:.1em!important
+}
+body.page-security-r120 .security-screen-head b{
+  padding:7px 8px!important;background:var(--sec-petrol)!important;color:var(--sec-acid)!important;
+  font-size:8px!important;letter-spacing:.05em!important
+}
+body.page-security-r120 .security-mark{
+  min-height:170px;padding:28px 22px!important;display:flex!important;align-items:center!important;
+  gap:22px!important;background:var(--sec-white-2)!important;border-bottom:1px solid #ddd8cf!important
+}
+body.page-security-r120 .security-mark>span{
+  width:82px!important;height:82px!important;display:grid!important;place-items:center!important;
+  border:1px solid var(--sec-petrol)!important;color:var(--sec-petrol)!important;background:var(--sec-paper)!important;
+  font-size:34px!important;font-weight:850!important
+}
+body.page-security-r120 .security-mark i{color:var(--sec-ink)!important;font:850 11px/1.45 ui-monospace,SFMono-Regular,Menlo,monospace!important;letter-spacing:.11em!important;font-style:normal!important}
+body.page-security-r120 .security-checks{margin:0!important;padding:0!important}
+body.page-security-r120 .security-checks>div{
+  min-height:58px;padding:0 17px!important;display:grid!important;
+  grid-template-columns:34px minmax(0,1fr) 28px!important;align-items:center!important;gap:10px!important;
+  background:var(--sec-white-2)!important;color:var(--sec-ink)!important;
+  border-bottom:1px solid #ddd8cf!important;cursor:default!important;transform:none!important
+}
+body.page-security-r120 .security-checks>div>span{color:#81432f!important;font:900 9px/1 ui-monospace,SFMono-Regular,Menlo,monospace!important}
+body.page-security-r120 .security-checks>div>strong{color:#34413d!important;font-size:12px!important;line-height:1.35!important}
+body.page-security-r120 .security-checks>div>b{width:24px;height:24px;display:grid!important;place-items:center!important;background:var(--sec-petrol)!important;color:var(--sec-acid)!important;font-size:11px!important}
+body.page-security-r120 .security-baseline>p{margin:0!important;padding:18px!important;background:var(--sec-petrol)!important;color:#c9d4d1!important;font:850 8px/1.4 ui-monospace,SFMono-Regular,Menlo,monospace!important;letter-spacing:.09em!important}
+body.page-security-r120 .security-principles{
+  display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  gap:1px!important;background:#aeb7b2!important;border:0!important
+}
+body.page-security-r120 .security-principles article{
+  min-height:220px;padding:28px!important;background:var(--sec-white)!important;color:var(--sec-ink)!important;
+  border:0!important;cursor:default!important;transform:none!important;box-shadow:none!important
+}
+body.page-security-r120 .security-principles article>span{color:#81432f!important;font:900 9px/1 ui-monospace,SFMono-Regular,Menlo,monospace!important}
+body.page-security-r120 .security-principles h3{margin:32px 0 12px!important;color:var(--sec-ink)!important;font-size:clamp(23px,1.9vw,30px)!important;line-height:1.06!important;letter-spacing:-.035em!important}
+body.page-security-r120 .security-principles p{margin:0!important;color:#59615c!important;font-size:13px!important;line-height:1.62!important}
+body.page-security-r120 .security-pledge{
+  margin-top:56px!important;padding:30px 32px!important;display:grid!important;
+  grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr)!important;gap:50px!important;align-items:start!important;
+  background:#f0d5c8!important;color:var(--sec-ink)!important;border:1px solid #c9a999!important;
+  border-left:5px solid var(--sec-orange)!important;box-shadow:11px 11px 0 #d9c9bb!important;transform:none!important
+}
+body.page-security-r120 .security-pledge span{color:#81432f!important;font:900 9px/1 ui-monospace,SFMono-Regular,Menlo,monospace!important;letter-spacing:.1em!important}
+body.page-security-r120 .security-pledge h3{margin:18px 0 0!important;color:#2d2926!important;font-size:clamp(27px,2.5vw,39px)!important;line-height:1.06!important;letter-spacing:-.04em!important}
+body.page-security-r120 .security-pledge p{margin:0!important;color:#514944!important;font-size:14px!important;line-height:1.66!important}
+body.page-security-r120 .security-pledge small{display:block;margin-top:18px;color:#655b55!important;font-size:11px!important;line-height:1.55!important}
+
+/* PRACTICAL TRUST --------------------------------------------------------- */
+body.page-security-r120 .security-trust{
+  padding:clamp(90px,9vw,148px) max(28px,calc((100vw - var(--sec-max))/2))!important;
+  background:var(--sec-paper-2)!important;color:var(--sec-ink)!important
+}
+body.page-security-r120 .security-trust .section-intro{max-width:980px;margin:0!important}
+body.page-security-r120 .security-trust .section-intro .eyebrow{color:#82422e!important}
+body.page-security-r120 .security-trust .section-intro h2,
+body.page-security-r120 .security-threats .section-intro h2,
+body.page-security-r120 .security-trust-proof-copy h2{
+  max-width:940px;margin:18px 0 24px!important;font-family:inherit!important;font-weight:780!important;
+  font-size:clamp(43px,4.7vw,74px)!important;line-height:.94!important;letter-spacing:-.058em!important;text-wrap:balance
+}
+body.page-security-r120 .security-trust .section-intro>p:last-child{max-width:780px;color:#505953!important;font-size:16px!important;line-height:1.7!important}
+body.page-security-r120 .security-trust-grid{
+  margin-top:56px!important;padding:1px!important;display:grid!important;
+  grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:1px!important;
+  background:#9ea7a2!important;border:0!important;box-shadow:14px 14px 0 #c6baa8!important
+}
+body.page-security-r120 .security-trust-card{
+  min-height:245px!important;padding:30px!important;background:var(--sec-white)!important;color:var(--sec-ink)!important;
+  border:0!important;cursor:default!important;transform:none!important;box-shadow:none!important
+}
+body.page-security-r120 .security-trust-card>span{color:#81432f!important;font:900 9px/1 ui-monospace,SFMono-Regular,Menlo,monospace!important;letter-spacing:.1em!important}
+body.page-security-r120 .security-trust-card h3{max-width:580px;margin:38px 0 13px!important;color:var(--sec-ink)!important;font-size:clamp(24px,2.05vw,32px)!important;line-height:1.06!important;letter-spacing:-.038em!important}
+body.page-security-r120 .security-trust-card p{max-width:580px;margin:0!important;color:#59615c!important;font-size:13px!important;line-height:1.62!important}
+
+/* THREATS / FAILURE MODES ------------------------------------------------- */
+body.page-security-r120 .security-threats{
+  width:min(calc(100% - 56px),var(--sec-max));margin:clamp(92px,9vw,148px) auto!important;
+  padding:clamp(54px,6vw,88px)!important;background:var(--sec-petrol)!important;color:var(--sec-white)!important;
+  border:1px solid #486269!important;box-shadow:16px 16px 0 #cbbdac!important
+}
+body.page-security-r120 .security-threats .section-intro{max-width:980px;margin:0!important}
+body.page-security-r120 .security-threats .section-intro .eyebrow{color:var(--sec-cyan)!important}
+body.page-security-r120 .security-threats .section-intro h2{color:var(--sec-white)!important}
+body.page-security-r120 .security-threats .section-intro>p:last-child{max-width:800px;color:#bdc9c7!important;font-size:16px!important;line-height:1.7!important}
+body.page-security-r120 .security-threat-grid{
+  margin-top:56px!important;padding:1px!important;display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  gap:1px!important;background:#62777a!important;border:0!important
+}
+body.page-security-r120 .security-threat{
+  min-height:205px!important;padding:27px!important;display:grid!important;grid-template-columns:46px minmax(0,1fr)!important;
+  gap:15px!important;background:var(--sec-white)!important;color:var(--sec-ink)!important;border:0!important;
+  cursor:default!important;transform:none!important
+}
+body.page-security-r120 .security-threat>span{padding-top:5px;color:#81432f!important;font:900 9px/1 ui-monospace,SFMono-Regular,Menlo,monospace!important;letter-spacing:.1em!important}
+body.page-security-r120 .security-threat h3{margin:0 0 10px!important;color:var(--sec-ink)!important;font-size:24px!important;line-height:1.08!important;letter-spacing:-.03em!important}
+body.page-security-r120 .security-threat p{margin:0!important;color:#59615c!important;font-size:13px!important;line-height:1.62!important}
+
+/* TRUST PROOF ------------------------------------------------------------- */
+body.page-security-r120 .security-trust-proof{
+  padding:clamp(92px,9vw,148px) max(28px,calc((100vw - var(--sec-max))/2))!important;
+  display:grid!important;grid-template-columns:minmax(320px,.78fr) minmax(0,1.22fr)!important;
+  gap:clamp(54px,7vw,110px)!important;align-items:start!important;background:var(--sec-soft)!important;color:var(--sec-ink)!important
+}
+body.page-security-r120 .security-trust-proof-copy{position:sticky;top:112px;align-self:start}
+body.page-security-r120 .security-trust-proof-copy .eyebrow{color:#82422e!important}
+body.page-security-r120 .security-trust-proof-copy h2{max-width:680px;color:var(--sec-ink)!important}
+body.page-security-r120 .security-trust-proof-copy>p{max-width:630px;color:#4f5953!important;font-size:16px!important;line-height:1.7!important}
+body.page-security-r120 .security-proof-note{
+  margin-top:32px!important;padding:22px 24px!important;background:var(--sec-white-2)!important;color:#302d2a!important;
+  border:1px solid #c5c7c0!important;border-left:4px solid var(--sec-orange)!important;
+  font:500 20px/1.4 Georgia,Times New Roman,serif!important;box-shadow:8px 8px 0 #ccd1ca!important
+}
+body.page-security-r120 .security-proof-links{display:flex!important;flex-wrap:wrap!important;gap:22px!important;margin-top:30px!important}
+body.page-security-r120 .security-proof-links .text-link{margin:0!important;color:var(--sec-ink)!important;font-weight:850!important}
+body.page-security-r120 .security-proof-list{
+  padding:10px!important;background:var(--sec-petrol)!important;border:1px solid #4c666b!important;
+  box-shadow:13px 13px 0 #c5ccc5!important
+}
+body.page-security-r120 .security-proof-list article{
+  min-height:122px!important;padding:23px 24px!important;display:grid!important;grid-template-columns:52px minmax(0,1fr)!important;
+  gap:17px!important;background:var(--sec-white)!important;color:var(--sec-ink)!important;border:0!important;
+  border-bottom:1px solid #c5ccc7!important;cursor:default!important;transform:none!important
+}
+body.page-security-r120 .security-proof-list article:last-child{border-bottom:0!important}
+body.page-security-r120 .security-proof-list article>span{padding-top:5px;color:#81432f!important;font:900 9px/1 ui-monospace,SFMono-Regular,Menlo,monospace!important}
+body.page-security-r120 .security-proof-list h3{margin:0 0 8px!important;color:var(--sec-ink)!important;font-size:22px!important;line-height:1.08!important;letter-spacing:-.03em!important}
+body.page-security-r120 .security-proof-list p{margin:0!important;color:#59615c!important;font-size:13px!important;line-height:1.6!important}
+
+/* SHARE ------------------------------------------------------------------ */
+body.page-security-r120 .ax-share{background:var(--sec-paper-2);border-top:1px solid #b9b1a5}
+body.page-security-r120 .ax-share-primary{background:var(--sec-petrol);border-color:var(--sec-petrol)}
+body.page-security-r120 .ax-share-primary:hover,body.page-security-r120 .ax-share-primary:focus-visible{background:var(--sec-orange);border-color:var(--sec-orange);color:var(--sec-ink)}
+
+/* RE-ENTERABLE MOTION: full opacity in every state for WCAG stability. */
+html.security-motion-ready body.page-security-r120 [data-security-reveal]{transform:translate3d(0,16px,0);transition:transform .58s cubic-bezier(.22,.72,.24,1)}
+html.security-motion-ready body.page-security-r120 [data-security-reveal].is-visible{transform:translate3d(0,0,0)}
+
+@media(max-width:1120px){
+ body.page-security-r120 .security-layout{grid-template-columns:1fr!important}
+ body.page-security-r120 .security-baseline{max-width:none}
+ body.page-security-r120 .security-trust-proof{grid-template-columns:1fr!important}
+ body.page-security-r120 .security-trust-proof-copy{position:static;max-width:820px}
+}
+@media(max-width:920px){
+ body.page-security-r120 .topbar{background:rgba(241,238,230,.985)}
+ body.page-security-r120 .mobile-menu summary,body.page-security-r120 .mobile-menu-panel,body.page-security-r120 .mobile-menu-panel a{background:var(--sec-paper)}
+ body.page-security-r120 .mobile-menu-panel a.active{background:var(--sec-orange);color:var(--sec-ink)}
+ body.page-security-r120 .security-principles,body.page-security-r120 .security-trust-grid,body.page-security-r120 .security-threat-grid{grid-template-columns:1fr!important}
+ body.page-security-r120 .security-pledge{grid-template-columns:1fr!important;gap:24px!important}
+ body.page-security-r120 .security-threats{width:calc(100% - 36px);padding:38px!important}
+}
+@media(max-width:680px){
+ body.page-security-r120 .security{padding:58px 18px 86px!important}
+ body.page-security-r120 .security>.section-intro h1{font-size:clamp(43px,13vw,62px)!important;line-height:.93!important}
+ body.page-security-r120 .security-layout{padding:8px!important;box-shadow:9px 9px 0 #d0c5b6!important}
+ body.page-security-r120 .security-screen-head{min-height:78px;padding:14px 16px!important;align-items:flex-start!important;flex-direction:column!important;justify-content:center!important}
+ body.page-security-r120 .security-mark{min-height:140px;padding:22px 18px!important}
+ body.page-security-r120 .security-mark>span{width:66px!important;height:66px!important;font-size:28px!important}
+ body.page-security-r120 .security-principles article{min-height:0!important;padding:24px 20px!important}
+ body.page-security-r120 .security-pledge{margin-top:42px!important;padding:25px 20px!important;box-shadow:8px 8px 0 #d9c9bb!important}
+ body.page-security-r120 .security-trust{padding:78px 18px 92px!important}
+ body.page-security-r120 .security-trust .section-intro h2,body.page-security-r120 .security-threats .section-intro h2,body.page-security-r120 .security-trust-proof-copy h2{font-size:clamp(39px,11.5vw,56px)!important}
+ body.page-security-r120 .security-trust-grid{box-shadow:9px 9px 0 #c6baa8!important}
+ body.page-security-r120 .security-trust-card{min-height:0!important;padding:24px 20px!important}
+ body.page-security-r120 .security-threats{width:calc(100% - 24px);margin:78px auto!important;padding:26px 18px!important;box-shadow:9px 9px 0 #cbbdac!important}
+ body.page-security-r120 .security-threat{min-height:0!important;padding:22px 18px!important;grid-template-columns:36px minmax(0,1fr)!important;gap:12px!important}
+ body.page-security-r120 .security-trust-proof{padding:78px 18px 92px!important;gap:42px!important}
+ body.page-security-r120 .security-proof-list{padding:8px!important;box-shadow:9px 9px 0 #c5ccc5!important}
+ body.page-security-r120 .security-proof-list article{min-height:0!important;padding:20px 17px!important;grid-template-columns:36px minmax(0,1fr)!important;gap:12px!important}
+ body.page-security-r120 .security-proof-links{display:grid!important;gap:12px!important}
+}
+@media(prefers-reduced-motion:reduce){
+ html.security-motion-ready body.page-security-r120 [data-security-reveal],html.security-motion-ready body.page-security-r120 [data-security-reveal].is-visible{transform:none!important;transition:none!important}
+}
