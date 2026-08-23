@@ -1,0 +1,58 @@
+name: AXIONA Systems R118 Live Proof
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "systems.html"
+      - "en/systems.html"
+      - "de/systems.html"
+      - "assets/systems-r118.css"
+      - "assets/js/systems-r118.js"
+      - ".github/workflows/axiona-systems-r118-live-proof.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  prove-live:
+    name: Verify live R118 systems release
+    runs-on: ubuntu-24.04
+    timeout-minutes: 6
+    steps:
+      - name: Verify exact live R118 bindings and assets
+        shell: bash
+        run: |
+          set -euo pipefail
+          for attempt in $(seq 1 36); do
+            KEY="${GITHUB_SHA}-systems-r118-${attempt}"
+            HU="$(curl --fail --silent --show-error --location --header 'Cache-Control: no-cache' "https://axiona.systems/systems.html?proof=${KEY}" || true)"
+            EN="$(curl --fail --silent --show-error --location --header 'Cache-Control: no-cache' "https://axiona.systems/en/systems.html?proof=${KEY}" || true)"
+            DE="$(curl --fail --silent --show-error --location --header 'Cache-Control: no-cache' "https://axiona.systems/de/systems.html?proof=${KEY}" || true)"
+            CSS="$(curl --fail --silent --show-error --location --header 'Cache-Control: no-cache' "https://axiona.systems/assets/systems-r118.css?release=R118&proof=${KEY}" || true)"
+            JS="$(curl --fail --silent --show-error --location --header 'Cache-Control: no-cache' "https://axiona.systems/assets/js/systems-r118.js?release=R118&proof=${KEY}" || true)"
+
+            bindings_ok=true
+            for PAGE in "$HU" "$EN" "$DE"; do
+              grep -Fq '/assets/systems-r118.css?release=R118' <<<"$PAGE" || bindings_ok=false
+              grep -Fq '/assets/js/systems-r118.js?release=R118' <<<"$PAGE" || bindings_ok=false
+              grep -Fq 'content="R118" name="axiona-release"' <<<"$PAGE" || bindings_ok=false
+              grep -Fq 'class="ax-share section-pad"' <<<"$PAGE" || bindings_ok=false
+            done
+
+            if [ "$bindings_ok" = true ] \
+              && grep -Fq 'AXIONA R118 — Systems page visual contract' <<<"$CSS" \
+              && grep -Fq 'AXIONA R118 — repeatable, progressive-enhancement reveal motion' <<<"$JS" \
+              && ! grep -Fq 'LIVE STATE' <<<"$HU$EN$DE" \
+              && ! grep -Fq 'OPERATIONS / 024' <<<"$HU$EN$DE"; then
+              echo "OK_AXIONA_SYSTEMS_R118_LIVE"
+              echo "PROVEN_PAGES_SOURCE_SHA=${GITHUB_SHA}"
+              exit 0
+            fi
+            sleep 5
+          done
+
+          echo "STOP_AXIONA_SYSTEMS_R118_NOT_LIVE_FOR_SHA=${GITHUB_SHA}" >&2
+          exit 1
