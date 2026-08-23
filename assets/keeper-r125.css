@@ -1,0 +1,24 @@
+/* AXIONA R125 — Keeper visual alignment and cache-safe hardening.
+   Preserve the accepted Keeper product composition; correct only current-site drift. */
+body.page-keeper-r125{--k125-paper:#f1eee6;--k125-white:#fbfaf6;--k125-white2:#fffdf8;--k125-soft:#e8ebe5;--k125-ink:#111917;--k125-petrol:#0b1e25;--k125-orange:#ef6b43;--k125-acid:#d7ef55;--k125-cyan:#54d4ca;background:var(--k125-paper);color:var(--k125-ink)}
+body.page-keeper-r125 main{background:var(--k125-paper);overflow:clip}
+body.page-keeper-r125 .topbar{background:rgba(241,238,230,.97)}
+body.page-keeper-r125 .keeper96-hero{background:var(--k125-paper)}
+body.page-keeper-r125 .keeper96-core,body.page-keeper-r125 .keeper96-trust{background:var(--k125-soft)}
+body.page-keeper-r125 .keeper96-workcard,body.page-keeper-r125 .keeper96-question,body.page-keeper-r125 .keeper96-process-step,body.page-keeper-r125 .keeper96-example,body.page-keeper-r125 .keeper96-trust-card{background:var(--k125-white)}
+body.page-keeper-r125 .keeper96-incoming{background:var(--k125-white2)}
+body.page-keeper-r125 .keeper96-control,body.page-keeper-r125 .keeper96-contrast,body.page-keeper-r125 .keeper96-preview-result,body.page-keeper-r125 .keeper96-mini-result,body.page-keeper-r125 .keeper96-dev-badge{background:var(--k125-petrol)}
+body.page-keeper-r125 .keeper-status-badge{background:var(--k125-acid);color:var(--k125-ink)}
+body.page-keeper-r125 .keeper96-hero-note{border-left-color:var(--k125-orange)}
+
+/* R116 affordance rule: these surfaces explain; they do not act. */
+body.page-keeper-r125 .keeper96-workrow,body.page-keeper-r125 .keeper96-question,body.page-keeper-r125 .keeper96-process-step,body.page-keeper-r125 .keeper96-compare-row,body.page-keeper-r125 .keeper96-example,body.page-keeper-r125 .keeper96-trust-card{cursor:default;opacity:1}
+
+/* Remove the older decorative grid if the matter preview component is present. */
+body.page-keeper-r125 .keeper-matter-summary{background:var(--k125-white2);background-image:none}
+
+/* Repeatable reveal remains contrast-stable: transform only, never text opacity. */
+body.page-keeper-r125.keeper125-motion-ready [data-keeper125-reveal]{opacity:1!important;transform:translateY(12px);transition:transform .42s cubic-bezier(.2,.75,.25,1)}
+body.page-keeper-r125.keeper125-motion-ready [data-keeper125-reveal].is-visible{opacity:1!important;transform:translateY(0)}
+
+@media(prefers-reduced-motion:reduce){body.page-keeper-r125 [data-keeper125-reveal]{opacity:1!important;transform:none!important;transition:none!important}}
