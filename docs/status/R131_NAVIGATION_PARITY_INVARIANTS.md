@@ -30,7 +30,10 @@ Both surfaces must expose the same ordered six routes in the current locale:
 5. Solutions
 6. Contact
 
-The active state must correspond to the current page when that page is one of these six primary routes. Keeper, Privacy, Legal and Support intentionally have no primary-nav active item.
+Active-state semantics are part of the information architecture:
+- each primary page activates itself;
+- Keeper intentionally activates **Solutions**, because Keeper is an AXIONA product/detail surface within the Solutions family;
+- Privacy, Legal and Support intentionally have no primary-nav active item.
 
 ### Header language switch
 The three language links are route-preserving, not home-only. For example:
@@ -63,7 +66,7 @@ It parses all 30 active public HTML files and checks:
 - desktop primary route list and ordering;
 - mobile primary route list and ordering;
 - desktop/mobile parity;
-- primary-nav active-state semantics;
+- primary-nav active-state semantics, including Keeper → Solutions;
 - route-preserving header language switch;
 - language-switch active state;
 - localized footer utility targets;
@@ -99,9 +102,15 @@ It proves fail-closed behavior for:
 2. broken German Privacy route-preserving language switch → `language switch mismatch`;
 3. wrong Keeper footer utility destination → `footer route mismatch`.
 
+## Baseline discovery
+
+The first R131 baseline run failed only on Keeper HU/EN/DE active state: all three correctly had **Solutions** active. This was not a public-source defect. It revealed the intended information-architecture relationship that the first verifier model had not encoded. The verifier was corrected to model Keeper under Solutions; no Keeper HTML remediation was required.
+
+No other desktop-nav, mobile-nav, language-switch, brand-route or footer-route baseline drift was reported.
+
 ## Scope boundary
 
-R131 is static verification only unless its baseline identifies a genuine current navigation drift. No public HTML/CSS/JS is intentionally modified. Browser/Lighthouse/axe are not required unless CI exposes a real HTML remediation.
+R131 remains static verification only. No public HTML/CSS/JS is intentionally modified. Browser/Lighthouse/axe are not required because the baseline finding required verifier-model correction rather than HTML remediation.
 
 ## Acceptance
 
@@ -109,4 +118,4 @@ The exact R131 PR head must pass:
 - AXIONA Public Surface Guard including navigation parity;
 - AXIONA Navigation R131 Parity Contract.
 
-If baseline verification exposes a current defect, fix the source and then require fresh exact-head checks; do not weaken the invariant.
+If a later verification exposes a current defect, fix the source and then require fresh exact-head checks; do not weaken the invariant.
