@@ -13,6 +13,7 @@ const browser = await chromium.launch({
 const primary = ['/', '/systems.html', '/process.html', '/security.html', '/solutions.html', '/contact.html'];
 const auxiliary = ['/support.html', '/keeper.html', '/privacy.html', '/legal.html', '/en/', '/de/'];
 const allRoutes = [...primary, ...auxiliary];
+const desktopMotionSettleMs = 1050;
 
 async function open(route, width, height) {
   const page = await browser.newPage({ viewport: { width, height } });
@@ -101,20 +102,24 @@ try {
     }
     if (!target) throw new Error('overview: no mid-page reveal target');
 
+    // The canonical R142 transform is animated. Measure the stable armed state,
+    // not the inherited pre-coordinator frame that exists during bootstrap.
+    await page.waitForTimeout(desktopMotionSettleMs);
     const armedBefore = await target.evaluate(element => {
       const matrix = new DOMMatrixReadOnly(getComputedStyle(element).transform);
       return {
         armed: element.classList.contains('ax-reveal-armed'),
         active: element.classList.contains('ax-reveal-active'),
+        entryY: element.style.getPropertyValue('--ax-r141-entry-y').trim(),
         y: matrix.m42
       };
     });
-    if (!armedBefore.armed || armedBefore.active || Math.abs(Math.abs(armedBefore.y) - 7) > .6) {
-      throw new Error(`overview: initial armed state ${JSON.stringify(armedBefore)}`);
+    if (!armedBefore.armed || armedBefore.active || armedBefore.entryY !== '7px' || Math.abs(Math.abs(armedBefore.y) - 7) > .6) {
+      throw new Error(`overview: stable initial armed state ${JSON.stringify(armedBefore)}`);
     }
 
     await target.scrollIntoViewIfNeeded();
-    await page.waitForTimeout(1050);
+    await page.waitForTimeout(desktopMotionSettleMs);
     if (!(await target.evaluate(element => element.classList.contains('ax-reveal-active')))) {
       throw new Error('overview: first reveal did not activate');
     }
@@ -122,23 +127,24 @@ try {
     const absoluteTop = await target.evaluate(element => element.getBoundingClientRect().top + window.scrollY);
     const far = await page.evaluate(y => Math.min(document.documentElement.scrollHeight - innerHeight, y + 1800), absoluteTop);
     await page.evaluate(y => window.scrollTo({ top: y, behavior: 'instant' }), far);
-    await page.waitForTimeout(450);
+    await page.waitForTimeout(desktopMotionSettleMs);
     const rearmed = await target.evaluate(element => {
       const matrix = new DOMMatrixReadOnly(getComputedStyle(element).transform);
       const rect = element.getBoundingClientRect();
       return {
         armed: element.classList.contains('ax-reveal-armed'),
         active: element.classList.contains('ax-reveal-active'),
+        entryY: element.style.getPropertyValue('--ax-r141-entry-y').trim(),
         y: matrix.m42,
         bottom: rect.bottom
       };
     });
-    if (!rearmed.armed || rearmed.active || Math.abs(Math.abs(rearmed.y) - 7) > .6) {
-      throw new Error(`overview: return rearm failed ${JSON.stringify(rearmed)}`);
+    if (!rearmed.armed || rearmed.active || !['-7px', '7px'].includes(rearmed.entryY) || Math.abs(Math.abs(rearmed.y) - 7) > .6) {
+      throw new Error(`overview: stable return rearm failed ${JSON.stringify(rearmed)}`);
     }
 
     await target.scrollIntoViewIfNeeded();
-    await page.waitForTimeout(1050);
+    await page.waitForTimeout(desktopMotionSettleMs);
     if (!(await target.evaluate(element => element.classList.contains('ax-reveal-active')))) {
       throw new Error('overview: return reveal did not activate');
     }
