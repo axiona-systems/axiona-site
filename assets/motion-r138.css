@@ -1,14 +1,16 @@
-/* AXIONA R138 — smooth one-shot reveal motion.
-   Scroll reveals should feel like a restrained glide, never a viewport-edge toggle. */
+/* AXIONA R140 — restrained bidirectional reveal motion.
+   Motion is intentionally subtle and uses hysteresis so returning through the page
+   feels alive without viewport-edge flicker or repeated jitter. */
 
 :root{
-  --ax-r138-reveal-y:18px;
-  --ax-r138-reveal-opacity-duration:680ms;
-  --ax-r138-reveal-transform-duration:900ms;
-  --ax-r138-reveal-ease:cubic-bezier(.16,1,.3,1);
+  --ax-r140-reveal-y:9px;
+  --ax-r140-reveal-opacity-start:.86;
+  --ax-r140-reveal-opacity-duration:420ms;
+  --ax-r140-reveal-transform-duration:620ms;
+  --ax-r140-reveal-ease:cubic-bezier(.22,1,.36,1);
 }
 
-html.ax-motion-r138-ready :is(
+html.ax-motion-r140-ready :is(
   [data-ax112-reveal],
   [data-system-reveal],
   [data-process-reveal],
@@ -19,17 +21,17 @@ html.ax-motion-r138-ready :is(
   [data-keeper125-reveal],
   [data-policy-reveal]
 ){
-  opacity:.001!important;
-  transform:translate3d(0,var(--ax-r138-reveal-y),0)!important;
+  opacity:var(--ax-r140-reveal-opacity-start)!important;
+  transform:translate3d(0,var(--ax-r140-entry-y,var(--ax-r140-reveal-y)),0)!important;
   transition-property:opacity,transform!important;
-  transition-duration:var(--ax-r138-reveal-opacity-duration),var(--ax-r138-reveal-transform-duration)!important;
-  transition-timing-function:var(--ax-r138-reveal-ease),var(--ax-r138-reveal-ease)!important;
+  transition-duration:var(--ax-r140-reveal-opacity-duration),var(--ax-r140-reveal-transform-duration)!important;
+  transition-timing-function:var(--ax-r140-reveal-ease),var(--ax-r140-reveal-ease)!important;
   transition-delay:0ms!important;
   will-change:opacity,transform;
   backface-visibility:hidden;
 }
 
-html.ax-motion-r138-ready :is(
+html.ax-motion-r140-ready :is(
   [data-ax112-reveal],
   [data-system-reveal],
   [data-process-reveal],
@@ -39,14 +41,14 @@ html.ax-motion-r138-ready :is(
   [data-support-reveal],
   [data-keeper125-reveal],
   [data-policy-reveal]
-):is(.is-visible,.ax-reveal-settled){
+).ax-reveal-active{
   opacity:1!important;
   transform:translate3d(0,0,0)!important;
   will-change:auto;
 }
 
-/* Stagger only dense sibling lists, and keep it subtle. */
-html.ax-motion-r138-ready :is(
+/* Barely perceptible rhythm for dense sibling lists. */
+html.ax-motion-r140-ready :is(
   .system-layer,
   .control-depth-card,
   .system-outcome-card,
@@ -66,8 +68,8 @@ html.ax-motion-r138-ready :is(
   .keeper96-example,
   .keeper96-trust-card,
   .policy-card
-):nth-child(2){transition-delay:45ms!important}
-html.ax-motion-r138-ready :is(
+):nth-child(2){transition-delay:18ms!important}
+html.ax-motion-r140-ready :is(
   .system-layer,
   .control-depth-card,
   .system-outcome-card,
@@ -87,13 +89,14 @@ html.ax-motion-r138-ready :is(
   .keeper96-example,
   .keeper96-trust-card,
   .policy-card
-):nth-child(3){transition-delay:90ms!important}
+):nth-child(3){transition-delay:36ms!important}
 
 @media(max-width:680px){
   :root{
-    --ax-r138-reveal-y:12px;
-    --ax-r138-reveal-opacity-duration:560ms;
-    --ax-r138-reveal-transform-duration:760ms;
+    --ax-r140-reveal-y:6px;
+    --ax-r140-reveal-opacity-start:.9;
+    --ax-r140-reveal-opacity-duration:340ms;
+    --ax-r140-reveal-transform-duration:500ms;
   }
 }
 
