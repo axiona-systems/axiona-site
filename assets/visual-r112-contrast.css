@@ -1,0 +1,6 @@
+/* AXIONA R112 — WCAG contrast corrections for small technical labels.
+   Loaded through the stable R110 entrypoint with !important so it remains
+   effective after the direct R112 stylesheet without changing layout. */
+.ax112-kicker span:last-child{color:#8f3b24!important}
+.ax112-hero-meta span{color:#59635d!important}
+.ax112-principles>article>span{color:#646a63!important}
