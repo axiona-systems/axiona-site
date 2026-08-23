@@ -1,0 +1,92 @@
+name: AXIONA Navigation R131 Parity Contract
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "*.html"
+      - "en/*.html"
+      - "de/*.html"
+      - "scripts/verify_navigation_parity.py"
+      - ".github/workflows/axiona-repo-guard.yml"
+      - ".github/workflows/axiona-navigation-r131-parity-contract.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  navigation-contract:
+    name: Prove navigation parity fails closed
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+
+      - name: Baseline navigation matrix must pass
+        shell: bash
+        run: python3 scripts/verify_navigation_parity.py
+
+      - name: Negative navigation fixtures must fail
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          make_case() {
+            rm -rf /tmp/r131-case
+            mkdir -p /tmp/r131-case
+            tar --exclude=.git -cf - . | tar -xf - -C /tmp/r131-case
+          }
+
+          expect_fail() {
+            local marker="$1"
+            if python3 /tmp/r131-case/scripts/verify_navigation_parity.py --root /tmp/r131-case >/tmp/r131-out 2>&1; then
+              echo "STOP_R131_NEGATIVE_CASE_PASSED_UNEXPECTEDLY: $marker"
+              cat /tmp/r131-out
+              exit 1
+            fi
+            grep -Fq "$marker" /tmp/r131-out || {
+              echo "STOP_R131_EXPECTED_MARKER_MISSING: $marker"
+              cat /tmp/r131-out
+              exit 1
+            }
+          }
+
+          make_case
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('/tmp/r131-case/en/process.html')
+          t=p.read_text(encoding='utf-8')
+          old='href="/en/systems.html"'
+          assert old in t
+          p.write_text(t.replace(old,'href="/en/security.html"'),encoding='utf-8')
+          PY
+          expect_fail "desktop nav mismatch"
+
+          make_case
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('/tmp/r131-case/de/privacy.html')
+          t=p.read_text(encoding='utf-8')
+          old='href="/en/privacy.html">EN</a>'
+          assert old in t
+          p.write_text(t.replace(old,'href="/en/">EN</a>',1),encoding='utf-8')
+          PY
+          expect_fail "language switch mismatch"
+
+          make_case
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('/tmp/r131-case/keeper.html')
+          t=p.read_text(encoding='utf-8')
+          old='<a href="/support.html">Támogatás</a>'
+          assert old in t
+          p.write_text(t.replace(old,'<a href="/privacy.html">Támogatás</a>',1),encoding='utf-8')
+          PY
+          expect_fail "footer route mismatch"
+
+          echo OK_AXIONA_NAVIGATION_R131_NEGATIVE_CONTRACT
