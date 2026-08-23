@@ -1,10 +1,10 @@
-/* AXIONA R141 — minimal bidirectional scroll motion.
-   No content fade. Only a short, restrained positional glide remains. */
+/* AXIONA R142 — slower minimal bidirectional scroll motion.
+   No content fade. The short positional glide is intentionally unhurried. */
 
 :root{
   --ax-r141-reveal-y:7px;
-  --ax-r141-reveal-transform-duration:520ms;
-  --ax-r141-reveal-ease:cubic-bezier(.22,1,.36,1);
+  --ax-r141-reveal-transform-duration:900ms;
+  --ax-r141-reveal-ease:cubic-bezier(.20,.62,.22,1);
 }
 
 html.ax-motion-r141-ready body :is(
@@ -94,7 +94,7 @@ html.ax-motion-r141-ready body :is(
 @media(max-width:680px){
   :root{
     --ax-r141-reveal-y:5px;
-    --ax-r141-reveal-transform-duration:420ms;
+    --ax-r141-reveal-transform-duration:760ms;
   }
 }
 
