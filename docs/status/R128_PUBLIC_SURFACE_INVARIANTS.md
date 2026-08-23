@@ -79,6 +79,18 @@ The contract first requires the untouched repository baseline to pass. It then c
 
 A negative fixture unexpectedly passing is itself a contract failure.
 
+## Defect exposed and remediated during R128
+
+The first strengthened Guard run correctly found an existing production-source defect: canonical and hreflang metadata were missing from the Systems, Process, Security and Solutions page families in all three languages, affecting 12 public HTML files.
+
+The invariant was not weakened. A branch-only remediation restored the missing canonical + `hu`/`en`/`de`/`x-default` blocks across all 12 pages at commit:
+
+`7225eb41455ebbe3110562d9b9e676412bd7f41f`
+
+The temporary migration workflow removed itself after the remediation and is not part of the final PR diff.
+
+GitHub marked the first PR workflow set on that remediation head as `action_required` because the commit author was `github-actions[bot]`. That is an execution-authorization state rather than a test failure. This documentation follow-up commit intentionally creates a normal new PR head so all required checks can execute again on the exact final source state.
+
 ## Scope boundary
 
 R128 does not change accepted page content, visual composition, tracking behavior or production routing. If the stronger verifier exposes a genuine current defect during CI, fix that defect rather than weakening the invariant.
