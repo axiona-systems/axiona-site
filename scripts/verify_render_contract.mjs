@@ -90,6 +90,41 @@ try {
 
   {
     const page = await open('/', 1440, 900);
+
+    await page.waitForTimeout(2500);
+    const heroType = await page.evaluate(() => {
+      const heading = document.getElementById('ax112-hero-title');
+      if (!heading) return null;
+      const glyphs = [...heading.querySelectorAll('.ax-hero-char')];
+      return {
+        state: heading.dataset.axHeroType || '',
+        label: heading.getAttribute('aria-label') || '',
+        glyphs: glyphs.length,
+        iterations: [...new Set(glyphs.map(glyph => getComputedStyle(glyph).animationIterationCount))],
+        hiddenGlyphs: glyphs.filter(glyph => Number.parseFloat(getComputedStyle(glyph).opacity) < .99).length,
+        runningAnimations: glyphs.flatMap(glyph => glyph.getAnimations()).filter(animation => animation.playState === 'running').length
+      };
+    });
+    if (!heroType || heroType.state !== 'complete' || heroType.label !== 'Valódi probléma. Működő rendszer.' || heroType.glyphs !== 30) {
+      throw new Error(`overview: hero character reveal structure ${JSON.stringify(heroType)}`);
+    }
+    if (heroType.iterations.length !== 1 || heroType.iterations[0] !== '1' || heroType.hiddenGlyphs !== 0 || heroType.runningAnimations !== 0) {
+      throw new Error(`overview: hero character reveal did not settle once ${JSON.stringify(heroType)}`);
+    }
+    await page.waitForTimeout(800);
+    const heroStillSettled = await page.evaluate(() => {
+      const heading = document.getElementById('ax112-hero-title');
+      const glyphs = heading ? [...heading.querySelectorAll('.ax-hero-char')] : [];
+      return {
+        state: heading?.dataset.axHeroType || '',
+        runningAnimations: glyphs.flatMap(glyph => glyph.getAnimations()).filter(animation => animation.playState === 'running').length
+      };
+    });
+    if (heroStillSettled.state !== 'complete' || heroStillSettled.runningAnimations !== 0) {
+      throw new Error(`overview: hero character reveal restarted ${JSON.stringify(heroStillSettled)}`);
+    }
+    console.log('OK_AXIONA_HERO_CHARACTER_REVEAL_ONCE');
+
     const nodes = page.locator('[data-ax112-reveal]');
     const count = await nodes.count();
     let target = null;

@@ -1,3 +1,62 @@
+/* AXIONA R144 — one-shot overview hero character reveal. */
+(() => {
+  const heading = document.getElementById('ax112-hero-title');
+  if (!heading || heading.dataset.axHeroType) return;
+
+  const firstLine = [...heading.childNodes].find((node) =>
+    node.nodeType === Node.TEXT_NODE && node.textContent.trim()
+  );
+  const secondLine = heading.querySelector(':scope > span');
+  if (!firstLine || !secondLine) return;
+
+  const firstText = firstLine.textContent;
+  const secondText = secondLine.textContent;
+  heading.setAttribute('aria-label', `${firstText.trim()} ${secondText.trim()}`);
+
+  let delay = 160;
+  let lastCharacter = null;
+  const buildCharacters = (text) => {
+    const fragment = document.createDocumentFragment();
+    for (const character of Array.from(text)) {
+      if (/\s/u.test(character)) {
+        fragment.appendChild(document.createTextNode(character));
+        delay += 22;
+        continue;
+      }
+
+      const glyph = document.createElement('i');
+      glyph.className = 'ax-hero-char';
+      glyph.setAttribute('aria-hidden', 'true');
+      glyph.textContent = character;
+      glyph.style.setProperty('--ax-hero-char-delay', `${delay}ms`);
+      fragment.appendChild(glyph);
+      lastCharacter = glyph;
+      delay += character === '.' ? 180 : 52;
+    }
+    return fragment;
+  };
+
+  const firstFragment = buildCharacters(firstText);
+  const secondFragment = buildCharacters(secondText);
+  heading.dataset.axHeroType = 'armed';
+  firstLine.replaceWith(firstFragment);
+  secondLine.replaceChildren(secondFragment);
+
+  const reduced = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+  if (reduced) {
+    heading.dataset.axHeroType = 'complete';
+    return;
+  }
+
+  requestAnimationFrame(() => {
+    heading.classList.add('ax-hero-type-running');
+  });
+
+  lastCharacter?.addEventListener('animationend', () => {
+    heading.dataset.axHeroType = 'complete';
+  }, { once: true });
+})();
+
 /* AXIONA R116 — restore the overview share utility before share-r86 boots. */
 (() => {
   const main = document.querySelector('body.page-overview main.ax112-home');
