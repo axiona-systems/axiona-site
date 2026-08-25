@@ -51,7 +51,15 @@ body.page-overview .ax116-share .ax-share-copy-button{
   color:#111917;
 }
 
-/* R144 — one-shot character reveal for the overview hero headline. */
+/* R145 — slower one-shot character reveal with word-safe wrapping. */
+body.page-overview #ax112-hero-title .ax-hero-word{
+  display:inline-block;
+  white-space:nowrap;
+  color:inherit;
+  font:inherit;
+  font-style:normal;
+  letter-spacing:inherit;
+}
 body.page-overview #ax112-hero-title .ax-hero-char{
   display:inline-block;
   color:inherit;
@@ -61,19 +69,19 @@ body.page-overview #ax112-hero-title .ax-hero-char{
 }
 body.page-overview #ax112-hero-title[data-ax-hero-type="armed"] .ax-hero-char{
   opacity:0;
-  transform:translate3d(0,.12em,0);
-  filter:blur(2px);
+  transform:translate3d(0,.1em,0);
+  filter:blur(1.5px);
 }
 body.page-overview #ax112-hero-title.ax-hero-type-running .ax-hero-char{
-  animation:ax-r144-hero-character-in 360ms cubic-bezier(.16,1,.3,1) var(--ax-hero-char-delay) 1 both;
+  animation:ax-r145-hero-character-in 520ms cubic-bezier(.16,1,.3,1) var(--ax-hero-char-delay) 1 both;
 }
 body.page-overview #ax112-hero-title[data-ax-hero-type="complete"] .ax-hero-char{
   opacity:1;
   transform:none;
   filter:none;
 }
-@keyframes ax-r144-hero-character-in{
-  0%{opacity:0;transform:translate3d(0,.12em,0);filter:blur(2px)}
+@keyframes ax-r145-hero-character-in{
+  0%{opacity:0;transform:translate3d(0,.1em,0);filter:blur(1.5px)}
   100%{opacity:1;transform:translate3d(0,0,0);filter:blur(0)}
 }
 
