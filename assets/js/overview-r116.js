@@ -1,4 +1,4 @@
-/* AXIONA R144 — one-shot overview hero character reveal. */
+/* AXIONA R145 — slower one-shot overview hero character reveal. */
 (() => {
   const heading = document.getElementById('ax112-hero-title');
   if (!heading || heading.dataset.axHeroType) return;
@@ -13,26 +13,38 @@
   const secondText = secondLine.textContent;
   heading.setAttribute('aria-label', `${firstText.trim()} ${secondText.trim()}`);
 
-  let delay = 160;
+  let delay = 220;
   let lastCharacter = null;
+
   const buildCharacters = (text) => {
     const fragment = document.createDocumentFragment();
-    for (const character of Array.from(text)) {
-      if (/\s/u.test(character)) {
-        fragment.appendChild(document.createTextNode(character));
-        delay += 22;
+    const tokens = text.match(/\s+|\S+/gu) || [];
+
+    for (const token of tokens) {
+      if (/^\s+$/u.test(token)) {
+        fragment.appendChild(document.createTextNode(token));
+        delay += 30;
         continue;
       }
 
-      const glyph = document.createElement('i');
-      glyph.className = 'ax-hero-char';
-      glyph.setAttribute('aria-hidden', 'true');
-      glyph.textContent = character;
-      glyph.style.setProperty('--ax-hero-char-delay', `${delay}ms`);
-      fragment.appendChild(glyph);
-      lastCharacter = glyph;
-      delay += character === '.' ? 180 : 52;
+      const word = document.createElement('em');
+      word.className = 'ax-hero-word';
+      word.setAttribute('aria-hidden', 'true');
+
+      for (const character of Array.from(token)) {
+        const glyph = document.createElement('i');
+        glyph.className = 'ax-hero-char';
+        glyph.setAttribute('aria-hidden', 'true');
+        glyph.textContent = character;
+        glyph.style.setProperty('--ax-hero-char-delay', `${delay}ms`);
+        word.appendChild(glyph);
+        lastCharacter = glyph;
+        delay += character === '.' ? 260 : 90;
+      }
+
+      fragment.appendChild(word);
     }
+
     return fragment;
   };
 
