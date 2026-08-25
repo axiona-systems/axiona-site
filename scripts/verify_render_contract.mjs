@@ -91,33 +91,70 @@ try {
   {
     const page = await open('/', 1440, 900);
 
-    await page.waitForTimeout(4200);
+    await page.waitForTimeout(4500);
     const heroType = await page.evaluate(() => {
       const heading = document.getElementById('ax112-hero-title');
       if (!heading) return null;
       const glyphs = [...heading.querySelectorAll('.ax-hero-char')];
       const words = [...heading.querySelectorAll('.ax-hero-word')];
+      const secondLine = heading.querySelector(':scope > .ax-hero-second-line');
       const brokenWords = words.filter(word => {
         const tops = [...word.querySelectorAll('.ax-hero-char')].map(glyph => glyph.getBoundingClientRect().top);
         return tops.length > 1 && Math.max(...tops) - Math.min(...tops) > 1;
       }).length;
+      const secondTops = secondLine ? [...secondLine.querySelectorAll('.ax-hero-char')].map(glyph => glyph.getBoundingClientRect().top) : [];
+      const styles = [...document.styleSheets].map(sheet => sheet.href || '');
+      const scripts = [...document.scripts].map(script => script.src || '');
       return {
         state: heading.dataset.axHeroType || '',
         label: heading.getAttribute('aria-label') || '',
         glyphs: glyphs.length,
         words: words.length,
         brokenWords,
+        secondLineRows: secondTops.length ? Math.max(...secondTops) - Math.min(...secondTops) : 999,
+        secondLineOverflow: secondLine ? secondLine.scrollWidth - secondLine.clientWidth : 999,
+        secondLineFit: secondLine?.dataset.axHeroFit || '',
+        r146Css: styles.filter(url => url.includes('/assets/visual-r116.css?release=R146')).length,
+        r146Js: scripts.filter(url => url.includes('/assets/js/overview-r116.js?release=R146')).length,
         iterations: [...new Set(glyphs.map(glyph => getComputedStyle(glyph).animationIterationCount))],
         hiddenGlyphs: glyphs.filter(glyph => Number.parseFloat(getComputedStyle(glyph).opacity) < .99).length,
         runningAnimations: glyphs.flatMap(glyph => glyph.getAnimations()).filter(animation => animation.playState === 'running').length
       };
     });
-    if (!heroType || heroType.state !== 'complete' || heroType.label !== 'Valódi probléma. Működő rendszer.' || heroType.glyphs !== 30 || heroType.words !== 4 || heroType.brokenWords !== 0) {
+    if (!heroType || heroType.state !== 'complete' || heroType.label !== 'Valódi problémára. Működő rendszer.' || heroType.glyphs !== 32 || heroType.words !== 4 || heroType.brokenWords !== 0) {
       throw new Error(`overview: hero character reveal structure ${JSON.stringify(heroType)}`);
+    }
+    if (heroType.secondLineRows > 1 || heroType.secondLineOverflow > 2 || !['native', 'scaled'].includes(heroType.secondLineFit)) {
+      throw new Error(`overview: hero solution line fit ${JSON.stringify(heroType)}`);
+    }
+    if (heroType.r146Css !== 1 || heroType.r146Js !== 1) {
+      throw new Error(`overview: R146 asset binding ${JSON.stringify(heroType)}`);
     }
     if (heroType.iterations.length !== 1 || heroType.iterations[0] !== '1' || heroType.hiddenGlyphs !== 0 || heroType.runningAnimations !== 0) {
       throw new Error(`overview: hero character reveal did not settle once ${JSON.stringify(heroType)}`);
     }
+
+    for (const width of [390, 540, 760, 1024, 1280, 1440]) {
+      await page.setViewportSize({ width, height: 900 });
+      await page.waitForTimeout(160);
+      const lineFit = await page.evaluate(() => {
+        const heading = document.getElementById('ax112-hero-title');
+        const secondLine = heading?.querySelector(':scope > .ax-hero-second-line');
+        if (!secondLine) return null;
+        const tops = [...secondLine.querySelectorAll('.ax-hero-char')].map(glyph => glyph.getBoundingClientRect().top);
+        return {
+          rowDelta: tops.length ? Math.max(...tops) - Math.min(...tops) : 999,
+          overflow: secondLine.scrollWidth - secondLine.clientWidth,
+          fit: secondLine.dataset.axHeroFit || '',
+          fontSize: getComputedStyle(secondLine).fontSize
+        };
+      });
+      if (!lineFit || lineFit.rowDelta > 1 || lineFit.overflow > 2 || !['native', 'scaled'].includes(lineFit.fit)) {
+        throw new Error(`overview: hero second line width=${width} ${JSON.stringify(lineFit)}`);
+      }
+      console.log(`OK_AXIONA_HERO_SECOND_LINE width=${width} fit=${lineFit.fit} font=${lineFit.fontSize}`);
+    }
+
     await page.waitForTimeout(800);
     const heroStillSettled = await page.evaluate(() => {
       const heading = document.getElementById('ax112-hero-title');
