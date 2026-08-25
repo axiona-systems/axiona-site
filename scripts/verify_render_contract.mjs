@@ -91,21 +91,28 @@ try {
   {
     const page = await open('/', 1440, 900);
 
-    await page.waitForTimeout(2500);
+    await page.waitForTimeout(4200);
     const heroType = await page.evaluate(() => {
       const heading = document.getElementById('ax112-hero-title');
       if (!heading) return null;
       const glyphs = [...heading.querySelectorAll('.ax-hero-char')];
+      const words = [...heading.querySelectorAll('.ax-hero-word')];
+      const brokenWords = words.filter(word => {
+        const tops = [...word.querySelectorAll('.ax-hero-char')].map(glyph => glyph.getBoundingClientRect().top);
+        return tops.length > 1 && Math.max(...tops) - Math.min(...tops) > 1;
+      }).length;
       return {
         state: heading.dataset.axHeroType || '',
         label: heading.getAttribute('aria-label') || '',
         glyphs: glyphs.length,
+        words: words.length,
+        brokenWords,
         iterations: [...new Set(glyphs.map(glyph => getComputedStyle(glyph).animationIterationCount))],
         hiddenGlyphs: glyphs.filter(glyph => Number.parseFloat(getComputedStyle(glyph).opacity) < .99).length,
         runningAnimations: glyphs.flatMap(glyph => glyph.getAnimations()).filter(animation => animation.playState === 'running').length
       };
     });
-    if (!heroType || heroType.state !== 'complete' || heroType.label !== 'Valódi probléma. Működő rendszer.' || heroType.glyphs !== 30) {
+    if (!heroType || heroType.state !== 'complete' || heroType.label !== 'Valódi probléma. Működő rendszer.' || heroType.glyphs !== 30 || heroType.words !== 4 || heroType.brokenWords !== 0) {
       throw new Error(`overview: hero character reveal structure ${JSON.stringify(heroType)}`);
     }
     if (heroType.iterations.length !== 1 || heroType.iterations[0] !== '1' || heroType.hiddenGlyphs !== 0 || heroType.runningAnimations !== 0) {
