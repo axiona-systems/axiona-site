@@ -1,4 +1,4 @@
-/* AXIONA R145 — slower one-shot overview hero character reveal. */
+/* AXIONA R146 — solution-first one-shot hero reveal with fitted second line. */
 (() => {
   const heading = document.getElementById('ax112-hero-title');
   if (!heading || heading.dataset.axHeroType) return;
@@ -53,6 +53,28 @@
   heading.dataset.axHeroType = 'armed';
   firstLine.replaceWith(firstFragment);
   secondLine.replaceChildren(secondFragment);
+  secondLine.classList.add('ax-hero-second-line');
+
+  const fitSecondLine = () => {
+    const available = heading.clientWidth;
+    const baseSize = Number.parseFloat(getComputedStyle(heading).fontSize);
+    if (!available || !Number.isFinite(baseSize)) return;
+
+    secondLine.style.fontSize = `${baseSize}px`;
+    const naturalWidth = secondLine.scrollWidth;
+    if (!naturalWidth) return;
+
+    const ratio = Math.min(1, Math.max(.1, (available - 2) / naturalWidth));
+    secondLine.style.fontSize = `${baseSize * ratio}px`;
+    secondLine.dataset.axHeroFit = ratio < .999 ? 'scaled' : 'native';
+  };
+
+  fitSecondLine();
+  requestAnimationFrame(fitSecondLine);
+  if ('ResizeObserver' in window) {
+    const fitObserver = new ResizeObserver(() => requestAnimationFrame(fitSecondLine));
+    fitObserver.observe(heading.parentElement || heading);
+  }
 
   const reduced = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
   if (reduced) {
