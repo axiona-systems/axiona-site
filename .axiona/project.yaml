@@ -1,0 +1,29 @@
+{
+  "architecture_profile": "repository-local",
+  "artifact_paths": [],
+  "build_system": "Static",
+  "data_classes": [
+    "INTERNAL"
+  ],
+  "engineering_deltas": [],
+  "generated_paths": [],
+  "languages": [
+    "HTML"
+  ],
+  "networking": false,
+  "persistence": [],
+  "platforms": [
+    "Web"
+  ],
+  "product_verifier": "./scripts/verify-all.sh",
+  "project_id": "axiona-site",
+  "project_type": "static-web",
+  "release_target": "repository-local",
+  "runtime": [],
+  "schema_version": "axiona.project-profile.v1",
+  "security_sensitive_surfaces": [],
+  "support_matrix": {},
+  "test_entrypoints": [
+    "./scripts/verify-all.sh"
+  ]
+}

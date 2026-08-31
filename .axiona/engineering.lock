@@ -1,0 +1,8 @@
+{
+  "context_schema_version": "axiona.context-manifest.v1",
+  "engineering_repository": "axiona-systems/AXIONA_ENGINE",
+  "engineering_sha": "323929d82a27d86f769f86ed7759eae05277bbb8",
+  "engineering_version": "0.1.0-shadow",
+  "profile_schema_version": "axiona.project-profile.v1",
+  "schema_version": "axiona.engineering-lock.v1"
+}
