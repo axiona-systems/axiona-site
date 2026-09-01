@@ -21,7 +21,7 @@ jobs:
           persist-credentials: false
 
       - name: Prove exact accepted representative through post-cutover Engine
-        uses: axiona-systems/AXIONA_ENGINE/.github/actions/representative-multi-stack-execution@71c0fda533ad27d47ccb77ce96525db7eb4127a7
+        uses: axiona-systems/AXIONA_ENGINE/.github/actions/representative-multi-stack-execution@4b13d0dcde2c4180fcfa571cba5a39759758fd80
         with:
           verifier-timeout-seconds: '900'
 
