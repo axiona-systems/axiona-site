@@ -1,0 +1,41 @@
+name: AXIONA B9.2 representative proof
+
+on:
+  push:
+    branches:
+      - proof/b92-web-static-1841599d
+
+permissions:
+  contents: read
+
+jobs:
+  representative-proof:
+    runs-on: [self-hosted, Linux, X64]
+    timeout-minutes: 30
+    steps:
+      - name: Checkout exact accepted static-web representative
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: 620720f125ce39845328a7a0ac2715377626d578
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Prove exact accepted representative through Engine
+        uses: axiona-systems/AXIONA_ENGINE/.github/actions/representative-multi-stack-execution@1841599d528ea0084814c39d9539551aafe8ad29
+        with:
+          verifier-timeout-seconds: '900'
+
+      - name: Show proof receipt
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          test -f "$RUNNER_TEMP/axiona-representative-multi-stack-execution-proof.json"
+          cat "$RUNNER_TEMP/axiona-representative-multi-stack-execution-proof.json"
+
+      - name: Upload proof receipt
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: axiona-b92-web-static-proof-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/axiona-representative-multi-stack-execution-proof.json
+          if-no-files-found: error
+          retention-days: 14
