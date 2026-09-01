@@ -21,7 +21,7 @@ jobs:
           persist-credentials: false
 
       - name: Prove exact accepted representative through Engine
-        uses: axiona-systems/AXIONA_ENGINE/.github/actions/representative-multi-stack-execution@406c3e05ecdf0e8340e0e4a54d16f18c3d3be8d4
+        uses: axiona-systems/AXIONA_ENGINE/.github/actions/representative-multi-stack-execution@3209ebb4119d56a0316928f90b45425fd9da2bf4
         with:
           verifier-timeout-seconds: '900'
 
