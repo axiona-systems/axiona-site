@@ -41,6 +41,12 @@ The approved mark has four components: deep-petrol structural stroke, orange upp
 
 These values describe the accepted master logo. Product UI design tokens remain governed by `AXIONA_BRAND_SYSTEM_V1.md` and the accepted public-site visual lineage.
 
+## Export automation
+
+`brand/assets/master-v1/build_exports.py` deterministically generates the complete logo package from the two canonical SVG sources. `.github/workflows/brand-master-package.yml` runs this generator in GitHub and publishes the checksumed artifact `axiona-brand-master-v1` containing the required SVG, PNG, PDF, ICO and ZIP outputs.
+
+Generated binaries are outputs, not new authorities. This keeps one editable geometry source and prevents binary drift.
+
 ## Runtime boundary
 
 The current public website runtime assets are not silently replaced by this master-logo introduction. Existing favicon, PWA, social-preview and header bindings remain at their proven runtime paths until a separate migration validates exact consumer behavior and browser/public-surface regression gates.
@@ -66,7 +72,7 @@ Durable public visual rules remain in `docs/AXIONA_WEB_VISUAL_UX_RULES.md`.
 3. Do not add the rejected small inner triangle.
 4. Project-specific identity may extend the brand but must not silently redefine the master mark.
 5. Copies in other repositories are consumers, not authorities.
-6. Consumer copies should pin a source commit/blob or release and verify source identity.
+6. Consumer copies should pin a source commit/blob or release and verify generated checksums.
 7. Runtime replacement of existing web/app/browser assets is a separate tested migration.
 
 ## Authority files
@@ -77,3 +83,5 @@ Durable public visual rules remain in `docs/AXIONA_WEB_VISUAL_UX_RULES.md`.
 - `assets/master-v1/README.md` — master-logo package usage rules
 - `assets/master-v1/MANIFEST.json` — machine-readable source authority and invariants
 - `assets/master-v1/EXPORT_SPEC_V1.md` — canonical derivative/export contract
+- `assets/master-v1/build_exports.py` — deterministic derivative generator
+- `.github/workflows/brand-master-package.yml` — GitHub validation and package artifact path
