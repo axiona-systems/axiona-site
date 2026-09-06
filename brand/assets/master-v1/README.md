@@ -16,11 +16,26 @@ Role: **CANONICAL AXIONA SYMBOL MASTER**
 
 These two SVG files are the editable/vector authorities. Do not redraw them from PNGs, screenshots, favicon files or other downstream assets.
 
-## Export contract
+## Deterministic export system
 
-`EXPORT_SPEC_V1.md` defines every standard derivative AXIONA may need: horizontal full-color, light/dark backgrounds, monochrome/reverse, print PDF, standalone symbol and the standard icon sizes for web/PWA/Apple/favicons.
+`EXPORT_SPEC_V1.md` defines every standard derivative AXIONA may need.
 
-Derived files are outputs, not independent sources of truth. They should be regenerated from the canonical SVGs when needed and verified against the export specification.
+`build_exports.py` generates the complete derivative package from the two canonical SVG sources. The GitHub workflow `.github/workflows/brand-master-package.yml` executes the same generator and publishes the package as the workflow artifact `axiona-brand-master-v1`.
+
+The package includes:
+
+- transparent high-resolution horizontal PNG;
+- paper-background and dark-inverse horizontal SVG/PNG;
+- petrol and white monochrome SVG/PNG;
+- vector PDF exports;
+- standalone symbol SVG/PDF;
+- transparent symbol PNGs at 1024, 512, 256, 192, 180, 128, 64, 48, 32 and 16 px;
+- paper-background symbol PNGs at 1024, 512, 192 and 180 px;
+- multi-size ICO;
+- `PACKAGE_MANIFEST.json` and `CHECKSUMS.sha256`;
+- complete `axiona-brand-master-v1.zip`.
+
+Derived files are outputs, not independent sources of truth. They are intentionally regenerated from the canonical SVGs instead of being manually maintained as competing binary masters.
 
 ## Canonical logo colors
 
