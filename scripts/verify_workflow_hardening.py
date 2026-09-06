@@ -68,7 +68,6 @@ allowed_names = {
     'axiona-browser-audit.yml',
     'axiona-render-contract.yml',
     'axiona-pages-rebuild.yml',
-    'brand-master-package.yml',
 }
 actual_names = {p.name for p in workflows}
 extra = sorted(actual_names - allowed_names)
