@@ -13,6 +13,9 @@
     "role": "canonical standalone AXIONA symbol vector"
   },
   "export_contract": "EXPORT_SPEC_V1.md",
+  "export_builder": "build_exports.py",
+  "github_workflow": ".github/workflows/brand-master-package.yml",
+  "workflow_artifact": "axiona-brand-master-v1",
   "palette": {
     "deep_petrol": "#082830",
     "orange": "#E06838",
@@ -28,7 +31,8 @@
     "horizontal_primary_text": "AXIONA",
     "horizontal_secondary_text": "SYSTEMS",
     "manual_redraw_allowed": false,
+    "generated_derivatives_are_authority": false,
     "runtime_consumer_migration_implicit": false
   },
-  "authority_note": "Only the two SVG sources are design authorities. PNG, PDF, favicon, PWA, social and other exports are derivatives or runtime consumers and must not redefine master geometry."
+  "authority_note": "Only the two SVG sources are design authorities. The deterministic builder generates PNG, PDF, ICO, alternate SVG and ZIP outputs; existing favicon, PWA, social and other runtime assets remain consumers until separately migrated."
 }
