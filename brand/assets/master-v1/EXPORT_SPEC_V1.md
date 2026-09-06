@@ -9,6 +9,12 @@ All derivatives are generated from either:
 
 Derived assets must preserve geometry exactly. No manual redraw, proportional change, added detail or independent recoloring is allowed.
 
+The canonical generator is:
+
+`build_exports.py`
+
+It produces a checksumed package and is executed by `.github/workflows/brand-master-package.yml`.
+
 ## 1. Horizontal lockup
 
 Required standard variants:
@@ -17,7 +23,7 @@ Required standard variants:
 | --- | --- | --- |
 | Full color transparent | transparent | canonical full-color symbol + deep-petrol wordmark |
 | Full color paper | `#F1EEE6` | canonical full-color symbol + deep-petrol wordmark |
-| Full color dark | deep petrol | full-color symbol + reverse warm-white wordmark |
+| Inverse full color dark | `#082830` | orange/yellow/beige accents + reverse structural stroke/wordmark |
 | Monochrome petrol | transparent | `#082830` only |
 | Monochrome white | transparent | `#FFFFFF` only |
 
@@ -47,6 +53,10 @@ Paper-background PNG sizes:
 - 192×192
 - 180×180
 
+Compatibility icon:
+
+- multi-size ICO containing 16×16, 32×32 and 48×48 symbol renders
+
 Symbol print/interchange export: PDF from `axiona-symbol-fullcolor.svg`.
 
 ## 3. Intended consumer mapping
@@ -55,6 +65,7 @@ Symbol print/interchange export: PDF from `axiona-symbol-fullcolor.svg`.
 - 512/192: PWA/application identity
 - 180: Apple touch icon source
 - 128/64/48/32/16: compact UI and favicon derivation
+- ICO: legacy/browser compatibility source
 - horizontal transparent: documents, headers, compositing
 - horizontal paper: AXIONA light-surface presentation
 - horizontal dark: AXIONA deep-petrol surfaces
@@ -79,12 +90,24 @@ Canonical full-color palette:
 - golden yellow `#E8B038`
 - warm beige `#D0C8B0`
 
-Surface colors:
+Surface/reverse colors:
 
 - AXIONA paper `#F1EEE6`
 - reverse warm white `#FBFAF6`
 - pure-white monochrome reverse `#FFFFFF`
 
-## 6. Runtime rule
+The dark inverse changes only the deep-petrol structural/wordmark paths to reverse warm white; the three warm accent modules remain unchanged.
+
+## 6. Reproducibility and integrity
+
+The generator emits:
+
+- `PACKAGE_MANIFEST.json` with SHA-256 hashes and raster dimensions;
+- `CHECKSUMS.sha256` for the complete output directory;
+- `axiona-brand-master-v1.zip` containing the full derivative package.
+
+Generated files are build outputs, not additional design authorities.
+
+## 7. Runtime rule
 
 This export contract defines what may be generated; it does not automatically authorize replacing existing production assets. Each runtime consumer migration must independently prove dimensions, binding, rendering and regression behavior before switching to a master-derived output.
