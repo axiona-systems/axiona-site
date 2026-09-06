@@ -1,36 +1,44 @@
 {
-  "schema": "axiona.brand.package.v1",
-  "status": "canonical-master-logo-package",
+  "schema": "axiona.brand.source.v1",
+  "status": "canonical-master-logo-source",
+  "approved_date": "2026-09-06",
   "authoritative_master": "axiona-master-horizontal-fullcolor.svg",
-  "files": [
-    {"file":"README.md","bytes":2086,"sha256":"00ff5e45bd898bb32db1053d891b6be9b659a094957a368db8397856db77b479"},
-    {"file":"axiona-horizontal-fullcolor-dark.png","bytes":49820,"sha256":"b8aae85a23a65017d9c697fc21b89be4731e88dc9da1280103c15d1383d37599","width":2172,"height":724},
-    {"file":"axiona-horizontal-fullcolor-dark.svg","bytes":12710,"sha256":"99f178a338223ad8c7bb2d62633813e2a7b9a9cdc97acfa15fb6fa50e20f9cd5"},
-    {"file":"axiona-horizontal-fullcolor-paper.png","bytes":49650,"sha256":"dd183b9ea1f19bd36a602a23218ca1149b2a6fb5632f95eee1c774517482f957","width":2172,"height":724},
-    {"file":"axiona-horizontal-fullcolor-paper.svg","bytes":12710,"sha256":"451221d67b814e7a08784f50ed8e89e727282729b7fc4eb0675a706b76f7acb8"},
-    {"file":"axiona-horizontal-monochrome-petrol.png","bytes":50456,"sha256":"d9e0a7ca6e035468e0ed79751c358dd35e7c1399769aa1272e3533fc95be103f","width":2172,"height":724},
-    {"file":"axiona-horizontal-monochrome-petrol.svg","bytes":12658,"sha256":"25981feadba0508e985a60132dac01c8ebbc346c50d3505f428c19965557a710"},
-    {"file":"axiona-horizontal-monochrome-white.png","bytes":41625,"sha256":"17ccafa188aefe3eb9dd90fe82ea0b160811e0cebed479b3944e9f4c627c8904","width":2172,"height":724},
-    {"file":"axiona-horizontal-monochrome-white.svg","bytes":12658,"sha256":"e5fb7353423935890c221babecff159ad21c68fcc4c886aad0a4badf76e81158"},
-    {"file":"axiona-master-horizontal-fullcolor.pdf","bytes":4328,"sha256":"08efbb940c637518d28bf57ceb49b99da6aa59f8e5d8bf6577bd623a3676d1f2"},
-    {"file":"axiona-master-horizontal-fullcolor.png","bytes":51103,"sha256":"25f9adf725e27ce3998f092a9923be7ccb9e683f77e1eca73930a36183829d74","width":2172,"height":724},
-    {"file":"axiona-master-horizontal-fullcolor.svg","bytes":12658,"sha256":"0e198d30d8b4ef837cec066825ce213a17c0104adc89dca67aa8a4d4ecebeb25"},
-    {"file":"axiona-symbol-1024.png","bytes":31802,"sha256":"c8c6de7fba97c6cc7410412f932c0a0171915c2d00acbffce2f98207b6d704d1","width":1024,"height":1024},
-    {"file":"axiona-symbol-128.png","bytes":3473,"sha256":"a3a00a78c2d38cce6b9c48389d2868e377434416accbb0d481004954f3c58e1e","width":128,"height":128},
-    {"file":"axiona-symbol-16.png","bytes":414,"sha256":"ca9efa11b78959f643f12118b7c843020bb544fb0338f5de051d4f8e284ac777","width":16,"height":16},
-    {"file":"axiona-symbol-180.png","bytes":4967,"sha256":"dc05cae2dfb54368f09909c5ab728b145abb1602da569340ab3778c624828c69","width":180,"height":180},
-    {"file":"axiona-symbol-192.png","bytes":5291,"sha256":"bbd240d88f8863eea07bd32ef599cbe7cf4d5c7ac27786491c394e6182b1e590","width":192,"height":192},
-    {"file":"axiona-symbol-256.png","bytes":7152,"sha256":"71c504a32d54c3ae8600c9aaf49617b427bcdfb04813e77d11b7b0fa2d811467","width":256,"height":256},
-    {"file":"axiona-symbol-32.png","bytes":841,"sha256":"964911d7a68439e142edd2ee59800242f23b7bd50ebb15d93fe747343a4495ce","width":32,"height":32},
-    {"file":"axiona-symbol-48.png","bytes":1310,"sha256":"9bc46c430f90ba64e380f76192d08e5e9de1b1fbcc248b44c5af678858ef9016","width":48,"height":48},
-    {"file":"axiona-symbol-512.png","bytes":14850,"sha256":"6347368ff31f87ab1ba7fc3214659ca315edb444ae60b8b8f5a112bf18446be7","width":512,"height":512},
-    {"file":"axiona-symbol-64.png","bytes":1739,"sha256":"0101ba6ddbec10f9d416359b5efd9797c2178126981439e456676c6b2a763e0e","width":64,"height":64},
-    {"file":"axiona-symbol-fullcolor-paper.svg","bytes":2323,"sha256":"634022984e2c92c843d6e4406224feff1627009ac21921f5da2b28e5e2bf87a6"},
-    {"file":"axiona-symbol-fullcolor.pdf","bytes":1719,"sha256":"56eccda4a973dd2dc28604572e5d207d62641ea67bf3f263c78a4426827fea9d"},
-    {"file":"axiona-symbol-fullcolor.svg","bytes":2273,"sha256":"bffbd80f2d5da5d1fbde4f0cba5d30383fca650bc7764f507454165dc8095237"},
-    {"file":"axiona-symbol-paper-1024.png","bytes":32512,"sha256":"24aa997eaba6b4257b0256d2953158dabb2662899f02a708162d5fe4698bbe63","width":1024,"height":1024},
-    {"file":"axiona-symbol-paper-180.png","bytes":5086,"sha256":"18586cc5dbfb087a070d13ea4f76637a1590dd8f7e4354b3670bf2761badd12b","width":180,"height":180},
-    {"file":"axiona-symbol-paper-192.png","bytes":5399,"sha256":"deb64eae00d99a80059b0c34792e52c1ebcc40e5a903b5fbda684ada649e5f48","width":192,"height":192},
-    {"file":"axiona-symbol-paper-512.png","bytes":15190,"sha256":"c6e1000fbddf5e3b2020c4651077af6eb1441ef8c93b85a6f1daf54443013bf7","width":512,"height":512}
+  "authoritative_symbol": "axiona-symbol-fullcolor.svg",
+  "canonical_sources": [
+    {
+      "file": "axiona-master-horizontal-fullcolor.svg",
+      "git_blob_sha": "374cc2f8738cb0abd519016cac2759b1cc43be0d"
+    },
+    {
+      "file": "axiona-symbol-fullcolor.svg",
+      "git_blob_sha": "1fbe0628bf1d6240495da75dfab2b51a28aac391"
+    }
+  ],
+  "builder": "build_exports.py",
+  "workflow": ".github/workflows/brand-master-package.yml",
+  "generated_exports": {
+    "horizontal_png_size": [2172, 724],
+    "transparent_symbol_png_sizes": [1024, 512, 256, 192, 180, 128, 64, 48, 32, 16],
+    "paper_symbol_png_sizes": [1024, 512, 192, 180],
+    "horizontal_svg_variants": [
+      "axiona-horizontal-fullcolor-paper.svg",
+      "axiona-horizontal-fullcolor-dark.svg",
+      "axiona-horizontal-monochrome-petrol.svg",
+      "axiona-horizontal-monochrome-white.svg"
+    ],
+    "symbol_svg_variants": ["axiona-symbol-fullcolor-paper.svg"],
+    "pdf": [
+      "axiona-master-horizontal-fullcolor.pdf",
+      "axiona-symbol-fullcolor.pdf"
+    ],
+    "package": "axiona-brand-master-v1.zip"
+  },
+  "runtime_migration_performed": false,
+  "invariants": [
+    "no-redraw",
+    "no-small-inner-triangle",
+    "open-symbol-center",
+    "preserve-geometry",
+    "preserve-relative-spacing"
   ]
 }
