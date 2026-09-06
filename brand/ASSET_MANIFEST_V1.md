@@ -10,8 +10,8 @@ This manifest assigns explicit authority to the accepted AXIONA master logo whil
 | --- | --- | --- |
 | `brand/assets/master-v1/axiona-master-horizontal-fullcolor.svg` | Authoritative complete AXIONA SYSTEMS vector master | **CANONICAL MASTER / SSOT** |
 | `brand/assets/master-v1/axiona-symbol-fullcolor.svg` | Authoritative standalone AXIONA symbol vector | **CANONICAL SYMBOL MASTER** |
-| `brand/assets/master-v1/axiona-brand-master-v1.zip` | Complete master-derived export archive | **CANONICAL EXPORT PACKAGE** |
-| `brand/assets/master-v1/MANIFEST.json` | Exact archive inventory, SHA-256 checksums and dimensions | **CANONICAL PACKAGE MANIFEST** |
+| `brand/assets/master-v1/EXPORT_SPEC_V1.md` | Standard derivative/export contract | **CANONICAL EXPORT SPECIFICATION** |
+| `brand/assets/master-v1/MANIFEST.json` | Machine-readable authority declaration and invariants | **CANONICAL MASTER MANIFEST** |
 
 ### Accepted master-logo invariants
 
@@ -30,22 +30,19 @@ Canonical master-logo palette:
 - `#F1EEE6` paper background
 - `#FBFAF6` reverse warm white
 
-## 2. Complete export archive
+## 2. Standard derivatives
 
-`brand/assets/master-v1/axiona-brand-master-v1.zip` contains the complete derivative set:
+`brand/assets/master-v1/EXPORT_SPEC_V1.md` defines the complete standard derivative set, including:
 
-- master horizontal SVG/PDF/high-resolution transparent PNG;
-- full-color horizontal paper-background SVG/PNG;
-- full-color dark-background reverse SVG/PNG;
-- monochrome petrol SVG/PNG;
-- monochrome white SVG/PNG;
-- standalone symbol SVG/PDF;
-- transparent standalone symbol PNG sizes 1024, 512, 256, 192, 180, 128, 64, 48, 32 and 16 px;
-- paper-background symbol PNG sizes 1024, 512, 192 and 180 px.
+- horizontal full-color transparent;
+- horizontal full-color paper-background;
+- horizontal full-color dark/reverse;
+- monochrome petrol and monochrome white;
+- print/vector PDF derivatives;
+- standalone symbol exports;
+- symbol PNG sizes from 1024 px down to 16 px for PWA, Apple touch, compact UI and favicon use.
 
-The two authoritative SVG sources remain directly browsable in GitHub. The ZIP exists to keep all raster/print exports together without turning each derived export into a competing source of truth.
-
-`MANIFEST.json` records the SHA-256 checksum and dimensions of every archive member.
+These are generated outputs, not independent sources of brand truth.
 
 ## 3. Current public/runtime identity assets
 
@@ -76,8 +73,9 @@ Social previews are publishing assets, not logo masters.
 - `brand/README.md` — brand authority entry point
 - `brand/AXIONA_BRAND_SYSTEM_V1.md` — accepted visual-system reference
 - `brand/ASSET_MANIFEST_V1.md` — this inventory
-- `brand/assets/master-v1/README.md` — master-package usage and invariants
-- `brand/assets/master-v1/MANIFEST.json` — exact export manifest
+- `brand/assets/master-v1/README.md` — master-logo package usage and invariants
+- `brand/assets/master-v1/MANIFEST.json` — machine-readable master declaration
+- `brand/assets/master-v1/EXPORT_SPEC_V1.md` — standard derivative contract
 - `docs/AXIONA_WEB_VISUAL_UX_RULES.md` — durable public visual/UX guidance
 - accepted R115/R116/R137/R142/R143 lineage documentation
 
@@ -88,7 +86,7 @@ When sources appear to disagree, use this order:
 1. Explicit current brand acceptance and master-logo invariants.
 2. `brand/assets/master-v1/axiona-master-horizontal-fullcolor.svg`.
 3. `brand/assets/master-v1/axiona-symbol-fullcolor.svg` for symbol-only usage.
-4. `brand/` authority documentation and package manifest.
+4. `brand/` authority documentation and machine-readable manifest.
 5. Current proven runtime consumer assets and bindings.
 6. Historical release assets and documentation.
 7. Copies in other AXIONA repositories.
@@ -97,4 +95,4 @@ When sources appear to disagree, use this order:
 
 A consumer repository may copy a brand asset only when packaging/runtime isolation requires it. The copy must be traceable to the source repository, source path and pinned Git commit/blob or release. Unexplained divergence is drift.
 
-Runtime migration should use exact checksums and regression validation rather than manual visual replacement.
+Runtime migration should use exact source identity and regression validation rather than manual visual replacement.
