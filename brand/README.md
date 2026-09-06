@@ -2,115 +2,71 @@
 
 Status: **CANONICAL / V1**
 
-This directory is the single entry point for the currently accepted AXIONA visual identity and brand assets.
+This directory is the single entry point for the accepted AXIONA visual identity and brand assets.
 
-It does **not** redesign AXIONA and it does **not** relocate live runtime assets. Runtime paths remain unchanged until a separate migration can prove zero regression.
+## Canonical master logo
 
-## Canonical baseline
+The AXIONA master logo was explicitly approved on 2026-09-06 and is now physically stored under:
 
-Repository baseline at creation:
+`brand/assets/master-v1/`
 
-`620720f125ce39845328a7a0ac2715377626d578`
+Authoritative source:
 
-Current accepted visual lineage:
+`brand/assets/master-v1/axiona-master-horizontal-fullcolor.svg`
 
-- R115: accepted visual direction;
-- R116: accepted UX corrections;
-- R137: accepted current layout/navigation behavior;
-- R142: accepted current motion tuning;
-- R143: repository cleanup/hardening preserving the accepted public design.
+Role: **CANONICAL AXIONA MASTER LOGO / VECTOR SOURCE OF TRUTH**
 
-The durable visual rules remain in `docs/AXIONA_WEB_VISUAL_UX_RULES.md` and are summarized here for brand-wide use.
+The standalone symbol vector is:
 
-## Identity authority
+`brand/assets/master-v1/axiona-symbol-fullcolor.svg`
 
-### Primary public brand mark
+All PNG, PDF, monochrome, reverse, background and icon-size files in `master-v1/` are derived assets. They are consumers of the master geometry and must not redefine it.
 
-Canonical live mark:
+The approved mark has four components: deep-petrol structural stroke, orange upper module, golden-yellow lower-left module and warm-beige lower-right module. The center remains open. The previously rejected small inner triangle is not part of the master logo.
 
-`/assets/axiona-mark.png`
+## Canonical logo palette
 
-Role: **PRIMARY BRAND MARK**
+- Deep petrol: `#082830`
+- Orange: `#E06838`
+- Golden yellow: `#E8B038`
+- Warm beige: `#D0C8B0`
+- AXIONA paper background: `#F1EEE6`
+- Reverse warm white: `#FBFAF6`
 
-This is the mark rendered in the live AXIONA header. Until a separately approved vector master is introduced, this PNG is the authoritative public mark. Do not replace it from an inferred or reconstructed source.
+These values describe the accepted master-logo package. Product UI design tokens remain governed by `AXIONA_BRAND_SYSTEM_V1.md` and the accepted public-site visual lineage.
 
-### AXIONA wordmark / lockup
+## Runtime boundary
 
-The current website does not use a flattened AXIONA wordmark image. The live lockup is composed from:
+The current public website runtime assets are not silently replaced by this commit. Existing favicon, PWA, social-preview and header bindings remain at their proven runtime paths until a separate migration validates exact consumer behavior and browser/public-surface regression gates.
 
-1. `/assets/axiona-mark.png`
-2. text `AXIONA`
-3. text `SYSTEMS`
-
-Therefore no other image should be called the canonical AXIONA wordmark unless it is explicitly accepted later.
-
-### Browser identity
-
-These are canonical browser/runtime identity assets, but they are **not automatically treated as the master logo source**:
-
-- `/favicon.svg`
-- `/favicon-32x32.png`
-- `/favicon-16x16.png`
-- `/favicon.ico`
-- `/apple-touch-icon.png`
-- `/assets/brand/axiona-icon-192.png`
-- `/assets/brand/axiona-icon-512.png`
-
-Their exact roles are listed in `ASSET_MANIFEST_V1.md`.
-
-### Social identity
-
-Current general AXIONA social preview family:
-
-- `/assets/social/axiona-social-preview-r92-hu.png`
-- `/assets/social/axiona-social-preview-r92-en.png`
-- `/assets/social/axiona-social-preview-r92-de.png`
-
-Keeper has its own accepted social-preview variants and is listed separately in the manifest.
+The historical public header asset `assets/axiona-mark.png` therefore remains a **canonical current runtime consumer asset**, but it is no longer the master design source. Future logo derivatives should originate from `brand/assets/master-v1/axiona-master-horizontal-fullcolor.svg`.
 
 ## Brand design authority
 
-The currently accepted AXIONA visual grammar is:
+Current accepted AXIONA visual grammar continues to derive from:
 
-- warm paper / off-white dominant field;
-- deep petrol for contained control/work surfaces;
-- restrained orange for active/control emphasis;
-- acid green only for compact status/control signals;
-- cyan only as a secondary technical accent;
-- thin one-pixel borders;
-- solid offset shadows instead of soft glow;
-- generous negative space;
-- calm editorial / engineering composition;
-- technical diagrams only when they communicate real structure.
+- R115 visual direction;
+- R116 UX corrections;
+- R137 layout/navigation behavior;
+- R142 motion tuning;
+- R143 repository cleanup/hardening.
 
-Explicitly rejected as brand identity:
-
-- full-page dark dashboard styling;
-- decorative CAD/relation-map identity;
-- fake telemetry;
-- scanner lines;
-- glow/particle effects;
-- excessive motion;
-- pseudo-controls that look interactive but are not.
-
-Exact tokens and usage rules are in `AXIONA_BRAND_SYSTEM_V1.md`.
+Durable public visual rules remain in `docs/AXIONA_WEB_VISUAL_UX_RULES.md`.
 
 ## Canonicality rules
 
-1. New AXIONA visual work starts here.
-2. A project-specific visual may extend the brand, but must not silently redefine it.
-3. Copies in other repositories are consumers, not authorities.
-4. If a copy differs from this authority, the difference must be intentional and documented; otherwise it is drift.
-5. Never overwrite the primary mark based on a guessed relationship between PNG, SVG, favicon or social assets.
-6. Runtime asset relocation requires its own tested migration.
-7. Historical release CSS is implementation history, not independent brand authority.
+1. New AXIONA logo work starts from the master SVG, never from a screenshot or a downstream PNG.
+2. Do not redraw, distort, recolor or independently edit derived variants.
+3. Do not add the rejected small inner triangle.
+4. Project-specific identity may extend the brand but must not silently redefine the master mark.
+5. Copies in other repositories are consumers, not authorities.
+6. Consumer copies should pin a source commit/blob or release and verify checksums.
+7. Runtime replacement of existing web/app/browser assets is a separate tested migration.
 
-## Files in this authority layer
+## Authority files
 
-- `README.md` — authority and ownership rules
-- `AXIONA_BRAND_SYSTEM_V1.md` — current visual system
-- `ASSET_MANIFEST_V1.md` — exact canonical asset inventory and roles
-
-## Next safe consolidation step
-
-A later migration may move the physical master assets into a dedicated brand repository or package and make product repositories consume pinned releases. That should only be done with checksum-based validation and consumer migration; this V1 intentionally avoids breaking current public runtime paths.
+- `README.md` — brand authority and ownership rules
+- `AXIONA_BRAND_SYSTEM_V1.md` — accepted visual system
+- `ASSET_MANIFEST_V1.md` — canonical asset inventory and role assignment
+- `assets/master-v1/README.md` — master-logo package usage rules
+- `assets/master-v1/MANIFEST.json` — exact package checksums, dimensions and authoritative source declaration
