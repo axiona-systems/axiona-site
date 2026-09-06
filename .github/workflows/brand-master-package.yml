@@ -5,11 +5,13 @@ on:
     paths:
       - 'brand/**'
       - '.github/workflows/brand-master-package.yml'
+      - 'scripts/verify_workflow_hardening.py'
   push:
     branches: [main]
     paths:
       - 'brand/**'
       - '.github/workflows/brand-master-package.yml'
+      - 'scripts/verify_workflow_hardening.py'
   workflow_dispatch:
 
 permissions:
@@ -17,13 +19,16 @@ permissions:
 
 jobs:
   build-brand-package:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
         with:
           python-version: '3.12'
 
@@ -38,6 +43,7 @@ jobs:
 
       - name: Verify package inventory
         run: |
+          set -euo pipefail
           test -f dist/axiona-brand-master-v1/PACKAGE_MANIFEST.json
           test -f dist/axiona-brand-master-v1/CHECKSUMS.sha256
           test -f dist/axiona-brand-master-v1/axiona-symbol.ico
@@ -45,7 +51,7 @@ jobs:
           test "$(find dist/axiona-brand-master-v1 -maxdepth 1 -type f | wc -l | tr -d ' ')" -ge 33
 
       - name: Upload complete brand package
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
           name: axiona-brand-master-v1
           path: |
