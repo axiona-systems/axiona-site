@@ -54,6 +54,10 @@ jobs:
         shell: bash
         run: python3 scripts/verify_asset_references.py
 
+      - name: Verify canonical brand master
+        shell: bash
+        run: python3 scripts/verify_brand_master.py
+
       - name: Verify Actions hardening
         shell: bash
         run: python3 scripts/verify_workflow_hardening.py
