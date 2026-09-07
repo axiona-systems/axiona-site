@@ -72,7 +72,7 @@ def public_url(prefix: str, route: str) -> str:
 
 
 def expected_image(lang: str, route: str) -> str:
-    stem = "axiona-keeper-social-preview-r92" if route == "keeper.html" else "axiona-social-preview-r92"
+    stem = "axiona-keeper-social-preview-r147" if route == "keeper.html" else "axiona-social-preview-r147"
     return f"{HOST}/assets/social/{stem}-{lang}.png"
 
 
@@ -138,13 +138,17 @@ def verify(root: Path) -> list[str]:
 
     for lang in LANGS:
         for keeper in (False, True):
-            stem = "axiona-keeper-social-preview-r92" if keeper else "axiona-social-preview-r92"
+            stem = "axiona-keeper-social-preview-r147" if keeper else "axiona-social-preview-r147"
             image_path = root / "assets" / "social" / f"{stem}-{lang}.png"
             dims = png_dimensions(image_path)
             if dims != (1200, 630):
                 errors.append(
                     f"social image asset mismatch: {image_path.relative_to(root).as_posix()} -> {dims or '<invalid>'}"
                 )
+
+    stale = sorted((root / "assets" / "social").glob("*r92-*.png"))
+    if stale:
+        errors.append("legacy R92 social card still present: " + ", ".join(path.name for path in stale))
 
     return errors
 
@@ -158,7 +162,7 @@ def main() -> int:
         for error in errors:
             print(f"STOP_AXIONA_SOCIAL_METADATA: {error}", file=sys.stderr)
         return 1
-    print("OK_AXIONA_SOCIAL_METADATA_R132")
+    print("OK_AXIONA_SOCIAL_METADATA_R147")
     return 0
 
 

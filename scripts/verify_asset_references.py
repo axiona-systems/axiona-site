@@ -55,7 +55,7 @@ if missing:
     for source, rel in missing:
         errors.append(f'{source}: missing local asset {rel}')
 
-for stale in ('assets/r135-ux-fixes.css', 'assets/r136-ux-fixes.css', 'assets/motion-r105.css', 'assets/motion-r108.css'):
+for stale in ('assets/r135-ux-fixes.css', 'assets/r136-ux-fixes.css', 'assets/motion-r105.css', 'assets/motion-r108.css', 'assets/axiona-mark.png'):
     if (ROOT / stale).exists():
         errors.append(f'stale compatibility asset still exists: {stale}')
 
@@ -73,6 +73,9 @@ for path in public_html:
             errors.append(f'{path}: {token} count={count}, expected={expected}')
     if 'r135-ux-fixes.css' in text or 'r136-ux-fixes.css' in text:
         errors.append(f'{path}: stale R135/R136 binding present')
+
+for stale_social in sorted(Path('assets/social').glob('*r92-*.png')):
+    errors.append(f'stale R92 social asset still exists: {stale_social.as_posix()}')
 
 manifest = Path('site.webmanifest').read_text(encoding='utf-8')
 for icon in ('/assets/brand/axiona-icon-192.png', '/assets/brand/axiona-icon-512.png'):
