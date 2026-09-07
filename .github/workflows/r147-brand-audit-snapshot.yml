@@ -18,19 +18,35 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           persist-credentials: false
-      - name: Upload current runtime identity assets
+      - name: Upload exact current public source
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
-          name: r147-current-brand-runtime
+          name: r147-current-site-source
           path: |
-            assets/axiona-mark.png
-            assets/brand/
-            assets/social/
+            404.html
+            *.html
+            en/
+            de/
+            assets/
+            scripts/
+            docs/
+            .github/workflows/
+            .axiona/
+            .well-known/
+            README.md
+            SECURITY.md
+            SUPPORT.md
+            CNAME
+            robots.txt
+            humans.txt
+            sitemap.xml
+            lighthouserc.json
+            site.webmanifest
             favicon.svg
             favicon-16x16.png
             favicon-32x32.png
             favicon.ico
             apple-touch-icon.png
-            site.webmanifest
+          include-hidden-files: true
           if-no-files-found: error
           retention-days: 1
