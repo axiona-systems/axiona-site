@@ -22,7 +22,7 @@ async function open(route, width, height) {
   return page;
 }
 
-async function verifyHeroReveal(route, expectedLabel, widths) {
+async function verifyHeroReveal(route, expectedLabel, widths, release) {
   const page = await open(route, 1440, 900);
   await page.waitForTimeout(5200);
 
@@ -39,11 +39,11 @@ async function verifyHeroReveal(route, expectedLabel, widths) {
     throw new Error(`${route}: hero tokenization mismatch`);
   }
 
-  const binding = await page.evaluate(() => ({
-    css: [...document.styleSheets].filter(sheet => (sheet.href || '').includes('/assets/visual-r116.css?release=R149')).length,
-    js: [...document.scripts].filter(script => (script.src || '').includes('/assets/js/overview-r116.js?release=R149')).length
-  }));
-  if (binding.css !== 1 || binding.js !== 1) throw new Error(`${route}: R149 hero asset binding ${JSON.stringify(binding)}`);
+  const binding = await page.evaluate((expectedRelease) => ({
+    css: [...document.styleSheets].filter(sheet => (sheet.href || '').includes(`/assets/visual-r116.css?release=${expectedRelease}`)).length,
+    js: [...document.scripts].filter(script => (script.src || '').includes(`/assets/js/overview-r116.js?release=${expectedRelease}`)).length
+  }), release);
+  if (binding.css !== 1 || binding.js !== 1) throw new Error(`${route}: ${release} hero asset binding ${JSON.stringify(binding)}`);
 
   const brokenWords = await words.evaluateAll(nodes => nodes.filter(word => {
     const tops = [...word.querySelectorAll('.ax-hero-char')].map(glyph => glyph.getBoundingClientRect().top);
@@ -161,9 +161,9 @@ try {
     await page.close();
   }
 
-  await verifyHeroReveal('/', 'Valódi problémára. Működő rendszer.', [390, 540, 760, 1024, 1280, 1440]);
-  await verifyHeroReveal('/en/', 'Real problem. Working system.', [390, 1440]);
-  await verifyHeroReveal('/de/', 'Reales Problem. Funktionierendes System.', [390, 1440]);
+  await verifyHeroReveal('/', 'Valódi problémára. Működő rendszer.', [390, 540, 760, 1024, 1280, 1440], 'R146');
+  await verifyHeroReveal('/en/', 'Real problem. Working system.', [390, 1440], 'R149');
+  await verifyHeroReveal('/de/', 'Reales Problem. Funktionierendes System.', [390, 1440], 'R149');
 
   {
     const page = await open('/', 1440, 900);
