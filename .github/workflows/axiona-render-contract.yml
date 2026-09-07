@@ -60,6 +60,12 @@ jobs:
           cat /tmp/axiona-render-http.log || true
           exit 1
 
+      - name: Verify exact local brand identity surface
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 scripts/verify_live_brand_surface.py --mode local
+
       - name: Verify route, navigation, geometry and motion contracts
         shell: bash
         env:
