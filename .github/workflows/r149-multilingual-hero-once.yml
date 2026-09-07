@@ -1,0 +1,178 @@
+name: R149 Multilingual Hero Patch Once
+
+on:
+  push:
+    branches: [feature/r149-multilingual-hero-reveal]
+    paths:
+      - ".github/workflows/r149-multilingual-hero-once.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Checkout feature branch
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: feature/r149-multilingual-hero-reveal
+          fetch-depth: 2
+
+      - name: Apply exact R149 multilingual hero patch
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD^)" = "2afda20ed9b7f1eea09f85073e4fddb7d8d324f8"
+          python3 - <<'PY'
+          from pathlib import Path
+
+          def exact(path, old, new, count=1):
+              p = Path(path)
+              text = p.read_text(encoding='utf-8')
+              actual = text.count(old)
+              if actual != count:
+                  raise SystemExit(f'STOP_R149_EXACT path={path} expected={count} actual={actual} old={old!r}')
+              p.write_text(text.replace(old, new), encoding='utf-8')
+
+          # Shared hero runtime: remove the HU-only id assumption.
+          exact(
+              'assets/js/overview-r116.js',
+              '/* AXIONA R146 — solution-first one-shot hero reveal with fitted second line. */',
+              '/* AXIONA R149 — localized one-shot hero reveal with fitted second line. */'
+          )
+          exact(
+              'assets/js/overview-r116.js',
+              "  const heading = document.getElementById('ax112-hero-title');",
+              "  const heading = document.querySelector('body.page-overview .ax112-hero h1[id^=\"ax112-hero-title\"]');"
+          )
+
+          # Shared CSS: bind the same reveal contract to HU/EN/DE hero ids.
+          css = Path('assets/visual-r116.css')
+          text = css.read_text(encoding='utf-8')
+          old_comment = '/* R146 — slower one-shot reveal with a single fitted solution line. */'
+          if text.count(old_comment) != 1:
+              raise SystemExit('STOP_R149_CSS_COMMENT')
+          text = text.replace(old_comment, '/* R149 — localized one-shot reveal with a single fitted solution line. */')
+          old_selector = 'body.page-overview #ax112-hero-title'
+          if text.count(old_selector) != 7:
+              raise SystemExit(f'STOP_R149_CSS_SELECTOR count={text.count(old_selector)}')
+          text = text.replace(old_selector, 'body.page-overview .ax112-hero h1[id^="ax112-hero-title"]')
+          if text.count('ax-r146-hero-character-in') != 2:
+              raise SystemExit('STOP_R149_CSS_KEYFRAME')
+          text = text.replace('ax-r146-hero-character-in', 'ax-r149-hero-character-in')
+          css.write_text(text, encoding='utf-8')
+
+          # All three overview pages must request the same new asset version.
+          exact('index.html', '/assets/visual-r116.css?release=R146', '/assets/visual-r116.css?release=R149')
+          exact('index.html', '/assets/js/overview-r116.js?release=R146', '/assets/js/overview-r116.js?release=R149')
+          for path in ('en/index.html', 'de/index.html'):
+              exact(path, '/assets/visual-r116.css?release=R116', '/assets/visual-r116.css?release=R149')
+              exact(path, '/assets/js/overview-r116.js?release=R116', '/assets/js/overview-r116.js?release=R149')
+
+          # Existing HU assertions move to the R149 cache binding.
+          render = Path('scripts/verify_render_contract.mjs')
+          text = render.read_text(encoding='utf-8')
+          for old, new, count in (
+              ('r146Css', 'r149Css', 2),
+              ('r146Js', 'r149Js', 2),
+              ('/assets/visual-r116.css?release=R146', '/assets/visual-r116.css?release=R149', 1),
+              ('/assets/js/overview-r116.js?release=R146', '/assets/js/overview-r116.js?release=R149', 1),
+              ('overview: R146 asset binding', 'overview: R149 asset binding', 1),
+          ):
+              actual = text.count(old)
+              if actual != count:
+                  raise SystemExit(f'STOP_R149_RENDER_REPLACE old={old!r} expected={count} actual={actual}')
+              text = text.replace(old, new)
+
+          anchor = "  {\n    const page = await open('/', 1440, 900);\n"
+          if text.count(anchor) != 1:
+              raise SystemExit('STOP_R149_RENDER_ANCHOR')
+          localized_proof = r'''  for (const [route, expectedLabel] of [
+    ['/en/', 'Real problem. Working system.'],
+    ['/de/', 'Reales Problem. Funktionierendes System.']
+  ]) {
+    const page = await open(route, 1440, 900);
+    await page.waitForTimeout(5200);
+    const hero = await page.evaluate(() => {
+      const heading = document.querySelector('body.page-overview .ax112-hero h1[id^="ax112-hero-title"]');
+      if (!heading) return null;
+      const glyphs = [...heading.querySelectorAll('.ax-hero-char')];
+      const words = [...heading.querySelectorAll('.ax-hero-word')];
+      const secondLine = heading.querySelector(':scope > .ax-hero-second-line');
+      const secondTops = secondLine ? [...secondLine.querySelectorAll('.ax-hero-char')].map(glyph => glyph.getBoundingClientRect().top) : [];
+      const styles = [...document.styleSheets].map(sheet => sheet.href || '');
+      const scripts = [...document.scripts].map(script => script.src || '');
+      return {
+        state: heading.dataset.axHeroType || '',
+        label: heading.getAttribute('aria-label') || '',
+        glyphs: glyphs.length,
+        words: words.length,
+        secondLineRows: secondTops.length ? Math.max(...secondTops) - Math.min(...secondTops) : 999,
+        secondLineOverflow: secondLine ? secondLine.scrollWidth - secondLine.clientWidth : 999,
+        secondLineFit: secondLine?.dataset.axHeroFit || '',
+        r149Css: styles.filter(url => url.includes('/assets/visual-r116.css?release=R149')).length,
+        r149Js: scripts.filter(url => url.includes('/assets/js/overview-r116.js?release=R149')).length,
+        iterations: [...new Set(glyphs.map(glyph => getComputedStyle(glyph).animationIterationCount))],
+        hiddenGlyphs: glyphs.filter(glyph => Number.parseFloat(getComputedStyle(glyph).opacity) < .99).length,
+        runningAnimations: glyphs.flatMap(glyph => glyph.getAnimations()).filter(animation => animation.playState === 'running').length
+      };
+    });
+    const expectedGlyphs = Array.from(expectedLabel.replace(/\s/gu, '')).length;
+    if (!hero || hero.state !== 'complete' || hero.label !== expectedLabel || hero.glyphs !== expectedGlyphs || hero.words !== 4) {
+      throw new Error(`${route}: localized hero reveal structure ${JSON.stringify(hero)}`);
+    }
+    if (hero.secondLineRows > 1 || hero.secondLineOverflow > 2 || !['native', 'scaled'].includes(hero.secondLineFit)) {
+      throw new Error(`${route}: localized hero solution line fit ${JSON.stringify(hero)}`);
+    }
+    if (hero.r149Css !== 1 || hero.r149Js !== 1 || hero.iterations.length !== 1 || hero.iterations[0] !== '1' || hero.hiddenGlyphs !== 0 || hero.runningAnimations !== 0) {
+      throw new Error(`${route}: localized hero reveal did not settle once ${JSON.stringify(hero)}`);
+    }
+
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.waitForTimeout(180);
+    const mobileFit = await page.evaluate(() => {
+      const secondLine = document.querySelector('body.page-overview .ax112-hero h1[id^="ax112-hero-title"] > .ax-hero-second-line');
+      if (!secondLine) return null;
+      const tops = [...secondLine.querySelectorAll('.ax-hero-char')].map(glyph => glyph.getBoundingClientRect().top);
+      return {
+        rows: tops.length ? Math.max(...tops) - Math.min(...tops) : 999,
+        overflow: secondLine.scrollWidth - secondLine.clientWidth,
+        fit: secondLine.dataset.axHeroFit || ''
+      };
+    });
+    if (!mobileFit || mobileFit.rows > 1 || mobileFit.overflow > 2 || !['native', 'scaled'].includes(mobileFit.fit)) {
+      throw new Error(`${route}: localized mobile hero fit ${JSON.stringify(mobileFit)}`);
+    }
+
+    await page.waitForTimeout(800);
+    const settled = await page.evaluate(() => {
+      const heading = document.querySelector('body.page-overview .ax112-hero h1[id^="ax112-hero-title"]');
+      const glyphs = heading ? [...heading.querySelectorAll('.ax-hero-char')] : [];
+      return {
+        state: heading?.dataset.axHeroType || '',
+        runningAnimations: glyphs.flatMap(glyph => glyph.getAnimations()).filter(animation => animation.playState === 'running').length
+      };
+    });
+    if (settled.state !== 'complete' || settled.runningAnimations !== 0) {
+      throw new Error(`${route}: localized hero reveal restarted ${JSON.stringify(settled)}`);
+    }
+    console.log(`OK_AXIONA_LOCALIZED_HERO_REVEAL_ONCE route=${route}`);
+    await page.close();
+  }
+
+'''
+          text = text.replace(anchor, localized_proof + anchor)
+          render.write_text(text, encoding='utf-8')
+          PY
+
+          # No helper artifacts may survive into the final feature commit.
+          git rm .github/workflows/r149-multilingual-hero-once.yml
+          git diff --check
+          git status --short
+          git config user.name "Zoltán Asztalos"
+          git config user.email "254342788+fakukac1980@users.noreply.github.com"
+          git add assets/js/overview-r116.js assets/visual-r116.css index.html en/index.html de/index.html scripts/verify_render_contract.mjs
+          git commit -m "R149: enable hero reveal on all locales"
+          git push origin HEAD:feature/r149-multilingual-hero-reveal
