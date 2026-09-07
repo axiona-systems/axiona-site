@@ -1,6 +1,6 @@
-/* AXIONA R146 — solution-first one-shot hero reveal with fitted second line. */
+/* AXIONA R149 — localized one-shot hero reveal with fitted second line. */
 (() => {
-  const heading = document.getElementById('ax112-hero-title');
+  const heading = document.querySelector('body.page-overview .ax112-hero h1[id^="ax112-hero-title"]');
   if (!heading || heading.dataset.axHeroType) return;
 
   const firstLine = [...heading.childNodes].find((node) =>

@@ -99,6 +99,61 @@ try {
     await page.close();
   }
 
+  for (const [route, expectedLabel] of [['/en/', 'Real problem. Working system.'], ['/de/', 'Reales Problem. Funktionierendes System.']]) {
+    const page = await open(route, 1440, 900);
+    await page.waitForTimeout(5200);
+    const hero = await page.evaluate(() => {
+      const heading = document.querySelector('body.page-overview .ax112-hero h1[id^=\"ax112-hero-title\"]');
+      if (!heading) return null;
+      const glyphs = [...heading.querySelectorAll('.ax-hero-char')];
+      const secondLine = heading.querySelector(':scope > .ax-hero-second-line');
+      const tops = secondLine ? [...secondLine.querySelectorAll('.ax-hero-char')].map(glyph => glyph.getBoundingClientRect().top) : [];
+      const styles = [...document.styleSheets].map(sheet => sheet.href || '');
+      const scripts = [...document.scripts].map(script => script.src || '');
+      return {
+        state: heading.dataset.axHeroType || '',
+        label: heading.getAttribute('aria-label') || '',
+        glyphs: glyphs.length,
+        rows: tops.length ? Math.max(...tops) - Math.min(...tops) : 999,
+        overflow: secondLine ? secondLine.scrollWidth - secondLine.clientWidth : 999,
+        fit: secondLine?.dataset.axHeroFit || '',
+        css: styles.filter(url => url.includes('/assets/visual-r116.css?release=R149')).length,
+        js: scripts.filter(url => url.includes('/assets/js/overview-r116.js?release=R149')).length,
+        hidden: glyphs.filter(glyph => Number.parseFloat(getComputedStyle(glyph).opacity) < .99).length,
+        running: glyphs.flatMap(glyph => glyph.getAnimations()).filter(animation => animation.playState === 'running').length,
+        iterations: [...new Set(glyphs.map(glyph => getComputedStyle(glyph).animationIterationCount))]
+      };
+    });
+    const expectedGlyphs = Array.from(expectedLabel.replace(/\s/gu, '')).length;
+    if (!hero || hero.state !== 'complete' || hero.label !== expectedLabel || hero.glyphs !== expectedGlyphs) {
+      throw new Error(`${route}: localized hero reveal structure ${JSON.stringify(hero)}`);
+    }
+    if (hero.rows > 1 || hero.overflow > 2 || !['native', 'scaled'].includes(hero.fit) || hero.css !== 1 || hero.js !== 1) {
+      throw new Error(`${route}: localized hero binding/fit ${JSON.stringify(hero)}`);
+    }
+    if (hero.hidden !== 0 || hero.running !== 0 || hero.iterations.length !== 1 || hero.iterations[0] !== '1') {
+      throw new Error(`${route}: localized hero did not settle once ${JSON.stringify(hero)}`);
+    }
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.waitForTimeout(180);
+    const mobile = await page.evaluate(() => {
+      const secondLine = document.querySelector('body.page-overview .ax112-hero h1[id^=\"ax112-hero-title\"] > .ax-hero-second-line');
+      if (!secondLine) return null;
+      const tops = [...secondLine.querySelectorAll('.ax-hero-char')].map(glyph => glyph.getBoundingClientRect().top);
+      return { rows: tops.length ? Math.max(...tops) - Math.min(...tops) : 999, overflow: secondLine.scrollWidth - secondLine.clientWidth };
+    });
+    if (!mobile || mobile.rows > 1 || mobile.overflow > 2) throw new Error(`${route}: localized mobile hero fit ${JSON.stringify(mobile)}`);
+    await page.waitForTimeout(800);
+    const settled = await page.evaluate(() => {
+      const heading = document.querySelector('body.page-overview .ax112-hero h1[id^=\"ax112-hero-title\"]');
+      const glyphs = heading ? [...heading.querySelectorAll('.ax-hero-char')] : [];
+      return { state: heading?.dataset.axHeroType || '', running: glyphs.flatMap(glyph => glyph.getAnimations()).filter(animation => animation.playState === 'running').length };
+    });
+    if (settled.state !== 'complete' || settled.running !== 0) throw new Error(`${route}: localized hero restarted ${JSON.stringify(settled)}`);
+    console.log(`OK_AXIONA_LOCALIZED_HERO_REVEAL_ONCE route=${route}`);
+    await page.close();
+  }
+
   {
     const page = await open('/', 1440, 900);
 
@@ -125,8 +180,8 @@ try {
         secondLineRows: secondTops.length ? Math.max(...secondTops) - Math.min(...secondTops) : 999,
         secondLineOverflow: secondLine ? secondLine.scrollWidth - secondLine.clientWidth : 999,
         secondLineFit: secondLine?.dataset.axHeroFit || '',
-        r146Css: styles.filter(url => url.includes('/assets/visual-r116.css?release=R146')).length,
-        r146Js: scripts.filter(url => url.includes('/assets/js/overview-r116.js?release=R146')).length,
+        r149Css: styles.filter(url => url.includes('/assets/visual-r116.css?release=R149')).length,
+        r149Js: scripts.filter(url => url.includes('/assets/js/overview-r116.js?release=R149')).length,
         iterations: [...new Set(glyphs.map(glyph => getComputedStyle(glyph).animationIterationCount))],
         hiddenGlyphs: glyphs.filter(glyph => Number.parseFloat(getComputedStyle(glyph).opacity) < .99).length,
         runningAnimations: glyphs.flatMap(glyph => glyph.getAnimations()).filter(animation => animation.playState === 'running').length
@@ -138,8 +193,8 @@ try {
     if (heroType.secondLineRows > 1 || heroType.secondLineOverflow > 2 || !['native', 'scaled'].includes(heroType.secondLineFit)) {
       throw new Error(`overview: hero solution line fit ${JSON.stringify(heroType)}`);
     }
-    if (heroType.r146Css !== 1 || heroType.r146Js !== 1) {
-      throw new Error(`overview: R146 asset binding ${JSON.stringify(heroType)}`);
+    if (heroType.r149Css !== 1 || heroType.r149Js !== 1) {
+      throw new Error(`overview: R149 asset binding ${JSON.stringify(heroType)}`);
     }
     if (heroType.iterations.length !== 1 || heroType.iterations[0] !== '1' || heroType.hiddenGlyphs !== 0 || heroType.runningAnimations !== 0) {
       throw new Error(`overview: hero character reveal did not settle once ${JSON.stringify(heroType)}`);
