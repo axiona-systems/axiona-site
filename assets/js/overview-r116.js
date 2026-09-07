@@ -1,7 +1,12 @@
-/* AXIONA R146 — solution-first one-shot hero reveal with fitted second line. */
+/* AXIONA R149 — localized one-shot hero reveal with canonical hero binding. */
 (() => {
-  const heading = document.getElementById('ax112-hero-title');
+  const heading = document.querySelector('body.page-overview .ax112-hero h1[id^="ax112-hero-title"]');
   if (!heading || heading.dataset.axHeroType) return;
+
+  if (heading.id !== 'ax112-hero-title') {
+    heading.id = 'ax112-hero-title';
+    heading.closest('.ax112-hero')?.setAttribute('aria-labelledby', 'ax112-hero-title');
+  }
 
   const firstLine = [...heading.childNodes].find((node) =>
     node.nodeType === Node.TEXT_NODE && node.textContent.trim()
