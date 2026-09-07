@@ -1,18 +1,21 @@
 #!/usr/bin/env python3
-"""Verify the deployed AXIONA brand surface against the exact checked-out source."""
+"""Verify the AXIONA R147 brand surface against the exact checked-out source."""
 from __future__ import annotations
 
 import argparse
 import hashlib
+import http.client
+import ssl
 import time
-import urllib.error
-import urllib.request
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 HEADER = "/assets/brand/axiona-horizontal-fullcolor.svg"
 FOOTER = "/assets/brand/axiona-horizontal-monochrome-white.svg"
 SYMBOL = "/assets/brand/axiona-symbol-fullcolor.svg"
+LIVE_HOST = "axiona.systems"
+LOCAL_HOST = "127.0.0.1"
+LOCAL_PORT = 4176
 
 ROOT_ROUTES = (
     "/",
@@ -74,32 +77,42 @@ def local_bytes(route: str) -> bytes:
     return path.read_bytes()
 
 
-def fetch(base: str, route: str, key: str, *, expected_status: int = 200) -> bytes:
-    separator = "&" if "?" in route else "?"
-    url = f"{base.rstrip('/')}{route}{separator}axiona_verify={key}"
-    request = urllib.request.Request(
-        url,
-        headers={
-            "Cache-Control": "no-cache",
-            "Pragma": "no-cache",
-            "User-Agent": "AXIONA-Pages-Brand-Verifier/1.0",
-        },
-    )
+def new_connection(mode: str) -> http.client.HTTPConnection:
+    if mode == "live":
+        return http.client.HTTPSConnection(
+            LIVE_HOST,
+            443,
+            timeout=15,
+            context=ssl.create_default_context(),
+        )
+    return http.client.HTTPConnection(LOCAL_HOST, LOCAL_PORT, timeout=15)
+
+
+def fetch(mode: str, route: str, key: str, *, expected_status: int = 200) -> bytes:
+    target = f"{route}?axiona_verify={key}"
     last_error: Exception | None = None
     for attempt in range(1, 4):
+        connection = new_connection(mode)
         try:
-            with urllib.request.urlopen(request, timeout=15) as response:
-                status = response.getcode()
-                body = response.read()
+            connection.request(
+                "GET",
+                target,
+                headers={
+                    "Cache-Control": "no-cache",
+                    "Pragma": "no-cache",
+                    "User-Agent": "AXIONA-Pages-Brand-Verifier/1.1",
+                },
+            )
+            response = connection.getresponse()
+            status = response.status
+            body = response.read()
             if status != expected_status:
                 raise RuntimeError(f"status={status} expected={expected_status}")
             return body
-        except urllib.error.HTTPError as exc:
-            if exc.code == expected_status:
-                return exc.read()
-            last_error = exc
         except Exception as exc:  # noqa: BLE001 - network boundary is intentionally broad
             last_error = exc
+        finally:
+            connection.close()
         if attempt < 3:
             time.sleep(1)
     fail(f"fetch failed: {route}: {last_error}")
@@ -120,9 +133,9 @@ def expected_social(route: str) -> str | None:
     return f"/assets/social/{stem}-{locale}.png"
 
 
-def verify_html(base: str, key: str) -> None:
+def verify_html(mode: str, key: str) -> None:
     for route in PUBLIC_ROUTES:
-        html = fetch(base, route, key).decode("utf-8", errors="strict")
+        html = fetch(mode, route, key).decode("utf-8", errors="strict")
         if f'src="{HEADER}"' not in html:
             fail(f"header brand missing: {route}")
         if f'src="{FOOTER}"' not in html:
@@ -143,10 +156,10 @@ def verify_html(base: str, key: str) -> None:
     print(f"OK_AXIONA_LIVE_BRAND_HTML routes={len(PUBLIC_ROUTES)}")
 
 
-def verify_asset_bytes(base: str, key: str) -> None:
+def verify_asset_bytes(mode: str, key: str) -> None:
     for route in ACTIVE_ASSETS:
         expected = local_bytes(route)
-        actual = fetch(base, route, key)
+        actual = fetch(mode, route, key)
         expected_hash = hashlib.sha256(expected).hexdigest()
         actual_hash = hashlib.sha256(actual).hexdigest()
         if actual_hash != expected_hash:
@@ -154,22 +167,22 @@ def verify_asset_bytes(base: str, key: str) -> None:
     print(f"OK_AXIONA_LIVE_BRAND_ASSET_HASHES assets={len(ACTIVE_ASSETS)}")
 
 
-def verify_stale_absent(base: str, key: str) -> None:
+def verify_stale_absent(mode: str, key: str) -> None:
     for route in STALE_ASSETS:
-        fetch(base, route, key, expected_status=404)
+        fetch(mode, route, key, expected_status=404)
     print(f"OK_AXIONA_LIVE_BRAND_STALE_ABSENT assets={len(STALE_ASSETS)}")
 
 
 def main() -> int:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--base", default="https://axiona.systems")
-    parser.add_argument("--cache-key", required=True)
+    parser.add_argument("--mode", choices=("local", "live"), required=True)
     args = parser.parse_args()
+    key = f"r147-{time.time_ns()}"
 
-    verify_html(args.base, args.cache_key)
-    verify_asset_bytes(args.base, args.cache_key)
-    verify_stale_absent(args.base, args.cache_key)
-    print("AXIONA_LIVE_BRAND_SURFACE=PASS")
+    verify_html(args.mode, key)
+    verify_asset_bytes(args.mode, key)
+    verify_stale_absent(args.mode, key)
+    print(f"AXIONA_LIVE_BRAND_SURFACE=PASS mode={args.mode}")
     return 0
 
 
