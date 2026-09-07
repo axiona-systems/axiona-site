@@ -52,14 +52,15 @@ jobs:
           from pathlib import Path
           import base64, zlib
           raw = ''.join(Path('scripts/r147-migration-payload.b64').read_text().split())
-          Path('/tmp/r147_migrate.py').write_bytes(zlib.decompress(base64.b64decode(raw)))
+          Path('scripts/r147_migrate.py').write_bytes(zlib.decompress(base64.b64decode(raw)))
           PY
-          python /tmp/r147_migrate.py --brand-dist /tmp/axiona-brand-dist
+          python scripts/r147_migrate.py --brand-dist /tmp/axiona-brand-dist
 
       - name: Remove one-shot migration machinery
         run: |
           set -euo pipefail
           git rm .github/workflows/r147-brand-runtime-migration-once.yml scripts/r147-migration-payload.b64
+          rm -f scripts/r147_migrate.py
 
       - name: Verify final candidate before commit
         run: |
