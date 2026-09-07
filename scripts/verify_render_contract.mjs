@@ -42,7 +42,11 @@ try {
           distance: root.getPropertyValue('--ax-r141-reveal-y').trim(),
           duration: root.getPropertyValue('--ax-r141-reveal-transform-duration').trim(),
           activeNav: document.querySelectorAll('.topbar nav a.active').length,
-          activeAfter: active ? getComputedStyle(active, '::after').display : null
+          activeAfter: active ? getComputedStyle(active, '::after').display : null,
+          brandSrc: document.querySelector('.brand img')?.getAttribute('src') || '',
+          brandWidth: document.querySelector('.brand img')?.getBoundingClientRect().width || 0,
+          footerBrandSrc: document.querySelector('.footer-brand img')?.getAttribute('src') || '',
+          footerBrandWidth: document.querySelector('.footer-brand img')?.getBoundingClientRect().width || 0
         };
       });
 
@@ -50,6 +54,13 @@ try {
       if (result.scrollWidth > result.clientWidth + 2) throw new Error(`${route} ${label}: horizontal overflow ${result.scrollWidth}/${result.clientWidth}`);
       if (result.r137 !== 1 || result.motionCss !== 1 || result.motionJs !== 1 || result.stale !== 0) {
         throw new Error(`${route} ${label}: canonical binding mismatch ${JSON.stringify(result)}`);
+      }
+      if (result.brandSrc !== '/assets/brand/axiona-horizontal-fullcolor.svg' || result.footerBrandSrc !== '/assets/brand/axiona-horizontal-monochrome-white.svg') {
+        throw new Error(`${route} ${label}: brand lockup binding mismatch ${JSON.stringify(result)}`);
+      }
+      const expectedBrandWidth = label === 'mobile' ? 168 : 200;
+      if (Math.abs(result.brandWidth - expectedBrandWidth) > 2 || Math.abs(result.footerBrandWidth - 210) > 2) {
+        throw new Error(`${route} ${label}: brand lockup geometry mismatch ${JSON.stringify(result)}`);
       }
       if (label === 'desktop' && (result.distance !== '7px' || result.duration !== '900ms')) {
         throw new Error(`${route}: desktop motion tuning ${result.distance}/${result.duration}`);
