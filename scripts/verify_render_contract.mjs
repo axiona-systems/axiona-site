@@ -22,64 +22,65 @@ async function open(route, width, height) {
   return page;
 }
 
-async function verifyLocalizedHero(route, expectedLabel) {
+async function verifyHeroReveal(route, expectedLabel, widths) {
   const page = await open(route, 1440, 900);
   await page.waitForTimeout(5200);
 
   const heading = page.locator('body.page-overview .ax112-hero h1[id^="ax112-hero-title"]');
-  if (await heading.count() !== 1) throw new Error(`${route}: localized hero heading missing`);
-  if (await heading.getAttribute('data-ax-hero-type') !== 'complete') {
-    throw new Error(`${route}: localized hero did not complete`);
-  }
-  if (await heading.getAttribute('aria-label') !== expectedLabel) {
-    throw new Error(`${route}: localized hero accessible label mismatch`);
-  }
+  if (await heading.count() !== 1) throw new Error(`${route}: hero heading missing`);
+  if (await heading.getAttribute('data-ax-hero-type') !== 'complete') throw new Error(`${route}: hero reveal did not complete`);
+  if (await heading.getAttribute('aria-label') !== expectedLabel) throw new Error(`${route}: hero accessible label mismatch`);
 
   const glyphs = heading.locator('.ax-hero-char');
+  const words = heading.locator('.ax-hero-word');
   const expectedGlyphs = Array.from(expectedLabel.replace(/\s/gu, '')).length;
-  if (await glyphs.count() !== expectedGlyphs) {
-    throw new Error(`${route}: localized hero glyph count mismatch`);
+  const expectedWords = expectedLabel.trim().split(/\s+/u).length;
+  if (await glyphs.count() !== expectedGlyphs || await words.count() !== expectedWords) {
+    throw new Error(`${route}: hero tokenization mismatch`);
   }
 
-  const assetBinding = await page.evaluate(() => ({
+  const binding = await page.evaluate(() => ({
     css: [...document.styleSheets].filter(sheet => (sheet.href || '').includes('/assets/visual-r116.css?release=R149')).length,
     js: [...document.scripts].filter(script => (script.src || '').includes('/assets/js/overview-r116.js?release=R149')).length
   }));
-  if (assetBinding.css !== 1 || assetBinding.js !== 1) {
-    throw new Error(`${route}: localized R149 asset binding ${JSON.stringify(assetBinding)}`);
-  }
+  if (binding.css !== 1 || binding.js !== 1) throw new Error(`${route}: R149 hero asset binding ${JSON.stringify(binding)}`);
+
+  const brokenWords = await words.evaluateAll(nodes => nodes.filter(word => {
+    const tops = [...word.querySelectorAll('.ax-hero-char')].map(glyph => glyph.getBoundingClientRect().top);
+    return tops.length > 1 && Math.max(...tops) - Math.min(...tops) > 1;
+  }).length);
+  if (brokenWords !== 0) throw new Error(`${route}: hero word split count=${brokenWords}`);
 
   const secondLine = heading.locator(':scope > .ax-hero-second-line');
-  const assertSecondLine = async label => {
+  for (const width of widths) {
+    await page.setViewportSize({ width, height: width <= 640 ? 844 : 900 });
+    await page.waitForTimeout(180);
     const fit = await secondLine.evaluate(element => {
       const tops = [...element.querySelectorAll('.ax-hero-char')].map(glyph => glyph.getBoundingClientRect().top);
       return {
         rows: tops.length ? Math.max(...tops) - Math.min(...tops) : 999,
         overflow: element.scrollWidth - element.clientWidth,
-        fit: element.dataset.axHeroFit || ''
+        fit: element.dataset.axHeroFit || '',
+        fontSize: getComputedStyle(element).fontSize
       };
     });
     if (fit.rows > 1 || fit.overflow > 2 || !['native', 'scaled'].includes(fit.fit)) {
-      throw new Error(`${route}: localized hero ${label} fit ${JSON.stringify(fit)}`);
+      throw new Error(`${route}: hero second line width=${width} ${JSON.stringify(fit)}`);
     }
-  };
+    console.log(`OK_AXIONA_HERO_SECOND_LINE route=${route} width=${width} fit=${fit.fit} font=${fit.fontSize}`);
+  }
 
-  await assertSecondLine('desktop');
-  await page.setViewportSize({ width: 390, height: 844 });
-  await page.waitForTimeout(180);
-  await assertSecondLine('mobile');
   await page.waitForTimeout(800);
-
   const settled = await glyphs.evaluateAll(nodes => ({
     hidden: nodes.filter(node => Number.parseFloat(getComputedStyle(node).opacity) < .99).length,
     running: nodes.flatMap(node => node.getAnimations()).filter(animation => animation.playState === 'running').length,
     iterations: [...new Set(nodes.map(node => getComputedStyle(node).animationIterationCount))]
   }));
   if (settled.hidden !== 0 || settled.running !== 0 || settled.iterations.length !== 1 || settled.iterations[0] !== '1') {
-    throw new Error(`${route}: localized hero did not settle once ${JSON.stringify(settled)}`);
+    throw new Error(`${route}: hero reveal did not settle once ${JSON.stringify(settled)}`);
   }
 
-  console.log(`OK_AXIONA_LOCALIZED_HERO_REVEAL_ONCE route=${route}`);
+  console.log(`OK_AXIONA_HERO_CHARACTER_REVEAL_ONCE route=${route}`);
   await page.close();
 }
 
@@ -160,89 +161,12 @@ try {
     await page.close();
   }
 
-  await verifyLocalizedHero('/en/', 'Real problem. Working system.');
-  await verifyLocalizedHero('/de/', 'Reales Problem. Funktionierendes System.');
+  await verifyHeroReveal('/', 'Valódi problémára. Működő rendszer.', [390, 540, 760, 1024, 1280, 1440]);
+  await verifyHeroReveal('/en/', 'Real problem. Working system.', [390, 1440]);
+  await verifyHeroReveal('/de/', 'Reales Problem. Funktionierendes System.', [390, 1440]);
 
   {
     const page = await open('/', 1440, 900);
-
-    await page.waitForTimeout(4500);
-    const heroType = await page.evaluate(() => {
-      const heading = document.getElementById('ax112-hero-title');
-      if (!heading) return null;
-      const glyphs = [...heading.querySelectorAll('.ax-hero-char')];
-      const words = [...heading.querySelectorAll('.ax-hero-word')];
-      const secondLine = heading.querySelector(':scope > .ax-hero-second-line');
-      const brokenWords = words.filter(word => {
-        const tops = [...word.querySelectorAll('.ax-hero-char')].map(glyph => glyph.getBoundingClientRect().top);
-        return tops.length > 1 && Math.max(...tops) - Math.min(...tops) > 1;
-      }).length;
-      const secondTops = secondLine ? [...secondLine.querySelectorAll('.ax-hero-char')].map(glyph => glyph.getBoundingClientRect().top) : [];
-      const styles = [...document.styleSheets].map(sheet => sheet.href || '');
-      const scripts = [...document.scripts].map(script => script.src || '');
-      return {
-        state: heading.dataset.axHeroType || '',
-        label: heading.getAttribute('aria-label') || '',
-        glyphs: glyphs.length,
-        words: words.length,
-        brokenWords,
-        secondLineRows: secondTops.length ? Math.max(...secondTops) - Math.min(...secondTops) : 999,
-        secondLineOverflow: secondLine ? secondLine.scrollWidth - secondLine.clientWidth : 999,
-        secondLineFit: secondLine?.dataset.axHeroFit || '',
-        r149Css: styles.filter(url => url.includes('/assets/visual-r116.css?release=R149')).length,
-        r149Js: scripts.filter(url => url.includes('/assets/js/overview-r116.js?release=R149')).length,
-        iterations: [...new Set(glyphs.map(glyph => getComputedStyle(glyph).animationIterationCount))],
-        hiddenGlyphs: glyphs.filter(glyph => Number.parseFloat(getComputedStyle(glyph).opacity) < .99).length,
-        runningAnimations: glyphs.flatMap(glyph => glyph.getAnimations()).filter(animation => animation.playState === 'running').length
-      };
-    });
-    if (!heroType || heroType.state !== 'complete' || heroType.label !== 'Valódi problémára. Működő rendszer.' || heroType.glyphs !== 32 || heroType.words !== 4 || heroType.brokenWords !== 0) {
-      throw new Error(`overview: hero character reveal structure ${JSON.stringify(heroType)}`);
-    }
-    if (heroType.secondLineRows > 1 || heroType.secondLineOverflow > 2 || !['native', 'scaled'].includes(heroType.secondLineFit)) {
-      throw new Error(`overview: hero solution line fit ${JSON.stringify(heroType)}`);
-    }
-    if (heroType.r149Css !== 1 || heroType.r149Js !== 1) {
-      throw new Error(`overview: R149 asset binding ${JSON.stringify(heroType)}`);
-    }
-    if (heroType.iterations.length !== 1 || heroType.iterations[0] !== '1' || heroType.hiddenGlyphs !== 0 || heroType.runningAnimations !== 0) {
-      throw new Error(`overview: hero character reveal did not settle once ${JSON.stringify(heroType)}`);
-    }
-
-    for (const width of [390, 540, 760, 1024, 1280, 1440]) {
-      await page.setViewportSize({ width, height: 900 });
-      await page.waitForTimeout(160);
-      const lineFit = await page.evaluate(() => {
-        const heading = document.getElementById('ax112-hero-title');
-        const secondLine = heading?.querySelector(':scope > .ax-hero-second-line');
-        if (!secondLine) return null;
-        const tops = [...secondLine.querySelectorAll('.ax-hero-char')].map(glyph => glyph.getBoundingClientRect().top);
-        return {
-          rowDelta: tops.length ? Math.max(...tops) - Math.min(...tops) : 999,
-          overflow: secondLine.scrollWidth - secondLine.clientWidth,
-          fit: secondLine.dataset.axHeroFit || '',
-          fontSize: getComputedStyle(secondLine).fontSize
-        };
-      });
-      if (!lineFit || lineFit.rowDelta > 1 || lineFit.overflow > 2 || !['native', 'scaled'].includes(lineFit.fit)) {
-        throw new Error(`overview: hero second line width=${width} ${JSON.stringify(lineFit)}`);
-      }
-      console.log(`OK_AXIONA_HERO_SECOND_LINE width=${width} fit=${lineFit.fit} font=${lineFit.fontSize}`);
-    }
-
-    await page.waitForTimeout(800);
-    const heroStillSettled = await page.evaluate(() => {
-      const heading = document.getElementById('ax112-hero-title');
-      const glyphs = heading ? [...heading.querySelectorAll('.ax-hero-char')] : [];
-      return {
-        state: heading?.dataset.axHeroType || '',
-        runningAnimations: glyphs.flatMap(glyph => glyph.getAnimations()).filter(animation => animation.playState === 'running').length
-      };
-    });
-    if (heroStillSettled.state !== 'complete' || heroStillSettled.runningAnimations !== 0) {
-      throw new Error(`overview: hero character reveal restarted ${JSON.stringify(heroStillSettled)}`);
-    }
-    console.log('OK_AXIONA_HERO_CHARACTER_REVEAL_ONCE');
 
     const nodes = page.locator('[data-ax112-reveal]');
     const count = await nodes.count();
