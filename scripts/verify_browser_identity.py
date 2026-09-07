@@ -133,8 +133,8 @@ def verify(root: Path) -> list[str]:
                     errors.append(f"browser identity manifest mismatch: {key}={manifest.get(key)!r}, expected {value!r}")
             icons = manifest.get("icons")
             expected_icons = [
-                {"src": "/assets/brand/axiona-icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any"},
-                {"src": "/assets/brand/axiona-icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any"},
+                {"src": "/assets/brand/axiona-icon-192.png?release=R148", "sizes": "192x192", "type": "image/png", "purpose": "any"},
+                {"src": "/assets/brand/axiona-icon-512.png?release=R148", "sizes": "512x512", "type": "image/png", "purpose": "any"},
             ]
             if icons != expected_icons:
                 errors.append("browser identity manifest icon contract mismatch")
@@ -151,7 +151,7 @@ def main() -> int:
         for error in errors:
             print(f"STOP_AXIONA_BROWSER_IDENTITY: {error}", file=sys.stderr)
         return 1
-    print("OK_AXIONA_BROWSER_IDENTITY_R134=31")
+    print("OK_AXIONA_BROWSER_IDENTITY_R148=31")
     return 0
 
 
