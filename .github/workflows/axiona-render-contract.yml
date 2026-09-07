@@ -64,9 +64,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          python3 scripts/verify_live_brand_surface.py \
-            --base http://127.0.0.1:4176 \
-            --cache-key "${GITHUB_SHA}-local-brand"
+          python3 scripts/verify_live_brand_surface.py --mode local
 
       - name: Verify route, navigation, geometry and motion contracts
         shell: bash
