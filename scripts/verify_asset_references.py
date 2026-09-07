@@ -55,7 +55,7 @@ if missing:
     for source, rel in missing:
         errors.append(f'{source}: missing local asset {rel}')
 
-for stale in ('assets/r135-ux-fixes.css', 'assets/r136-ux-fixes.css', 'assets/motion-r105.css', 'assets/motion-r108.css'):
+for stale in ('assets/r135-ux-fixes.css', 'assets/r136-ux-fixes.css', 'assets/motion-r105.css', 'assets/motion-r108.css', 'assets/axiona-mark.png'):
     if (ROOT / stale).exists():
         errors.append(f'stale compatibility asset still exists: {stale}')
 

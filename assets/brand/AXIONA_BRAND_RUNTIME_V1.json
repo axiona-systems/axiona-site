@@ -1,0 +1,58 @@
+{
+  "schema": "axiona.brand.runtime-consumer.v1",
+  "status": "canonical-runtime-consumer",
+  "release": "R147",
+  "authority": {
+    "repository": "axiona-systems/AXIONA_BRAND",
+    "commit": "aebf0f112bd5f4e589ef58f337a55d9be861b493",
+    "artifact_run_id": 34063542627,
+    "artifact_id": 9998217611,
+    "artifact_digest": "sha256:3fbd354301b45ff0fe2e4edff425003eed300b812d228a82ddf798af40ebae0d",
+    "master_git_blob_sha": "374cc2f8738cb0abd519016cac2759b1cc43be0d",
+    "symbol_git_blob_sha": "1fbe0628bf1d6240495da75dfab2b51a28aac391"
+  },
+  "placements": {
+    "header": {
+      "path": "/assets/brand/axiona-horizontal-fullcolor.svg"
+    },
+    "footer": {
+      "path": "/assets/brand/axiona-horizontal-monochrome-white.svg"
+    },
+    "keeper_product_mark": {
+      "path": "/assets/brand/axiona-symbol-fullcolor.svg"
+    },
+    "favicon_svg": {
+      "path": "/favicon.svg"
+    },
+    "apple_touch": {
+      "path": "/apple-touch-icon.png"
+    },
+    "pwa_192": {
+      "path": "/assets/brand/axiona-icon-192.png"
+    },
+    "pwa_512": {
+      "path": "/assets/brand/axiona-icon-512.png"
+    }
+  },
+  "social": {
+    "release": "R147"
+  },
+  "sha256": {
+    "assets/brand/axiona-horizontal-fullcolor.svg": "dca03db3af56c0d3956e2c63f5154750034d7bf6ec37da26ec0bc07581f9be8d",
+    "assets/brand/axiona-horizontal-monochrome-white.svg": "8c5b276b8e2ba2ebfe7ce9e8832b25d3f34d15785a87e48f9bf6c3513f237c76",
+    "assets/brand/axiona-symbol-fullcolor.svg": "a551d43284d05c5a2a84da91fc7815d9181e595636ec73b2e4aabafc55e9fb13",
+    "favicon.svg": "a551d43284d05c5a2a84da91fc7815d9181e595636ec73b2e4aabafc55e9fb13",
+    "favicon-16x16.png": "acb7caa1f7a57783646cfb42c5e94a1396f769cd73cc8be0668df310b46b9fae",
+    "favicon-32x32.png": "f1713c0c22966c876daf6ebfec19507cc1d3511cb99a5d26e3158ac7cd56ce67",
+    "favicon.ico": "763b11ae6c1b8528c60b058249372cb6ba4ab529936ae202a93948c00bbbe338",
+    "apple-touch-icon.png": "c8beb1c608c83f254db243e686ed3c9cfbac844556d55111ee55105fb71d9363",
+    "assets/brand/axiona-icon-192.png": "245b330d957100172f311d4d21ced6311b39621fd4a413040ed52b28d048ff51",
+    "assets/brand/axiona-icon-512.png": "ac019d3118682a8f5b6d63fe89f211225d27e8000e32966257f049ba1f62bee7",
+    "assets/social/axiona-keeper-social-preview-r147-de.png": "cdcb2ed7a0bd90e169890affc462ec5642d14e04a544dd68973d5c39217acb87",
+    "assets/social/axiona-keeper-social-preview-r147-en.png": "56cf68802a19a5f5c5d8d1bb991ae9366c68c096b13b09582ccf47bcdf936c82",
+    "assets/social/axiona-keeper-social-preview-r147-hu.png": "5d71437285bcf7d4e6482af2401fb5af1e5b98acda7658cc8f1c733a40522edc",
+    "assets/social/axiona-social-preview-r147-de.png": "35c8d51bb30e3552132195906acb61dbd4cfb2f01bcb9a952638cab4e5e88e4e",
+    "assets/social/axiona-social-preview-r147-en.png": "1d0f27f5deae5d62084d04d96b928fa8c38e99c97238f59343b75f6a5eb8a0f7",
+    "assets/social/axiona-social-preview-r147-hu.png": "847984ae4f2bbf87e34c6625bea13e03f7c0f186ca6617fb90226fe778bfd32b"
+  }
+}
