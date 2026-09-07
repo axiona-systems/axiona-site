@@ -77,13 +77,22 @@ def local_bytes(route: str) -> bytes:
     return path.read_bytes()
 
 
+def verified_tls_context() -> ssl.SSLContext:
+    context = ssl.SSLContext(ssl.PROTOCOL_TLS_CLIENT)
+    context.minimum_version = ssl.TLSVersion.TLSv1_2
+    context.check_hostname = True
+    context.verify_mode = ssl.CERT_REQUIRED
+    context.load_default_certs(ssl.Purpose.SERVER_AUTH)
+    return context
+
+
 def new_connection(mode: str) -> http.client.HTTPConnection:
     if mode == "live":
         return http.client.HTTPSConnection(
             LIVE_HOST,
             443,
             timeout=15,
-            context=ssl.create_default_context(),
+            context=verified_tls_context(),
         )
     return http.client.HTTPConnection(LOCAL_HOST, LOCAL_PORT, timeout=15)
 
@@ -100,7 +109,7 @@ def fetch(mode: str, route: str, key: str, *, expected_status: int = 200) -> byt
                 headers={
                     "Cache-Control": "no-cache",
                     "Pragma": "no-cache",
-                    "User-Agent": "AXIONA-Pages-Brand-Verifier/1.1",
+                    "User-Agent": "AXIONA-Pages-Brand-Verifier/1.2",
                 },
             )
             response = connection.getresponse()
@@ -133,26 +142,35 @@ def expected_social(route: str) -> str | None:
     return f"/assets/social/{stem}-{locale}.png"
 
 
+def verify_primary_identity(route: str, html: str) -> None:
+    if f'src="{HEADER}"' not in html:
+        fail(f"header brand missing: {route}")
+    if f'src="{FOOTER}"' not in html:
+        fail(f"footer brand missing: {route}")
+    if "/assets/axiona-mark.png" in html or "r92-" in html:
+        fail(f"legacy brand binding present: {route}")
+
+
+def verify_symbol_placement(route: str, html: str) -> None:
+    has_symbol = f'src="{SYMBOL}"' in html
+    if route in KEEPER_ROUTES and not has_symbol:
+        fail(f"Keeper standalone symbol missing: {route}")
+    if route not in KEEPER_ROUTES and has_symbol:
+        fail(f"unexpected standalone symbol placement: {route}")
+
+
+def verify_social_binding(route: str, html: str) -> None:
+    social = expected_social(route)
+    if social and social not in html:
+        fail(f"locale social card mismatch: {route} expected={social}")
+
+
 def verify_html(mode: str, key: str) -> None:
     for route in PUBLIC_ROUTES:
         html = fetch(mode, route, key).decode("utf-8", errors="strict")
-        if f'src="{HEADER}"' not in html:
-            fail(f"header brand missing: {route}")
-        if f'src="{FOOTER}"' not in html:
-            fail(f"footer brand missing: {route}")
-        if "/assets/axiona-mark.png" in html or "r92-" in html:
-            fail(f"legacy brand binding present: {route}")
-
-        has_symbol = f'src="{SYMBOL}"' in html
-        if route in KEEPER_ROUTES and not has_symbol:
-            fail(f"Keeper standalone symbol missing: {route}")
-        if route not in KEEPER_ROUTES and has_symbol:
-            fail(f"unexpected standalone symbol placement: {route}")
-
-        social = expected_social(route)
-        if social and social not in html:
-            fail(f"locale social card mismatch: {route} expected={social}")
-
+        verify_primary_identity(route, html)
+        verify_symbol_placement(route, html)
+        verify_social_binding(route, html)
     print(f"OK_AXIONA_LIVE_BRAND_HTML routes={len(PUBLIC_ROUTES)}")
 
 
