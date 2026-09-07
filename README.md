@@ -34,6 +34,10 @@ Current cross-site correction layers:
 
 Older release-numbered design/status documents remain historical evidence only. They are not active CI contracts and must not override the current public source.
 
+### Brand runtime authority
+
+The website is a consumer of the private `axiona-systems/AXIONA_BRAND` authority, pinned at `aebf0f112bd5f4e589ef58f337a55d9be861b493`. R147 migrated the complete public identity surface to master-derived header/footer lockups, favicon/browser identity, Apple/PWA icons and fresh localized social cards. Exact runtime provenance and hashes are recorded in `assets/brand/AXIONA_BRAND_RUNTIME_V1.json` and `docs/status/AXIONA_BRAND_CONSUMER_PROVENANCE.md`.
+
 ## Quality and release controls
 
 The active workflow surface is intentionally small:

@@ -11,6 +11,7 @@ python3 scripts/verify_social_metadata.py
 python3 scripts/verify_retired_routes.py
 python3 scripts/verify_browser_identity.py
 python3 scripts/verify_asset_references.py
+python3 scripts/verify_brand_consumer_boundary.py
 python3 scripts/verify_workflow_hardening.py
 
 if git rev-parse --verify HEAD~1 >/dev/null 2>&1; then

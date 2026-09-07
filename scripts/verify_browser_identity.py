@@ -125,8 +125,8 @@ def verify(root: Path) -> list[str]:
                 "start_url": "/",
                 "scope": "/",
                 "display": "standalone",
-                "background_color": "#f6efe3",
-                "theme_color": "#142d31",
+                "background_color": "#F1EEE6",
+                "theme_color": "#082830",
             }
             for key, value in exact.items():
                 if manifest.get(key) != value:
