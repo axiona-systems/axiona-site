@@ -33,7 +33,7 @@ class ArtifactError(ValueError):
 
 
 def git(repo: Path, *args: str) -> bytes:
-    result = subprocess.run(['git', '-C', str(repo), *args], capture_output=True)
+    result = subprocess.run(['git', '--no-replace-objects', '-C', str(repo), *args], capture_output=True)
     if result.returncode:
         raise ArtifactError('Git source unavailable')
     return result.stdout

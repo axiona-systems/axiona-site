@@ -2,7 +2,8 @@
 
 `scripts/build_local_public_artifact.py` prepares a reproducible, uncompressed
 USTAR archive from one exact 40-character Git commit. It reads committed Git
-blobs, so local edits cannot silently replace the selected source bytes.
+blobs with Git replacement refs disabled, so local edits or replacement objects
+cannot silently replace the selected source bytes.
 
 The product-owned public surface is explicit: the ten known pages in the root,
 English and German directories; browser icons, robots/sitemap/manifest/humans,

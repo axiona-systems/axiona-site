@@ -58,6 +58,31 @@ class ArtifactTests(unittest.TestCase):
         with tarfile.open(self.root / 'artifact/public.tar') as archive:
             self.assertEqual(archive.extractfile('index.html').read(), b'synthetic:index.html')
 
+    def test_replacement_ref_cannot_substitute_retained_blob_bytes(self):
+        original = self.git('rev-parse', self.sha + ':index.html')
+        replacement = subprocess.check_output(
+            ['git', '-C', str(self.repo), 'hash-object', '-w', '--stdin'],
+            input=b'replacement bytes outside selected commit',
+        ).decode().strip()
+        self.git('replace', original, replacement)
+        self.assertEqual(self.git_bytes('index.html'), b'replacement bytes outside selected commit')
+        manifest = build(self.repo, self.sha, self.root / 'replacement-proof')
+        with tarfile.open(self.root / 'replacement-proof/public.tar') as archive:
+            self.assertEqual(archive.extractfile('index.html').read(), b'synthetic:index.html')
+        self.assertEqual(next(f['git_blob'] for f in manifest['files'] if f['path'] == 'index.html'), original)
+
+    def test_replacement_commit_cannot_redirect_selected_tree(self):
+        original, tree = self.sha, self.git('rev-parse', self.sha + '^{tree}')
+        (self.repo / 'index.html').write_text('replacement commit content')
+        self.commit()
+        self.git('replace', original, self.sha)
+        self.assertNotEqual(self.git('rev-parse', original + '^{tree}'), tree)
+        manifest = build(self.repo, original, self.root / 'commit-replacement-proof')
+        self.assertEqual(manifest['source_commit'], original)
+        self.assertEqual(manifest['source_tree'], tree)
+        with tarfile.open(self.root / 'commit-replacement-proof/public.tar') as archive:
+            self.assertEqual(archive.extractfile('index.html').read(), b'synthetic:index.html')
+
     def test_public_symlink_and_unadmitted_asset_are_rejected_before_output(self):
         (self.repo / 'assets/secret.key').write_text('synthetic forbidden asset')
         self.commit()
