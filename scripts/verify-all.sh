@@ -13,6 +13,8 @@ python3 scripts/verify_browser_identity.py
 python3 scripts/verify_asset_references.py
 python3 scripts/verify_brand_consumer_boundary.py
 python3 scripts/verify_workflow_hardening.py
+python3 scripts/verify_release_provenance_policy.py
+python3 scripts/test_release_provenance_policy.py
 
 if git rev-parse --verify HEAD~1 >/dev/null 2>&1; then
   git diff --check HEAD~1 HEAD
