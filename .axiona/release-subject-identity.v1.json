@@ -1,0 +1,10 @@
+{
+  "schema_version": "axiona.site.release-subject-identity.v1",
+  "subject_id": "axiona-site",
+  "repository": "axiona-systems/axiona-site",
+  "product_truth_capability": "public-site-product-truth",
+  "artifact_kind": "STATIC_BUNDLE",
+  "product_verifier": "./scripts/verify-all.sh",
+  "authority_effect": "IDENTITY_ONLY",
+  "production_activation": "BLOCKED"
+}
