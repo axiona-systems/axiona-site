@@ -50,6 +50,11 @@ GitHub Actions dependencies are pinned to immutable full commit SHAs and validat
 
 Dependabot tracks GitHub Actions updates weekly through `.github/dependabot.yml`.
 
+An isolated HTTP proof can prepare exact committed public bytes with the
+[local public artifact recipe](docs/LOCAL_PUBLIC_ARTIFACT.md). It produces a
+reproducible archive and source manifest; release admission remains pending.
+The command does not publish or deploy the website.
+
 ## Design and release documentation
 
 Current public-site design and UX baseline:
