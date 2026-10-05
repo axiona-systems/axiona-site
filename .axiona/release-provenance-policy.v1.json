@@ -1,0 +1,33 @@
+{
+  "schema_version": "axiona.site.nonproduction-provenance-policy.v1",
+  "policy_id": "axiona-site-isolated-http-proof-v1",
+  "subject_id": "axiona-site",
+  "repository": "axiona-systems/axiona-site",
+  "scope": {
+    "environment": "NON_PRODUCTION",
+    "source_sha": "ee17a4cddb08073613d5ddf7c1dd6283e3f9c51e",
+    "artifact_kind": "STATIC_BUNDLE",
+    "product_verifier": "./scripts/verify-all.sh",
+    "artifact_recipe": {
+      "repository": "axiona-systems/axiona-site",
+      "revision": "47f5b1ea51a8eface3d596bc233111db93da0f17",
+      "path": "scripts/build_local_public_artifact.py",
+      "git_blob_sha1": "d8353b7f207bc0c3ea8fc63ed3bbe79ba2390a28"
+    }
+  },
+  "signing": {
+    "algorithm": "ED25519",
+    "public_key_id": "axiona-site-provenance-v1",
+    "public_key_format": "SPKI_DER_BASE64",
+    "public_key_der_sha256": "ae70cadecfa3e6e0eaefb6f45512dbb50c42f285f0cad02a498411bb8474962c",
+    "public_key_der_base64": "MCowBQYDK2VwAyEAIWr/hlMPaPxTkl4Dt8ABSnQWKBBIgqZhKwybiOCU8A4=",
+    "status": "ACTIVE",
+    "revocation_state": "NOT_REVOKED"
+  },
+  "private_key_repository_custody": false,
+  "private_key_payload_custody": false,
+  "release_authority": "NONE",
+  "deployment_authority": "NONE",
+  "production_activation": "BLOCKED",
+  "authority_effect": "PRODUCT_POLICY_ONLY"
+}
