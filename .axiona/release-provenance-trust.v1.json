@@ -1,0 +1,22 @@
+{
+  "schema_version": "axiona.site.release-provenance-trust.v1",
+  "product_repository": "axiona-systems/axiona-site",
+  "contract": {
+    "id": "axiona.release-provenance.v1",
+    "release": "0.1.0"
+  },
+  "keys": [
+    {
+      "public_key_id": "axiona-site-provenance-v1",
+      "algorithm": "ED25519",
+      "public_key_der_base64": "MCowBQYDK2VwAyEAIWr/hlMPaPxTkl4Dt8ABSnQWKBBIgqZhKwybiOCU8A4=",
+      "public_key_der_sha256": "ae70cadecfa3e6e0eaefb6f45512dbb50c42f285f0cad02a498411bb8474962c",
+      "scope": "RELEASE_PROVENANCE_ONLY",
+      "state": "ACTIVE"
+    }
+  ],
+  "caller_selected_keys": false,
+  "private_key_in_repository": false,
+  "authority_effect": "PUBLIC_TRUST_POLICY_ONLY",
+  "production_activation": "BLOCKED"
+}
