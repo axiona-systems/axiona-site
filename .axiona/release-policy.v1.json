@@ -1,0 +1,17 @@
+{
+  "schema_version": "axiona.site.release-policy.v1",
+  "subject_id": "axiona-site",
+  "repository": "axiona-systems/axiona-site",
+  "candidate_artifact_kind": "STATIC_BUNDLE",
+  "source_identity": "EXACT_GIT_COMMIT_REQUIRED",
+  "product_verifier": "./scripts/verify-all.sh",
+  "provenance_contract": "axiona.release-provenance.v1@0.1.0",
+  "provenance_trust_policy": ".axiona/release-provenance-trust.v1.json",
+  "admitted_environments": [
+    "NON_PRODUCTION"
+  ],
+  "production_human_authority_required": true,
+  "release_mutation_authority": false,
+  "authority_effect": "PRODUCT_POLICY_ONLY",
+  "production_activation": "BLOCKED"
+}
