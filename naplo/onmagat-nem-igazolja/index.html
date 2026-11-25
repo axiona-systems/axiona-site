@@ -3,6 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'self'; manifest-src 'self'; connect-src 'none'; base-uri 'none'; form-action 'none'; upgrade-insecure-requests">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
   <title>Miért nem igazolhatja az MI a saját munkáját | AXIONA Systems</title>
   <meta name="description" content="Ha ugyanaz írja a kódot és a tesztet, a teszt csak azt bizonyítja, hogy a kettő egyetért egymással.">
   <meta name="theme-color" content="#0a0f11">
@@ -26,8 +28,8 @@
   <link rel="manifest" href="/site.webmanifest">
   <link rel="alternate" type="application/rss+xml" title="AXIONA Systems – Napló" href="/naplo/feed.xml">
   <link rel="preload" href="/assets/fonts/InterVariable.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="/assets/site.css?v=12">
-  <script src="/assets/site.js?v=12" defer></script>
+  <link rel="stylesheet" href="/assets/site.css?v=13">
+  <script src="/assets/site.js?v=13" defer></script>
 </head>
 <body>
   <a class="skip-link" href="#tartalom">Ugrás a tartalomhoz</a>
@@ -45,7 +47,7 @@
           <li><a class="nav__link" href="/otletlada/">Ötletláda</a></li>
           <li><a class="nav__link" href="/rolam/">Rólam</a></li>
         </ul>
-        <a class="button button--small" style="--text:#e9e7e1;--bg:#0a0f11" href="/kapcsolat/">Kapcsolat</a>
+        <a class="button button--small button--light" href="/kapcsolat/">Kapcsolat</a>
       </nav>
       <details class="menu">
         <summary>Menü</summary>
@@ -67,11 +69,11 @@
       <div class="wrap">
         <nav class="crumbs" aria-label="Morzsamenü"><a href="/naplo/">Napló</a><span aria-hidden="true">/</span><span>Írás</span></nav>
         <span class="label"><time datetime="2026-11-23">2026.11.23.</time> · 3 perc olvasás</span>
-        <h1 class="page-title" id="oldal-cim" style="margin-top:1rem">Miért nem igazolhatja az MI a saját munkáját</h1>
+        <h1 class="page-title mt-s" id="oldal-cim">Miért nem igazolhatja az MI a saját munkáját</h1>
         <p class="page-lead">Ha ugyanaz írja a kódot és a tesztet, a teszt csak azt bizonyítja, hogy a kettő egyetért egymással.</p>
       </div>
     </section>
-    <section class="sec light" style="padding-top:0">
+    <section class="sec light pt-0">
       <div class="wrap">
         <article class="article">
           <p>Az MI gyorsan ír kódot, és ugyanilyen gyorsan ír hozzá tesztet. A kettő szinte mindig egyezik, hiszen ugyanabból a feltevésből készült. Ha a feltevés rossz, mindkettő rossz, és a teszt mégis zöld.</p>

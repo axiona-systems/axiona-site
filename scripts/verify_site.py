@@ -8,6 +8,8 @@ Ellenőrzi:
   - minden belső hivatkozás, kép és horgony létezik-e;
   - minden oldal feje teljes-e (nyelv, cím, leírás, kanonikus cím, közösségi és ikonlinkek);
   - nincs-e külső szkript, követőkód vagy külső erőforrás;
+  - minden oldalon ott van-e a szigorú Content-Security-Policy és a referrer-szabály,
+    és nincs-e beágyazott stílus, szkript vagy eseménykezelő, amit a CSP tiltana;
   - az átirányítások és a 404-es oldal helyesek-e;
   - a nyilvános fájlokban nincs-e privát belső név;
   - az adatfájlok szerkezete érvényes-e.
@@ -40,6 +42,8 @@ PRIVATE_PATTERNS = [
     r"axiona-contracts", r"otthon-projekt", r"\bHetzner\b", r"/Users/[a-z]",
 ]
 TRACKING_PATTERNS = [r"googletagmanager", r"google-analytics", r"\bgtag\(", r"connect\.facebook", r"hotjar", r"plausible\.io", r"document\.cookie"]
+EXPECTED_CSP = ("default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'self'; "
+                "manifest-src 'self'; connect-src 'none'; base-uri 'none'; form-action 'none'; upgrade-insecure-requests")
 REQUIRED_ICONS = {
     ("icon", "/favicon.svg"), ("icon", "/favicon-32x32.png"), ("icon", "/favicon-16x16.png"),
     ("apple-touch-icon", "/apple-touch-icon.png"), ("manifest", "/site.webmanifest"),
@@ -206,6 +210,8 @@ def main() -> int:
         route = "/" + label.removesuffix("index.html")
         if p.lang != "hu":
             stop(f"{label}: a nyelv nem hu")
+        if p.meta.get("Content-Security-Policy") != EXPECTED_CSP:
+            stop(f"{label}: hiányzó vagy eltérő Content-Security-Policy")
         if f in redirects:
             target = p.meta["refresh"].split("url=", 1)[-1]
             if p.meta.get("robots") != "noindex" or not route_to_file(target):
@@ -227,6 +233,10 @@ def main() -> int:
         icons = {(r, h) for r, h in p.links if r in {"icon", "apple-touch-icon", "manifest"}}
         if icons != REQUIRED_ICONS:
             stop(f"{label}: ikonlinkek eltérnek: {sorted(icons ^ REQUIRED_ICONS)}")
+        if p.meta.get("Content-Security-Policy") != EXPECTED_CSP:
+            stop(f"{label}: hiányzó vagy eltérő Content-Security-Policy")
+        if p.meta.get("referrer") != "strict-origin-when-cross-origin":
+            stop(f"{label}: hiányzó referrer-szabály")
         for src in p.scripts:
             if src and not src.startswith("/assets/"):
                 stop(f"{label}: külső vagy ismeretlen szkript: {src}")
@@ -259,6 +269,18 @@ def main() -> int:
                 continue
             if parts.fragment and target in parsed and parts.fragment not in parsed[target].ids:
                 stop(f"{label}: nem létező horgony: {ref}")
+
+    for f in sorted(parsed):
+        raw = f.read_text(encoding="utf-8")
+        label = f.relative_to(ROOT).as_posix()
+        if re.search(r"\sstyle=\"", raw) or "<style" in raw:
+            stop(f"{label}: beágyazott stílus (a CSP tiltja)")
+        if re.search(r"<script(?![^>]*\ssrc=)[^>]*>", raw):
+            stop(f"{label}: beágyazott szkript (a CSP tiltja)")
+        if re.search(r"\son[a-z]+=\"", raw):
+            stop(f"{label}: beágyazott eseménykezelő")
+        if 'target="_blank"' in raw and 'rel="noopener' not in raw:
+            stop(f"{label}: új lapon nyíló link noopener nélkül")
 
     for f in public_files():
         if f.suffix.lower() not in {".html", ".xml", ".txt", ".json", ".js", ".css", ".md", ".py", ".mjs", ".yml", ".webmanifest"}:

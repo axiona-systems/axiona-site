@@ -1,5 +1,5 @@
 // v4 megjelenítési szerződés: valódi böngészőben ellenőrzi az oldalakat.
-// Minden sitemap-oldalon asztali és mobil nézetben: nincs vízszintes kilógás,
+// Minden sitemap-oldalon asztali és mobil nézetben: nincs vízszintes kilógás, nincs CSP-sértés,
 // egy h1, látható fejléc, nincs konzolhiba és nincs külső hálózati kérés.
 // Ezen felül: a mobilmenü nyílik, a hero nyugtája végigfut, a Napló-szűrő szűr,
 // és a lazy képek betöltődnek.
@@ -20,6 +20,10 @@ const fail = (msg) => failures.push(msg);
 
 async function open(route, width, height, { reducedMotion = "no-preference" } = {}) {
   const context = await browser.newContext({ viewport: { width, height }, reducedMotion });
+  await context.addInitScript(() => {
+    window.__cspViolations = [];
+    document.addEventListener("securitypolicyviolation", (e) => window.__cspViolations.push(`${e.violatedDirective} ${e.blockedURI}`));
+  });
   const page = await context.newPage();
   const errors = [];
   page.on("pageerror", (e) => errors.push(String(e)));
@@ -42,6 +46,8 @@ for (const route of routes) {
       header: !!document.querySelector(".site-header") && document.querySelector(".site-header").getBoundingClientRect().height > 0,
       main: !!document.querySelector("main#tartalom"),
     }));
+    const csp = await page.evaluate(() => window.__cspViolations);
+    for (const v of csp) fail(`${route} ${label}: CSP-sértés: ${v}`);
     if (facts.overflow > 0) fail(`${route} ${label}: vízszintes kilógás ${facts.overflow}px`);
     if (facts.h1 !== 1) fail(`${route} ${label}: ${facts.h1} h1`);
     if (!facts.header || !facts.main) fail(`${route} ${label}: hiányzó fejléc vagy fő tartalom`);

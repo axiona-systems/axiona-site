@@ -40,7 +40,7 @@ const browser = await chromium.launch({
 let failed = false;
 try {
   for (const route of paths) {
-    const context = await browser.newContext({ viewport: { width: 1440, height: 900 } });
+    const context = await browser.newContext({ viewport: { width: 1440, height: 900 }, bypassCSP: true }); // az axe beinjektálásához; a CSP-t a render contract ellenőrzi
     const page = await context.newPage();
     const url = new URL(route, base).href;
     await page.goto(url, { waitUntil: "domcontentloaded", timeout: 30000 });

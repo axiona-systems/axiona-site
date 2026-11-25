@@ -17,9 +17,14 @@ PROOF = json.loads((ROOT / "data/proof.json").read_text(encoding="utf-8"))
 IDEAS = json.loads((ROOT / "data/ideas.json").read_text(encoding="utf-8"))
 MILES = json.loads((ROOT / "data/milestones.json").read_text(encoding="utf-8"))
 SITE = "https://axiona.systems"
+# Szigorú tartalombiztonsági szabály: csak saját forrásból tölthet bármit, beágyazott kód és stílus nélkül.
+CSP = ("default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'self'; "
+       "manifest-src 'self'; connect-src 'none'; base-uri 'none'; form-action 'none'; upgrade-insecure-requests")
+SECURITY_META = (f'  <meta http-equiv="Content-Security-Policy" content="{CSP}">\n'
+                 '  <meta name="referrer" content="strict-origin-when-cross-origin">')
 SOCIAL_IMAGE = "/assets/social/axiona-social-preview-r147-hu.png"
 MAIL = "hello@axiona.systems"
-ASSET_V = "12"
+ASSET_V = "13"
 
 E = html.escape
 
@@ -177,6 +182,7 @@ def head(path: str, title: str, desc: str, current: str = "", extra_head: str = 
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+{SECURITY_META}
   <title>{E(title)}</title>
   <meta name="description" content="{E(desc)}">
   <meta name="theme-color" content="#0a0f11">
@@ -213,7 +219,7 @@ def head(path: str, title: str, desc: str, current: str = "", extra_head: str = 
         <ul class="nav__list">
 {nav}
         </ul>
-        <a class="button button--small" style="--text:#e9e7e1;--bg:#0a0f11" href="/kapcsolat/"{" aria-current=\"page\"" if current == "kapcsolat" else ""}>Kapcsolat</a>
+        <a class="button button--small button--light" href="/kapcsolat/"{" aria-current=\"page\"" if current == "kapcsolat" else ""}>Kapcsolat</a>
       </nav>
       <details class="menu">
         <summary>Menü</summary>
@@ -290,6 +296,7 @@ def redirect(old: str, new: str) -> None:
 <html lang="hu">
 <head>
   <meta charset="utf-8">
+{SECURITY_META}
   <title>Átirányítás | AXIONA Systems</title>
   <meta name="robots" content="noindex">
   <link rel="canonical" href="{SITE}{new}">
@@ -328,26 +335,6 @@ def receipt(r: dict, print_anim: bool = False, pins: bool = False) -> str:
         </dl>
         <p class="receipt__stamp"><span>Állapot{pin(5)}</span><strong>Ellenőrizve</strong></p>
       </div>"""
-
-
-def entry(r: dict) -> str:
-    p = PRODUCTS[r["product"]]
-    proof = f'{num(r["tests"])} teszt · <b>ellenőrizve</b>' if r.get("tests") else "<b>ellenőrizve</b>"
-    return f"""        <li class="entry" data-kind="{r['product']}">
-          <span class="entry__meta entry__date"><time datetime="{r['date']}">{hu_date(r['date'])}</time></span>
-          <span class="entry__meta entry__product dot-{r['product']}">{E(p['name'])}</span>
-          <span class="entry__text"><a href="{p['path']}">{E(r['text'])}</a></span>
-          <span class="entry__proof">{r['id']} · {proof}</span>
-        </li>"""
-
-
-def note_entry(n: dict) -> str:
-    return f"""        <li class="entry" data-kind="iras">
-          <span class="entry__meta entry__date"><time datetime="{n['date']}">{hu_date(n['date'])}</time></span>
-          <span class="entry__meta entry__product dot-iras">Írás</span>
-          <span class="entry__text"><a href="{n['path']}">{E(n['title'])}</a></span>
-          <span class="entry__proof">{n['minutes']} perc olvasás</span>
-        </li>"""
 
 
 MILESTONES = sorted(MILES["milestones"], key=lambda m: m["date"], reverse=True)
@@ -565,7 +552,6 @@ NOTES = [
 # ---------------------------------------------------------------- főoldal
 
 hero_r = next(r for r in RECEIPTS if r.get("hero"))
-log5 = sorted(RECEIPTS, key=lambda r: (r["date"], r["id"]), reverse=True)[:5]
 
 
 def product_block(key: str) -> str:
@@ -630,7 +616,7 @@ home = head("/", "AXIONA Systems — Szoftver, amihez nyugta jár.",
           <figcaption class="fig__cap"><span>Ábra 02 · A kör</span><span>egy változtatás útja</span></figcaption>
 {loop_html()}
         </figure>
-        <p style="margin-top:2.5rem"><a class="text-link" href="/hogyan-keszul/">Hogyan működik a gépház: hat megoldás, hét szabály →</a></p>
+        <p class="mt-l"><a class="text-link" href="/hogyan-keszul/">Hogyan működik a gépház: hat megoldás, hét szabály →</a></p>
       </div>
     </section>
 
@@ -638,7 +624,7 @@ home = head("/", "AXIONA Systems — Szoftver, amihez nyugta jár.",
       <div class="wrap">
 {sec_head("03 — Együttműködés", "Neked is építek.", "Webes rendszert, iPhone-appot vagy belső céges eszközt ugyanúgy építek, mint a saját termékeimet: előre rögzített elvárásokkal, független ellenőrzéssel, és úgy, hogy minden lépést látsz.", "egyutt-cim")}
 {offer_html()}
-        <div class="actions" style="margin-top:2.5rem">
+        <div class="actions mt-l">
           <a class="button" href="/egyuttmukodes/">Hogyan dolgozunk együtt <span class="button__arrow" aria-hidden="true">→</span></a>
           <a class="button button--ghost" href="/kapcsolat/?tema=fejlesztes">Írd le, mire van szükséged</a>
         </div>
@@ -658,7 +644,7 @@ home = head("/", "AXIONA Systems — Szoftver, amihez nyugta jár.",
         <ol class="mslist reveal">
 {chr(10).join(ms_entry(m) for m in [x for x in MILESTONES if x.get("top")][:5])}
         </ol>
-        <p style="margin-top:2rem"><a class="text-link" href="/naplo/">Mind a {len(MILESTONES)} mérföldkő →</a></p>
+        <p class="mt-m"><a class="text-link" href="/naplo/">Mind a {len(MILESTONES)} mérföldkő →</a></p>
       </div>
     </section>
 
@@ -782,7 +768,7 @@ for key, pp in PRODUCT_PAGES.items():
     pms = "\n".join(ms_entry(m, show_kind=False) for m in MILESTONES if m["product"] == key and not m.get("tech"))
     latest = receipt(last_receipts(key, 1)[0])
     what = "\n".join(f"            <p>{E(x)}</p>" for x in pp["what"])
-    notice = f'\n      <p class="note" style="margin-top:2.5rem">{E(pp["notice"])}</p>' if pp["notice"] else ""
+    notice = f'\n      <p class="note mt-l">{E(pp["notice"])}</p>' if pp["notice"] else ""
     shot = ""
     if key == "kockalmar":
         shot = """    <section class="sec sec--tight light" aria-label="A webshop képernyőképe">
@@ -794,7 +780,7 @@ for key, pp in PRODUCT_PAGES.items():
             <img src="/assets/img/kockalmar-webshop-1600.webp" srcset="/assets/img/kockalmar-webshop-800.webp 800w, /assets/img/kockalmar-webshop-1600.webp 1600w" sizes="(max-width: 80rem) 100vw, 80rem" width="1600" height="1000" loading="lazy" decoding="async" alt="A Kockalmár webshop nyitóoldala: „Keresd meg a hiányzó darabot.” cím, alkatrészkereső mező és LEGO-figurák egy épülő falnál.">
           </div>
         </figure>
-        <figure class="fig flow reveal" style="margin-top:clamp(3rem,2rem + 3vw,5rem)">
+        <figure class="fig flow reveal mt-xl">
           <figcaption class="fig__cap"><span>Ábra 02 · Egy vásárlás útja</span><span>4 lépés · fejlesztői változat</span></figcaption>
           <ol class="flow__steps">
             <li class="flow__step">
@@ -818,7 +804,7 @@ for key, pp in PRODUCT_PAGES.items():
               <p class="flow__text">Fiók nélkül is: adatok, majd szállítási mód, valós díjjal.</p>
             </li>
           </ol>
-          <p class="note" style="margin-top:1rem">A képeken tesztárak láthatók. Alkatrészképek: <a href="https://rebrickable.com/">Rebrickable</a>, <a href="https://www.ldraw.org/">LDraw</a> (CC BY 4.0).</p>
+          <p class="note mt-s">A képeken tesztárak láthatók. Alkatrészképek: <a href="https://rebrickable.com/">Rebrickable</a>, <a href="https://www.ldraw.org/">LDraw</a> (CC BY 4.0).</p>
         </figure>
       </div>
     </section>
@@ -830,7 +816,7 @@ for key, pp in PRODUCT_PAGES.items():
         <div>
           <nav class="crumbs" aria-label="Morzsamenü"><a href="/#termekek">Termékek</a><span aria-hidden="true">/</span><span>{E(p['name'])}</span></nav>
           <span class="label">{E(p['type'])} · {p['state']}</span>
-          <h1 class="page-title" id="oldal-cim" style="margin-top:1rem">{E(p['name'])}</h1>
+          <h1 class="page-title mt-s" id="oldal-cim">{E(p['name'])}</h1>
           <p class="page-lead">{E(p['line'])}</p>
           <div class="actions">
             <a class="button" href="{mailto(p['name'] + ' – értesítést kérek')}">Értesítést kérek <span class="button__arrow" aria-hidden="true">→</span></a>
@@ -852,12 +838,12 @@ for key, pp in PRODUCT_PAGES.items():
 {shot}    <section class="sec light" aria-labelledby="mi-cim">
       <div class="wrap">
         <div class="split">
-          <div class="split__head"><span class="label">01</span><h2 id="mi-cim" style="margin-top:0.75rem">Mi ez?</h2></div>
+          <div class="split__head"><span class="label">01</span><h2 id="mi-cim" class="mt-xs">Mi ez?</h2></div>
           <div class="prose">
 {what}
           </div>
         </div>
-        <div class="twocol" style="margin-top:clamp(3rem,2rem + 3vw,5rem)">
+        <div class="twocol mt-xl">
           <div class="panel panel--now reveal">
             <span class="label">02 · A fejlesztői változatban már működik</span>
             <h3>Mit tud ma</h3>
@@ -888,19 +874,19 @@ for key, pp in PRODUCT_PAGES.items():
 {latest}
           </figure>
         </div>
-        <p style="margin-top:2.5rem"><a class="text-link" href="/hogyan-keszul/">Mit jelent egy nyugta? →</a></p>
+        <p class="mt-l"><a class="text-link" href="/hogyan-keszul/">Mit jelent egy nyugta? →</a></p>
       </div>
     </section>
 
     <section class="sec light" aria-labelledby="gyik-cim">
       <div class="wrap">
         <div class="split">
-          <div class="split__head"><span class="label">05</span><h2 id="gyik-cim" style="margin-top:0.75rem">Kérdések</h2></div>
+          <div class="split__head"><span class="label">05</span><h2 id="gyik-cim" class="mt-xs">Kérdések</h2></div>
           <div class="faq">
 {faq}
           </div>
         </div>
-        <div class="notify" style="margin-top:clamp(3rem,2rem + 3vw,5rem)">
+        <div class="notify mt-xl">
           <p class="notify__text">Szólok, amikor a {E(p['name'])} elérhető.</p>
           <a class="button" href="{mailto(p['name'] + ' – értesítést kérek')}">Értesítést kérek <span class="button__arrow" aria-hidden="true">→</span></a>
         </div>{notice}
@@ -1051,7 +1037,7 @@ naplo = head("/naplo/", "Napló | AXIONA Systems",
         <p class="page-lead">A nagy lépések: amikor valami először működött végig, vagy a rendszer új képességet kapott. Mind elfogadott változtatás, dátummal. <a href="/naplo/feed.xml">RSS</a></p>
       </div>
     </section>
-    <section class="sec light" style="padding-top:0" aria-label="Bejegyzések">
+    <section class="sec light pt-0" aria-label="Bejegyzések">
       <div class="wrap">
 {filters}
         <ol class="mslist">
@@ -1069,11 +1055,11 @@ for n in NOTES:
       <div class="wrap">
         <nav class="crumbs" aria-label="Morzsamenü"><a href="/naplo/">Napló</a><span aria-hidden="true">/</span><span>Írás</span></nav>
         <span class="label"><time datetime="{n['date']}">{hu_date(n['date'])}</time> · {n['minutes']} perc olvasás</span>
-        <h1 class="page-title" id="oldal-cim" style="margin-top:1rem">{E(n['title'])}</h1>
+        <h1 class="page-title mt-s" id="oldal-cim">{E(n['title'])}</h1>
         <p class="page-lead">{E(n['lead'])}</p>
       </div>
     </section>
-    <section class="sec light" style="padding-top:0">
+    <section class="sec light pt-0">
       <div class="wrap">
         <article class="article">
 {body}
@@ -1120,7 +1106,7 @@ def idea(i: dict) -> str:
             <h3>{E(i['name'])}</h3>
             <p class="idea__line">{E(i['line'])}</p>
             <ul class="idea__scope">{scope}</ul>
-            <p class="idea__why"><span class="label" style="display:inline">Miért most · </span>{E(i['why'])}</p>
+            <p class="idea__why"><span class="label inline">Miért most · </span>{E(i['why'])}</p>
             <a class="text-link idea__vote" href="{mailto('Érdekel: ' + i['name'])}">Ez érdekel →</a>
           </article>"""
 
@@ -1145,7 +1131,7 @@ otlet = head("/otletlada/", "Ötletláda | AXIONA Systems",
         <nav class="crumbs" aria-label="Morzsamenü"><a href="/">Főoldal</a><span aria-hidden="true">/</span><span>Ötletláda</span></nav>
         <h1 class="page-title" id="oldal-cim">Ötletláda</h1>
         <p class="page-lead">{total} nagyobb rendszer, amelyen gondolkodom. Mindegyik mögött egy valódi szabály vagy határidő áll, amelyhez ma a legtöbb kis cégnek nincs jó eszköze. Ha a cégednek szüksége van valamelyikre, megépíthetem neked; ha csak érdekel, az is segít eldönteni, mi legyen a következő.</p>
-        <ul class="chipnav" style="margin-top:2.5rem">
+        <ul class="chipnav mt-l">
 {chr(10).join(chips)}
         </ul>
       </div>
@@ -1266,12 +1252,12 @@ egyutt = head("/egyuttmukodes/", "Együttműködés — egyedi szoftverfejleszt�
     <section class="sec light" aria-labelledby="kerdes-cim">
       <div class="wrap">
         <div class="split">
-          <div class="split__head"><span class="label">04</span><h2 id="kerdes-cim" style="margin-top:0.75rem">Amit tudni szeretnél</h2></div>
+          <div class="split__head"><span class="label">04</span><h2 id="kerdes-cim" class="mt-xs">Amit tudni szeretnél</h2></div>
           <div class="faq">
 {work_faq}
           </div>
         </div>
-        <div class="notify" style="margin-top:clamp(3rem,2rem + 3vw,5rem)">
+        <div class="notify mt-xl">
           <p class="notify__text">Két munkanapon belül válaszolok.</p>
           <a class="button" href="/kapcsolat/?tema=fejlesztes">Írd le, mire van szükséged <span class="button__arrow" aria-hidden="true">→</span></a>
         </div>
@@ -1292,11 +1278,11 @@ kapcsolat = head("/kapcsolat/", "Kapcsolat | AXIONA Systems",
         <p class="page-lead">Egy szoftver, amire a cégednek szüksége lenne, kérdés egy termékről, vagy csak szólnál, amikor valami elindul. Két munkanapon belül válaszolok.</p>
       </div>
     </section>
-    <section class="sec light" style="padding-top:0" aria-label="Kapcsolatfelvétel">
+    <section class="sec light pt-0" aria-label="Kapcsolatfelvétel">
       <div class="wrap split">
         <div class="split__head">
           <span class="label">E-mail</span>
-          <p style="margin-top:0.75rem;font-size:var(--t-h3);font-weight:600;letter-spacing:-0.02em"><a href="{mailto('Kérdés')}">{MAIL}</a></p>
+          <p class="contact-mail"><a href="{mailto('Kérdés')}">{MAIL}</a></p>
         </div>
         <form class="form" data-mailto="{MAIL}" novalidate>
           <div class="field">
@@ -1346,7 +1332,7 @@ def legal_page(path: str, title: str, h1: str, lead: str, desc: str, blocks: lis
         <p class="page-lead">{lead}</p>
       </div>
     </section>
-    <section class="sec light" style="padding-top:0">
+    <section class="sec light pt-0">
       <div class="wrap">
 {body}
       </div>
@@ -1416,13 +1402,13 @@ legal_page("/tamogatas/", "Támogatás | AXIONA Systems", "Támogatás",
 # ---------------------------------------------------------------- 404
 
 write("/404.html", head("/404.html", "Az oldal nem található | AXIONA Systems", "Ez az oldal nem létezik.") + """
-    <section class="sec dark grid-lines page-hero" aria-labelledby="oldal-cim" style="min-height:70vh">
+    <section class="sec dark grid-lines page-hero min-h" aria-labelledby="oldal-cim">
       <div class="wrap">
         <span class="label">404 · megállás</span>
-        <h1 class="page-title" id="oldal-cim" style="margin-top:1rem">Itt megállt a rendszer.</h1>
+        <h1 class="page-title mt-s" id="oldal-cim">Itt megállt a rendszer.</h1>
         <p class="page-lead">Ez nem hiba, hanem információ: ez az oldal nem létezik. Lehet, hogy a hivatkozás régi, vagy elírás történt.</p>
-        <div class="actions" style="margin-top:2.5rem">
-          <a class="button" style="--text:#e9e7e1;--bg:#0a0f11" href="/">Vissza a főoldalra <span class="button__arrow" aria-hidden="true">→</span></a>
+        <div class="actions mt-l">
+          <a class="button button--light" href="/">Vissza a főoldalra <span class="button__arrow" aria-hidden="true">→</span></a>
           <a class="button button--ghost" href="/naplo/">Napló</a>
         </div>
       </div>

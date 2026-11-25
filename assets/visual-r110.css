@@ -1,6 +1,0 @@
-/* AXIONA R143 — direct legacy visual compatibility entrypoint.
-   Keep only dependencies that are not already loaded directly by the homepage.
-   This removes duplicate R113/tuning CSS evaluation while preserving cascade. */
-@import url("/assets/visual-r109.css?release=R110");
-@import url("/assets/visual-r109-compat.css?release=R110");
-@import url("/assets/visual-r112-contrast.css?release=R112");

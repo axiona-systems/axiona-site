@@ -3,6 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'self'; manifest-src 'self'; connect-src 'none'; base-uri 'none'; form-action 'none'; upgrade-insecure-requests">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
   <title>Az oldal nem található | AXIONA Systems</title>
   <meta name="description" content="Ez az oldal nem létezik.">
   <meta name="theme-color" content="#0a0f11">
@@ -25,8 +27,8 @@
   <link rel="manifest" href="/site.webmanifest">
   <link rel="alternate" type="application/rss+xml" title="AXIONA Systems – Napló" href="/naplo/feed.xml">
   <link rel="preload" href="/assets/fonts/InterVariable.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="/assets/site.css?v=12">
-  <script src="/assets/site.js?v=12" defer></script>
+  <link rel="stylesheet" href="/assets/site.css?v=13">
+  <script src="/assets/site.js?v=13" defer></script>
 </head>
 <body>
   <a class="skip-link" href="#tartalom">Ugrás a tartalomhoz</a>
@@ -44,7 +46,7 @@
           <li><a class="nav__link" href="/otletlada/">Ötletláda</a></li>
           <li><a class="nav__link" href="/rolam/">Rólam</a></li>
         </ul>
-        <a class="button button--small" style="--text:#e9e7e1;--bg:#0a0f11" href="/kapcsolat/">Kapcsolat</a>
+        <a class="button button--small button--light" href="/kapcsolat/">Kapcsolat</a>
       </nav>
       <details class="menu">
         <summary>Menü</summary>
@@ -62,13 +64,13 @@
   </header>
   <main id="tartalom">
 
-    <section class="sec dark grid-lines page-hero" aria-labelledby="oldal-cim" style="min-height:70vh">
+    <section class="sec dark grid-lines page-hero min-h" aria-labelledby="oldal-cim">
       <div class="wrap">
         <span class="label">404 · megállás</span>
-        <h1 class="page-title" id="oldal-cim" style="margin-top:1rem">Itt megállt a rendszer.</h1>
+        <h1 class="page-title mt-s" id="oldal-cim">Itt megállt a rendszer.</h1>
         <p class="page-lead">Ez nem hiba, hanem információ: ez az oldal nem létezik. Lehet, hogy a hivatkozás régi, vagy elírás történt.</p>
-        <div class="actions" style="margin-top:2.5rem">
-          <a class="button" style="--text:#e9e7e1;--bg:#0a0f11" href="/">Vissza a főoldalra <span class="button__arrow" aria-hidden="true">→</span></a>
+        <div class="actions mt-l">
+          <a class="button button--light" href="/">Vissza a főoldalra <span class="button__arrow" aria-hidden="true">→</span></a>
           <a class="button button--ghost" href="/naplo/">Napló</a>
         </div>
       </div>

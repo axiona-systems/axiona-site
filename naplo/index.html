@@ -3,6 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'self'; manifest-src 'self'; connect-src 'none'; base-uri 'none'; form-action 'none'; upgrade-insecure-requests">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
   <title>Napló | AXIONA Systems</title>
   <meta name="description" content="A nagy lépések a Kockalmár, a Fejtörpe, a Keeper és az AXIONA fejlesztéséből: amikor valami először működött végig. Elfogadott változtatások, dátummal, és rövid írások.">
   <meta name="theme-color" content="#0a0f11">
@@ -26,8 +28,8 @@
   <link rel="manifest" href="/site.webmanifest">
   <link rel="alternate" type="application/rss+xml" title="AXIONA Systems – Napló" href="/naplo/feed.xml">
   <link rel="preload" href="/assets/fonts/InterVariable.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="/assets/site.css?v=12">
-  <script src="/assets/site.js?v=12" defer></script>
+  <link rel="stylesheet" href="/assets/site.css?v=13">
+  <script src="/assets/site.js?v=13" defer></script>
 </head>
 <body>
   <a class="skip-link" href="#tartalom">Ugrás a tartalomhoz</a>
@@ -45,7 +47,7 @@
           <li><a class="nav__link" href="/otletlada/">Ötletláda</a></li>
           <li><a class="nav__link" href="/rolam/">Rólam</a></li>
         </ul>
-        <a class="button button--small" style="--text:#e9e7e1;--bg:#0a0f11" href="/kapcsolat/">Kapcsolat</a>
+        <a class="button button--small button--light" href="/kapcsolat/">Kapcsolat</a>
       </nav>
       <details class="menu">
         <summary>Menü</summary>
@@ -70,7 +72,7 @@
         <p class="page-lead">A nagy lépések: amikor valami először működött végig, vagy a rendszer új képességet kapott. Mind elfogadott változtatás, dátummal. <a href="/naplo/feed.xml">RSS</a></p>
       </div>
     </section>
-    <section class="sec light" style="padding-top:0" aria-label="Bejegyzések">
+    <section class="sec light pt-0" aria-label="Bejegyzések">
       <div class="wrap">
         <div class="filters" data-filters hidden role="group" aria-label="Szűrés">
           <button type="button" data-filter="all" aria-pressed="true">Mind</button>

@@ -102,7 +102,7 @@ h1, h2, h3, h4 { margin: 0; font-weight: 640; letter-spacing: -0.025em; line-hei
 p { margin: 0; text-wrap: pretty; }
 ul, ol { margin: 0; padding: 0; }
 
-.mono, .label, .fig__cap, .receipt, .kpi__label, .crumbs, .chip, .datasheet dt, .entry__meta {
+.label, .fig__cap, .receipt, .kpi__label, .crumbs, .chip, .datasheet dt {
   font-family: var(--font-mono);
   font-weight: 400;
 }
@@ -510,14 +510,11 @@ ul, ol { margin: 0; padding: 0; }
 .product__mark { display: flex; align-items: center; justify-content: center; min-height: 15rem; border: 1px solid var(--p-line); border-radius: 4px; padding: 1.5rem; }
 .product__mark img { width: min(100%, 17rem); }
 .wordmark { font-size: clamp(2.75rem, 1.5rem + 4vw, 5rem); font-weight: 700; letter-spacing: -0.05em; line-height: 1; }
-.wordmark--sm { font-size: clamp(2rem, 1.4rem + 2vw, 3rem); }
+
 .product__body { display: flex; flex-direction: column; gap: 1.25rem; }
 .product__name { font-size: var(--t-h2); }
 .product__line { font-size: var(--t-lead); line-height: 1.45; max-width: 34rem; }
-.product__meta { display: flex; flex-wrap: wrap; gap: 0.5rem 1.5rem; margin: 0; padding: 1rem 0; border-top: 1px solid var(--p-line); border-bottom: 1px solid var(--p-line); font-family: var(--font-mono); font-size: var(--t-mono); letter-spacing: 0.06em; text-transform: uppercase; }
-.product__meta div { display: flex; gap: 0.5rem; }
-.product__meta dt { color: var(--p-muted); }
-.product__meta dd { margin: 0; }
+
 .product__proof { font-family: var(--font-mono); font-size: var(--t-mono); letter-spacing: 0.04em; color: var(--p-muted); }
 .product .button { background: var(--p-text); color: var(--p-bg); }
 .product .button--ghost { background: transparent; color: var(--p-text); border-color: var(--p-text); }
@@ -563,18 +560,8 @@ ul, ol { margin: 0; padding: 0; }
   .loop__st:last-child { border-bottom: 0; }
 }
 
-/* ------------------------------------------------------------ szabályok */
-
-.rules { list-style: none; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0; border-top: 1px solid var(--line); }
-.rules > li { padding: 1.75rem 1.5rem 0 0; }
-.rules > li + li { padding-left: 1.5rem; border-left: 1px solid var(--line); }
 .rule__no { display: block; font-family: var(--font-mono); font-size: var(--t-mono); color: var(--mark); letter-spacing: 0.08em; margin-bottom: 1rem; }
 .rule__title { font-size: var(--t-h3); margin-bottom: 0.75rem; }
-.rule__text { color: var(--muted); max-width: 32rem; }
-@media (max-width: 55.99rem) {
-  .rules { grid-template-columns: 1fr; }
-  .rules > li + li { padding-left: 0; border-left: 0; border-top: 1px solid var(--line); margin-top: 1.75rem; }
-}
 
 .rulelist { list-style: none; border-top: 1px solid var(--line); }
 .rulelist details { border-bottom: 1px solid var(--line); }
@@ -610,29 +597,10 @@ ul, ol { margin: 0; padding: 0; }
 .claims__col--no li::before { content: "×"; color: var(--muted); }
 @media (max-width: 47.99rem) { .claims { grid-template-columns: 1fr; } }
 
-/* ------------------------------------------------------------ napló */
-
-.log { list-style: none; border-top: 1px solid var(--line); }
-.entry { display: grid; grid-template-columns: 8.5rem 8.5rem minmax(0, 1fr) auto; gap: 1.25rem; align-items: baseline; padding: 1.15rem 0; border-bottom: 1px solid var(--line); }
-.entry__meta { font-size: var(--t-mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
-.entry__product { display: inline-flex; align-items: center; gap: 0.5rem; }
-.entry__product::before { content: ""; width: 0.55rem; height: 0.55rem; border-radius: 2px; background: var(--dot, var(--muted)); }
-.entry__text { font-size: 1.0625rem; }
-.entry__text a { text-decoration: none; }
-.entry__text a:hover { text-decoration: underline; }
-.entry__proof { font-family: var(--font-mono); font-size: var(--t-mono); color: var(--muted); letter-spacing: 0.04em; white-space: nowrap; }
-.entry__proof b { font-weight: 400; color: var(--mark); }
 .dot-kockalmar { --dot: var(--kockalmar); }
 .dot-fejtorpe { --dot: #b9a57c; }
 .dot-keeper { --dot: #7d898d; }
 .dot-iras { --dot: var(--signal); }
-@media (max-width: 55.99rem) {
-  .entry { grid-template-columns: 1fr auto; gap: 0.35rem 1rem; }
-  .entry__date { grid-column: 1; }
-  .entry__product { grid-column: 2; justify-self: end; }
-  .entry__text { grid-column: 1 / -1; }
-  .entry__proof { grid-column: 1 / -1; }
-}
 
 .filters { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 2rem; }
 .filters button {
@@ -698,11 +666,6 @@ ul, ol { margin: 0; padding: 0; }
 .panel--next li::before { content: "○ "; font-family: var(--font-mono); color: var(--muted); }
 @media (max-width: 47.99rem) { .twocol { grid-template-columns: 1fr; } }
 
-.receipts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.25rem; align-items: start; }
-.receipts .receipt { max-width: none; }
-@media (max-width: 63.99rem) { .receipts { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-@media (max-width: 41.99rem) { .receipts { grid-template-columns: 1fr; } }
-
 .faq { border-top: 1px solid var(--line); }
 .faq details { border-bottom: 1px solid var(--line); }
 .faq summary { padding: 1.25rem 2rem 1.25rem 0; cursor: pointer; font-weight: 560; font-size: 1.125rem; list-style: none; position: relative; }
@@ -740,8 +703,7 @@ ul, ol { margin: 0; padding: 0; }
 .chipnav { list-style: none; display: flex; flex-wrap: wrap; gap: 0.5rem; }
 .chip { display: inline-flex; gap: 0.5rem; align-items: center; padding: 0.6rem 0.9rem; border: 1px solid var(--line); border-radius: 999px; font-size: var(--t-mono); letter-spacing: 0.06em; text-transform: uppercase; text-decoration: none; }
 .chip:hover { border-color: var(--mark); }
-.chip--big { background: var(--dark-bg); color: var(--dark-text); border-color: var(--dark-bg); }
-.topic + .topic { margin-top: clamp(3.5rem, 2rem + 4vw, 6rem); }
+
 .ideas { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; }
 .idea { display: flex; flex-direction: column; gap: 0.75rem; padding: 1.5rem; background: var(--raised); border: 1px solid var(--line); border-radius: 6px; }
 .idea h3 { font-size: 1.3125rem; letter-spacing: -0.02em; }
@@ -909,3 +871,15 @@ ul, ol { margin: 0; padding: 0; }
 .tools__row li { font-family: var(--font-mono); font-size: var(--t-mono); letter-spacing: 0.02em; padding: 0.35rem 0.6rem; border: 1px solid var(--line); border-radius: 3px; background: var(--light-raised); }
 @media (max-width: 700px) { .tools__row { grid-template-columns: 1fr; gap: 0.75rem; } }
 .tools__note { display: block; margin-top: 0.35rem; font-family: var(--font-mono); font-size: var(--t-mono); font-weight: 400; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+
+/* Segédosztályok a beágyazott stílusok helyett (szigorú CSP mellett). */
+.mt-xs { margin-top: 0.75rem; }
+.mt-s { margin-top: 1rem; }
+.mt-m { margin-top: 2rem; }
+.mt-l { margin-top: 2.5rem; }
+.mt-xl { margin-top: clamp(3rem, 2rem + 3vw, 5rem); }
+.pt-0 { padding-top: 0; }
+.min-h { min-height: 70vh; }
+.inline { display: inline; }
+.button--light { --text: #e9e7e1; --bg: #0a0f11; }
+.contact-mail { margin-top: 0.75rem; font-size: var(--t-h3); font-weight: 600; letter-spacing: -0.02em; }

@@ -3,6 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'self'; manifest-src 'self'; connect-src 'none'; base-uri 'none'; form-action 'none'; upgrade-insecure-requests">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
   <title>Ötletláda | AXIONA Systems</title>
   <meta name="description" content="9 nagyobb szoftverrendszer, amelyen gondolkodom: kiberbiztonság, uniós adatszolgáltatás, energia. Ha valamelyik a te gondod is, szólj.">
   <meta name="theme-color" content="#0a0f11">
@@ -26,8 +28,8 @@
   <link rel="manifest" href="/site.webmanifest">
   <link rel="alternate" type="application/rss+xml" title="AXIONA Systems – Napló" href="/naplo/feed.xml">
   <link rel="preload" href="/assets/fonts/InterVariable.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="/assets/site.css?v=12">
-  <script src="/assets/site.js?v=12" defer></script>
+  <link rel="stylesheet" href="/assets/site.css?v=13">
+  <script src="/assets/site.js?v=13" defer></script>
 </head>
 <body>
   <a class="skip-link" href="#tartalom">Ugrás a tartalomhoz</a>
@@ -45,7 +47,7 @@
           <li><a class="nav__link" href="/otletlada/" aria-current="page">Ötletláda</a></li>
           <li><a class="nav__link" href="/rolam/">Rólam</a></li>
         </ul>
-        <a class="button button--small" style="--text:#e9e7e1;--bg:#0a0f11" href="/kapcsolat/">Kapcsolat</a>
+        <a class="button button--small button--light" href="/kapcsolat/">Kapcsolat</a>
       </nav>
       <details class="menu">
         <summary>Menü</summary>
@@ -68,7 +70,7 @@
         <nav class="crumbs" aria-label="Morzsamenü"><a href="/">Főoldal</a><span aria-hidden="true">/</span><span>Ötletláda</span></nav>
         <h1 class="page-title" id="oldal-cim">Ötletláda</h1>
         <p class="page-lead">9 nagyobb rendszer, amelyen gondolkodom. Mindegyik mögött egy valódi szabály vagy határidő áll, amelyhez ma a legtöbb kis cégnek nincs jó eszköze. Ha a cégednek szüksége van valamelyikre, megépíthetem neked; ha csak érdekel, az is segít eldönteni, mi legyen a következő.</p>
-        <ul class="chipnav" style="margin-top:2.5rem">
+        <ul class="chipnav mt-l">
           <li><a class="chip" href="#kiberbiztonsag">Kiberbiztonság és megfelelés <span>4</span></a></li>
           <li><a class="chip" href="#termekadat">Fenntarthatóság és termékadatok <span>3</span></a></li>
           <li><a class="chip" href="#energia">Energia és terep <span>2</span></a></li>
@@ -91,7 +93,7 @@
             <h3>NIS2-iránytű</h3>
             <p class="idea__line">Kiberbiztonsági megfelelés-kezelő: eszközleltár, kockázatok, incidensnapló, szabályzatok és auditbizonyítékok egy helyen, folyamatosan karbantartva.</p>
             <ul class="idea__scope"><li>Eszköz- és szolgáltatásleltár, felelősökkel</li><li>Kockázatértékelés és intézkedési terv, határidőkkel</li><li>Incidensnapló a 24 és 72 órás bejelentési rendhez</li><li>Auditbizonyítékok verziózva, egy helyen</li></ul>
-            <p class="idea__why"><span class="label" style="display:inline">Miért most · </span>Az első auditkör lezárult: 2026. szeptember 30-ig 2 220 szervezet küldött jelentést. A következő feladat a folyamatos megfelelés.</p>
+            <p class="idea__why"><span class="label inline">Miért most · </span>Az első auditkör lezárult: 2026. szeptember 30-ig 2 220 szervezet küldött jelentést. A következő feladat a folyamatos megfelelés.</p>
             <a class="text-link idea__vote" href="mailto:hello@axiona.systems?subject=%C3%89rdekel%3A%20NIS2-ir%C3%A1nyt%C5%B1">Ez érdekel →</a>
           </article>
           <article class="idea">
@@ -99,7 +101,7 @@
             <h3>CRA-sebezhetőségkezelő</h3>
             <p class="idea__line">Szoftvert vagy okoseszközt forgalmazó cégeknek: összetevők, ismert sebezhetőségek és a kötelező bejelentések egy folyamatban.</p>
             <ul class="idea__scope"><li>Szoftverösszetevő-lista (SBOM) minden kiadáshoz</li><li>Ismert sebezhetőségek figyelése az összetevőkön</li><li>Bejelentési határidők és sablonok: 24 óra, 72 óra, 14 nap</li></ul>
-            <p class="idea__why"><span class="label" style="display:inline">Miért most · </span>Az uniós kiberreziliencia-rendelet bejelentési kötelezettsége 2026. szeptember 11. óta él: az aktívan kihasznált sebezhetőséget 24 órán belül jelezni kell.</p>
+            <p class="idea__why"><span class="label inline">Miért most · </span>Az uniós kiberreziliencia-rendelet bejelentési kötelezettsége 2026. szeptember 11. óta él: az aktívan kihasznált sebezhetőséget 24 órán belül jelezni kell.</p>
             <a class="text-link idea__vote" href="mailto:hello@axiona.systems?subject=%C3%89rdekel%3A%20CRA-sebezhet%C5%91s%C3%A9gkezel%C5%91">Ez érdekel →</a>
           </article>
           <article class="idea">
@@ -107,7 +109,7 @@
             <h3>Beszállítói bizonyítéktár</h3>
             <p class="idea__line">A nagy ügyfelek biztonsági kérdőíveire egyszer összegyűjtött, bizonyítékokkal alátámasztott válaszok, újrahasznosítva.</p>
             <ul class="idea__scope"><li>Egyszer megírt, bizonyítékhoz kötött válaszok</li><li>Új kérdőív előkitöltése a korábbi válaszokból</li><li>Lejáró tanúsítványok és szabályzatok figyelése</li></ul>
-            <p class="idea__why"><span class="label" style="display:inline">Miért most · </span>A NIS2 alá eső cégek szerződésben kérnek bizonyítékot a beszállítóiktól, a kis beszállító ezt ma minden ügyfélnél újra kitölti.</p>
+            <p class="idea__why"><span class="label inline">Miért most · </span>A NIS2 alá eső cégek szerződésben kérnek bizonyítékot a beszállítóiktól, a kis beszállító ezt ma minden ügyfélnél újra kitölti.</p>
             <a class="text-link idea__vote" href="mailto:hello@axiona.systems?subject=%C3%89rdekel%3A%20Besz%C3%A1ll%C3%ADt%C3%B3i%20bizony%C3%ADt%C3%A9kt%C3%A1r">Ez érdekel →</a>
           </article>
           <article class="idea">
@@ -115,7 +117,7 @@
             <h3>MI-nyilvántartó</h3>
             <p class="idea__line">Melyik MI-eszközt ki használja, mire, milyen adatokkal; a munkatársak MI-képzése és az átláthatósági jelölések dokumentálva.</p>
             <ul class="idea__scope"><li>MI-eszközök és felhasználási esetek nyilvántartása</li><li>Kockázati besorolás az uniós MI-rendelet szerint</li><li>Képzési igazolások és átláthatósági jelölések</li></ul>
-            <p class="idea__why"><span class="label" style="display:inline">Miért most · </span>2026. augusztus 2-tól a hatóságok felügyelik az uniós MI-rendeletet, és az átláthatósági szabályok is élnek.</p>
+            <p class="idea__why"><span class="label inline">Miért most · </span>2026. augusztus 2-tól a hatóságok felügyelik az uniós MI-rendeletet, és az átláthatósági szabályok is élnek.</p>
             <a class="text-link idea__vote" href="mailto:hello@axiona.systems?subject=%C3%89rdekel%3A%20MI-nyilv%C3%A1ntart%C3%B3">Ez érdekel →</a>
           </article>
         </div>
@@ -137,7 +139,7 @@
             <h3>VSME-jelentés</h3>
             <p class="idea__line">Önkéntes ESG-jelentés lépésről lépésre, az uniós VSME-szabvány szerint, a banknak és a nagy vevőknek kiadható formában.</p>
             <ul class="idea__scope"><li>Adatgyűjtés a VSME alap- és átfogó moduljához</li><li>Energia-, kibocsátás- és munkaügyi számítások</li><li>Bankoknak és vevőknek kiadható jelentés</li></ul>
-            <p class="idea__why"><span class="label" style="display:inline">Miért most · </span>A Bizottság 2025 júliusában ajánlotta a VSME-t, és a bankok, nagy vevők egyre gyakrabban ilyen adatokat kérnek.</p>
+            <p class="idea__why"><span class="label inline">Miért most · </span>A Bizottság 2025 júliusában ajánlotta a VSME-t, és a bankok, nagy vevők egyre gyakrabban ilyen adatokat kérnek.</p>
             <a class="text-link idea__vote" href="mailto:hello@axiona.systems?subject=%C3%89rdekel%3A%20VSME-jelent%C3%A9s">Ez érdekel →</a>
           </article>
           <article class="idea">
@@ -145,7 +147,7 @@
             <h3>EUDR-napló</h3>
             <p class="idea__line">Erdőirtás-mentességi átvilágítás: beszállítók, származási koordináták, kockázatértékelés és nyilatkozat egy folyamatban.</p>
             <ul class="idea__scope"><li>Beszállítói adatok és földrajzi koordináták bekérése</li><li>Kockázatértékelés és -csökkentés dokumentálva</li><li>Kellő gondossági nyilatkozat előkészítése</li></ul>
-            <p class="idea__why"><span class="label" style="display:inline">Miért most · </span>Az uniós erdőirtási rendelet a nagyobb cégekre 2026. december 30-tól, a mikro- és kisvállalkozásokra 2027. június 30-tól vonatkozik.</p>
+            <p class="idea__why"><span class="label inline">Miért most · </span>Az uniós erdőirtási rendelet a nagyobb cégekre 2026. december 30-tól, a mikro- és kisvállalkozásokra 2027. június 30-tól vonatkozik.</p>
             <a class="text-link idea__vote" href="mailto:hello@axiona.systems?subject=%C3%89rdekel%3A%20EUDR-napl%C3%B3">Ez érdekel →</a>
           </article>
           <article class="idea">
@@ -153,7 +155,7 @@
             <h3>Akkumulátor-útlevél</h3>
             <p class="idea__line">Digitális termékútlevél kis akkumulátor-összeszerelőknek: összetétel, eredet, újrahasznosítási adatok, QR-kód.</p>
             <ul class="idea__scope"><li>Összetétel, eredet és szénlábnyom adatai</li><li>Nyilvános és jogosultsághoz kötött adatrészek szétválasztva</li><li>QR-kóddal elérhető útlevél</li></ul>
-            <p class="idea__why"><span class="label" style="display:inline">Miért most · </span>Bizonyos akkumulátorokra 2027. február 18-tól kötelező a digitális termékútlevél.</p>
+            <p class="idea__why"><span class="label inline">Miért most · </span>Bizonyos akkumulátorokra 2027. február 18-tól kötelező a digitális termékútlevél.</p>
             <a class="text-link idea__vote" href="mailto:hello@axiona.systems?subject=%C3%89rdekel%3A%20Akkumul%C3%A1tor-%C3%BAtlev%C3%A9l">Ez érdekel →</a>
           </article>
         </div>
@@ -175,7 +177,7 @@
             <h3>Közösségi áram</h3>
             <p class="idea__line">Energiaközösség-elszámoló: a negyedórás mérési adatokból a rögzített kvóták szerint elosztja a megtermelt áramot, és lakónként kimutatást készít.</p>
             <ul class="idea__scope"><li>Negyedórás mérési adatok beolvasása</li><li>Megosztás előre rögzített kvóták szerint</li><li>Tagonkénti havi kimutatás</li></ul>
-            <p class="idea__why"><span class="label" style="display:inline">Miért most · </span>2025 szeptembere óta társasházak is alapíthatnak energiaközösséget; ehhez negyedórás mérés és előre rögzített megosztás kell.</p>
+            <p class="idea__why"><span class="label inline">Miért most · </span>2025 szeptembere óta társasházak is alapíthatnak energiaközösséget; ehhez negyedórás mérés és előre rögzített megosztás kell.</p>
             <a class="text-link idea__vote" href="mailto:hello@axiona.systems?subject=%C3%89rdekel%3A%20K%C3%B6z%C3%B6ss%C3%A9gi%20%C3%A1ram">Ez érdekel →</a>
           </article>
           <article class="idea">
@@ -183,7 +185,7 @@
             <h3>Növényvédelmi napló</h3>
             <p class="idea__line">Terepen, telefonról rögzített kezelések, szerkészlet és hatósági exportra kész napló.</p>
             <ul class="idea__scope"><li>Kezelések rögzítése terepen, hálózat nélkül is</li><li>Szerkészlet és élelmezés-egészségügyi várakozási idők</li><li>Hatósági exportra kész napló, 3 év megőrzéssel</li></ul>
-            <p class="idea__why"><span class="label" style="display:inline">Miért most · </span>A kezelést 24 órán belül kell rögzíteni és 3 évig megőrizni; 10 hektár fölött részben elektronikusan.</p>
+            <p class="idea__why"><span class="label inline">Miért most · </span>A kezelést 24 órán belül kell rögzíteni és 3 évig megőrizni; 10 hektár fölött részben elektronikusan.</p>
             <a class="text-link idea__vote" href="mailto:hello@axiona.systems?subject=%C3%89rdekel%3A%20N%C3%B6v%C3%A9nyv%C3%A9delmi%20napl%C3%B3">Ez érdekel →</a>
           </article>
         </div>
