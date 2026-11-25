@@ -55,7 +55,7 @@ ORIGINS = {
 
 
 CF_SCRIPT = re.compile(rb'<script data-cfasync="false" src="/cdn-cgi/scripts/[0-9a-f]+/cloudflare-static/email-decode\.min\.js"></script>')
-CF_BEACON = re.compile(rb'<script[^>]*src="https://static\.cloudflareinsights\.com/beacon\.min\.js[^"]*"[^>]*></script>')
+CF_BEACON = re.compile(rb'<script[^>]*src="https://static\.cloudflareinsights\.com/beacon\.min\.js[^"]*"[^>]*></script>\n?')
 CF_LINK = re.compile(rb'href="/cdn-cgi/l/email-protection#([0-9a-f]+)"')
 CF_SPAN = re.compile(rb'<span class="__cf_email__" data-cfemail="([0-9a-f]+)">\[email&#160;protected\]</span>')
 
