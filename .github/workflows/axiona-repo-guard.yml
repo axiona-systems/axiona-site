@@ -26,37 +26,25 @@ jobs:
           fetch-depth: 2
           persist-credentials: false
 
-      - name: Verify current public surface
+      - name: Verify v4 public surface, generator freshness and links
         shell: bash
         run: python3 scripts/verify_site.py
 
-      - name: Verify sitemap locale families
-        shell: bash
-        run: python3 scripts/verify_sitemap_hreflang.py
-
-      - name: Verify RFC 9116 security.txt
+      - name: Verify security.txt
         shell: bash
         run: python3 scripts/verify_security_txt.py
 
-      - name: Verify social metadata
-        shell: bash
-        run: python3 scripts/verify_social_metadata.py
-
-      - name: Verify retired public routes
+      - name: Verify retired routes stay retired
         shell: bash
         run: python3 scripts/verify_retired_routes.py
-
-      - name: Verify browser identity metadata
-        shell: bash
-        run: python3 scripts/verify_browser_identity.py
-
-      - name: Verify runtime asset graph
-        shell: bash
-        run: python3 scripts/verify_asset_references.py
 
       - name: Verify brand consumer boundary
         shell: bash
         run: python3 scripts/verify_brand_consumer_boundary.py
+
+      - name: Verify browser audit coverage
+        shell: bash
+        run: python3 scripts/verify_browser_audit_matrix.py
 
       - name: Verify Actions hardening
         shell: bash

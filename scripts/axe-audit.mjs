@@ -8,35 +8,22 @@ const chromePath = process.env.CHROME_PATH;
 const base = process.env.AXIONA_AUDIT_BASE || "http://127.0.0.1:4173";
 const paths = [
   "/",
-  "/systems.html",
-  "/process.html",
-  "/security.html",
-  "/solutions.html",
-  "/keeper.html",
-  "/contact.html",
-  "/support.html",
-  "/privacy.html",
-  "/legal.html",
-  "/en/",
-  "/en/systems.html",
-  "/en/process.html",
-  "/en/security.html",
-  "/en/solutions.html",
-  "/en/keeper.html",
-  "/en/contact.html",
-  "/en/support.html",
-  "/en/privacy.html",
-  "/en/legal.html",
-  "/de/",
-  "/de/systems.html",
-  "/de/process.html",
-  "/de/security.html",
-  "/de/solutions.html",
-  "/de/keeper.html",
-  "/de/contact.html",
-  "/de/support.html",
-  "/de/privacy.html",
-  "/de/legal.html"
+  "/kockalmar/",
+  "/fejtorpe/",
+  "/keeper/",
+  "/egyuttmukodes/",
+  "/hogyan-keszul/",
+  "/naplo/",
+  "/naplo/megallas-nem-hiba/",
+  "/naplo/onmagat-nem-igazolja/",
+  "/otletlada/",
+  "/rolam/",
+  "/kapcsolat/",
+  "/impresszum/",
+  "/adatvedelem/",
+  "/biztonsag/",
+  "/tamogatas/",
+  "/404.html"
 ];
 
 if (!chromePath) {
@@ -53,7 +40,7 @@ const browser = await chromium.launch({
 let failed = false;
 try {
   for (const route of paths) {
-    const context = await browser.newContext({ viewport: { width: 1440, height: 900 } });
+    const context = await browser.newContext({ viewport: { width: 1440, height: 900 }, bypassCSP: true }); // az axe beinjektálásához; a CSP-t a render contract ellenőrzi
     const page = await context.newPage();
     const url = new URL(route, base).href;
     await page.goto(url, { waitUntil: "domcontentloaded", timeout: 30000 });

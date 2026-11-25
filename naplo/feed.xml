@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0">
+  <channel>
+    <title>AXIONA Systems – Napló</title>
+    <link>https://axiona.systems/naplo/</link>
+    <description>A nagy lépések és rövid írások.</description>
+    <language>hu</language>
+    <item>
+      <title>Miért nem hiba, ha a rendszer megáll</title>
+      <link>https://axiona.systems/naplo/megallas-nem-hiba/</link>
+      <guid isPermaLink="false">megallas-nem-hiba</guid>
+      <pubDate>Tue, 24 Nov 2026 12:00:00 +0100</pubDate>
+      <description>A legtöbb szoftver akkor is ad valamilyen választ, ha nem tudja a jót. Az AXIONA ilyenkor megáll.</description>
+    </item>
+    <item>
+      <title>Miért nem igazolhatja az MI a saját munkáját</title>
+      <link>https://axiona.systems/naplo/onmagat-nem-igazolja/</link>
+      <guid isPermaLink="false">onmagat-nem-igazolja</guid>
+      <pubDate>Mon, 23 Nov 2026 12:00:00 +0100</pubDate>
+      <description>Ha ugyanaz írja a kódot és a tesztet, a teszt csak azt bizonyítja, hogy a kettő egyetért egymással.</description>
+    </item>
+    <item>
+      <title>Kockalmár: 2 588 teszt fut le minden változtatás előtt.</title>
+      <link>https://axiona.systems/kockalmar/</link>
+      <guid isPermaLink="false">2026-11-20-kockalmar-3019142b</guid>
+      <pubDate>Fri, 20 Nov 2026 12:00:00 +0100</pubDate>
+      <description>Ha egyetlen teszt is elbukik, a változtatás nem kerül be a webshopba. A tesztkészlet minden új funkcióval együtt nő. (KM-0458 · 2 588 teszt)</description>
+    </item>
+    <item>
+      <title>Fejtörpe: Füzetstúdió: minden oldal valódi előnézettel.</title>
+      <link>https://axiona.systems/fejtorpe/</link>
+      <guid isPermaLink="false">2026-11-20-fejtorpe-b4a8d562</guid>
+      <pubDate>Fri, 20 Nov 2026 12:00:00 +0100</pubDate>
+      <description>A füzet lépésenként áll össze, a munka megmarad két alkalom között, a végén nyomtatható PDF készül. (FT-0299 · 1 569 teszt)</description>
+    </item>
+    <item>
+      <title>Fejtörpe: A kép azt jelenti, amit a feladat mond.</title>
+      <link>https://axiona.systems/fejtorpe/</link>
+      <guid isPermaLink="false">2026-11-19-fejtorpe-252fa749</guid>
+      <pubDate>Thu, 19 Nov 2026 12:00:00 +0100</pubDate>
+      <description>Ha a feladat almát kér, egy független ellenőrzés megnézi, hogy a rajz nem téveszthető-e össze mással, egészen a kész füzetig. (független képellenőrzés)</description>
+    </item>
+    <item>
+      <title>Kockalmár: Csomagautomata, vendégvásárlás, ingyenes szállítás.</title>
+      <link>https://axiona.systems/kockalmar/</link>
+      <guid isPermaLink="false">2026-11-17-kockalmar-d6387400</guid>
+      <pubDate>Tue, 17 Nov 2026 12:00:00 +0100</pubDate>
+      <description>Csomagautomaták a szolgáltató hivatalos listájából, rendeléskeresés fiók nélkül, és a kosár mutatja, mennyi hiányzik az ingyenes szállításhoz. (kiszállítás három módon)</description>
+    </item>
+    <item>
+      <title>Kockalmár: Kész a teljes raktári folyamat.</title>
+      <link>https://axiona.systems/kockalmar/</link>
+      <guid isPermaLink="false">2026-11-16-kockalmar-a9a7acbf</guid>
+      <pubDate>Mon, 16 Nov 2026 12:00:00 +0100</pubDate>
+      <description>A beérkezéstől a csomagolásig minden raktári lépés naplózott, és a tesztszerveren fut. (tesztszerveren fut)</description>
+    </item>
+    <item>
+      <title>Kockalmár: A webshop először fut saját szerveren.</title>
+      <link>https://axiona.systems/kockalmar/</link>
+      <guid isPermaLink="false">2026-11-12-kockalmar-fa763f94</guid>
+      <pubDate>Thu, 12 Nov 2026 12:00:00 +0100</pubDate>
+      <description>A teljes vásárlási út, a raktárfelület és a katalógus egy privát tesztszerveren, mért teljesítménnyel. (élő mérés a szerveren)</description>
+    </item>
+    <item>
+      <title>Kockalmár: A raktár tudja, melyik készlet rakható ki.</title>
+      <link>https://axiona.systems/kockalmar/</link>
+      <guid isPermaLink="false">2026-11-05-kockalmar-6312b0ae</guid>
+      <pubDate>Thu, 05 Nov 2026 12:00:00 +0100</pubDate>
+      <description>A klasszikus és az újabb készletek alkatrészlistáját a rendszer összeveti a polcon lévő, valódi tételekkel. (két katalógus-korszak)</description>
+    </item>
+    <item>
+      <title>Kockalmár: Alkatrészrajzok, pontos 3D-modellekből.</title>
+      <link>https://axiona.systems/kockalmar/</link>
+      <guid isPermaLink="false">2026-11-03-kockalmar-dd19ad6e</guid>
+      <pubDate>Tue, 03 Nov 2026 12:00:00 +0100</pubDate>
+      <description>Ahol nincs jó fotó, az alkatrész képe rögzített változatú, nyílt 3D-modellből készül, nem kézzel rajzolva. (rögzített modellváltozatok)</description>
+    </item>
+    <item>
+      <title>Fejtörpe: A drága lépés csak az olcsó ellenőrzés után indul.</title>
+      <link>https://axiona.systems/fejtorpe/</link>
+      <guid isPermaLink="false">2026-09-29-fejtorpe-8dbf5678</guid>
+      <pubDate>Tue, 29 Sep 2026 12:00:00 +0100</pubDate>
+      <description>A képgenerálás költségét a rendszer előre lefoglalja, és csak akkor költ, ha a vizuális ellenőrzés készen áll. (költségkapu)</description>
+    </item>
+    <item>
+      <title>Fejtörpe: Az emberi döntést biztonsági kulcs írja alá.</title>
+      <link>https://axiona.systems/fejtorpe/</link>
+      <guid isPermaLink="false">2026-09-27-fejtorpe-46ccf420</guid>
+      <pubDate>Sun, 27 Sep 2026 12:00:00 +0100</pubDate>
+      <description>A rajzstílust csak hitelesített ember hagyhatja jóvá, a saját eszközén, biztonsági kulccsal. A gép nem dönthet helyette. (hitelesített emberi jóváhagyás)</description>
+    </item>
+    <item>
+      <title>Fejtörpe: Az első füzet végigment: a kéréstől a nyomtatható PDF-ig.</title>
+      <link>https://axiona.systems/fejtorpe/</link>
+      <guid isPermaLink="false">2026-09-26-fejtorpe-cbf96513</guid>
+      <pubDate>Sat, 26 Sep 2026 12:00:00 +0100</pubDate>
+      <description>Adatfelvétel, feladatok, rajzok, vizuális ellenőrzés és nyomdai előellenőrzés, egyetlen végigvihető úton. (nyomdai előellenőrzésen átment PDF)</description>
+    </item>
+    <item>
+      <title>Fejtörpe: Pontösszekötő, amelyről a gép dönti el, felismerhető-e.</title>
+      <link>https://axiona.systems/fejtorpe/</link>
+      <guid isPermaLink="false">2026-09-26-fejtorpe-cb9f0edc</guid>
+      <pubDate>Sat, 26 Sep 2026 12:00:00 +0100</pubDate>
+      <description>A pontok helyét a rendszer kiszámolja, és egy ellenőrzés megnézi, hogy összekötve tényleg kiadják-e a formát. (felismerhetőségi kapu)</description>
+    </item>
+    <item>
+      <title>AXIONA: Hiba, MI-javítás, újraellenőrzés. Kézi másolás nélkül.</title>
+      <link>https://axiona.systems/hogyan-keszul/#gephaz</link>
+      <guid isPermaLink="false">2026-09-09-axiona-d9c0fc7a</guid>
+      <pubDate>Wed, 09 Sep 2026 12:00:00 +0100</pubDate>
+      <description>Egy szándékosan elrontott változtatást az MI kijavított, a rendszer elszigetelt gépen újraellenőrizte, és rendben jelezte vissza. (élő próba elszigetelt gépen)</description>
+    </item>
+    <item>
+      <title>AXIONA: Megszületik a független ellenőrző.</title>
+      <link>https://axiona.systems/hogyan-keszul/#gephaz</link>
+      <guid isPermaLink="false">2026-08-30-axiona-e18f37f7</guid>
+      <pubDate>Sun, 30 Aug 2026 12:00:00 +0100</pubDate>
+      <description>Külön rendszer, amely elolvassa a változtatást, de nem futtatja, és amelyet nem az irányít, aki a változtatást készítette. (azóta minden változtatáson)</description>
+    </item>
+    <item>
+      <title>Keeper: „Kérdezd a Keepert”: válasz, mindig forrással.</title>
+      <link>https://axiona.systems/keeper/</link>
+      <guid isPermaLink="false">2026-08-23-keeper-ff7b8861</guid>
+      <pubDate>Sun, 23 Aug 2026 12:00:00 +0100</pubDate>
+      <description>Válasz csak a saját iratokból. Ha nincs biztos forrás, a Keeper ezt mondja, és nem talál ki semmit. Valódi iPhone-on kipróbálva. (KP-0104 · KP-0106)</description>
+    </item>
+    <item>
+      <title>Keeper: Minden kiemelt adat visszavezet az iratra.</title>
+      <link>https://axiona.systems/keeper/</link>
+      <guid isPermaLink="false">2026-08-21-keeper-b6cb88d8</guid>
+      <pubDate>Fri, 21 Aug 2026 12:00:00 +0100</pubDate>
+      <description>Egy dátumra vagy összegre koppintva a Keeper megmutatja az irat pontos részét, ahonnan az adat származik. (forráshoz kötött mezők)</description>
+    </item>
+    <item>
+      <title>Keeper: Helyi MI, a készüléken.</title>
+      <link>https://axiona.systems/keeper/</link>
+      <guid isPermaLink="false">2026-08-19-keeper-4bddd5c2</guid>
+      <pubDate>Wed, 19 Aug 2026 12:00:00 +0100</pubDate>
+      <description>Az iratok elemzése a telefonon fut, külső MI-szolgáltatás nélkül. (külső szolgáltatás nélkül)</description>
+    </item>
+    <item>
+      <title>Keeper: Titkosított tárolás, valódi eszközön igazolva.</title>
+      <link>https://axiona.systems/keeper/</link>
+      <guid isPermaLink="false">2026-08-16-keeper-dba61456</guid>
+      <pubDate>Sun, 16 Aug 2026 12:00:00 +0100</pubDate>
+      <description>Az iratok titkosított adatbázisba kerülnek, és az átállást valódi készüléken kellett bizonyítani, nem csak szimulátorban. (eszközön igazolt átállás)</description>
+    </item>
+    <item>
+      <title>Kockalmár: Működő kosár, pénztár és tesztfizetés.</title>
+      <link>https://axiona.systems/kockalmar/</link>
+      <guid isPermaLink="false">2026-07-13-kockalmar-e4807e4f</guid>
+      <pubDate>Mon, 13 Jul 2026 12:00:00 +0100</pubDate>
+      <description>A vásárlás végigvihető a kosártól a kártyás fizetésig, egy fizetési szolgáltató tesztkörnyezetében. (tesztfizetés végigvive)</description>
+    </item>
+    <item>
+      <title>AXIONA: Egy mérnöki alap minden termékhez.</title>
+      <link>https://axiona.systems/hogyan-keszul/#gephaz</link>
+      <guid isPermaLink="false">2026-07-12-axiona-6eb2375f</guid>
+      <pubDate>Sun, 12 Jul 2026 12:00:00 +0100</pubDate>
+      <description>Ugyanazok a szabályok, ellenőrzések és nyugták a webshopban, a füzetkészítőben és az appban, egy helyről karbantartva. (közös alap)</description>
+    </item>
+    <item>
+      <title>Kockalmár: A számla a NAV sémáján is átmegy, mielőtt elindulna.</title>
+      <link>https://axiona.systems/kockalmar/</link>
+      <guid isPermaLink="false">2026-07-11-kockalmar-1032623b</guid>
+      <pubDate>Sat, 11 Jul 2026 12:00:00 +0100</pubDate>
+      <description>A számlaadatokat a rendszer a hivatalos NAV-séma szerint ellenőrzi, hálózat nélkül, minden változtatás előtt. (ellenőrzőkapu minden változtatáson)</description>
+    </item>
+    <item>
+      <title>Kockalmár: Összeállt a webshop gerince.</title>
+      <link>https://axiona.systems/kockalmar/</link>
+      <guid isPermaLink="false">2026-07-08-kockalmar-098f7f2f</guid>
+      <pubDate>Wed, 08 Jul 2026 12:00:00 +0100</pubDate>
+      <description>Nyilvános katalógus, kosár, rendelés, készletfoglalás és számla-előkészítés. (katalógustól a számláig)</description>
+    </item>
+  </channel>
+</rss>

@@ -4,17 +4,17 @@ on:
   push:
     branches: [main]
     paths:
-      - "*.html"
-      - "en/**"
-      - "de/**"
+      - "**/*.html"
       - "assets/**"
       - ".well-known/**"
-      - "scripts/verify_live_brand_surface.py"
+      - "naplo/feed.xml"
       - "sitemap.xml"
+      - "llms.txt"
       - "robots.txt"
       - "site.webmanifest"
       - "CNAME"
       - ".nojekyll"
+      - "scripts/verify_served_site.py"
       - ".github/workflows/axiona-pages-rebuild.yml"
   workflow_dispatch:
 
@@ -80,70 +80,6 @@ jobs:
             sleep 5
           done
 
-      - name: Resolve canonical runtime bindings from source
+      - name: Verify live site equals exact source
         shell: bash
-        run: |
-          set -euo pipefail
-          python3 <<'PY' >> "$GITHUB_ENV"
-          import re
-          from pathlib import Path
-          text=Path('index.html').read_text(encoding='utf-8')
-          patterns={
-            'AX_R137': r'(/assets/r137-ux-fixes\.css\?release=[A-Za-z0-9_-]+)',
-            'AX_MOTION_CSS': r'(/assets/motion-r138\.css\?release=[A-Za-z0-9_-]+)',
-            'AX_MOTION_JS': r'(/assets/js/motion-r138\.js\?release=[A-Za-z0-9_-]+)',
-          }
-          for key, pattern in patterns.items():
-            match=re.search(pattern,text)
-            if not match: raise SystemExit(f'missing canonical binding {key}')
-            print(f'{key}={match.group(1)}')
-          PY
-
-      - name: Verify live canonical routes and security contact
-        shell: bash
-        run: |
-          set -euo pipefail
-          routes=(
-            "/" "/systems.html" "/process.html" "/security.html" "/solutions.html"
-            "/contact.html" "/support.html" "/keeper.html" "/privacy.html" "/legal.html"
-            "/en/" "/de/"
-          )
-          for attempt in $(seq 1 30); do
-            key="${GITHUB_SHA}-live-${attempt}"
-            ok=1
-            for route in "${routes[@]}"; do
-              html="$(curl --fail --silent --show-error --location --retry 2 --retry-all-errors --header 'Cache-Control: no-cache' "https://axiona.systems${route}?axiona_verify=${key}" || true)"
-              grep -Fq "$AX_R137" <<<"$html" || ok=0
-              grep -Fq "$AX_MOTION_CSS" <<<"$html" || ok=0
-              grep -Fq "$AX_MOTION_JS" <<<"$html" || ok=0
-              grep -Fq '<main' <<<"$html" || ok=0
-            done
-            security_txt="$(curl --fail --silent --show-error --location --header 'Cache-Control: no-cache' "https://axiona.systems/.well-known/security.txt?axiona_verify=${key}" || true)"
-            grep -Fq 'Canonical: https://axiona.systems/.well-known/security.txt' <<<"$security_txt" || ok=0
-            grep -Fq 'Policy: https://axiona.systems/security.html' <<<"$security_txt" || ok=0
-            if [ "$ok" -eq 1 ]; then
-              echo "OK_AXIONA_LIVE_CANONICAL_SURFACE attempt=${attempt}"
-              break
-            fi
-            if [ "$attempt" -eq 30 ]; then
-              echo "STOP_AXIONA_LIVE_CANONICAL_SURFACE_NOT_CONVERGED" >&2
-              exit 1
-            fi
-            sleep 5
-          done
-
-      - name: Verify exact live R147 brand identity surface
-        shell: bash
-        run: |
-          set -u
-          for attempt in $(seq 1 18); do
-            echo "AXIONA_LIVE_BRAND_ATTEMPT=${attempt}"
-            if python3 scripts/verify_live_brand_surface.py --mode live; then
-              exit 0
-            fi
-            if [ "$attempt" -lt 18 ]; then
-              sleep 5
-            fi
-          done
-          echo "STOP_AXIONA_LIVE_BRAND_SURFACE_NOT_CONVERGED" >&2
-          exit 1
+        run: python3 scripts/verify_served_site.py --mode live --attempts 18

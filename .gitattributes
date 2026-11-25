@@ -15,3 +15,7 @@
 *.webp binary
 *.ico binary
 *.pdf binary
+*.woff2 binary
+
+# A betűkészletek licencszövege szó szerint marad, a sorvégi szóközökkel együtt.
+assets/fonts/*.txt -whitespace

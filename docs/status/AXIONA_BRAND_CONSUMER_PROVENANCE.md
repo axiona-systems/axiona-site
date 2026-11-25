@@ -40,10 +40,10 @@ The site manifest uses canonical paper `#F1EEE6` and deep petrol `#082830`.
 
 ## Completeness
 
-All 31 public HTML documents bind the full-color horizontal lockup in the header and the monochrome-white lockup in the footer. All 30 indexable HU/EN/DE pages bind locale-correct R147 social cards. The 404 page carries the same header/footer and browser identity.
+Since v4 every public content page (Hungarian only) binds the monochrome-white horizontal lockup in both the dark header and the footer, and the HU R147 social card. Old HU/EN/DE URLs are redirect stubs. The 404 page carries the same header/footer and browser identity. The full-color lockup, symbol and EN/DE social cards remain pinned runtime assets but are not bound by the current pages.
 
 Legacy runtime identity is prohibited after R147: `assets/axiona-mark.png`, any `assets/social/*r92-*.png`, and any public binding to those assets.
 
 ## Machine verification
 
-`assets/brand/AXIONA_BRAND_RUNTIME_V1.json` records the pinned authority, placement mapping and exact SHA-256 hashes of every active brand/browser/social runtime asset. `scripts/verify_brand_consumer_boundary.py`, browser identity, social metadata, asset-reference and render-contract checks fail closed on drift.
+`assets/brand/AXIONA_BRAND_RUNTIME_V1.json` records the pinned authority, placement mapping and exact SHA-256 hashes of every active brand/browser/social runtime asset. `scripts/verify_brand_consumer_boundary.py` and `scripts/verify_site.py` (icons, social metadata, asset references) fail closed on drift.

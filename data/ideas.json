@@ -1,0 +1,125 @@
+{
+  "groups": [
+    {
+      "id": "kiberbiztonsag",
+      "name": "Kiberbiztonság és megfelelés",
+      "sub": "Ahol a szabályozás már él, és a kis cégeknek ma táblázatkezelőnél jobb eszköz nem jut.",
+      "items": [
+        {
+          "name": "NIS2-iránytű",
+          "line": "Kiberbiztonsági megfelelés-kezelő: eszközleltár, kockázatok, incidensnapló, szabályzatok és auditbizonyítékok egy helyen, folyamatosan karbantartva.",
+          "who": "NIS2 hatálya alá eső cégeknek",
+          "why": "Az első auditkör lezárult: 2026. szeptember 30-ig 2 220 szervezet küldött jelentést. A következő feladat a folyamatos megfelelés.",
+          "scope": [
+            "Eszköz- és szolgáltatásleltár, felelősökkel",
+            "Kockázatértékelés és intézkedési terv, határidőkkel",
+            "Incidensnapló a 24 és 72 órás bejelentési rendhez",
+            "Auditbizonyítékok verziózva, egy helyen"
+          ]
+        },
+        {
+          "line": "Szoftvert vagy okoseszközt forgalmazó cégeknek: összetevők, ismert sebezhetőségek és a kötelező bejelentések egy folyamatban.",
+          "who": "Szoftver- és okoseszköz-gyártóknak",
+          "why": "Az uniós kiberreziliencia-rendelet bejelentési kötelezettsége 2026. szeptember 11. óta él: az aktívan kihasznált sebezhetőséget 24 órán belül jelezni kell.",
+          "name": "CRA-sebezhetőségkezelő",
+          "scope": [
+            "Szoftverösszetevő-lista (SBOM) minden kiadáshoz",
+            "Ismert sebezhetőségek figyelése az összetevőkön",
+            "Bejelentési határidők és sablonok: 24 óra, 72 óra, 14 nap"
+          ]
+        },
+        {
+          "name": "Beszállítói bizonyítéktár",
+          "line": "A nagy ügyfelek biztonsági kérdőíveire egyszer összegyűjtött, bizonyítékokkal alátámasztott válaszok, újrahasznosítva.",
+          "who": "Kis IT- és szoftverbeszállítóknak",
+          "why": "A NIS2 alá eső cégek szerződésben kérnek bizonyítékot a beszállítóiktól, a kis beszállító ezt ma minden ügyfélnél újra kitölti.",
+          "scope": [
+            "Egyszer megírt, bizonyítékhoz kötött válaszok",
+            "Új kérdőív előkitöltése a korábbi válaszokból",
+            "Lejáró tanúsítványok és szabályzatok figyelése"
+          ]
+        },
+        {
+          "name": "MI-nyilvántartó",
+          "line": "Melyik MI-eszközt ki használja, mire, milyen adatokkal; a munkatársak MI-képzése és az átláthatósági jelölések dokumentálva.",
+          "who": "MI-t használó kis- és középvállalkozásoknak",
+          "why": "2026. augusztus 2-tól a hatóságok felügyelik az uniós MI-rendeletet, és az átláthatósági szabályok is élnek.",
+          "scope": [
+            "MI-eszközök és felhasználási esetek nyilvántartása",
+            "Kockázati besorolás az uniós MI-rendelet szerint",
+            "Képzési igazolások és átláthatósági jelölések"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "termekadat",
+      "name": "Fenntarthatóság és termékadatok",
+      "sub": "Uniós adatszolgáltatások, amelyeket a nagy cégek továbbadnak a beszállítóiknak.",
+      "items": [
+        {
+          "name": "VSME-jelentés",
+          "line": "Önkéntes ESG-jelentés lépésről lépésre, az uniós VSME-szabvány szerint, a banknak és a nagy vevőknek kiadható formában.",
+          "who": "Kis- és középvállalkozásoknak",
+          "why": "A Bizottság 2025 júliusában ajánlotta a VSME-t, és a bankok, nagy vevők egyre gyakrabban ilyen adatokat kérnek.",
+          "scope": [
+            "Adatgyűjtés a VSME alap- és átfogó moduljához",
+            "Energia-, kibocsátás- és munkaügyi számítások",
+            "Bankoknak és vevőknek kiadható jelentés"
+          ]
+        },
+        {
+          "name": "EUDR-napló",
+          "line": "Erdőirtás-mentességi átvilágítás: beszállítók, származási koordináták, kockázatértékelés és nyilatkozat egy folyamatban.",
+          "who": "Fa-, kávé-, kakaó-, bőr- és gumitermékekkel dolgozó cégeknek",
+          "why": "Az uniós erdőirtási rendelet a nagyobb cégekre 2026. december 30-tól, a mikro- és kisvállalkozásokra 2027. június 30-tól vonatkozik.",
+          "scope": [
+            "Beszállítói adatok és földrajzi koordináták bekérése",
+            "Kockázatértékelés és -csökkentés dokumentálva",
+            "Kellő gondossági nyilatkozat előkészítése"
+          ]
+        },
+        {
+          "name": "Akkumulátor-útlevél",
+          "line": "Digitális termékútlevél kis akkumulátor-összeszerelőknek: összetétel, eredet, újrahasznosítási adatok, QR-kód.",
+          "who": "E-bicikli- és ipari akkumulátorokkal dolgozó cégeknek",
+          "why": "Bizonyos akkumulátorokra 2027. február 18-tól kötelező a digitális termékútlevél.",
+          "scope": [
+            "Összetétel, eredet és szénlábnyom adatai",
+            "Nyilvános és jogosultsághoz kötött adatrészek szétválasztva",
+            "QR-kóddal elérhető útlevél"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "energia",
+      "name": "Energia és terep",
+      "sub": "Mérési és naplózási kötelezettségek, ahol ma papír és táblázat dolgozik.",
+      "items": [
+        {
+          "name": "Közösségi áram",
+          "line": "Energiaközösség-elszámoló: a negyedórás mérési adatokból a rögzített kvóták szerint elosztja a megtermelt áramot, és lakónként kimutatást készít.",
+          "who": "Társasházaknak és energiaközösségeknek",
+          "why": "2025 szeptembere óta társasházak is alapíthatnak energiaközösséget; ehhez negyedórás mérés és előre rögzített megosztás kell.",
+          "scope": [
+            "Negyedórás mérési adatok beolvasása",
+            "Megosztás előre rögzített kvóták szerint",
+            "Tagonkénti havi kimutatás"
+          ]
+        },
+        {
+          "name": "Növényvédelmi napló",
+          "line": "Terepen, telefonról rögzített kezelések, szerkészlet és hatósági exportra kész napló.",
+          "who": "Gazdáknak, szőlészeknek, gyümölcsösöknek",
+          "why": "A kezelést 24 órán belül kell rögzíteni és 3 évig megőrizni; 10 hektár fölött részben elektronikusan.",
+          "scope": [
+            "Kezelések rögzítése terepen, hálózat nélkül is",
+            "Szerkészlet és élelmezés-egészségügyi várakozási idők",
+            "Hatósági exportra kész napló, 3 év megőrzéssel"
+          ]
+        }
+      ]
+    }
+  ]
+}

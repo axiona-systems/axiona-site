@@ -4,12 +4,14 @@ on:
   pull_request:
     branches: [main]
     paths:
-      - "*.html"
-      - "en/**"
-      - "de/**"
+      - "**/*.html"
       - "assets/**"
-      - "scripts/axe-audit.mjs"
-      - "scripts/verify_browser_audit_matrix.py"
+      - "data/**"
+      - "scripts/**"
+      - ".well-known/**"
+      - "sitemap.xml"
+      - "llms.txt"
+      - "site.webmanifest"
       - "lighthouserc.json"
       - ".github/workflows/axiona-browser-audit.yml"
   workflow_dispatch:

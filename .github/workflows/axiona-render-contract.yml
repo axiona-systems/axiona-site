@@ -4,11 +4,13 @@ on:
   pull_request:
     branches: [main]
     paths:
-      - "*.html"
-      - "en/**"
-      - "de/**"
+      - "**/*.html"
       - "assets/**"
+      - "data/**"
       - "scripts/**"
+      - ".well-known/**"
+      - "sitemap.xml"
+      - "llms.txt"
       - "site.webmanifest"
       - ".github/workflows/axiona-render-contract.yml"
   workflow_dispatch:
@@ -35,7 +37,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          python3 scripts/verify_asset_references.py
+          python3 scripts/verify_site.py
           python3 scripts/verify_workflow_hardening.py
 
       - name: Prepare browser runtime
@@ -60,11 +62,9 @@ jobs:
           cat /tmp/axiona-render-http.log || true
           exit 1
 
-      - name: Verify exact local brand identity surface
+      - name: Verify served bytes equal source
         shell: bash
-        run: |
-          set -euo pipefail
-          python3 scripts/verify_live_brand_surface.py --mode local
+        run: python3 scripts/verify_served_site.py --mode local
 
       - name: Verify route, navigation, geometry and motion contracts
         shell: bash
