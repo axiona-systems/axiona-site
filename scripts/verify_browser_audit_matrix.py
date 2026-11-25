@@ -20,9 +20,8 @@ EXPECTED_LIGHTHOUSE = [
 
 
 def sitemap_routes(root: Path) -> list[str]:
-    ns = {"s": "http://www.sitemaps.org/schemas/sitemap/0.9"}
     tree = ET.parse(root / "sitemap.xml").getroot()
-    return [el.text.strip()[len(SITE):] or "/" for el in tree.findall("s:url/s:loc", ns)]
+    return [el.text.strip()[len(SITE):] or "/" for el in tree.findall("{*}url/{*}loc")]
 
 
 def fail(message: str) -> int:

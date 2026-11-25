@@ -64,7 +64,7 @@ jobs:
 
       - name: Verify served bytes equal source
         shell: bash
-        run: python3 scripts/verify_served_site.py --mode local --port 4176
+        run: python3 scripts/verify_served_site.py --mode local
 
       - name: Verify route, navigation, geometry and motion contracts
         shell: bash

@@ -177,8 +177,7 @@ def main() -> int:
     check_data()
 
     sitemap = ET.parse(ROOT / "sitemap.xml").getroot()
-    ns = {"s": "http://www.sitemaps.org/schemas/sitemap/0.9"}
-    locs = [el.text.strip() for el in sitemap.findall("s:url/s:loc", ns)]
+    locs = [el.text.strip() for el in sitemap.findall("{*}url/{*}loc")]
     if len(set(locs)) != len(locs):
         stop("ismétlődő sitemap-bejegyzés")
 
