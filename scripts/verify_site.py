@@ -42,8 +42,9 @@ PRIVATE_PATTERNS = [
     r"axiona-contracts", r"otthon-projekt", r"\bHetzner\b", r"/Users/[a-z]",
 ]
 TRACKING_PATTERNS = [r"googletagmanager", r"google-analytics", r"\bgtag\(", r"connect\.facebook", r"hotjar", r"plausible\.io", r"document\.cookie"]
-EXPECTED_CSP = ("default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'self'; "
-                "manifest-src 'self'; connect-src 'none'; base-uri 'none'; form-action 'none'; upgrade-insecure-requests")
+EXPECTED_CSP = ("default-src 'none'; script-src 'self' https://static.cloudflareinsights.com; style-src 'self'; "
+                "img-src 'self'; font-src 'self'; manifest-src 'self'; connect-src https://cloudflareinsights.com; "
+                "base-uri 'none'; form-action 'none'; upgrade-insecure-requests")
 REQUIRED_ICONS = {
     ("icon", "/favicon.svg"), ("icon", "/favicon-32x32.png"), ("icon", "/favicon-16x16.png"),
     ("apple-touch-icon", "/apple-touch-icon.png"), ("manifest", "/site.webmanifest"),

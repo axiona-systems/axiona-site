@@ -18,8 +18,10 @@ IDEAS = json.loads((ROOT / "data/ideas.json").read_text(encoding="utf-8"))
 MILES = json.loads((ROOT / "data/milestones.json").read_text(encoding="utf-8"))
 SITE = "https://axiona.systems"
 # Szigorú tartalombiztonsági szabály: csak saját forrásból tölthet bármit, beágyazott kód és stílus nélkül.
-CSP = ("default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'self'; "
-       "manifest-src 'self'; connect-src 'none'; base-uri 'none'; form-action 'none'; upgrade-insecure-requests")
+# Kivétel csak a Cloudflare Web Analytics süti nélküli mérőszkriptje és annak beküldési címe.
+CSP = ("default-src 'none'; script-src 'self' https://static.cloudflareinsights.com; style-src 'self'; "
+       "img-src 'self'; font-src 'self'; manifest-src 'self'; connect-src https://cloudflareinsights.com; "
+       "base-uri 'none'; form-action 'none'; upgrade-insecure-requests")
 SECURITY_META = (f'  <meta http-equiv="Content-Security-Policy" content="{CSP}">\n'
                  '  <meta name="referrer" content="strict-origin-when-cross-origin">')
 SOCIAL_IMAGE = "/assets/social/axiona-social-preview-r147-hu.png"
@@ -273,7 +275,7 @@ FOOT = f"""  </main>
       </div>
       <div class="footer__base">
         <span>© 2026 AXIONA Systems · Asztalos Zoltán</span>
-        <span>Süti és követés nélkül · <a href="{mailto('Kérdés')}">{MAIL}</a></span>
+        <span>Süti nélkül · <a href="{mailto('Kérdés')}">{MAIL}</a></span>
       </div>
     </div>
   </footer>
@@ -460,7 +462,7 @@ def kpis_html() -> str:
         (str(COUNTS["products_in_development"]), "termék, egy ember"),
         (str(len(MILES["milestones"])), "elfogadott mérföldkő a Naplóban"),
         ("2", "munkanapon belül válaszolok"),
-        ("0", "süti és követőkód ezen az oldalon"),
+        ("0", "süti ezen az oldalon"),
     ]
     cells = "\n".join(
         f'        <div class="kpi"><span class="kpi__value">{v}</span><span class="kpi__label">{l}</span></div>' for v, l in items)
@@ -1359,16 +1361,17 @@ legal_page("/impresszum/", "Impresszum | AXIONA Systems", "Impresszum",
            ])
 
 legal_page("/adatvedelem/", "Adatvédelem | AXIONA Systems", "Adatvédelem",
-           "Az axiona.systems nagyon kevés adatot kezel. Nincs felhasználói fiók, rendelés, süti vagy marketingkövetés.",
+           "Az axiona.systems nagyon kevés adatot kezel. Nincs felhasználói fiók, rendelés, süti vagy hirdetési követés; a látogatottságot süti nélkül, összesítve mérem.",
            "Röviden és világosan arról, milyen adatot kezel az axiona.systems.",
            [
                ("Ki felel az adatkezelésért?", P(f'A weboldalhoz és a közvetlen megkeresésekhez kapcsolódó adatkezelésért Asztalos Zoltán felel az AXIONA Systems név alatt. Kérdés vagy kérelem: <a href="{mailto("Adatvédelem")}">{MAIL}</a>.')),
-               ("Amikor meglátogatod az oldalt", P("A weboldalt a GitHub Pages szolgálja ki. A GitHub a szolgáltatás működtetéséhez és biztonságához technikai adatokat, köztük IP-címet naplózhat. Az oldal betűtípusai és képei ugyanerről a címről töltődnek be; harmadik féltől származó követőkód, hirdetés vagy közösségi beágyazás nincs.")),
+               ("Amikor meglátogatod az oldalt", P("A weboldalt a GitHub Pages szolgálja ki, elé a Cloudflare kerül, amely a tartalmat továbbítja és az oldalt védi. Mindkettő a szolgáltatás működtetéséhez és biztonságához technikai adatokat, köztük IP-címet kezelhet. Az oldal betűtípusai és képei ugyanerről a címről töltődnek be; hirdetés, közösségi beágyazás és hirdetési követőkód nincs.")),
+               ("Látogatásmérés", P("A látogatottságot a Cloudflare Web Analytics méri. Sütit és a böngészőben tárolt azonosítót nem használ, egyes látogatókat nem követ, profilt nem készít. Csak összesített adatot látok: mely oldalakat nézték meg, honnan érkeztek a látogatók, milyen országból, böngészőből és eszközről, és milyen gyorsan töltött be az oldal.")),
                ("Ha e-mailt írsz", P("Az e-mail-címedet, a megadott nevedet, az üzenet tartalmát és az önként csatolt fájlokat kezelem, a megkeresés megválaszolására és az abból következő teendőkre. A Kapcsolat oldal űrlapja nem küld és nem tárol adatot: csak a saját levelezőprogramodban készíti elő a levelet.")),
-               ("Jogalap", P("A weboldal működtetése és biztonsága jogos érdeken alapul. Az e-mailes kapcsolatfelvétel a kérésedre tett lépéshez vagy jogos érdekhez kapcsolódik. Ha egy helyzet más jogalapot vagy hozzájárulást kíván, azt alkalmazzuk.")),
-               ("Szolgáltatók", P("A weboldal kiszolgálásában a GitHub Pages, az e-mailek kézbesítésében a levelezési szolgáltató vesz részt. Ezek több országban is működhetnek; ha a jog nemzetközi adattovábbításhoz külön garanciát ír elő, annak megfelelő megoldást alkalmazok.")),
+               ("Jogalap", P("A weboldal működtetése és biztonsága jogos érdeken alapul. Az e-mailes kapcsolatfelvétel a kérésedre tett lépéshez vagy jogos érdekhez kapcsolódik. Ha egy helyzet más jogalapot vagy hozzájárulást kíván, azt alkalmazom.")),
+               ("Szolgáltatók", P("A weboldal kiszolgálásában a GitHub Pages, a továbbításban, védelemben és látogatásmérésben a Cloudflare, az e-mailek kézbesítésében a levelezési szolgáltató vesz részt. Ezek több országban is működhetnek; ha a jog nemzetközi adattovábbításhoz külön garanciát ír elő, annak megfelelő megoldást alkalmazok.")),
                ("Meddig őrzöm meg?", P("Az e-mailes adatokat addig tartom meg, ameddig a megkeresés kezelése, jogi kötelezettség vagy igényérvényesítés indokolja. A szolgáltatók saját technikai naplóinak megőrzését az adott szolgáltató szabályai határozzák meg.")),
-               ("Sütik és profilozás", P("A weboldal nem állít be sütit, nem használ látogatói azonosítót, és nem készít profilt. Automatizált döntéshozatal nincs.")),
+               ("Sütik és profilozás", P("A weboldal nem állít be sütit, nem használ látogatói azonosítót, és nem készít profilt. A látogatásmérés is süti nélkül, összesítve működik. Automatizált döntéshozatal nincs.")),
                ("Jogaid", P(f'Kérhetsz hozzáférést, helyesbítést, törlést, korlátozást, tiltakozhatsz az adatkezelés ellen, kérhetsz adathordozhatóságot, és panaszt tehetsz a Nemzeti Adatvédelmi és Információszabadság Hatóságnál (NAIH). Kérelemmel a <a href="{mailto("Adatvédelem")}">{MAIL}</a> címen lehet jelentkezni.')),
                ("Termékek", P("Ez a tájékoztató a weboldalra vonatkozik. A Kockalmár, a Fejtörpe és a Keeper saját adatvédelmi tájékoztatót kap, mielőtt elérhetővé válik.")),
            ])

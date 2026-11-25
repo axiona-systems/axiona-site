@@ -55,6 +55,7 @@ ORIGINS = {
 
 
 CF_SCRIPT = re.compile(rb'<script data-cfasync="false" src="/cdn-cgi/scripts/[0-9a-f]+/cloudflare-static/email-decode\.min\.js"></script>')
+CF_BEACON = re.compile(rb'<script[^>]*src="https://static\.cloudflareinsights\.com/beacon\.min\.js[^"]*"[^>]*></script>')
 CF_LINK = re.compile(rb'href="/cdn-cgi/l/email-protection#([0-9a-f]+)"')
 CF_SPAN = re.compile(rb'<span class="__cf_email__" data-cfemail="([0-9a-f]+)">\[email&#160;protected\]</span>')
 
@@ -64,9 +65,11 @@ def cf_decode(hexstr: bytes) -> bytes:
     return bytes(b ^ data[0] for b in data[1:])
 
 
-def undo_cloudflare_email(body: bytes) -> bytes:
-    """A Cloudflare e-mail-védelme kiszolgáláskor átírja a címeket; ezt visszafejtjük összehasonlítás előtt."""
+def undo_cloudflare(body: bytes) -> bytes:
+    """A Cloudflare kiszolgáláskor átírja az e-mail-címeket, és néha beszúrja a Web Analytics szkriptjét;
+    ezeket visszafejtjük, illetve eltávolítjuk az összehasonlítás előtt."""
     body = CF_SCRIPT.sub(b"", body)
+    body = CF_BEACON.sub(b"", body)
     body = CF_LINK.sub(lambda m: b'href="mailto:' + cf_decode(m.group(1)) + b'"', body)
     return CF_SPAN.sub(lambda m: cf_decode(m.group(1)), body)
 
@@ -109,7 +112,7 @@ def main() -> int:
                 bad.append(f"{route}: {exc}")
                 continue
             if route.endswith((".html", "/")):
-                got = undo_cloudflare_email(got)
+                got = undo_cloudflare(got)
             if got != expected:
                 bad.append(f"{route}: a kiszolgált tartalom eltér a forrástól{diff_hint(expected, got)}")
         if not bad:
