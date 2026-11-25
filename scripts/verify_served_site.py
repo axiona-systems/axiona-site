@@ -82,6 +82,15 @@ def fetch(origin: str, route: str, token: str) -> bytes:
         return r.read()
 
 
+def diff_hint(expected: bytes, got: bytes) -> str:
+    """Az első eltérés környezete, hogy CI-ben is látsszon, mit módosított a kiszolgáló."""
+    i = next((k for k, (a, b) in enumerate(zip(expected, got)) if a != b), min(len(expected), len(got)))
+    lo = max(0, i - 40)
+    want = expected[lo:i + 80].decode("utf-8", "replace")
+    seen = got[lo:i + 160].decode("utf-8", "replace")
+    return f" (bájt {i}, hossz {len(expected)}/{len(got)}; várt: {want!r}; kapott: {seen!r})"
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--mode", choices=["local", "live"], required=True)
@@ -102,7 +111,7 @@ def main() -> int:
             if route.endswith((".html", "/")):
                 got = undo_cloudflare_email(got)
             if got != expected:
-                bad.append(f"{route}: a kiszolgált tartalom eltér a forrástól")
+                bad.append(f"{route}: a kiszolgált tartalom eltér a forrástól{diff_hint(expected, got)}")
         if not bad:
             print(f"OK_AXIONA_SERVED_SITE mode={args.mode} routes={len(todo)} attempt={attempt}")
             return 0
