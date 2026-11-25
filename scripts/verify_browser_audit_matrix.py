@@ -10,41 +10,19 @@ import sys
 from pathlib import Path
 from urllib.parse import urlsplit
 
+import xml.etree.ElementTree as ET
+
+SITE = "https://axiona.systems"
 EXPECTED_LIGHTHOUSE = [
-    "/",
-    "/systems.html",
-    "/process.html",
-    "/security.html",
-    "/solutions.html",
-    "/keeper.html",
-    "/contact.html",
-    "/support.html",
-    "/privacy.html",
-    "/legal.html",
-    "/en/",
-    "/de/",
+    "/", "/kockalmar/", "/fejtorpe/", "/keeper/", "/egyuttmukodes/", "/hogyan-keszul/",
+    "/naplo/", "/otletlada/", "/rolam/", "/kapcsolat/",
 ]
 
-ROUTES = [
-    "",
-    "systems.html",
-    "process.html",
-    "security.html",
-    "solutions.html",
-    "keeper.html",
-    "contact.html",
-    "support.html",
-    "privacy.html",
-    "legal.html",
-]
 
-EXPECTED_AXE = [
-    (f"/{prefix}/{route}" if route else f"/{prefix}/")
-    if prefix
-    else (f"/{route}" if route else "/")
-    for prefix in ("", "en", "de")
-    for route in ROUTES
-]
+def sitemap_routes(root: Path) -> list[str]:
+    ns = {"s": "http://www.sitemaps.org/schemas/sitemap/0.9"}
+    tree = ET.parse(root / "sitemap.xml").getroot()
+    return [el.text.strip()[len(SITE):] or "/" for el in tree.findall("s:url/s:loc", ns)]
 
 
 def fail(message: str) -> int:
@@ -103,17 +81,13 @@ def main() -> int:
         axe_routes = json.loads(match.group(1))
     except json.JSONDecodeError as exc:
         return fail(f"invalid axe paths array: {exc}")
-    if axe_routes != EXPECTED_AXE:
-        missing = [route for route in EXPECTED_AXE if route not in axe_routes]
-        extra = [route for route in axe_routes if route not in EXPECTED_AXE]
-        return fail(f"axe coverage mismatch missing={missing} extra={extra} actual_count={len(axe_routes)}")
-    if len(set(axe_routes)) != 30:
-        return fail(f"axe route matrix must contain 30 unique active routes, got {len(set(axe_routes))}")
-
-    lighthouse_families = {route.removeprefix("/en").removeprefix("/de") or "/" for route in lighthouse_routes}
-    required_hu_families = {f"/{route}" if route else "/" for route in ROUTES}
-    if not required_hu_families.issubset(lighthouse_families):
-        return fail("Lighthouse representative family coverage incomplete")
+    expected_axe = sitemap_routes(root) + ["/404.html"]
+    if axe_routes != expected_axe:
+        missing = [route for route in expected_axe if route not in axe_routes]
+        extra = [route for route in axe_routes if route not in expected_axe]
+        return fail(f"axe coverage must equal sitemap + 404: missing={missing} extra={extra}")
+    if not set(lighthouse_routes) <= set(expected_axe):
+        return fail("Lighthouse route outside the sitemap")
 
     print("OK_AXIONA_BROWSER_AUDIT_MATRIX")
     print(f"LIGHTHOUSE_ROUTES={len(lighthouse_routes)}")

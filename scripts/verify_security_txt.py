@@ -13,7 +13,7 @@ from urllib.parse import urlsplit
 DEFAULT_ROOT = Path(__file__).resolve().parents[1]
 SECURITY_PATH = Path(".well-known/security.txt")
 EXPECTED_CANONICAL = "https://axiona.systems/.well-known/security.txt"
-EXPECTED_POLICY = "https://axiona.systems/security.html"
+EXPECTED_POLICY = "https://axiona.systems/biztonsag/"
 EXPECTED_LANGUAGES = {"hu", "en", "de"}
 MAX_BYTES = 32 * 1024
 MAX_EXPIRY_HORIZON = timedelta(days=366)

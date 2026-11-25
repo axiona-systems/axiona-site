@@ -23,18 +23,20 @@ def main():
     p=ROOT/rel
     if not p.is_file(): fail(f'runtime identity asset missing: {rel}')
     if sha256(p)!=expected_hash: fail(f'runtime identity hash drift: {rel}')
-  pages=sorted([*ROOT.glob('*.html'),*(ROOT/'en').glob('*.html'),*(ROOT/'de').glob('*.html')])
-  if len(pages)!=31: fail(f'public brand page count drift: {len(pages)}')
-  for p in pages:
-    t=p.read_text(); label=p.relative_to(ROOT).as_posix()
+  # v4: minden tartalmi oldal fejléce és lábléce a kanonikus, sötét háttérre szánt fekvő logót használja.
+  pages=[]
+  for p in sorted(ROOT.rglob('*.html')):
+    rel=p.relative_to(ROOT)
+    if {'.git','node_modules','.claude','BUILD'} & set(rel.parts): continue
+    t=p.read_text()
+    if 'http-equiv="refresh"' in t: continue
+    pages.append((rel.as_posix(),t))
+  if len(pages)<15: fail(f'public brand page count drift: {len(pages)}')
+  for label,t in pages:
     if '/assets/axiona-mark.png' in t or 'r92-' in t: fail(f'legacy brand binding remains: {label}')
-    if t.count(f'src="{HEADER}"')!=1 or t.count(f'href="{HEADER}"')!=1: fail(f'header brand binding mismatch: {label}')
-    if t.count(f'src="{FOOTER}"')!=1: fail(f'footer brand binding mismatch: {label}')
-    sc=t.count(f'src="{SYMBOL}"')
-    if label in {'keeper.html','en/keeper.html','de/keeper.html'}:
-      if sc!=1: fail(f'Keeper product symbol binding mismatch: {label}')
-    elif sc: fail(f'unexpected standalone product symbol: {label}')
+    if t.count(f'src="{FOOTER}"')!=2: fail(f'header/footer brand binding mismatch: {label}')
+    if f'src="{HEADER}"' in t or f'src="{SYMBOL}"' in t: fail(f'unexpected brand variant: {label}')
   stale=list((ROOT/'assets/social').glob('*r92-*.png'))
   if stale: fail('legacy R92 social cards still exist')
-  print('AXIONA_BRAND_CONSUMER_BOUNDARY=PASS'); print('SITE_BRAND_AUTHORITY=false'); print('SYSTEM_BRAND_AUTHORITY=axiona-systems/AXIONA_BRAND'); print('BRAND_AUTHORITY_COMMIT=aebf0f112bd5f4e589ef58f337a55d9be861b493'); print('BRAND_RUNTIME_RELEASE=R147'); print('PUBLIC_BRAND_PAGES=31'); print('VERIFIED_RUNTIME_ASSETS=16')
+  print('AXIONA_BRAND_CONSUMER_BOUNDARY=PASS'); print('SITE_BRAND_AUTHORITY=false'); print('SYSTEM_BRAND_AUTHORITY=axiona-systems/AXIONA_BRAND'); print('BRAND_AUTHORITY_COMMIT=aebf0f112bd5f4e589ef58f337a55d9be861b493'); print('BRAND_RUNTIME_RELEASE=R147'); print(f'PUBLIC_BRAND_PAGES={len(pages)}'); print('VERIFIED_RUNTIME_ASSETS=16')
 if __name__=='__main__': main()

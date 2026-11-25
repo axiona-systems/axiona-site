@@ -1,0 +1,29 @@
+{
+  "as_of": "2026-11-25",
+  "source": "GitHub, elfogadott (mergelt) változtatások",
+  "counts": {
+    "product_changes": 837,
+    "product_changes_note": "Kockalmár 402, Fejtörpe 234, Keeper 85, valamint egy nem nyilvános belső termék 116.",
+    "framework_changes": 1786,
+    "framework_repos": 10,
+    "products_in_development": 3,
+    "max_tests_kockalmar": 2588,
+    "max_tests_fejtorpe": 1608
+  },
+  "receipts": [
+    {"id": "KM-0456", "product": "kockalmar", "date": "2026-11-20", "text": "Egyszerűbb pénztár: a vevő neve lesz az alapértelmezett címzett, a ritkán kellő címmezők lenyithatók.", "tests": 2544, "hero": true},
+    {"id": "KM-0460", "product": "kockalmar", "date": "2026-11-20", "text": "Gyorsabb kosár kevesebb adatbázis-lekérdezéssel, szorosabb összhang a webshop és a raktár között.", "tests": null},
+    {"id": "KM-0458", "product": "kockalmar", "date": "2026-11-20", "text": "Letisztultabb magyar nyelvű böngészés a webáruházban.", "tests": 2588},
+    {"id": "FT-0303", "product": "fejtorpe", "date": "2026-11-21", "text": "Szebb füzetgrafika, pontosabb feladatok és egyszerűbb javítás.", "tests": 1608},
+    {"id": "FT-0299", "product": "fejtorpe", "date": "2026-11-20", "text": "Teljes füzetkészítés: minden oldal valódi előnézettel, a végén nyomtatható PDF.", "tests": 1569},
+    {"id": "FT-0298", "product": "fejtorpe", "date": "2026-11-20", "text": "Füzetstúdió, amelyben a munka megmarad két alkalom között.", "tests": 1509},
+    {"id": "KM-0454", "product": "kockalmar", "date": "2026-11-19", "text": "Érthetőbb kosármennyiségek, és ellenőrzött helyreállítás, ha egy frissítés félbemarad.", "tests": 2535},
+    {"id": "KM-0453", "product": "kockalmar", "date": "2026-11-19", "text": "Egyetlen, átlátható vásárlási blokk a termékoldalon.", "tests": 2528},
+    {"id": "FT-0292", "product": "fejtorpe", "date": "2026-11-19", "text": "A jóváhagyott rajzstílus újra felhasználható a hasonló füzeteknél.", "tests": 1286},
+    {"id": "FT-0290", "product": "fejtorpe", "date": "2026-11-19", "text": "A magyar feladatutasítások az ellenőrzött feladatokhoz kötve, egészen a kész füzetig.", "tests": 1225},
+    {"id": "KM-0451", "product": "kockalmar", "date": "2026-11-18", "text": "Egységes keresés; a katalógus megjegyzi, hol jártál, amikor visszalépsz.", "tests": 2511},
+    {"id": "KM-0449", "product": "kockalmar", "date": "2026-11-18", "text": "Raktár: a készlet áll elöl, egy félbemaradt művelet helyben visszaállítható.", "tests": 2495},
+    {"id": "KP-0106", "product": "keeper", "date": "2026-08-23", "text": "Stabil keresési menü iOS 26-on, valódi iPhone-on kipróbálva.", "tests": null},
+    {"id": "KP-0104", "product": "keeper", "date": "2026-08-23", "text": "„Kérdezd a Keepert”: válasz csak a saját irataidból, mindig forrással.", "tests": null}
+  ]
+}

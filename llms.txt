@@ -1,0 +1,21 @@
+# AXIONA Systems
+
+> Termék- és fejlesztőstúdió (Asztalos Zoltán). Saját szoftvertermékek és megrendelésre készülő szoftverek egy saját mérnöki rendszeren (AXIONA), minden elfogadott változtatáshoz független ellenőrzéssel és nyugtával. Az oldal nyelve magyar.
+
+## Termékek
+- [Kockalmár](https://axiona.systems/kockalmar/): használt LEGO®-alkatrészek webshopja, darabra. Fejlesztés alatt.
+- [Fejtörpe](https://axiona.systems/fejtorpe/): személyre szabott, nyomtatható készségfejlesztő füzetek gyerekeknek. Fejlesztés alatt.
+- [Keeper](https://axiona.systems/keeper/): iratkezelő app iPhone-ra és iPadre. Fejlesztés alatt.
+
+## Együttműködés
+- [Együttműködés](https://axiona.systems/egyuttmukodes/): webes rendszereket, iPhone- és iPad-appokat és belső céges eszközöket is építek megrendelésre. Fix áras szakaszok, a kód a megrendelőé.
+
+## A rendszer
+- [Hogyan készül](https://axiona.systems/hogyan-keszul/): az AXIONA köre, a nyugta felépítése, hét szabály, és amit a rendszer nem garantál. Az AXIONA nem termék és nem eladó.
+
+## Bizonyíték
+- Legfeljebb 2 588 teszt fut egy Kockalmár-, 1 608 egy Fejtörpe-változtatás előtt (GitHub, elfogadott (mergelt) változtatások, 2026-11-25).
+- [Napló](https://axiona.systems/naplo/): a nagy lépések, elfogadott változtatások dátummal. RSS: https://axiona.systems/naplo/feed.xml
+
+## Kapcsolat
+- hello@axiona.systems (válasz két munkanapon belül)
