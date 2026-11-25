@@ -11,6 +11,7 @@ Minden sitemap-oldalt, az átirányításokat, a 404-et és a futásidejű fájl
 from __future__ import annotations
 
 import argparse
+import re
 import ssl
 import sys
 import time
@@ -53,6 +54,23 @@ ORIGINS = {
 }
 
 
+CF_SCRIPT = re.compile(rb'<script data-cfasync="false" src="/cdn-cgi/scripts/[0-9a-f]+/cloudflare-static/email-decode\.min\.js"></script>')
+CF_LINK = re.compile(rb'href="/cdn-cgi/l/email-protection#([0-9a-f]+)"')
+CF_SPAN = re.compile(rb'<span class="__cf_email__" data-cfemail="([0-9a-f]+)">\[email&#160;protected\]</span>')
+
+
+def cf_decode(hexstr: bytes) -> bytes:
+    data = bytes.fromhex(hexstr.decode())
+    return bytes(b ^ data[0] for b in data[1:])
+
+
+def undo_cloudflare_email(body: bytes) -> bytes:
+    """A Cloudflare e-mail-védelme kiszolgáláskor átírja a címeket; ezt visszafejtjük összehasonlítás előtt."""
+    body = CF_SCRIPT.sub(b"", body)
+    body = CF_LINK.sub(lambda m: b'href="mailto:' + cf_decode(m.group(1)) + b'"', body)
+    return CF_SPAN.sub(lambda m: cf_decode(m.group(1)), body)
+
+
 def fetch(origin: str, route: str, token: str) -> bytes:
     # Az útvonal a saját sitemapből és fájllistából jön; csak gyökérrelatív, séma és gép nélkül.
     if not route.startswith("/") or route.startswith("//") or "://" in route:
@@ -81,6 +99,8 @@ def main() -> int:
             except (urllib.error.URLError, OSError) as exc:
                 bad.append(f"{route}: {exc}")
                 continue
+            if route.endswith((".html", "/")):
+                got = undo_cloudflare_email(got)
             if got != expected:
                 bad.append(f"{route}: a kiszolgált tartalom eltér a forrástól")
         if not bad:
