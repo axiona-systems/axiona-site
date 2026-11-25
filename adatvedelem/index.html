@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'self'; manifest-src 'self'; connect-src 'none'; base-uri 'none'; form-action 'none'; upgrade-insecure-requests">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' https://static.cloudflareinsights.com; style-src 'self'; img-src 'self'; font-src 'self'; manifest-src 'self'; connect-src https://cloudflareinsights.com; base-uri 'none'; form-action 'none'; upgrade-insecure-requests">
   <meta name="referrer" content="strict-origin-when-cross-origin">
   <title>Adatvédelem | AXIONA Systems</title>
   <meta name="description" content="Röviden és világosan arról, milyen adatot kezel az axiona.systems.">
@@ -69,7 +69,7 @@
       <div class="wrap">
         <nav class="crumbs" aria-label="Morzsamenü"><a href="/">Főoldal</a><span aria-hidden="true">/</span><span>Adatvédelem</span></nav>
         <h1 class="page-title" id="oldal-cim">Adatvédelem</h1>
-        <p class="page-lead">Az axiona.systems nagyon kevés adatot kezel. Nincs felhasználói fiók, rendelés, süti vagy marketingkövetés.</p>
+        <p class="page-lead">Az axiona.systems nagyon kevés adatot kezel. Nincs felhasználói fiók, rendelés, süti vagy hirdetési követés; a látogatottságot süti nélkül, összesítve mérem.</p>
       </div>
     </section>
     <section class="sec light pt-0">
@@ -80,7 +80,11 @@
         </div>
         <div class="split">
           <div class="split__head"><h2>Amikor meglátogatod az oldalt</h2></div>
-          <div class="prose"><p>A weboldalt a GitHub Pages szolgálja ki. A GitHub a szolgáltatás működtetéséhez és biztonságához technikai adatokat, köztük IP-címet naplózhat. Az oldal betűtípusai és képei ugyanerről a címről töltődnek be; harmadik féltől származó követőkód, hirdetés vagy közösségi beágyazás nincs.</p></div>
+          <div class="prose"><p>A weboldalt a GitHub Pages szolgálja ki, elé a Cloudflare kerül, amely a tartalmat továbbítja és az oldalt védi. Mindkettő a szolgáltatás működtetéséhez és biztonságához technikai adatokat, köztük IP-címet kezelhet. Az oldal betűtípusai és képei ugyanerről a címről töltődnek be; hirdetés, közösségi beágyazás és hirdetési követőkód nincs.</p></div>
+        </div>
+        <div class="split">
+          <div class="split__head"><h2>Látogatásmérés</h2></div>
+          <div class="prose"><p>A látogatottságot a Cloudflare Web Analytics méri. Sütit és a böngészőben tárolt azonosítót nem használ, egyes látogatókat nem követ, profilt nem készít. Csak összesített adatot látok: mely oldalakat nézték meg, honnan érkeztek a látogatók, milyen országból, böngészőből és eszközről, és milyen gyorsan töltött be az oldal.</p></div>
         </div>
         <div class="split">
           <div class="split__head"><h2>Ha e-mailt írsz</h2></div>
@@ -88,11 +92,11 @@
         </div>
         <div class="split">
           <div class="split__head"><h2>Jogalap</h2></div>
-          <div class="prose"><p>A weboldal működtetése és biztonsága jogos érdeken alapul. Az e-mailes kapcsolatfelvétel a kérésedre tett lépéshez vagy jogos érdekhez kapcsolódik. Ha egy helyzet más jogalapot vagy hozzájárulást kíván, azt alkalmazzuk.</p></div>
+          <div class="prose"><p>A weboldal működtetése és biztonsága jogos érdeken alapul. Az e-mailes kapcsolatfelvétel a kérésedre tett lépéshez vagy jogos érdekhez kapcsolódik. Ha egy helyzet más jogalapot vagy hozzájárulást kíván, azt alkalmazom.</p></div>
         </div>
         <div class="split">
           <div class="split__head"><h2>Szolgáltatók</h2></div>
-          <div class="prose"><p>A weboldal kiszolgálásában a GitHub Pages, az e-mailek kézbesítésében a levelezési szolgáltató vesz részt. Ezek több országban is működhetnek; ha a jog nemzetközi adattovábbításhoz külön garanciát ír elő, annak megfelelő megoldást alkalmazok.</p></div>
+          <div class="prose"><p>A weboldal kiszolgálásában a GitHub Pages, a továbbításban, védelemben és látogatásmérésben a Cloudflare, az e-mailek kézbesítésében a levelezési szolgáltató vesz részt. Ezek több országban is működhetnek; ha a jog nemzetközi adattovábbításhoz külön garanciát ír elő, annak megfelelő megoldást alkalmazok.</p></div>
         </div>
         <div class="split">
           <div class="split__head"><h2>Meddig őrzöm meg?</h2></div>
@@ -100,7 +104,7 @@
         </div>
         <div class="split">
           <div class="split__head"><h2>Sütik és profilozás</h2></div>
-          <div class="prose"><p>A weboldal nem állít be sütit, nem használ látogatói azonosítót, és nem készít profilt. Automatizált döntéshozatal nincs.</p></div>
+          <div class="prose"><p>A weboldal nem állít be sütit, nem használ látogatói azonosítót, és nem készít profilt. A látogatásmérés is süti nélkül, összesítve működik. Automatizált döntéshozatal nincs.</p></div>
         </div>
         <div class="split">
           <div class="split__head"><h2>Jogaid</h2></div>
@@ -151,7 +155,7 @@
       </div>
       <div class="footer__base">
         <span>© 2026 AXIONA Systems · Asztalos Zoltán</span>
-        <span>Süti és követés nélkül · <a href="mailto:hello@axiona.systems?subject=K%C3%A9rd%C3%A9s">hello@axiona.systems</a></span>
+        <span>Süti nélkül · <a href="mailto:hello@axiona.systems?subject=K%C3%A9rd%C3%A9s">hello@axiona.systems</a></span>
       </div>
     </div>
   </footer>
